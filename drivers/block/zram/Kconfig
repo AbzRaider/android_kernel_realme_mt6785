@@ -41,6 +41,7 @@ config ZRAM_MEMORY_TRACKING
 
 	  See Documentation/blockdev/zram.txt for more information.
 
+<<<<<<< HEAD
 #ifdef OPLUS_FEATURE_ZRAM_OPT
 #/*Huacai.Zhou@Tech.Kernel.MM, 2020-03-21, add zram opt support*/
 config OPLUS_ZRAM_OPT
@@ -50,3 +51,8 @@ config OPLUS_ZRAM_OPT
 	help
 	oplus zram optimization
 #endif /*OPLUS_FEATURE_ZRAM_OPT*/
+=======
+config ZRAM_DEFAULT_COMP_ALGORITHM
+	string "Default ZRAM compression algorithm"
+	default "lzo"
+>>>>>>> 34c5a01dd412 (zram: Move default compression algorithm choice to Kconfig)
