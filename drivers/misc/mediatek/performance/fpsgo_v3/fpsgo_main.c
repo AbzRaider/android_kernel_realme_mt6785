@@ -658,10 +658,6 @@ void dfrc_fps_limit_cb(unsigned int fps_limit)
 	if (fps_limit > 0 && fps_limit <= TARGET_UNLIMITED_FPS)
 		vTmp = fps_limit;
 
-	if (!fpsgo_is_enable())
-		return;
-
-
 	FPSGO_LOGI("[FPSGO_CTRL] dfrc_fps %d\n", vTmp);
 
 	vpPush =
