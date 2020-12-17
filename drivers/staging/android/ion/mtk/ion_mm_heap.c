@@ -2313,7 +2313,7 @@ long ion_mm_ioctl(struct ion_client *client, unsigned int cmd,
 		}
 
 		if ((int)buffer->heap->type == ION_HEAP_TYPE_MULTIMEDIA) {
-			struct ion_fb_buffer_info *buffer_info =
+			struct ion_mm_buffer_info *buffer_info =
 			    buffer->priv_virt;
 			enum ION_MM_CMDS mm_cmd = param.mm_cmd;
 
@@ -2504,6 +2504,7 @@ long ion_mm_ioctl(struct ion_client *client, unsigned int cmd,
 			} else {
 				IONMSG("%s #%d: buffer err\n",
 				       __func__, __LINE__);
+				ion_drv_put_kernel_handle(kernel_handle);
 				return -EFAULT;
 			}
 
