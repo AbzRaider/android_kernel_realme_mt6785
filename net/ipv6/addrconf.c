@@ -3349,7 +3349,7 @@ static void addrconf_dev_config(struct net_device *dev)
 		return;
 
 	/* mobile device doesn't need auto-linklocal addr */
-	if (dev->type == ARPHRD_PUREIP)
+	if (dev->type == ARPHRD_RAWIP)
 		return;
 
 	/* mobile device doesn't need auto-linklocal addr */
