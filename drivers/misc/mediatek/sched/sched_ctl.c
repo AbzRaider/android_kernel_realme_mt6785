@@ -547,8 +547,11 @@ int aware_big_thermal(int cpu, struct task_struct *p)
 		if (sd) {
 			sg = sd->groups;
 			sge = sg->sge;
-		} else
+
+		} else{
+			printk_deferred("sched: %s no sd", __func__);
 			goto out;
+		}
 
 		min_new_util = calc_cpu_util(sge, cpu, p, 1);
 		for (cpu_idx = last_cpu; cpu_idx > cpu; --cpu_idx) {
@@ -567,14 +570,6 @@ out:
 	}
 
 	return new_cpu;
-}
-#endif
-
-#ifdef CONFIG_MACH_MT6873
-static int efuse_aware_big_thermal;
-void __init init_efuse_info(void)
-{
-	efuse_aware_big_thermal = (get_devinfo_with_index(7) & 0xFF) == 0x30;
 }
 #endif
 
@@ -651,7 +646,7 @@ int select_task_prefer_cpu(struct task_struct *p, int new_cpu)
 out:
 
 #ifdef CONFIG_MACH_MT6873
-	if (efuse_aware_big_thermal)
+	if ((get_devinfo_with_index(7) & 0xFF) == 0x30)
 		new_cpu = aware_big_thermal(new_cpu, p);
 #endif
 
