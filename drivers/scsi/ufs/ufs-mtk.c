@@ -790,11 +790,17 @@ static int ufs_mtk_setup_clocks(struct ufs_hba *hba, bool on,
 			ret = ufs_mtk_pltfrm_ref_clk_ctrl(hba, false);
 			if (ret)
 				goto out;
+<<<<<<< HEAD
 
 
 			if (host && host->qos_enabled)
 				ufs_mtk_biolog_clk_gating(on);
 
+=======
+#ifdef UFS_MTK_PLATFORM_EARA_IO
+			ufs_mtk_biolog_clk_gating(true);
+#endif
+>>>>>>> da3b9796edcf ([ALPS05588970] eara-io-qos: Add support in fs/block/storage-driver layers)
 		}
 		break;
 	case POST_CHANGE:
@@ -811,11 +817,17 @@ static int ufs_mtk_setup_clocks(struct ufs_hba *hba, bool on,
 				if (ret)
 					goto out;
 			}
+<<<<<<< HEAD
 
 
 			if (host && host->qos_enabled)
 				ufs_mtk_biolog_clk_gating(on);
 
+=======
+#ifdef UFS_MTK_PLATFORM_EARA_IO
+			ufs_mtk_biolog_clk_gating(false);
+#endif
+>>>>>>> da3b9796edcf ([ALPS05588970] eara-io-qos: Add support in fs/block/storage-driver layers)
 		}
 		break;
 	default:
@@ -2663,6 +2675,121 @@ static void ufs_mtk_abort_handler(struct ufs_hba *hba, int tag,
 #endif
 }
 
+int ufs_mtk_perf_heurisic_if_allow_cmd(struct ufs_hba *hba,
+	struct scsi_cmnd *cmd)
+{
+	if (!(hba->quirks & UFSHCD_QUIRK_UFS_HCI_PERF_HEURISTIC))
+		return 0;
+
+	/* Check rw commands only and allow all other commands. */
+	if (ufs_mtk_is_data_cmd(cmd, true)) {
+
+		if (!hba->ufs_mtk_qcmd_r_cmd_cnt &&
+			!hba->ufs_mtk_qcmd_w_cmd_cnt) {
+
+			/* Case: no on-going r or w commands. */
+
+			if (ufs_mtk_is_data_write_cmd(cmd, true))
+				hba->ufs_mtk_qcmd_w_cmd_cnt++;
+			else
+				hba->ufs_mtk_qcmd_r_cmd_cnt++;
+
+		} else {
+
+			if (ufs_mtk_is_data_write_cmd(cmd, true)) {
+
+				if (hba->ufs_mtk_qcmd_r_cmd_cnt)
+					return 1;
+
+				hba->ufs_mtk_qcmd_w_cmd_cnt++;
+
+			} else {
+
+				if (hba->ufs_mtk_qcmd_w_cmd_cnt)
+					return 1;
+
+				hba->ufs_mtk_qcmd_r_cmd_cnt++;
+			}
+		}
+	}
+
+	return 0;
+}
+
+void ufs_mtk_perf_heurisic_req_done(struct ufs_hba *hba, struct scsi_cmnd *cmd)
+{
+	if (!(hba->quirks & UFSHCD_QUIRK_UFS_HCI_PERF_HEURISTIC))
+		return;
+
+	if (ufs_mtk_is_data_cmd(cmd, true)) {
+		if (ufs_mtk_is_data_write_cmd(cmd, true))
+			hba->ufs_mtk_qcmd_w_cmd_cnt--;
+		else
+			hba->ufs_mtk_qcmd_r_cmd_cnt--;
+	}
+}
+
+static void ufs_mtk_event_notify(struct ufs_hba *hba,
+				 enum ufs_event_type evt, void *data)
+{
+	static bool skip_first_dev_reset = true;
+	unsigned int val = *(u32 *)data;
+
+	/* Ignore the first device reset during initialization */
+	if ((hba->lanes_per_direction == 2) &&
+	    (evt == UFS_EVT_DEV_RESET) &&
+	    skip_first_dev_reset) {
+		skip_first_dev_reset = false;
+		return;
+	}
+
+	if ((evt == UFS_EVT_SUSPEND_ERR && val == -EAGAIN) ||
+		(evt == UFS_EVT_PERF_WARN))
+		return;
+
+	trace_ufs_mtk_event(evt, val);
+}
+
+static void ufs_mtk_setup_xfer_req(struct ufs_hba *hba, int tag,
+				   bool is_scsi)
+{
+	struct ufshcd_lrb *lrbp;
+	struct scsi_cmnd *cmd;
+
+	if (is_scsi) {
+		lrbp = &hba->lrb[tag];
+		cmd = lrbp->cmd;
+
+		if (!ufs_mtk_is_data_cmd(cmd->cmnd[0], false))
+			return;
+
+		ufs_mtk_biolog_send_command(tag, cmd);
+		ufs_mtk_biolog_check(hba->outstanding_reqs | (1 << tag));
+	}
+}
+
+static void ufs_mtk_compl_xfer_req(struct ufs_hba *hba, int tag,
+				   bool is_scsi)
+{
+	struct ufshcd_lrb *lrbp;
+	struct scsi_cmnd *cmd;
+	unsigned long req_mask;
+
+	if (is_scsi) {
+		lrbp = &hba->lrb[tag];
+		cmd = lrbp->cmd;
+
+		if (!ufs_mtk_is_data_cmd(cmd->cmnd[0], false))
+			return;
+
+		req_mask = hba->outstanding_reqs &
+			   ~(1 << tag);
+		ufs_mtk_biolog_transfer_req_compl(tag, req_mask);
+		ufs_mtk_biolog_check(req_mask);
+	}
+}
+
+
 /**
  * struct ufs_hba_mtk_vops - UFS MTK specific variant operations
  *
@@ -2680,7 +2807,8 @@ static struct ufs_hba_variant_ops ufs_hba_mtk_vops = {
 	ufs_mtk_hce_enable_notify,    /* hce_enable_notify */
 	ufs_mtk_link_startup_notify,  /* link_startup_notify */
 	ufs_mtk_pwr_change_notify,    /* pwr_change_notify */
-	NULL,		 /* setup_xfer_req */
+	ufs_mtk_setup_xfer_req,       /* setup_xfer_req */
+	ufs_mtk_compl_xfer_req,       /* compl_xfer_req */
 	NULL,		 /* setup_task_mgmt */
 	NULL,		 /* hibern8_notify */
 	NULL,            /* apply_dev_quirks */

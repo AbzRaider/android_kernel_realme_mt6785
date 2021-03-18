@@ -239,7 +239,8 @@ int mtk_btag_pidlog_add_mmc(struct request_queue *q, pid_t pid, __u32 len,
 	mtk_btag_pidlog_insert(&ctx->pidlog, pid, len, write);
 
 	if (ctx->qid == BTAG_STORAGE_EMBEDDED)
-		mtk_btag_mictx_eval_req(write, 1, len);
+		mtk_btag_mictx_eval_req(mtk_btag_mmc, write, 1, len,
+					false);
 
 	spin_unlock_irqrestore(&ctx->lock, flags);
 
@@ -446,7 +447,7 @@ void mt_biolog_cmdq_queue_task(unsigned int task_id, struct mmc_request *req)
 	tsk->t[tsk_req_start] = sched_clock();
 
 	ctx->q_depth++;
-	mtk_btag_mictx_update_ctx(ctx->q_depth);
+	mtk_btag_mictx_update_ctx(mtk_btag_mmc, ctx->q_depth);
 
 	for (i = tsk_dma_start; i < tsk_max; i++)
 		tsk->t[i] = 0;
@@ -600,7 +601,7 @@ void mt_biolog_cmdq_isdone_end(unsigned int task_id)
 	tsk->t[tsk_isdone_end] = end_time = sched_clock();
 
 	ctx->q_depth--;
-	mtk_btag_mictx_update_ctx(ctx->q_depth);
+	mtk_btag_mictx_update_ctx(mtk_btag_mmc, ctx->q_depth);
 
 	/* throughput usage := duration of handling this request */
 
@@ -615,7 +616,7 @@ void mt_biolog_cmdq_isdone_end(unsigned int task_id)
 	tp->usage += busy_time;
 	tp->size += bytes;
 
-	mtk_btag_mictx_eval_tp(write, busy_time, bytes);
+	mtk_btag_mictx_eval_tp(mtk_btag_mmc, write, busy_time, bytes);
 
 	/* workload statistics */
 	ctx->workload.count++;
@@ -669,7 +670,7 @@ void mt_biolog_cqhci_queue_task(unsigned int task_id, struct mmc_request *req)
 	tsk->t[tsk_req_start] = sched_clock();
 
 	ctx->q_depth++;
-	mtk_btag_mictx_update_ctx(ctx->q_depth);
+	mtk_btag_mictx_update_ctx(mtk_btag_mmc, ctx->q_depth);
 
 	if (!ctx->period_start_t)
 		ctx->period_start_t = tsk->t[tsk_req_start];
@@ -699,7 +700,7 @@ void mt_biolog_cqhci_complete(unsigned int task_id)
 	tsk->t[tsk_isdone_end] = end_time = sched_clock();
 
 	ctx->q_depth--;
-	mtk_btag_mictx_update_ctx(ctx->q_depth);
+	mtk_btag_mictx_update_ctx(mtk_btag_mmc, ctx->q_depth);
 
 	/* throughput usage := duration of handling this request */
 
@@ -715,7 +716,7 @@ void mt_biolog_cqhci_complete(unsigned int task_id)
 	tp->usage += busy_time;
 	tp->size += bytes;
 
-	mtk_btag_mictx_eval_tp(write, busy_time, bytes);
+	mtk_btag_mictx_eval_tp(mtk_btag_mmc, write, busy_time, bytes);
 
 	/* workload statistics */
 	ctx->workload.count++;
@@ -786,7 +787,7 @@ void mt_biolog_mmcqd_req_start(struct mmc_host *host)
 #else
 	/* Legacy mode. Update mictx for embedded eMMC only */
 	if (ctx->qid == BTAG_STORAGE_EMBEDDED)
-		mtk_btag_mictx_update_ctx(1);
+		mtk_btag_mictx_update_ctx(mtk_btag_mmc, 1);
 #endif
 }
 
@@ -837,8 +838,9 @@ void mt_biolog_mmcqd_req_end(struct mmc_data *data)
 
 	/* update mictx for embedded eMMC only */
 	if (ctx->qid == BTAG_STORAGE_EMBEDDED) {
-		mtk_btag_mictx_eval_tp(!rw, busy_time, size);
-		mtk_btag_mictx_update_ctx(0);
+		mtk_btag_mictx_eval_tp(mtk_btag_mmc, !rw, busy_time,
+				       size);
+		mtk_btag_mictx_update_ctx(mtk_btag_mmc, 0);
 	}
 
 	/* re-init task to indicate no on-going request */
@@ -893,6 +895,10 @@ static size_t mt_bio_seq_debug_show_info(char **buff, unsigned long *size,
 	return 0;
 }
 
+static struct mtk_btag_vops mt_mmc_btag_vops = {
+	.seq_show       = mt_bio_seq_debug_show_info,
+};
+
 int mt_mmc_biolog_init(void)
 {
 	struct mtk_blocktag *btag;
@@ -901,7 +907,7 @@ int mt_mmc_biolog_init(void)
 		MMC_BIOLOG_RINGBUF_MAX,
 		sizeof(struct mt_bio_context),
 		MMC_BIOLOG_CONTEXTS,
-		mt_bio_seq_debug_show_info);
+		&mt_mmc_btag_vops);
 
 	if (btag)
 		mtk_btag_mmc = btag;

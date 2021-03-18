@@ -2276,7 +2276,6 @@ void ufshcd_send_command(struct ufs_hba *hba, unsigned int task_tag)
 	ufs_mtk_auto_hiber8_quirk_handler(hba, false);
 
 	__set_bit(task_tag, &hba->outstanding_reqs);
-	ufs_mtk_biolog_check(hba->outstanding_reqs);
 	ufshcd_writel(hba, 1 << task_tag, REG_UTP_TRANSFER_REQ_DOOR_BELL);
 	/* Make sure that doorbell is committed immediately */
 	wmb();
@@ -3055,12 +3054,6 @@ send_orig_cmd:
 	/* Make sure descriptors are ready before ringing the doorbell */
 	wmb();
 
-#if defined(CONFIG_UFSFEATURE) && defined(CONFIG_UFSHPB)
-	if (!pre_req_err)
-		ufs_mtk_biolog_queue_command(add_tag, add_lrbp->cmd);
-#endif
-	ufs_mtk_biolog_queue_command(tag, lrbp->cmd);
-
 	/* issue command to the controller */
 	spin_lock_irqsave(hba->host->host_lock, flags);
 
@@ -3088,21 +3081,6 @@ send_orig_cmd:
 
 out_unlock:
 	spin_unlock_irqrestore(hba->host->host_lock, flags);
-
-	/*
-	 * Logging "send_cmd" in blocktag after command is actually sent.
-	 *
-	 * Use "err" here as condition because command will be sent only
-	 * if "err" is 0.
-	 *
-	 * Note we always try to avoid logging while holding mutexes.
-	 */
-#if defined(CONFIG_UFSFEATURE) && defined(CONFIG_UFSHPB)
-	if (req_sent)
-		ufs_mtk_biolog_send_command(add_tag);
-#endif
-	if (!err)
-		ufs_mtk_biolog_send_command(tag);
 out:
 #if defined(CONFIG_UFSFEATURE) && defined(CONFIG_UFSHPB)
 	if (!pre_req_err) {
@@ -5771,6 +5749,7 @@ static int __ufshcd_transfer_req_compl(struct ufs_hba *hba,
 	for_each_set_bit(index, &completed_reqs, hba->nutrs) {
 		lrbp = &hba->lrb[index];
 		cmd = lrbp->cmd;
+		ufshcd_vops_compl_xfer_req(hba, index, (cmd) ? true : false);
 		if (cmd) {
 			/* MTK PATCH */
 			ufshcd_cond_add_cmd_trace(hba, index,
@@ -5778,9 +5757,8 @@ static int __ufshcd_transfer_req_compl(struct ufs_hba *hba,
 			ufs_mtk_biolog_transfer_req_compl(index);
 			result = ufshcd_transfer_rsp_status(hba, lrbp, index);
 			scsi_dma_unmap(cmd);
-
-			if (result == (DID_FATAL << 16))
-				return result;
+			ufs_mtk_perf_heurisic_req_done(hba, cmd);
+			handled_reqs |= (1UL << index);
 
 			cmd->result = result;
 #ifdef CONFIG_MTK_UFS_LBA_CRC16_CHECK
@@ -5849,6 +5827,7 @@ static int __ufshcd_transfer_req_compl(struct ufs_hba *hba,
 			}
 #endif
 			/* Do not touch lrbp after scsi done */
+<<<<<<< HEAD
 			ufs_mtk_biolog_scsi_done_start(index); /* MTK PATCH */
 #if defined(VENDOR_EDIT) && defined(CONFIG_TRACEPOINTS)
 //yh@BSP.Storage.UFS, 2019-09-13 add for ufs io latency info calculate
@@ -5866,9 +5845,10 @@ static int __ufshcd_transfer_req_compl(struct ufs_hba *hba,
 				}
 			}
 #endif
+=======
+>>>>>>> da3b9796edcf ([ALPS05588970] eara-io-qos: Add support in fs/block/storage-driver layers)
 			cmd->scsi_done(cmd);
 			__ufshcd_release(hba);
-			ufs_mtk_biolog_scsi_done_end(index); /* MTK PATCH */
 		} else if (lrbp->command_type == UTP_CMD_TYPE_DEV_MANAGE ||
 			lrbp->command_type == UTP_CMD_TYPE_UFS_STORAGE) {
 #ifdef OPLUS_FEATURE_MIDAS
@@ -5897,7 +5877,6 @@ static int __ufshcd_transfer_req_compl(struct ufs_hba *hba,
 
 	/* clear corresponding bits of completed commands */
 	hba->outstanding_reqs ^= completed_reqs;
-	ufs_mtk_biolog_check(hba->outstanding_reqs);
 	ufshcd_vops_res_ctrl(hba, UFS_RESCTL_CMD_COMP);
 	ufs_mtk_auto_hiber8_quirk_handler(hba, true);
 
