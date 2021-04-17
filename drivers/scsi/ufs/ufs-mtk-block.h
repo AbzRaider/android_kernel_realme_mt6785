@@ -20,7 +20,7 @@
 
 #if defined(CONFIG_MTK_UFS_BLOCK_IO_LOG)
 
-int ufs_mtk_biolog_init(void);
+int ufs_mtk_biolog_init(bool qos_allowed);
 int ufs_mtk_biolog_exit(void);
 
 void ufs_mtk_biolog_queue_command(unsigned int taski_id, struct scsi_cmnd *cmd);
@@ -79,6 +79,7 @@ struct ufs_mtk_bio_context {
 #define ufs_mtk_biolog_scsi_done_start(...)
 #define ufs_mtk_biolog_scsi_done_end(...)
 #define ufs_mtk_biolog_check(...)
+#define ufs_mtk_biolog_clk_gating(...)
 
 #endif
 
