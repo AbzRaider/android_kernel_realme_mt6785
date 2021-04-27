@@ -30,6 +30,7 @@
 #include "fpsgo_sysfs.h"
 #include "fbt_cpu.h"
 #include "fps_composer.h"
+#include "uboost.h"
 
 #include <linux/preempt.h>
 #include <linux/trace_events.h>
@@ -44,6 +45,7 @@ static struct kobject *base_kobj;
 static struct rb_root render_pid_tree;
 static struct rb_root BQ_id_list;
 static struct rb_root linger_tree;
+static struct rb_root hwui_info_tree;
 
 static DEFINE_MUTEX(fpsgo_render_lock);
 
@@ -305,6 +307,7 @@ void fpsgo_traverse_linger(unsigned long long cur_ts)
 			FPSGO_LOGI("timeout %d(%p)(%llu),",
 				pos->pid, pos, pos->linger_ts);
 			fpsgo_base2fbt_cancel_jerk(pos);
+			fpsgo_base2uboost_cancel(pos);
 			fpsgo_del_linger(pos);
 			tofree = 1;
 			n = rb_first(&linger_tree);
@@ -316,6 +319,24 @@ void fpsgo_traverse_linger(unsigned long long cur_ts)
 		if (tofree)
 			kfree(pos);
 	}
+}
+
+int fpsgo_base_is_finished(struct render_info *thr)
+{
+	fpsgo_lockprove(__func__);
+	fpsgo_thread_lockprove(__func__, &(thr->thr_mlock));
+
+	if (!fpsgo_base2fbt_is_finished(thr))
+		return 0;
+
+	if (thr->uboost_info.uboosting) {
+		FPSGO_LOGE("(%d, %llu)(%p)(%d, %d)\n",
+			thr->pid, thr->buffer_id, thr, thr->linger,
+			thr->uboost_info.uboosting);
+		return 0;
+	}
+
+	return 1;
 }
 
 struct render_info *fpsgo_search_and_add_render_info(int pid,
@@ -397,7 +418,7 @@ void fpsgo_delete_render_info(int pid,
 	data->p_blc = NULL;
 	data->dep_arr = NULL;
 
-	if (fpsgo_base2fbt_is_finished(data))
+	if (fpsgo_base_is_finished(data))
 		delete = 1;
 	else {
 		delete = 0;
@@ -406,11 +427,63 @@ void fpsgo_delete_render_info(int pid,
 	}
 	fpsgo_thread_unlock(&data->thr_mlock);
 
+	fpsgo_delete_hwui_info(data->pid);
+
 	if (check_max_blc)
 		fpsgo_base2fbt_check_max_blc();
 
 	if (delete == 1)
 		kfree(data);
+}
+
+struct hwui_info *fpsgo_search_and_add_hwui_info(int pid, int force)
+{
+	struct rb_node **p = &hwui_info_tree.rb_node;
+	struct rb_node *parent = NULL;
+	struct hwui_info *tmp = NULL;
+
+	fpsgo_lockprove(__func__);
+
+	while (*p) {
+		parent = *p;
+		tmp = rb_entry(parent, struct hwui_info, entry);
+
+		if (pid < tmp->pid)
+			p = &(*p)->rb_left;
+		else if (pid > tmp->pid)
+			p = &(*p)->rb_right;
+		else
+			return tmp;
+	}
+
+	if (!force)
+		return NULL;
+
+	tmp = kzalloc(sizeof(*tmp), GFP_KERNEL);
+	if (!tmp)
+		return NULL;
+
+	tmp->pid = pid;
+
+	rb_link_node(&tmp->entry, parent, p);
+	rb_insert_color(&tmp->entry, &hwui_info_tree);
+
+	return tmp;
+}
+
+void fpsgo_delete_hwui_info(int pid)
+{
+	struct hwui_info *data;
+
+	fpsgo_lockprove(__func__);
+
+	data = fpsgo_search_and_add_hwui_info(pid, 0);
+
+	if (!data)
+		return;
+
+	rb_erase(&data->entry, &hwui_info_tree);
+	kfree(data);
 }
 
 int fpsgo_has_bypass(void)
@@ -542,7 +615,7 @@ void fpsgo_check_thread_status(void)
 			iter->dep_arr = NULL;
 			n = rb_first(&render_pid_tree);
 
-			if (fpsgo_base2fbt_is_finished(iter))
+			if (fpsgo_base_is_finished(iter))
 				delete = 1;
 			else {
 				delete = 0;
@@ -551,6 +624,8 @@ void fpsgo_check_thread_status(void)
 			}
 
 			fpsgo_thread_unlock(&iter->thr_mlock);
+
+			fpsgo_delete_hwui_info(iter->pid);
 
 			if (delete == 1)
 				kfree(iter);
@@ -608,7 +683,7 @@ void fpsgo_clear(void)
 		iter->dep_arr = NULL;
 		n = rb_first(&render_pid_tree);
 
-		if (fpsgo_base2fbt_is_finished(iter))
+		if (fpsgo_base_is_finished(iter))
 			delete = 1;
 		else {
 			delete = 0;
@@ -618,11 +693,41 @@ void fpsgo_clear(void)
 
 		fpsgo_thread_unlock(&iter->thr_mlock);
 
+		fpsgo_delete_hwui_info(iter->pid);
+
 		if (delete == 1)
 			kfree(iter);
 	}
 
 	fpsgo_render_tree_unlock(__func__);
+}
+
+int fpsgo_uboost_traverse(unsigned long long ts)
+{
+	struct rb_node *n;
+	struct render_info *iter;
+	int result = 0;
+
+	fpsgo_render_tree_lock(__func__);
+
+	for (n = rb_first(&render_pid_tree); n != NULL; n = rb_next(n)) {
+		iter = rb_entry(n, struct render_info, render_key_node);
+		fpsgo_thread_lock(&iter->thr_mlock);
+		fpsgo_base2uboost_compute(iter, ts);
+		fpsgo_thread_unlock(&iter->thr_mlock);
+	}
+
+	fpsgo_render_tree_unlock(__func__);
+
+	return result;
+}
+
+int fpsgo_update_swap_buffer(int pid)
+{
+	fpsgo_render_tree_lock(__func__);
+	fpsgo_search_and_add_hwui_info(pid, 1);
+	fpsgo_render_tree_unlock(__func__);
+	return 0;
 }
 
 static struct BQ_id *fpsgo_get_BQid_by_key(unsigned long long key,
@@ -848,6 +953,7 @@ static ssize_t render_info_show(struct kobject *kobj,
 {
 	struct rb_node *n;
 	struct render_info *iter;
+	struct hwui_info *h_info;
 	struct task_struct *tsk;
 	char temp[FPSGO_SYSFS_MAX_BUFF_SIZE];
 	int pos = 0;
@@ -860,7 +966,7 @@ static ssize_t render_info_show(struct kobject *kobj,
 			"    FRAME_L    ENQ_L    ENQ_S    ENQ_E");
 	pos += length;
 	length = scnprintf(temp + pos, FPSGO_SYSFS_MAX_BUFF_SIZE - pos,
-			"    DEQ_L     DEQ_S    DEQ_E\n");
+			"    DEQ_L     DEQ_S    DEQ_E    (HWUI,UX)\n");
 	pos += length;
 
 	fpsgo_render_tree_lock(__func__);
@@ -881,17 +987,36 @@ static ssize_t render_info_show(struct kobject *kobj,
 			pos += length;
 			length = scnprintf(temp + pos,
 					FPSGO_SYSFS_MAX_BUFF_SIZE - pos,
-					"  %4llu %4llu %4llu %4llu %4llu %4llu\n",
+					"  %4llu %4llu %4llu %4llu %4llu %4llu (%d,%d)\n",
 				iter->enqueue_length,
 				iter->t_enqueue_start, iter->t_enqueue_end,
 				iter->dequeue_length, iter->t_dequeue_start,
-				iter->t_dequeue_end);
+				iter->t_dequeue_end, iter->hwui, iter->ux);
 			pos += length;
 			put_task_struct(tsk);
 		}
 	}
 
 	rcu_read_unlock();
+
+	for (n = rb_first(&linger_tree); n != NULL; n = rb_next(n)) {
+		iter = rb_entry(n, struct render_info, linger_node);
+		length = scnprintf(temp + pos, FPSGO_SYSFS_MAX_BUFF_SIZE - pos,
+			"(%5d %4llu) linger %d uboost %d timer %d\n",
+			iter->pid, iter->buffer_id, iter->linger,
+			iter->uboost_info.uboosting,
+			fpsgo_base2fbt_is_finished(iter));
+		pos += length;
+	}
+
+	/* hwui tree */
+	for (n = rb_first(&hwui_info_tree); n != NULL; n = rb_next(n)) {
+		h_info = rb_entry(n, struct hwui_info, entry);
+		length = scnprintf(temp + pos, FPSGO_SYSFS_MAX_BUFF_SIZE - pos,
+			"HWUI: %d\n", h_info->pid);
+		pos += length;
+	}
+
 	fpsgo_render_tree_unlock(__func__);
 
 	return scnprintf(buf, PAGE_SIZE, "%s", temp);
@@ -1033,6 +1158,7 @@ int init_fpsgo_common(void)
 
 	BQ_id_list = RB_ROOT;
 	linger_tree = RB_ROOT;
+	hwui_info_tree = RB_ROOT;
 
 	if (!fpsgo_sysfs_create_dir(NULL, "common", &base_kobj)) {
 		fpsgo_sysfs_create_file(base_kobj, &kobj_attr_systrace_mask);
