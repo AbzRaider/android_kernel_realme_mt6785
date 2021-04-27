@@ -36,6 +36,7 @@ void (*fpsgo_notify_nn_job_end_fp)(int pid, int tid, unsigned long long mid,
 int (*fpsgo_get_nn_priority_fp)(unsigned int pid, unsigned long long mid);
 void (*fpsgo_get_nn_ttime_fp)(unsigned int pid, unsigned long long mid,
 	int num_step, __u64 *ttime);
+void (*fpsgo_notify_swap_buffer_fp)(int pid);
 
 void (*rsu_getusage_fp)(__s32 *devusage, __u32 *bwusage, __u32 pid);
 void (*rsu_getstate_fp)(int *throttled);
@@ -445,6 +446,9 @@ static long device_ioctl(struct file *filp,
 		if (fpsgo_notify_vsync_fp)
 			fpsgo_notify_vsync_fp();
 		break;
+	case FPSGO_SWAP_BUFFER:
+		if (fpsgo_notify_swap_buffer_fp)
+			fpsgo_notify_swap_buffer_fp(msgKM->tid);
 		break;
 	case FPSGO_GET_FPS:
 		if (fpsgo_get_fps_fp)
