@@ -798,10 +798,38 @@ KBUILD_CFLAGS	+= -mcpu=cortex-a55 -mtune=cortex-a55
 endif
 endif
 
+
+KBUILD_CFLAGS += $(call cc-ifversion, -gt, 0900, \
+			$(call cc-option, -Wno-psabi) \
+			$(call cc-disable-warning,maybe-uninitialized,) \
+			$(call cc-disable-warning,format,) \
+			$(call cc-disable-warning,array-bounds,) \
+			$(call cc-disable-warning,stringop-overflow,))
+
+KBUILD_CFLAGS += $(call cc-ifversion, -lt, 0409, \
+			$(call cc-disable-warning,maybe-uninitialized,))
+
+KBUILD_CFLAGS += $(call cc-ifversion, -gt, 0900, \
+			$(call cc-option, -Wno-psabi) \
+			$(call cc-disable-warning,maybe-uninitialized,) \
+			$(call cc-disable-warning,format,) \
+			$(call cc-disable-warning,array-bounds,) \
+			$(call cc-disable-warning,stringop-overflow,))
+
+KBUILD_CFLAGS += $(call cc-ifversion, -lt, 0409, \
+			$(call cc-disable-warning,maybe-uninitialized,))
+
+ifdef CONFIG_LTO_CLANG
+KBUILD_CFLAG	+= -fwhole-program-vtables
+endif
+
+>>>>>>> 76eecb479738c (Makefile: LTO Tweaks)
+
 ifdef CONFIG_INLINE_OPTIMIZATION
 KBUILD_CFLAGS	+= -mllvm -inline-threshold=2000
 KBUILD_CFLAGS	+= -mllvm -inlinehint-threshold=3000
 KBUILD_CFLAGS   += -mllvm -unroll-threshold=1200
+KBUILD_LDFLAGS  += --plugin-opt=-import-instr-limit=40
 endif
 
 # Tell gcc to never replace conditional load with a non-conditional one
