@@ -128,6 +128,11 @@
  */
 #define KBASE_REG_ZONE_MAX 4ul
 
+/**
+ * Maximum number of GPU memory region zones
+ */
+#define KBASE_REG_ZONE_MAX 4ul
+
 #include "mali_kbase_hwaccess_defs.h"
 
 /* Maximum number of pages of memory that require a permanent mapping, per
