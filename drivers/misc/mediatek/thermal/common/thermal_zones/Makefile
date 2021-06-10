@@ -400,7 +400,11 @@ obj-$(CONFIG_THERMAL) += mtk_ts_charger.o
 #obj-$(CONFIG_THERMAL) += mtk_ts_charger2.o
 
 ifneq ($(CONFIG_MTK_COMBO_WIFI),)
+ifneq ($(filter "MT76%", $(CONFIG_MTK_COMBO_CHIP)),)
+    obj-$(CONFIG_THERMAL) += mtk_ts_wmt_766x.o
+else
     obj-$(CONFIG_THERMAL) += mtk_ts_wmt.o
+endif
 endif
 
 obj-$(CONFIG_THERMAL) += mtk_tsAll.o
