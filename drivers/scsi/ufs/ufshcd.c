@@ -4924,7 +4924,7 @@ out:
  * @hba: per adapter instance
  * @can_sleep: perform sleep or just spin
  */
-static inline void ufshcd_hba_stop(struct ufs_hba *hba, bool can_sleep)
+void ufshcd_hba_stop(struct ufs_hba *hba, bool can_sleep)
 {
 	int err;
 
@@ -4943,6 +4943,7 @@ static inline void ufshcd_hba_stop(struct ufs_hba *hba, bool can_sleep)
 	 */
 	ufshcd_vops_auto_hibern8(hba, false);
 }
+EXPORT_SYMBOL_GPL(ufshcd_hba_stop);
 
 /**
  * MTK PATCH
