@@ -33,7 +33,8 @@
 #define DISPMSG(string, args...)					\
 	do {								\
 		dprec_logger_pr(DPREC_LOGGER_DEBUG, string, ##args);	\
-		pr_debug("[DISP]"string, ##args);			\
+		if (g_mobilelog)					\
+			pr_debug("[DISP]"string, ##args);		\
 	} while (0)
 
 #define DISPCHECK(string, args...)					\
