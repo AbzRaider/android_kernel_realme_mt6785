@@ -58,7 +58,7 @@ static unsigned long perfctl_copy_to_user(void __user *pvTo,
 	return ulBytes;
 }
 
-static void perfctl_notify_fpsgo_nn_begin(
+void perfctl_notify_fpsgo_nn_begin(
 	struct _EARA_NN_PACKAGE *msgKM,
 	struct _EARA_NN_PACKAGE *msgUM)
 {
@@ -91,7 +91,7 @@ static void perfctl_notify_fpsgo_nn_begin(
 	kfree(__target_time);
 }
 
-static void perfctl_notify_fpsgo_nn_end(
+void perfctl_notify_fpsgo_nn_end(
 	struct _EARA_NN_PACKAGE *msgKM,
 	struct _EARA_NN_PACKAGE *msgUM)
 {
@@ -177,6 +177,7 @@ static long eara_ioctl_impl(struct file *filp,
 	}
 
 	switch (cmd) {
+#if defined(CONFIG_MTK_EARA_AI)
 	case EARA_NN_BEGIN:
 		perfctl_notify_fpsgo_nn_begin(msgKM, msgUM);
 		break;
@@ -206,6 +207,36 @@ static long eara_ioctl_impl(struct file *filp,
 				sizeof(struct _EARA_NN_PACKAGE));
 
 		break;
+#else
+	case EARA_NN_BEGIN:
+		/* FALLTHROUGH */
+	case EARA_NN_END:
+		/* FALLTHROUGH */
+		break;
+	case EARA_GETUSAGE:
+		msgKM->bw_usage = 0;
+
+		if (rsu_getusage_fp)
+			rsu_getusage_fp(&msgKM->dev_usage, &msgKM->bw_usage,
+					msgKM->pid);
+		else
+			msgKM->dev_usage = 0;
+
+		perfctl_copy_to_user(msgUM, msgKM,
+				sizeof(struct _EARA_NN_PACKAGE));
+
+		break;
+	case EARA_GETSTATE:
+		if (rsu_getstate_fp)
+			rsu_getstate_fp(&msgKM->thrm_throttled);
+		else
+			msgKM->thrm_throttled = -1;
+
+		perfctl_copy_to_user(msgUM, msgKM,
+				sizeof(struct _EARA_NN_PACKAGE));
+
+		break;
+#endif
 	default:
 		pr_debug(TAG "%s %d: unknown cmd %x\n",
 			__FILE__, __LINE__, cmd);
