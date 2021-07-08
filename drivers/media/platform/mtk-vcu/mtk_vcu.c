@@ -767,6 +767,7 @@ static void vcu_gce_flush_callback(struct cmdq_cb_data data)
 	venc_encode_pmqos_gce_end(vcu->gce_info[j].v4l2_ctx, core_id,
 				vcu->gce_job_cnt[i][core_id].counter);
 	if (atomic_dec_and_test(&vcu->gce_job_cnt[i][core_id]) &&
+		j >= 0 &&
 		vcu->gce_info[j].v4l2_ctx != NULL){
 		if (i == VCU_VENC) {
 			venc_encode_unprepare(vcu->gce_info[j].v4l2_ctx,
@@ -936,7 +937,7 @@ static int vcu_gce_cmd_flush(struct mtk_vcu *vcu,
 		}
 	}
 	vcu_dbg_log("vcu gce_info[%d].v4l2_ctx %p\n",
-		j, vcu->gce_info[j].v4l2_ctx);
+		j, (j >= 0) ? vcu->gce_info[j].v4l2_ctx : NULL);
 	if (i == VCU_VENC) {
 		venc_encode_pmqos_gce_begin(vcu->gce_info[j].v4l2_ctx, core_id,
 			vcu->gce_job_cnt[i][core_id].counter);
@@ -1016,7 +1017,6 @@ static int vcu_gce_cmd_flush(struct mtk_vcu *vcu,
 	/* flush cmd async */
 	cmdq_pkt_flush_threaded(pkt_ptr,
 		vcu_gce_flush_callback, (void *)&vcu_ptr->gce_info[j].buff[i]);
-
 	atomic_inc(&vcu_ptr->gce_info[j].flush_pending);
 	time_check_end(100, strlen(vcodec_param_string));
 
@@ -2189,7 +2189,7 @@ static int mtk_vcu_probe(struct platform_device *pdev)
 	struct device *dev;
 	struct resource *res;
 	int i, ret = 0;
-	unsigned int vcuid;
+	unsigned int vcuid = 0;
 
 	dev_dbg(&pdev->dev, "[VCU] initialization\n");
 
