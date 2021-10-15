@@ -1877,14 +1877,6 @@ static int ion_dma_buf_begin_cpu_access(struct dma_buf *dmabuf,
 	struct ion_buffer *buffer = dmabuf->priv;
 	struct ion_dma_buf_attachment *a;
 
-	/*
-	 * TODO: Move this elsewhere because we don't always need a vaddr
-	 */
-	if (buffer->heap->ops->map_kernel) {
-		mutex_lock(&buffer->lock);
-		vaddr = ion_buffer_kmap_get(buffer);
-		mutex_unlock(&buffer->lock);
-	}
 	if (ion_iommu_heap_type(buffer) ||
 	    buffer->heap->type == (int)ION_HEAP_TYPE_SYSTEM) {
 		IONMSG("%s iommu device, to cache sync\n", __func__);
@@ -1908,12 +1900,6 @@ static int ion_dma_buf_end_cpu_access(struct dma_buf *dmabuf,
 	struct ion_buffer *buffer = dmabuf->priv;
 	struct ion_dma_buf_attachment *a;
 
-	if (buffer->heap->ops->map_kernel) {
-		mutex_lock(&buffer->lock);
-		ion_buffer_kmap_put(buffer);
-		mutex_unlock(&buffer->lock);
-	}
-
 	if (ion_iommu_heap_type(buffer) ||
 	    buffer->heap->type == (int)ION_HEAP_TYPE_SYSTEM) {
 		IONMSG("%s iommu device, to cache sync\n", __func__);
@@ -1934,19 +1920,7 @@ static int ion_dma_buf_end_cpu_access(struct dma_buf *dmabuf,
 static int ion_dma_buf_begin_cpu_access(struct dma_buf *dmabuf,
 					enum dma_data_direction direction)
 {
-	struct ion_buffer *buffer = dmabuf->priv;
-	void *vaddr;
-
-	if (!buffer->heap->ops->map_kernel) {
-		pr_err("%s: map kernel is not implemented by this heap.\n",
-		       __func__);
-		return -ENODEV;
-	}
-
-	mutex_lock(&buffer->lock);
-	vaddr = ion_buffer_kmap_get(buffer);
-	mutex_unlock(&buffer->lock);
-	return PTR_ERR_OR_ZERO(vaddr);
+	return 0;
 }
 
 static int ion_dma_buf_end_cpu_access(struct dma_buf *dmabuf,
