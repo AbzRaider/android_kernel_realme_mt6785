@@ -459,7 +459,14 @@ KBUILD_LDFLAGS_MODULE := -T $(srctree)/scripts/module-common.lds
 LDFLAGS :=
 GCC_PLUGINS_CFLAGS :=
 CLANG_FLAGS :=
+
 OPPO_F2FS_DEBUG := false
+
+VENDOR_EDIT := 1
+ODM_WT_EDIT := yes
+CONFIG_OPPO_FINGERPRINT_PLATFORM := 6785
+COMPILE_PLATFORM=oppo6785
+OPPO_COMPILE_PLATFORM=oppo6785
 
 #ifdef VENDOR_EDIT
 #LiYue@BSP.CHG.Basic, 2019/09/12, add for 806 high/low temp aging
@@ -515,6 +522,13 @@ export KBUILD_AFLAGS_MODULE KBUILD_CFLAGS_MODULE KBUILD_LDFLAGS_MODULE
 export KBUILD_AFLAGS_KERNEL KBUILD_CFLAGS_KERNEL
 export KBUILD_ARFLAGS
 export OPPO_F2FS_DEBUG
+
+export VENDOR_EDIT
+export ODM_WT_EDIT
+export CONFIG_OPPO_FINGERPRINT_PLATFORM
+export COMPILE_PLATFORM
+export OPPO_COMPILE_PLATFORM
+
 
 # When compiling out-of-tree modules, put MODVERDIR in the module
 # tree rather than in the kernel tree. The kernel tree might
