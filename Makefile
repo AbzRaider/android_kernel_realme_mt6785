@@ -459,8 +459,14 @@ KBUILD_LDFLAGS_MODULE := -T $(srctree)/scripts/module-common.lds
 LDFLAGS :=
 GCC_PLUGINS_CFLAGS :=
 CLANG_FLAGS :=
+
 OPPO_F2FS_DEBUG := false
 TARGET_BUILD_VARIANT := user
+VENDOR_EDIT := 1
+ODM_WT_EDIT := yes
+CONFIG_OPPO_FINGERPRINT_PLATFORM := 6785
+COMPILE_PLATFORM=oppo6785
+OPPO_COMPILE_PLATFORM=oppo6785
 
 
 KBUILD_CFLAGS +=   -DVENDOR_EDIT
@@ -508,6 +514,12 @@ export KBUILD_AFLAGS_KERNEL KBUILD_CFLAGS_KERNEL
 export KBUILD_ARFLAGS
 export OPPO_F2FS_DEBUG
 export TARGET_BUILD_VARIANT
+export VENDOR_EDIT
+export ODM_WT_EDIT
+export CONFIG_OPPO_FINGERPRINT_PLATFORM
+export COMPILE_PLATFORM
+export OPPO_COMPILE_PLATFORM
+
 
 # When compiling out-of-tree modules, put MODVERDIR in the module
 # tree rather than in the kernel tree. The kernel tree might
