@@ -354,6 +354,7 @@ void register_all_oc_interrupts(void)
 static void vio18_oc_int_handler(void)
 {
 	static unsigned int times;
+	int __maybe_unused len = 0;
 #if defined(CONFIG_MTK_AEE_FEATURE)
 	int len = 0;
 	char oc_str[30] = "";
