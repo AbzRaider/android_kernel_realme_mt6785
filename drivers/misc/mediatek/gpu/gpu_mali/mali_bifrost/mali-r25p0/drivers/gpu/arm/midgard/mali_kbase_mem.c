@@ -4336,6 +4336,8 @@ int kbase_jd_user_buf_pin_pages(struct kbase_context *kctx,
 
 	lockdep_assert_held(&kctx->reg_lock);
 
+	lockdep_assert_held(&kctx->reg_lock);
+
 	if (WARN_ON(alloc->type != KBASE_MEM_TYPE_IMPORTED_USER_BUF))
 		return -EINVAL;
 
