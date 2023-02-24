@@ -9618,10 +9618,6 @@ out:
 		ktime_to_us(ktime_sub(ktime_get(), start)),
 		hba->curr_dev_pwr_mode, hba->uic_link_state);
 
-	/* MTK PATCH */
-	dev_info(hba->dev, "ss,ret %d,%d us\n", ret,
-		(int)ktime_to_us(ktime_sub(ktime_get(), start)));
-
 	if (!ret)
 		hba->is_sys_suspended = true;
 	return ret;
@@ -9655,10 +9651,6 @@ out:
 	trace_ufshcd_system_resume(dev_name(hba->dev), ret,
 		ktime_to_us(ktime_sub(ktime_get(), start)),
 		hba->curr_dev_pwr_mode, hba->uic_link_state);
-
-	/* MTK PATCH */
-	dev_info(hba->dev, "sr,ret %d,%d us\n", ret,
-		(int)ktime_to_us(ktime_sub(ktime_get(), start)));
 
 	if (!ret)
 		hba->is_sys_suspended = false;
@@ -9695,9 +9687,6 @@ out:
 		ktime_to_us(ktime_sub(ktime_get(), start)),
 		hba->curr_dev_pwr_mode, hba->uic_link_state);
 
-	/* MTK PATCH */
-	dev_info(hba->dev, "rs,ret %d,%d us\n", ret,
-		(int)ktime_to_us(ktime_sub(ktime_get(), start)));
 	return ret;
 }
 EXPORT_SYMBOL(ufshcd_runtime_suspend);
@@ -9744,9 +9733,6 @@ out:
 		ktime_to_us(ktime_sub(ktime_get(), start)),
 		hba->curr_dev_pwr_mode, hba->uic_link_state);
 
-	/* MTK PATCH */
-	dev_info(hba->dev, "rr,ret %d,%d us\n", ret,
-		(int)ktime_to_us(ktime_sub(ktime_get(), start)));
 	return ret;
 }
 EXPORT_SYMBOL(ufshcd_runtime_resume);
