@@ -13,16 +13,6 @@
 
 ###############################################################################
 # Necessary Check
-
-ifeq ($(AUTOCONF_H),)
-    $(error AUTOCONF_H is not defined)
-endif
-
-ccflags-y += -imacros $(AUTOCONF_H)
-
-ifndef TOP
-    TOP := $(srctree)/..
-endif
 # Force build fail on modpost warning
 KBUILD_MODPOST_FAIL_ON_WARNINGS := y
 ###############################################################################
@@ -57,7 +47,7 @@ endif
 ifneq ($(CONFIG_MTK_FMRADIO),)
 
 MODULE_NAME := fmradio_drv
-obj-m += $(MODULE_NAME).o
+obj-y += $(MODULE_NAME).o
 
 ifeq ($(CFG_FM_CHIP),)
     FM_CHIP := mt6631_6635
@@ -150,7 +140,7 @@ ifeq ($(CFG_BUILD_CONNAC2), true)
     $(FM_CHIP)-objs += chips/mt6635/pub/mt6635_2_fm_lib.o
     $(FM_CHIP)-objs += plat/conn_infra.o
 else
-    WMT_SRC_FOLDER := $(TOP)/vendor/mediatek/kernel_modules/connectivity/common
+    WMT_SRC_FOLDER := $(srctree)/drivers/misc/mediatek/connectivity/common
     WMT_INCLUDE_PATH := common_main
 
     ccflags-y += -I$(WMT_SRC_FOLDER)/$(WMT_INCLUDE_PATH)/include \
