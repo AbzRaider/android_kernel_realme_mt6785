@@ -10,8 +10,8 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 # GNU General Public License for more details.
 #
-
+export DISABLE_LOW_BATTERY_PROTECT=yes
 ccflags-y += -I$(srctree)/drivers/misc/mediatek/base/power/include/power_throttling/
-#ccflags-y += -I$(srctree)/drivers/misc/mediatek/include/mt-plat/$(MTK_PLATFORM)/include/mach/
+ccflags-y += -I$(srctree)/drivers/misc/mediatek/include/mt-plat/$(MTK_PLATFORM)/include/mach/
 
 obj-y += mtk_md_power_throttling.o
