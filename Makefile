@@ -461,20 +461,11 @@ GCC_PLUGINS_CFLAGS :=
 CLANG_FLAGS :=
 OPPO_F2FS_DEBUG := false
 
-#ifdef VENDOR_EDIT
-#LiYue@BSP.CHG.Basic, 2019/09/12, add for 806 high/low temp aging
-ifeq ($(OPPO_HIGH_TEMP_VERSION),true)
-KBUILD_CFLAGS += -DCONFIG_HIGH_TEMP_VERSION
-endif
-#endif /* VENDOR_EDIT */
 
-#ifdef  VENDOR_EDIT
-#LiPing-m@PSW.MM.Display.LCD.Machine, 2017/11/03, Add for VENDOR_EDIT macro in kernel
 KBUILD_CFLAGS +=   -DVENDOR_EDIT
 KBUILD_CPPFLAGS += -DVENDOR_EDIT
 CFLAGS_KERNEL +=   -DVENDOR_EDIT
 CFLAGS_MODULE +=   -DVENDOR_EDIT
-#endif /* VENDOR_EDIT */
 
 #ifdef OPLUS_FEATURE_MEMLEAK_DETECT
 #Kui.Zhang@Bsp.Kernel.MM, 2020/05/19, Add for memleak test
