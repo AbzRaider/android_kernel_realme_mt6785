@@ -46,7 +46,7 @@
 #define IOCTL_MNL_NVRAM_MEM_TO_FILE  3
 #define IOCTL_ADC_CAPTURE_ADDR_GET   4
 
-#if defined(CONFIG_MACH_MT6765) || defined(CONFIG_MACH_MT6761) || defined(CONFIG_MACH_MT6768)
+#if defined(CONFIG_MACH_MT6765) || defined(CONFIG_MACH_MT6761) || defined(CONFIG_MACH_MT6768) || defined(CONFIG_MACH_MT6785)
 #define GPS_EMI_MPU_REGION           29
 #define GPS_EMI_BASE_ADDR_OFFSET     (2*SZ_1M + SZ_1M/2 + 0x1000)
 #define GPS_EMI_MPU_SIZE             (SZ_1M + SZ_1M/2 - 0x2000)
