@@ -77,14 +77,14 @@
 #define TIME_3MS  3000000
 #define TIME_2MS  2000000
 #define TIME_1MS  1000000
-#define TARGET_UNLIMITED_FPS 240
-#define TARGET_DEFAULT_FPS 60
+#define TARGET_UNLIMITED_FPS 90
+#define TARGET_DEFAULT_FPS 90
 #define FBTCPU_SEC_DIVIDER 1000000000
 #define NSEC_PER_HUSEC 100000
 #define BIG_CAP 95
 #define TIME_MS_TO_NS  1000000ULL
 #define MAX_DEP_NUM 30
-#define LOADING_WEIGHT 50
+#define LOADING_WEIGHT 70
 #define DEF_RESCUE_PERCENT 33
 #define DEF_RESCUE_NS_TH 0
 #define INVALID_NUM -1
@@ -136,7 +136,7 @@ enum FPSGO_LIMIT_POLICY {
 static struct kobject *fbt_kobj;
 
 static int bhr;
-static int bhr_opp;
+static int bhr_opp=15;
 static int rescue_opp_f;
 static int rescue_enhance_f;
 static int rescue_opp_c;
@@ -158,7 +158,7 @@ static int loading_time_diff;
 static int adjust_loading;
 static int rescue_percent_90;
 static int rescue_percent_120;
-static int fps_level_range;
+static int fps_level_range=90;
 static int check_running;
 
 module_param(bhr, int, 0644);
@@ -195,16 +195,16 @@ static DEFINE_MUTEX(blc_mlock);
 static struct list_head loading_list;
 static struct list_head blc_list;
 
-static int fbt_enable;
-static int fbt_idleprefer_enable;
-static int bypass_flag;
-static int set_idleprefer;
-static int suppress_ceiling;
+static int fbt_enable=1;
+static int fbt_idleprefer_enable=1;
+static int bypass_flag=1;
+static int set_idleprefer=1;
+static int suppress_ceiling=1;
 static int boost_ta;
-static int down_throttle_ns;
-static int fbt_down_throttle_enable;
-static int sync_flag;
-static int fbt_sync_flag_enable;
+static int down_throttle_ns=-1;
+static int fbt_down_throttle_enable=-1;
+static int sync_flag=1;
+static int fbt_sync_flag_enable=1;
 static int set_cap_margin;
 static int fbt_cap_margin_enable;
 static int ultra_rescue;
@@ -224,7 +224,7 @@ static int limit_opp; /* for ceiling limit */
 static int limit_cpu; /* for core limit */
 
 /* set dynamically when policy changes*/
-static int limit_policy;
+static int limit_policy=0;
 static int limit_cap;
 
 static int *clus_max_cap;
@@ -539,7 +539,7 @@ static void fbt_set_cap_margin_locked(int set)
 	else
 		set_capacity_margin_dvfs(def_capacity_margin);
 #if defined(CONFIG_SCHEDUTIL_USE_TL)
-	set_capacity_margin_dvfs_changed(!!set);
+	//set_capacity_margin_dvfs_changed(!!set);
 #endif /* CONFIG_SCHEDUTIL_USE_TL */
 #else
 	if (set)

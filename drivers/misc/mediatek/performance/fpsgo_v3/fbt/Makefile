@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
-
+export OPLUS_FEATURE_SCHEDUTIL_USE_TL=y 
 FPSGO_TOP = $(srctree)/drivers/misc/mediatek/performance/fpsgo_v3
 FBT_TOP = $(FPSGO_TOP)/fbt
 COMP_TOP = $(FPSGO_TOP)/composer
