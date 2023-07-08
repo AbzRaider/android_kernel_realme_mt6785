@@ -9,7 +9,7 @@ ccache -M 100G
 export ARCH=arm64
 export KBUILD_BUILD_HOST=MARKxDEVS
 export KBUILD_BUILD_USER="AbzRaider"
-git clone --depth=1  https://gitlab.com/LeCmnGend/proton-clang.git -b clang-16  clang
+git clone  --depth=1 https://gitlab.com/onettboots/boolx-clang.git -b Clang-17.0_x86 clang 
 
 
 
