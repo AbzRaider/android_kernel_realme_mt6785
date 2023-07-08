@@ -34,12 +34,12 @@
 
 static struct ppm_limit_data *freq_to_set;
 static struct ppm_limit_data *current_freq;
-static int dfrc_fps;
+static int dfrc_fps=90;
 static int limit_freq_at_60;
-static int limit_freq_at_90;
+static int limit_freq_at_90=0;
 static int limit_freq_at_120;
 static int limit_freq_at_144;
-static int syslimiter_disable;
+static int syslimiter_disable=1;
 static int fpsgo_state;
 static int tolerance_percent;
 static int fps60_tolerance;
