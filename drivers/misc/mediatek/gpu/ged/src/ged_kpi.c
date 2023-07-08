@@ -262,7 +262,7 @@ static unsigned int enable_cpu_boost = 1;
 #endif /* GED_KPI_CPU_BOOST */
 static unsigned int enable_gpu_boost = 1;
 static unsigned int is_GED_KPI_enabled = 1;
-static unsigned int ap_self_frc_detection_rate = 20;
+static unsigned int ap_self_frc_detection_rate = 30;
 #ifdef GED_ENABLE_FB_DVFS
 static unsigned int g_force_gpu_dvfs_fallback;
 static int g_fb_dvfs_threshold = 80;
@@ -296,14 +296,14 @@ static unsigned long long g_CRemTimeAccu; /*g_cpu_remained_time_accum*/
 static unsigned long long g_gpu_freq_accum;
 static unsigned int g_frame_count;
 
-static int gx_game_mode;
-static int gx_boost_on;
+static int gx_game_mode=0;
+static int gx_boost_on=0;
 #ifdef GED_KPI_CPU_BOOST
-static int gx_force_cpu_boost;
-static int gx_top_app_pid;
-static int enable_game_self_frc_detect;
+static int gx_force_cpu_boost=1;
+static int gx_top_app_pid=1;
+static int enable_game_self_frc_detect=1;
 #endif /* GED_KPI_CPU_BOOST */
-static unsigned int gx_fps;
+static unsigned int gx_fps=1;
 static unsigned int gx_cpu_time_avg;
 static unsigned int gx_gpu_time_avg;
 static unsigned int gx_response_time_avg;
@@ -314,12 +314,12 @@ static unsigned int gx_gpu_freq_avg;
 #ifdef GED_KPI_CPU_BOOST
 static int boost_accum_cpu;
 /* for non-GED_KPI_MAX_FPS-FPS cases */
-static long target_t_cpu_remained = 16000000;
+static long target_t_cpu_remained = 15600000;
 /* static long target_t_cpu_remained_min = 8300000; */
 /* default 0.5 vsync period */
-static int cpu_boost_policy;
-static int boost_extra;
-static int boost_amp;
+static int cpu_boost_policy=-1;
+static int boost_extra=1;
+static int boost_amp=1;
 static int deboost_reduce;
 static int boost_upper_bound = 100;
 static void (*ged_kpi_cpu_boost_policy_fp)(struct GED_KPI_HEAD *psHead,
@@ -477,7 +477,7 @@ static void ged_kpi_PushCurFps_and_DetectAppSelfFrc(int fps)
 	int fps_grp[G_K_G_S_FRC_D_M_W_S];
 	int i;
 
-	if (enable_game_self_frc_detect && fps > 18 && fps <= 61) {
+	if (enable_game_self_frc_detect && fps > 18 && fps <= 91) {
 		fps_records[cur_fps_idx] = fps;
 		if (reset == 0) {
 			if (fps > target_fps_4_main_head + 1
