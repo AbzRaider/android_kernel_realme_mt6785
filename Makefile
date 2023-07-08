@@ -648,7 +648,8 @@ CFLAGS_MODULE +=   -DVENDOR_EDIT
 -include OplusKernelEnvConfig.mk
 #endif /* OPLUS_ARCH_INJECT */
 
-
+#OPLUS_TL
+export OPLUS_FEATURE_SCHEDUTIL_USE_TL=y
 ifeq ($(KBUILD_EXTMOD),)
 # Additional helpers built in scripts/
 # Carefully list dependencies so we do not try to build scripts twice

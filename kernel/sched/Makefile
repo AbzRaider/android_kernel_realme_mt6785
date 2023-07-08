@@ -29,6 +29,8 @@ obj-$(CONFIG_SCHED_TUNE) += tune.o
 obj-$(CONFIG_CGROUP_CPUACCT) += cpuacct.o
 obj-$(CONFIG_CPU_FREQ) += cpufreq.o
 obj-$(CONFIG_CPU_FREQ_GOV_SCHEDUTIL) += cpufreq_schedutil.o
+export OPLUS_FEATURE_SCHEDUTIL_USE_TL=y
+export OPLUS_FEATURE_CORE_CTL=y
 obj-$(CONFIG_MEMBARRIER) += membarrier.o
 #ifdef OPLUS_FEATURE_CORE_CTL
 obj-$(CONFIG_SCHED_CORE_CTL) += core_ctl.o

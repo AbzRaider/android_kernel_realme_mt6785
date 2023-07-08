@@ -36,11 +36,11 @@ unsigned long boosted_cpu_util(int cpu);
 void (*cpufreq_notifier_fp)(int cluster_id, unsigned long freq);
 EXPORT_SYMBOL(cpufreq_notifier_fp);
 
-#define SUGOV_KTHREAD_PRIORITY	50
+#define SUGOV_KTHREAD_PRIORITY	85
 
 #if defined(OPLUS_FEATURE_SCHEDUTIL_USE_TL) && defined(CONFIG_SCHEDUTIL_USE_TL)
 /* Target load.  Lower values result in higher CPU speeds. */
-#define DEFAULT_TARGET_LOAD 80
+#define DEFAULT_TARGET_LOAD 65
 static unsigned int default_target_loads[] = {DEFAULT_TARGET_LOAD};
 #endif
 
