@@ -144,10 +144,10 @@ static unsigned int ppm_get_cpu_temp(enum ppm_cluster cluster)
 
 	switch (cluster) {
 	case PPM_CLUSTER_L:
-		temp = get_immediate_cpuL_wrap() / 1000;
+		temp = 55;
 		break;
 	case PPM_CLUSTER_B:
-		temp = get_immediate_cpuB_wrap() / 1000;
+		temp = 55;
 		break;
 	default:
 		ppm_err("@%s: invalid cluster id = %d\n", __func__, cluster);
@@ -358,9 +358,9 @@ unsigned int mt_ppm_get_leakage_mw(enum ppm_cluster_lkg cluster)
 			if (!cl_status[i].core_num)
 				continue;
 #ifdef CONFIG_THERMAL
-			temp = ppm_get_cpu_temp((enum ppm_cluster)i);
+			temp = 55;
 #else
-			temp = 85;
+			temp = 55;
 #endif
 			volt = mt_cpufreq_get_cur_volt(i) / 100;
 			dev_id = ppm_get_spower_devid((enum ppm_cluster)i);
@@ -371,9 +371,9 @@ unsigned int mt_ppm_get_leakage_mw(enum ppm_cluster_lkg cluster)
 		}
 	} else {
 #ifdef CONFIG_THERMAL
-		temp = ppm_get_cpu_temp((enum ppm_cluster)cluster);
+		temp = 55;
 #else
-		temp = 85;
+		temp = 55;
 #endif
 		volt = mt_cpufreq_get_cur_volt(cluster) / 100;
 		dev_id = ppm_get_spower_devid((enum ppm_cluster)cluster);
