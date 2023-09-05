@@ -254,7 +254,7 @@ static spinlock_t gs_hashtableLock;
 static struct GED_KPI g_asKPI[GED_KPI_TOTAL_ITEMS];
 static int g_i32Pos;
 static GED_THREAD_HANDLE ghThread;
-static unsigned int gx_dfps; /* variable to fix FPS*/
+static unsigned int gx_dfps=90; /* variable to fix FPS*/
 static unsigned int gx_frc_mode; /* variable to fix FRC mode*/
 
 #ifdef GED_KPI_CPU_BOOST
@@ -314,10 +314,10 @@ static unsigned int gx_gpu_freq_avg;
 #ifdef GED_KPI_CPU_BOOST
 static int boost_accum_cpu;
 /* for non-GED_KPI_MAX_FPS-FPS cases */
-static long target_t_cpu_remained = 16000000;
+static long target_t_cpu_remained = 14600000;
 /* static long target_t_cpu_remained_min = 8300000; */
 /* default 0.5 vsync period */
-static int cpu_boost_policy;
+static int cpu_boost_policy=-1;
 static int boost_extra;
 static int boost_amp;
 static int deboost_reduce;
@@ -477,7 +477,7 @@ static void ged_kpi_PushCurFps_and_DetectAppSelfFrc(int fps)
 	int fps_grp[G_K_G_S_FRC_D_M_W_S];
 	int i;
 
-	if (enable_game_self_frc_detect && fps > 18 && fps <= 61) {
+	if (enable_game_self_frc_detect && fps > 18 && fps <= 91) {
 		fps_records[cur_fps_idx] = fps;
 		if (reset == 0) {
 			if (fps > target_fps_4_main_head + 1
@@ -875,7 +875,7 @@ static inline void ged_kpi_cpu_boost_policy_0(struct GED_KPI_HEAD *psHead,
 			t_cpu_target = (long long)psKPI->t_cpu_target;
 		} else {
 			/* when GPU bound, chase GPU frame time as target */
-			t_cpu_target = t_gpu_cur + 2000000; /* 2 ms buffer*/
+			t_cpu_target = t_gpu_cur + 2100000; /* 2 ms buffer*/
 		}
 
 		if (psHead->target_fps == GED_KPI_MAX_FPS) {
