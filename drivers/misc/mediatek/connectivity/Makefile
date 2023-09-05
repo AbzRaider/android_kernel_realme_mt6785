@@ -102,10 +102,6 @@ endif
         export MTK_ANDROID_EMI=y
         export ADAPTOR_OPTS=$(MTK_COMBO_CHIP)
 
-<<<<<<< HEAD
-        # Remove debugging
-        export TARGET_BUILD_VARIANT=user
-=======
         WLAN_IP_SET_1_SERIES := 6765 6761 6885 6893
         WLAN_IP_SET_2_SERIES := 3967 6785
         WLAN_IP_SET_3_SERIES := 6779 6873 6853
@@ -119,7 +115,6 @@ endif
             $(info WIFI_IP_SET is 1)
             export WIFI_IP_SET=1
         endif
->>>>>>> 4697b3c24c4a (drivers/misc/mediatek : Revert Xiaomi Connectivity Modules)
 
         # Do build-in for xxx.c checking
         subdir-ccflags-y += -D MTK_WCN_REMOVE_KERNEL_MODULE
