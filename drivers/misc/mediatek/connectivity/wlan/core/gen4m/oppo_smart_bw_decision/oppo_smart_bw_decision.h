@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /***********************************************************
 ** Copyright (C), 2008-2019, OPPO Mobile Comm Corp., Ltd.
 ** VENDOR_EDIT
@@ -15,7 +16,7 @@
 #ifdef OPLUS_FEATURE_WIFI_SMART_BW
 #ifndef _OPPO_SMART_BW_DECISION_H
 #define _OPPO_SMART_BW_DECISION_H
-#include <linux/oplus_kevent.h>
+
 
 //@2019/10/28: Gen4m missing too many define, define here to let core code needn't modify
 typedef struct BSS_DESC BSS_DESC_T, *P_BSS_DESC_T;
@@ -24,6 +25,7 @@ typedef enum ENUM_BAND ENUM_BAND_T, *P_ENUM_BAND_T;
 typedef enum ENUM_CHANNEL_WIDTH ENUM_CHANNEL_WIDTH_T, *P_ENUM_CHANNEL_WIDTH_P;
 typedef enum ENUM_CHNL_EXT ENUM_CHNL_EXT_T, *P_ENUM_CHNL_EXT_T;
 typedef unsigned char BOOL, *PBOOL, BOOLEAN, *PBOOLEAN;
+
 #ifndef _OSAL_TYPEDEF_H_
 typedef void VOID, *PVOID, **PPVOID;
 #endif
