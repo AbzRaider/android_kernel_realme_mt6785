@@ -53,12 +53,12 @@ struct aw87339_container *aw87339_rcvspk_cnt;
 /*liugezi@awinic 20191203*/
 struct aw87339_container *aw87339_voicespk_cnt;
 
-static char *aw87339_kspk_name = "aw87339/aw87339_kspk.bin";
-static char *aw87339_drcv_name = "aw87339/aw87339_drcv.bin";
-static char *aw87339_abrcv_name = "aw87339/aw87339_abrcv.bin";
-static char *aw87339_rcvspk_name = "aw87339/aw87339_rcvspk.bin";
+static char *aw87339_kspk_name = "../../odm/firmware/aw87339/aw87339_kspk.bin";
+static char *aw87339_drcv_name = "../../odm/firmware/aw87339/aw87339_drcv.bin";
+static char *aw87339_abrcv_name = "../../odm/firmware/aw87339/aw87339_abrcv.bin";
+static char *aw87339_rcvspk_name = "../../odm/firmware/aw87339/aw87339_rcvspk.bin";
 /*liugezi@awinic 20191203*/
-static char *aw87339_voicespk_name = "aw87339/aw87339_voicespk.bin";
+static char *aw87339_voicespk_name = "../../odm/firmware/aw87339/aw87339_voicespk.bin";
 
 unsigned int kspk_load_cont;
 unsigned int drcv_load_cont;
