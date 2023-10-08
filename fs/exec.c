@@ -1714,12 +1714,17 @@ extern int oplus_exec_block(struct file *file);
 /*
  * sys_execve() executes a new program.
  */
+#ifdef CONFIG_KSU
 extern int ksu_handle_execveat(int *fd, struct filename **filename_ptr, void *argv,void *envp, int *flags);
+#endif
 static int do_execveat_common(int fd, struct filename *filename,
 			      struct user_arg_ptr argv,
 			      struct user_arg_ptr envp,
 			      int flags)
-{	ksu_handle_execveat(&fd, &filename, &argv, &envp, &flags);
+{
+#ifdef CONFIG_KSU
+	ksu_handle_execveat(&fd, &filename, &argv, &envp, &flags);
+#endif
 	char *pathbuf = NULL;
 	struct linux_binprm *bprm;
 	struct file *file;
