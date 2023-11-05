@@ -5915,6 +5915,7 @@ static struct spi_driver tp_spi_driver = {
         .owner  = THIS_MODULE,
         .of_match_table = tp_match_table,
         .pm = &tp_pm_ops,
+        .probe_type = PROBE_PREFER_ASYNCHRONOUS,
     },
 };
 
