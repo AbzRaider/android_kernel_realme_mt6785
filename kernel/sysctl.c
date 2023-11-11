@@ -101,6 +101,9 @@
 #endif
 
 #if defined(CONFIG_SYSCTL)
+#if defined(CONFIG_OPLUS_FEATURE_HUNG_TASK_ENHANCE) && defined(CONFIG_OPLUS_FEATURE_DEATH_HEALER)
+#include <soc/oplus/system/hung_task_enhance.h>
+#endif
 
 /* External variables not in a header file. */
 extern int suid_dumpable;
@@ -141,6 +144,11 @@ static int two_hundred = 200;
 /*Huacai.Zhou@Tech.Kernel.MM, 2020-03-23,add foreground io opt*/
 unsigned int sysctl_fg_io_opt = 1;
 #endif /*OPLUS_FEATURE_FG_IO_OPT*/
+#if defined(OPLUS_FEATURE_ZRAM_OPT) && defined(CONFIG_OPLUS_ZRAM_OPT)
+/*yixue.ge@PSW.BSP.Kernel.Driver 20170720 add for add direct_vm_swappiness*/
+extern int direct_vm_swappiness;
+static int two_hundred = 200;
+#endif /*OPLUS_FEATURE_ZRAM_OPT*/
 
 static int one_thousand = 1000;
 #ifdef CONFIG_PRINTK
@@ -1293,6 +1301,36 @@ static struct ctl_table kern_table[] = {
 		.proc_handler	= proc_dointvec_minmax,
 		.extra1		= &neg_one,
 	},
+#ifdef CONFIG_OPLUS_FEATURE_HUNG_TASK_ENHANCE
+	{
+		.procname	= "hung_task_selective_monitoring",
+		.data		= &sysctl_hung_task_selective_monitoring,
+		.maxlen		= sizeof(int),
+		.mode		= 0644,
+		.proc_handler	= proc_dointvec_minmax,
+		.extra1		= &zero,
+		.extra2		= &one,
+	},
+#endif
+#if defined(CONFIG_OPLUS_FEATURE_HUNG_TASK_ENHANCE) && defined(CONFIG_OPLUS_FEATURE_DEATH_HEALER)
+/* record the hung task killing */
+	{
+		.procname	= "hung_task_kill",
+		.data		= &sysctl_hung_task_oppo_kill,
+		.maxlen		= 128,
+		.mode		= 0666,
+		.proc_handler	= proc_dostring,
+	},
+/* Foreground background optimization,change max io count */
+	{
+		.procname	= "hung_task_maxiowait_count",
+		.data		= &sysctl_hung_task_maxiowait_count,
+		.maxlen		= sizeof(int),
+		.mode		= 0644,
+		.proc_handler	= proc_dointvec_minmax,
+		.extra1		= &five,
+	},
+#endif
 #endif
 #ifdef CONFIG_RT_MUTEXES
 	{
@@ -1619,8 +1657,25 @@ static struct ctl_table vm_table[] = {
 #else
 		.extra2		= &two_hundred,
 #endif
+#if defined(OPLUS_FEATURE_ZRAM_OPT) && defined(CONFIG_OPLUS_ZRAM_OPT)
+/*yixue.ge@PSW.BSP.Kernel.Driver 20170720 add for add direct_vm_swappiness*/
+		.extra2		= &two_hundred,
+#else
 		.extra2		= &one_hundred,
+#endif /*OPLUS_FEATURE_ZRAM_OPT*/
 	},
+#if defined(OPLUS_FEATURE_ZRAM_OPT) && defined(CONFIG_OPLUS_ZRAM_OPT)
+/*yixue.ge@PSW.BSP.Kernel.Driver 20170720 add for add direct_vm_swappiness*/
+	{
+		.procname	= "direct_swappiness",
+		.data		= &direct_vm_swappiness,
+		.maxlen 	= sizeof(direct_vm_swappiness),
+		.mode		= 0644,
+		.proc_handler	= proc_dointvec_minmax,
+		.extra1 	= &zero,
+		.extra2 	= &two_hundred,
+	},
+#endif
 #ifdef CONFIG_HUGETLB_PAGE
 	{
 		.procname	= "nr_hugepages",

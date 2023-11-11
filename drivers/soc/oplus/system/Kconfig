@@ -29,9 +29,12 @@ config OPPO_DEVICE_IFNO
 
 source "drivers/soc/oplus/system/feedback/Kconfig"
 source "drivers/soc/oplus/system/uboot_log/Kconfig"
+source "drivers/soc/oplus/system/shutdown_detect/Kconfig"
 source "drivers/soc/oplus/system/slabtrace/Kconfig"
 source "drivers/soc/oplus/system/oplus_project/Kconfig"
 source "drivers/soc/oplus/system/qcom_minidump/Kconfig"
+source "drivers/soc/oplus/system/hung_task_enhance/Kconfig"
+source "drivers/soc/oplus/system/oppo_phoenix/Kconfig"
 source "drivers/soc/oplus/system/oppo_pmic_monitor/Kconfig"
 source "drivers/soc/oplus/system/oppo_saupwk/Kconfig"
 source "drivers/soc/oplus/system/project_info/Kconfig"
