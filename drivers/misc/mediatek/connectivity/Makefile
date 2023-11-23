@@ -72,7 +72,11 @@ endif
         obj-y += wlan/core/gen4m/
 
     endif
-
+# FMRadio
+ifeq ($(CONFIG_MTK_FMRADIO),y)
+    export CFG_FM_CHIP_ID=6785
+    export CFG_FM_CHIP=mt6631
+endif    
     # Do build-in for rest of connectivity drivers
     obj-y += bt/mt66xx/legacy/
     obj-y += fmradio/
