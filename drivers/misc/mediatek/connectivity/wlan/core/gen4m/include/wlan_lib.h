@@ -143,6 +143,11 @@
 /* Support Random P2P MAC */
 #define WIFI_FEATURE_P2P_RAND_MAC  (0x80000000)
 
+#ifdef OPLUS_BUG_COMPATIBILITY
+/* Support DBDC */
+#define WIFI_FEATURE_DBDC               (0x200000000L)
+#endif /* OPLUS_BUG_COMPATIBILITY */
+
 /* note: WIFI_FEATURE_GSCAN be enabled just for ACTS test item: scanner */
 #define WIFI_HAL_FEATURE_SET ((WIFI_FEATURE_P2P) |\
 			      (WIFI_FEATURE_SOFT_AP) |\
@@ -207,7 +212,11 @@
 #define WLAN_CFG_KEY_LEN_MAX	32	/* include \x00  EOL */
 #define WLAN_CFG_VALUE_LEN_MAX	128	/* include \x00 EOL */
 #define WLAN_CFG_FLAG_SKIP_CB	BIT(0)
-#define WLAN_CFG_FILE_BUF_SIZE	8192
+
+//#ifdef VENDOR_EDIT
+//#define WLAN_CFG_FILE_BUF_SIZE	2048
+//#else
+#define WLAN_CFG_FILE_BUF_SIZE	3072
 #define WLAN_CFG_REC_ENTRY_NUM_MAX 200
 
 
@@ -1177,6 +1186,18 @@ struct WIFI_LINK_QUALITY_INFO {
 	uint64_t u8LastTxTotalCount;
 	uint64_t u8LastTxFailCount;
 	uint64_t u8LastIdleSlotCount;
+#ifdef OPLUS_FEATURE_WIFI_SMART_BW
+	unsigned long long u8LastTxRetryCount;
+
+	unsigned long long u8LastRxTotalCount;	/* Rx total accumulated count */
+	unsigned long long u8LastRxErrCount;
+
+	/* L3 LQ status */
+	int iL3CSpeed; /* oppo_sla current_speed */
+	int iL3CongestionFlag; /* congestion_flag 0: normal, 1: middle, 2: high */
+
+	OS_SYSTIME rRecordLQSysTime;    /* the recorded connect sys time */
+#endif
 };
 #endif /* CFG_SUPPORT_LINK_QUALITY_MONITOR */
 

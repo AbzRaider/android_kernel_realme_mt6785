@@ -109,6 +109,7 @@ extern UINT32 gBtDbgLevel;
 
 struct bt_dbg_st {
 	bool trx_enable;
+        bool audio_cr_dbug;
 	uint16_t trx_opcode;
 	struct completion trx_comp;
 	void(*trx_cb) (char *buf, int len);

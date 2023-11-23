@@ -487,9 +487,20 @@ struct PARAM_CUSTOM_KEY_CFG_STRUCT g_rDefaulteSetting[] = {
 	*	"Operation:default 0"
 	*   }
 	*/
-	/* enable WIFI FW coex feature */
-	{"CoexFddSupport", "0x1"},
-	{"CoexTddCotxSupport", "0x1"},
+#ifdef OPLUS_BUG_STABILITY
+	//add for: [ modify Cw/TxOp param to compatible with gen4m]
+	{"WmmParamCwMax", "3"},
+	{"WmmParamCwMin", "3"},
+	{"WmmParamAifsN", "2"},
+	{"WmmParamCfgEn", "1"},
+	{"Cert11gModeEnable", "0"},
+
+	//Add for add beacon to 10+10 before disconnect to avoid multiple disconnect
+	{"ScreenOnBeaconTimeoutCount", "10"},
+	//Add for check if any data at the last 2s,if has then not disconnect
+	{"BeaconTimoutFilterDurationMs","2000"},
+#endif /* OPLUS_BUG_STABILITY */
+
 	{"AdapScan", "0x0", WLAN_CFG_DEFAULT},
 #if CFG_SUPPORT_IOT_AP_BLACKLIST
 	/*Fill Iot AP blacklist here*/
@@ -502,6 +513,25 @@ struct PARAM_CUSTOM_KEY_CFG_STRUCT g_rDefaulteSetting[] = {
 	{"DropPacketsIPV6Low", "0x1"},
 	{"Sta2gBw", "1"},
 #endif
+#ifdef OPLUS_BUG_STABILITY
+	//Add for: filter SSDP packets
+	{"DropPacketsIPV4Low", "0x12DE"},
+	{"DropPacketsIPV4High", "0x0"},
+
+	//Add for: filter IPV6 multicast packets
+	{"DropPacketsIPV6Low", "0x2"},
+	{"DropPacketsIPV6High", "0x0"},
+
+	//Add for: 2.4G mask invalid issue
+	{"2GTxMaskDPDOn", "1"},
+	{"2GTxPMinus1dbAtHighTemp", "1"},
+	{"TssiGroupBackupRestore", "1"},
+#endif /* OPLUS_BUG_STABILITY */
+
+#ifdef OPLUS_BUG_STABILITY
+	//Add for: adjust beacon miss report time as 3 seconds, 5*100ms is a round
+	{"LdtBTONullHwLifeTime", "5"},
+#endif /* OPLUS_BUG_STABILITY */
 };
 
 /*******************************************************************************
@@ -713,8 +743,9 @@ void wlanAdapterDestroy(IN struct ADAPTER *prAdapter)
 	if (!prAdapter)
 		return;
 
-	scanLogCacheFlushAll(&(prAdapter->rWifiVar.rScanInfo.rScanLogCache),
-		LOG_SCAN_D2D, SCAN_LOG_MSG_MAX_LEN);
+	scanLogCacheFlushAll(prAdapter,
+		&(prAdapter->rWifiVar.rScanInfo.rScanLogCache),
+		LOG_SCAN_D2D);
 
 	kalMemFree(prAdapter, VIR_MEM_TYPE, sizeof(struct ADAPTER));
 }
@@ -6927,7 +6958,7 @@ void wlanBindBssIdxToNetInterface(IN struct GLUE_INFO *prGlueInfo,
  * @param prGlueInfo                     Pointer of prGlueInfo Data Structure
  * @param ucNetInterfaceIndex       Index of network interface
  *
- * @return UINT_8                         Index of BSS
+ * @return unsigned char                         Index of BSS
  */
 /*----------------------------------------------------------------------------*/
 uint8_t wlanGetBssIdxByNetInterface(IN struct GLUE_INFO
@@ -7205,9 +7236,24 @@ void wlanInitFeatureOption(IN struct ADAPTER *prAdapter)
 	 */
 	prWifiVar->ucStaBandwidth = (uint8_t) wlanCfgGetUint32(
 				prAdapter, "StaBw", MAX_BW_160MHZ);
+#ifndef OPLUS_FEATURE_WIFI_SMART_BW
+	/* Modify for smart band-width decision */
 	prWifiVar->ucSta2gBandwidth = (uint8_t) wlanCfgGetUint32(
+
 				prAdapter, "Sta2gBw", MAX_BW_40MHZ);
-	prWifiVar->ucSta5gBandwidth = (uint8_t) wlanCfgGetUint32(
+#else
+	//@2019/12/3 let prWifiVar->ucSta2gBandwidth in wlanInitFeatureOption can be controlled by smart feature option
+	//which means when feature off, driver STA BW cap will same with the original code
+	if (prAdapter->rSmartBW.smart_bw_params.SELECT_BW_WHEN_CONNECT_FEATRUE_ENABLE) {
+			prWifiVar->ucSta2gBandwidth = (unsigned char) wlanCfgGetUint32(
+							prAdapter, "Sta2gBw", MAX_BW_40MHZ);
+	} else {
+			prWifiVar->ucSta2gBandwidth = (uint8_t) wlanCfgGetUint32(
+			prAdapter, "Sta2gBw", MAX_BW_40MHZ);
+	}
+#endif
+
+prWifiVar->ucSta5gBandwidth = (uint8_t) wlanCfgGetUint32(
 				prAdapter, "Sta5gBw", MAX_BW_80MHZ);
 	/* GC,GO */
 	prWifiVar->ucP2p2gBandwidth = (uint8_t) wlanCfgGetUint32(
@@ -7276,7 +7322,11 @@ void wlanInitFeatureOption(IN struct ADAPTER *prAdapter)
 	prWifiVar->aucMtkFeature[3] = 0xff;
 	prWifiVar->ucGbandProbe256QAM = (uint8_t) wlanCfgGetUint32(
 					prAdapter, "Probe256QAM",
+#ifdef OPLUS_BUG_STABILITY
+					FEATURE_DISABLED);
+#else
 					FEATURE_ENABLED);
+#endif /* OPLUS_BUG_STABILITY */
 #endif
 #if CFG_SUPPORT_VHT_IE_IN_2G
 	prWifiVar->ucVhtIeIn2g = (uint8_t) wlanCfgGetUint32(
@@ -9745,15 +9795,13 @@ void wlanTxLifetimeTagPacket(IN struct ADAPTER *prAdapter,
 			/* Enable packet lifetime profiling */
 			prPktProfile->fgIsValid = TRUE;
 
-			/* Packet enqueue time */
-			prPktProfile->rEnqueueTimestamp = (OS_SYSTIME)
-							  kalGetTimeTick();
 			/* Packet arrival time at kernel Hard Xmit */
-			if (!prMsduInfo->prPacket)
-                                break;
 			prPktProfile->rHardXmitArrivalTimestamp =
 				GLUE_GET_PKT_ARRIVAL_TIME(prMsduInfo->prPacket);
 
+			/* Packet enqueue time */
+			prPktProfile->rEnqueueTimestamp = (OS_SYSTIME)
+							  kalGetTimeTick();
 		}
 		break;
 
@@ -11662,10 +11710,23 @@ uint64_t wlanGetSupportedFeatureSet(IN struct GLUE_INFO *prGlueInfo)
 {
 	uint64_t u8FeatureSet = WIFI_HAL_FEATURE_SET;
 	struct REG_INFO *prRegInfo;
+	#ifdef OPLUS_BUG_COMPATIBILITY
+	//Add for: inform if DBDC supports
+	struct ADAPTER *prAdapter;
+	#endif /* OPLUS_BUG_COMPATIBILITY */
 
 	prRegInfo = &(prGlueInfo->rRegInfo);
 	if ((prRegInfo != NULL) && (prRegInfo->ucSupport5GBand))
 		u8FeatureSet |= WIFI_FEATURE_INFRA_5G;
+
+	#ifdef OPLUS_BUG_COMPATIBILITY
+	//Add for: inform if DBDC supports
+	prAdapter = prGlueInfo->prAdapter;
+    if (prAdapter != NULL &&
+        prAdapter->rWifiVar.eDbdcMode == ENUM_DBDC_MODE_DYNAMIC) {
+		u8FeatureSet |= WIFI_FEATURE_DBDC;
+	}
+	#endif /* OPLUS_BUG_COMPATIBILITY */
 
 	return u8FeatureSet;
 }
@@ -11904,6 +11965,15 @@ int wlanGetMaxTxRate(IN struct ADAPTER *prAdapter,
 	if (ucAPBwPermitted < ucBw)
 		ucBw = ucAPBwPermitted;
 
+#ifdef OPLUS_FEATURE_WIFI_SMART_BW
+	//MTK code only check STA cap & AP cap, need check the real assoc BW
+	//@2019/12/4: fgAssoc40mBwAllowed will restore to 0 when connect success, fg40mBwAllowed keep the value
+	DBGLOG(SW4, TRACE, "prBssInfo->fgAssoc40mBwAllowed = %d, prBssInfo->fg40mBwAllowed = %d, prAdapter->rSmartBW.ucSelectBW = %d\n",
+			prBssInfo->fgAssoc40mBwAllowed, prBssInfo->fg40mBwAllowed, prAdapter->rSmartBW.ucSelectBW);
+	if (prAdapter->rSmartBW.smart_bw_params.SELECT_BW_WHEN_CONNECT_FEATRUE_ENABLE &&
+			!prBssInfo->fg40mBwAllowed) ucBw = MAX_BW_20MHZ;
+#endif /* OPLUS_FEATURE_WIFI_SMART_BW */
+
 	/* get Short GI Tx capability */
 	if ((prStaRec->u2HtCapInfo & HT_CAP_INFO_SHORT_GI_20M) ==
 	    HT_CAP_INFO_SHORT_GI_20M) {
@@ -12055,6 +12125,10 @@ uint32_t wlanLinkQualityMonitor(struct GLUE_INFO *prGlueInfo, bool bFgIsOid)
 	uint8_t arBssid[PARAM_MAC_ADDR_LEN];
 	uint32_t u4Status = WLAN_STATUS_FAILURE;
 	uint8_t ucBssIndex = AIS_DEFAULT_INDEX;
+#ifdef OPLUS_FEATURE_WIFI_SMART_BW
+	int payload[5];
+	int idleSlotRatio = 0;
+#endif
 
 	if (kalGetMediaStateIndicated(prGlueInfo,
 		ucBssIndex) !=
@@ -12110,7 +12184,12 @@ uint32_t wlanLinkQualityMonitor(struct GLUE_INFO *prGlueInfo, bool bFgIsOid)
 #if CFG_SUPPORT_DATA_STALL
 	wlanCustomMonitorFunction(prAdapter, prLinkQualityInfo, ucBssIndex);
 #endif
-
+#ifdef OPLUS_FEATURE_WIFI_SMART_BW
+	/* Just get 100% ratio, so it caculate as: (100 * (slottime * 9/1000))/scan duration */
+	/* So it's (slottime * 9) / (10 * scan duration(ms) ) */
+	if (prLinkQualityInfo->u4HwMacAwakeDuration) {
+			idleSlotRatio = (prLinkQualityInfo->u8DiffIdleSlotCount * 9) / (10 * prLinkQualityInfo->u4HwMacAwakeDuration);
+	}
 	DBGLOG(SW4, INFO,
 	       "Link Quality: Tx(rate:%u, total:%lu, retry:%lu, fail:%lu, RTS fail:%lu, ACK fail:%lu), Rx(rate:%u, total:%lu, dup:%u, error:%lu), PER(%u), Congestion(idle slot:%lu, diff:%lu, AwakeDur:%u)\n",
 	       prLinkQualityInfo->u4CurTxRate, /* current tx link speed */
@@ -12127,8 +12206,24 @@ uint32_t wlanLinkQualityMonitor(struct GLUE_INFO *prGlueInfo, bool bFgIsOid)
 	       /* congestion stats */
 	       prLinkQualityInfo->u8IdleSlotCount, /* idle slot */
 	       prLinkQualityInfo->u8DiffIdleSlotCount, /* idle slot diff */
-	       prLinkQualityInfo->u4HwMacAwakeDuration
-	);
+	       prLinkQualityInfo->u4HwMacAwakeDuration,
+           idleSlotRatio
+		);
+#endif
+#ifdef OPLUS_FEATURE_WIFI_SMART_BW
+		if (prAdapter->rSmartBW.fgIsNeedMonitorAPIOT || prAdapter->rSmartBW.fgIsNeedMonitorLink) {
+				DBGLOG(SW4, INFO,"fgIsNeedMonitorAPIOT: %d, fgIsNeedMonitorLinkTx: %d\n",
+						prAdapter->rSmartBW.fgIsNeedMonitorAPIOT, prAdapter->rSmartBW.fgIsNeedMonitorLink);
+				prLinkQualityInfo->rRecordLQSysTime = kalGetTimeTick();
+				get_L3_LQ_status(payload, sizeof(payload)/sizeof(payload[0]));
+				prLinkQualityInfo->iL3CSpeed = payload[1];
+				prLinkQualityInfo->iL3CongestionFlag = payload[3];
+				wlanSaveLinkQualitySmooth(prLinkQualityInfo);
+
+				wlanMonitorAPIOTIssue();
+				wlanMonitorLQStatus();
+		}
+#endif
 
 	return u4Status;
 }
@@ -12140,6 +12235,9 @@ void wlanFinishCollectingLinkQuality(struct GLUE_INFO *prGlueInfo)
 	uint32_t u4CurRxRate, u4MaxRxRate;
 	uint64_t u8TxFailCntDif, u8TxTotalCntDif;
 
+#ifdef OPLUS_FEATURE_WIFI_SMART_BW
+	unsigned long long  u8TxRetryCntDif, u8RxTotalCntDif, u8RxErrCntDif;
+#endif
 	prAdapter = prGlueInfo->prAdapter;
 	if (prAdapter == NULL) {
 		DBGLOG(SW4, ERROR, "prAdapter is null\n");
@@ -12187,6 +12285,34 @@ void wlanFinishCollectingLinkQuality(struct GLUE_INFO *prGlueInfo)
 					prLinkQualityInfo->u8TxFailCount;
 	prLinkQualityInfo->u8LastIdleSlotCount =
 					prLinkQualityInfo->u8IdleSlotCount;
+#ifdef OPLUS_FEATURE_WIFI_SMART_BW
+	/* Check packet diff purpose */
+	u8TxRetryCntDif = (prLinkQualityInfo->u8TxRetryCount >
+		   prLinkQualityInfo->u8LastTxRetryCount) ?
+		  (prLinkQualityInfo->u8TxRetryCount -
+		   prLinkQualityInfo->u8LastTxRetryCount) : 0;
+	u8RxTotalCntDif = (prLinkQualityInfo->u8RxTotalCount >
+		  prLinkQualityInfo->u8LastRxTotalCount) ?
+		 (prLinkQualityInfo->u8RxTotalCount -
+		  prLinkQualityInfo->u8LastRxTotalCount) : 0;
+	u8RxErrCntDif = (prLinkQualityInfo->u8RxErrCount >
+		  prLinkQualityInfo->u8LastRxErrCount) ?
+		 (prLinkQualityInfo->u8RxErrCount -
+		  prLinkQualityInfo->u8LastRxErrCount) : 0;
+
+	prLinkQualityInfo->u8LastTxRetryCount = prLinkQualityInfo->u8TxRetryCount;
+	prLinkQualityInfo->u8LastRxTotalCount = prLinkQualityInfo->u8RxTotalCount;
+	prLinkQualityInfo->u8LastRxErrCount = prLinkQualityInfo->u8RxErrCount;
+
+DBGLOG(SW4, TRACE,
+	   "Link Quality: Tx(u8TxTotalCntDif:%lu, u8TxFailCntDif:%lu, u8TxRetryCntDif:%lu), Rx(u8RxTotalCntDif:%lu, u8RxErrCntDif:%lu)\n",
+	   u8TxTotalCntDif,
+	   u8TxFailCntDif,
+	   u8TxRetryCntDif,
+	   u8RxTotalCntDif,
+	   u8RxErrCntDif
+);
+#endif
 }
 #endif /* CFG_SUPPORT_LINK_QUALITY_MONITOR */
 

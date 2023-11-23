@@ -133,7 +133,7 @@ $(FM_CHIP)-objs    += core/fm_module.o \
                 core/fm_reg_utils.o
 
 ifeq ($(CFG_BUILD_CONNAC2), true)
-    CONNINFRA_SRC_FOLDER := $(srctree)/drivers/misc/mediatek/connectivity/conninfra
+    CONNINFRA_SRC_FOLDER := $(TOP)/vendor/mediatek/kernel_modules/connectivity/conninfra
 
     ccflags-y += -I$(CONNINFRA_SRC_FOLDER)/include
     ccflags-y += -DCFG_FM_CONNAC2=1

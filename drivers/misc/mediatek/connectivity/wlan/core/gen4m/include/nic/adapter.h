@@ -74,6 +74,9 @@
 #endif /* CFG_SUPPORT_PASSPOINT */
 #include "gl_os.h"
 
+#ifdef OPLUS_FEATURE_WIFI_SMART_BW
+#include "oppo_smart_bw_decision.h"
+#endif
 /*******************************************************************************
  *                              C O N S T A N T S
  *******************************************************************************
@@ -614,6 +617,8 @@ struct BSS_INFO {
 	uint8_t aucCountryStr[3];
 	uint8_t aucSubbandTriplet[253];
 	enum ENUM_IFTYPE eIftype;
+
+	uint8_t ucDeauthTrialCount;
 };
 
 /* Support AP Selection */
@@ -1764,7 +1769,9 @@ struct ADAPTER {
 #endif
 
 	int8_t cArpNoResponseIdx;
-
+#ifdef OPLUS_FEATURE_WIFI_SMART_BW
+	SMART_BW_T rSmartBW;
+#endif
 	u_int8_t fgEnDbgPowerMode;
 
 	struct HIF_STATS rHifStats;
