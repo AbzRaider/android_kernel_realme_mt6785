@@ -1106,10 +1106,6 @@ int binder_alloc_shrinker_init(void)
 	return ret;
 }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 47ab07648324c8aaf93440ad90bd024ee16927d4
 /**
  * check_buffer() - verify that buffer/offset is safe to access
  * @alloc: binder_alloc for this proc
