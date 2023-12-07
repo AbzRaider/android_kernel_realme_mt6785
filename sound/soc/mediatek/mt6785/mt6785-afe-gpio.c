@@ -200,7 +200,7 @@ int mt6785_afe_gpio_extamp_select(struct mtk_base_afe *afe, bool enable, int mod
 	int i = 0;
 	mutex_lock(&extamp_gpio_request_mutex);
 
-	//pr_info("[WENDELL] %s enter, enable = %d, mode = %d", __func__, enable, mode);
+	//pr_debug("[WENDELL] %s enter, enable = %d, mode = %d", __func__, enable, mode);
 
 	if (enable) {
 		if (mode == 1)
@@ -227,7 +227,7 @@ int mt6785_afe_gpio_extamp_select(struct mtk_base_afe *afe, bool enable, int mod
 			pr_err("could not set aud_gpios[MT6785_AFE_GPIO_EXTAMP_PULLLOW] pins\n");
 		udelay(2);
 	}
-	//pr_info("[WENDELL] %s exit, enable = %d, mode = %d", __func__, enable, mode);
+	//pr_debug("[WENDELL] %s exit, enable = %d, mode = %d", __func__, enable, mode);
 	mutex_unlock(&extamp_gpio_request_mutex);
 
 	return retval;

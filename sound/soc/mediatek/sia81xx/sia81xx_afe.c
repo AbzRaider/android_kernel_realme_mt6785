@@ -187,7 +187,7 @@ static int32_t sia81xx_afe_callback(
 	afe = (SIA81XX_AFE *)priv;
 
 	if(RESET_EVENTS == data->opcode) {
-		pr_info("[ info][%s] %s: RESET_EVENTS, event : %d !! \r\n",
+		pr_debug("[ info][%s] %s: RESET_EVENTS, event : %d !! \r\n",
 			LOG_FLAG, __func__, (int)data->reset_event);
 
 		afe->cal_block.dsp_mmap_handle = 0;
@@ -357,7 +357,7 @@ static int check_cal_block(
 				LOG_FLAG, __func__, ret);
 			goto err;
 		} else {
-			pr_info("[ info][%s] %s: afe[0x%04x] allocate buffer success! "
+			pr_debug("[ info][%s] %s: afe[0x%04x] allocate buffer success! "
 				"pa_size = %zu \r\n", 
 				LOG_FLAG, __func__, afe->afe_port_id, 
 				afe->cal_block.pa_size);
@@ -371,7 +371,7 @@ static int check_cal_block(
 				LOG_FLAG, __func__, ret);
 			goto err;
 		} else {
-			pr_info("[ info][%s] %s: afe[0x%04x] map buffer success! "
+			pr_debug("[ info][%s] %s: afe[0x%04x] map buffer success! "
 				"handle = 0x%08x \r\n", 
 				LOG_FLAG, __func__, afe->afe_port_id, 
 				afe->cal_block.dsp_mmap_handle);
@@ -930,7 +930,7 @@ unsigned long sia81xx_afe_open(
 
 	add_sia81xx_afe_list(afe);
 	
-	pr_info("[ info][%s] %s: afe open success !! "
+	pr_debug("[ info][%s] %s: afe open success !! "
 		"afe prot : 0x%04x \r\n", 
 		LOG_FLAG, __func__, afe_prot_id);
 	
@@ -949,7 +949,7 @@ int sia81xx_afe_close(
 		return 0;
 	}
 
-	pr_info("[ info][%s] %s: afe closeing !! "
+	pr_debug("[ info][%s] %s: afe closeing !! "
 		"afe prot : 0x%04x \r\n", 
 		LOG_FLAG, __func__, afe->afe_port_id);
 
@@ -1013,7 +1013,7 @@ static int sia81xx_afe_init(void) {
 
 	int ret = 0;
 
-	pr_info("[ info][%s] %s: run !! \r\n",
+	pr_debug("[ info][%s] %s: run !! \r\n",
 		LOG_FLAG, __func__);
 
 	return ret;
@@ -1021,7 +1021,7 @@ static int sia81xx_afe_init(void) {
 
 static void sia81xx_afe_exit(void) {
 
-	pr_info("[ info][%s] %s: run !! \r\n",
+	pr_debug("[ info][%s] %s: run !! \r\n",
 		LOG_FLAG, __func__);
 }
 

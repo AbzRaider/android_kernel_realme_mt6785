@@ -486,14 +486,14 @@ static long sia81xx_tuning_if_dev_unlocked_ioctl(struct file *fp,
 
 static int sia81xx_tuning_if_dev_open(struct inode *inode, struct file *fp)
 {
-	pr_info("[ info][%s] %s: run !! \r\n", LOG_FLAG, __func__);
+	pr_debug("[ info][%s] %s: run !! \r\n", LOG_FLAG, __func__);
 	
 	return 0 ;
 }
 
 static int sia81xx_tuning_if_dev_close(struct inode *inode, struct file *fp)
 {
-	pr_info("[ info][%s] %s: run !! \r\n", LOG_FLAG, __func__);
+	pr_debug("[ info][%s] %s: run !! \r\n", LOG_FLAG, __func__);
 
 	delete_cal_module(fp);
 	
@@ -523,11 +523,11 @@ static int open_tuning_if_dev(void)
 	int ret = misc_register(&sia81xx_tuning_if_misc_dev);
 	if(ret != 0){
 	   ret_error = ret ;
-	   pr_info("[ info][%s] %s: err !! \r\n", LOG_FLAG, __func__);
+	   pr_debug("[ info][%s] %s: err !! \r\n", LOG_FLAG, __func__);
 	   goto fair ;
 	}
 
-	pr_info("[ info][%s] %s: success !! \r\n", LOG_FLAG, __func__);
+	pr_debug("[ info][%s] %s: success !! \r\n", LOG_FLAG, __func__);
 	return ret ;
 	
 	fair:
@@ -544,7 +544,7 @@ static void close_tuning_if_dev(void)
 
 static int sia81xx_tuning_if_init(void) 
 {
-	pr_info("[ info][%s] %s: run !! \r\n", LOG_FLAG, __func__);
+	pr_debug("[ info][%s] %s: run !! \r\n", LOG_FLAG, __func__);
 
 	memset(cal_module_table, 0, sizeof(cal_module_table));
 
@@ -555,7 +555,7 @@ static int sia81xx_tuning_if_init(void)
 
 static void sia81xx_tuning_if_exit(void) 
 {
-	pr_info("[ info][%s] %s: run !! \r\n", LOG_FLAG, __func__);
+	pr_debug("[ info][%s] %s: run !! \r\n", LOG_FLAG, __func__);
 
 	close_tuning_if_dev();
 

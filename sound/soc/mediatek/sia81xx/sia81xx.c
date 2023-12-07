@@ -125,8 +125,8 @@
 #define SIXTH_SIA81XX_RX_ENABLE			(0x1000EA01)/* parameter id */
 #ifdef OPLUS_ARCH_EXTENDS
 /* Liang.Huang@MULTIMEDIA.AUDIODRIVER.CODEC, 2020/08/19, 2018/12/06, Add for log*/
-#undef pr_info
-#define pr_info pr_err
+#undef pr_debug
+#define pr_debug pr_err
 #endif /* OPLUS_ARCH_EXTENDS */
 
 struct sia81xx_err {
@@ -718,7 +718,7 @@ static int sia81xx_reg_init(
 #ifdef VENDOR_EDIT
 /* Kun.Wang@PSW.MULTIMEDIA.AUDIODRIVER.MACHINE,2020/09/19, Add for adjust codec */
     if(sia81xx->chip_type == CHIP_TYPE_UNKNOWN) {
-		pr_info("[ info][%s] %s: there isn't sia81xx device \r\n",
+		pr_debug("[ info][%s] %s: there isn't sia81xx device \r\n",
 		LOG_FLAG, __func__);
 		return 0;
 	}
@@ -1202,7 +1202,7 @@ static ssize_t sia81xx_cmd_store(
 			char data = simple_strtoul(strsep(&cur, split_symb), &after, 10);
 			sia81xx_owi_write_data(sia81xx, 1, &data);
 #else
-			pr_info("[ info][%s] %s: the option "
+			pr_debug("[ info][%s] %s: the option "
 				"OWI_SUPPORT_WRITE_DATA unsupport!! \r\n", LOG_FLAG, __func__);
 #endif
 			break;
@@ -1632,28 +1632,28 @@ static const struct snd_soc_dapm_widget sia81xx_dapm_widgets[] = {
 static int sia81xx_component_probe(
 	struct snd_soc_component *component)
 {
- 	pr_info("[debug][%s] %s: running \r\n", LOG_FLAG, __func__);
+ 	pr_debug("[debug][%s] %s: running \r\n", LOG_FLAG, __func__);
 	return 0;
 }
 
 static void sia81xx_component_remove(
 	struct snd_soc_component *component)
 {
- 	pr_info("[debug][%s] %s: running \r\n", LOG_FLAG, __func__);
+ 	pr_debug("[debug][%s] %s: running \r\n", LOG_FLAG, __func__);
 	return;
 }
 #else
 static int sia81xx_codec_probe(
 	struct snd_soc_codec *codec)
 {
- 	pr_info("[debug][%s] %s: running \r\n", LOG_FLAG, __func__);
+ 	pr_debug("[debug][%s] %s: running \r\n", LOG_FLAG, __func__);
 	return 0;
 }
  
 static int sia81xx_codec_remove(
 	struct snd_soc_codec *codec)
 {
- 	pr_info("[debug][%s] %s: running \r\n", LOG_FLAG, __func__);
+ 	pr_debug("[debug][%s] %s: running \r\n", LOG_FLAG, __func__);
 	return 0;
 }
 
@@ -1931,7 +1931,7 @@ static unsigned int get_chip_type(const char *name)
 	if(NULL == name)
 		return CHIP_TYPE_UNKNOWN;
 
-	pr_info("[ info][%s] %s: chip : %s \r\n",
+	pr_debug("[ info][%s] %s: chip : %s \r\n",
 		LOG_FLAG, __func__, name);
 
 	for(i = 0; i < ARRAY_SIZE(support_chip_type_name_table); i ++) {
@@ -1981,7 +1981,7 @@ static int sia81xx_i2c_probe(
 /* Xijing.Zhou@MM.AUDIODRIVER.MACHINE,2021/02/05, add check id for compat */
         unsigned int i = 0;
 #endif /* OPLUS_ARCH_EXTENDS */
-	pr_info("[ info][%s] %s: i2c addr = 0x%02x \r\n",
+	pr_debug("[ info][%s] %s: i2c addr = 0x%02x \r\n",
 		LOG_FLAG, __func__, client->addr);
 
 	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) {
@@ -2051,12 +2051,12 @@ static int sia81xx_i2c_probe(
 	if (1 == check_sia81xx_status(sia81xx)) {
 		device_create_file(&sia81xx->pdev->dev, &dev_attr_sia81xx_device);
 
-		pr_info("[ info][%s] %s: sia81xx device is available \r\n",
+		pr_debug("[ info][%s] %s: sia81xx device is available \r\n",
 			LOG_FLAG, __func__);
 	} else {
 		sia81xx->owi_cur_mode = DEFAULT_OTHER_OWI_MODE;
 		sia81xx->chip_type = CHIP_TYPE_UNKNOWN;
-		pr_info("[ info][%s] %s: there is no sia81xx device \r\n",
+		pr_debug("[ info][%s] %s: there is no sia81xx device \r\n",
 			LOG_FLAG, __func__);
 	}
 #endif
@@ -2066,10 +2066,10 @@ static int sia81xx_i2c_probe(
 	  gpio_set_value(sia81xx->rst_pin, SIA81XX_ENABLE_LEVEL);
           mdelay(1);/* wait chip power up, the time must be > 1ms */
           while (i <= CHIP_TYPE_UNKNOWN) {
-               pr_info("[2222 info][%s] %s: chip_type = %d sia81xx_regmap_check_chip_id OK. \r\n",LOG_FLAG, __func__,sia81xx->chip_type);
+               pr_debug("[2222 info][%s] %s: chip_type = %d sia81xx_regmap_check_chip_id OK. \r\n",LOG_FLAG, __func__,sia81xx->chip_type);
                pr_debug("[3333 info][%s] %s: chip_type = %d sia81xx_regmap_check_chip_id OK. \r\n",LOG_FLAG, __func__,sia81xx->chip_type);
               if (!sia81xx_regmap_check_chip_id(sia81xx->regmap, sia81xx->chip_type)) {
-                  pr_info("[ info][%s] %s: sia81xx_regmap_check_chip_id OK. \r\n",LOG_FLAG, __func__);
+                  pr_debug("[ info][%s] %s: sia81xx_regmap_check_chip_id OK. \r\n",LOG_FLAG, __func__);
               is_sia_chip = 1;
               break;
           }
@@ -2087,7 +2087,7 @@ static int sia81xx_i2c_remove(
 	int ret = 0;
 	sia81xx_dev_t *sia81xx = NULL;
 
-	pr_info("[ info][%s] %s: remove \r\n", LOG_FLAG, __func__);
+	pr_debug("[ info][%s] %s: remove \r\n", LOG_FLAG, __func__);
 
 	sia81xx = (sia81xx_dev_t *)dev_get_drvdata(&client->dev);
 	if(NULL == sia81xx)
@@ -2198,7 +2198,7 @@ static int sia81xx_probe(struct platform_device *pdev)
 	int  sia_boost_vol = 0;
 #endif /* OPLUS_BUG_COMPATIBILITY */
 
-	pr_info("[ info][%s] %s: probe \r\n", LOG_FLAG, __func__);
+	pr_debug("[ info][%s] %s: probe \r\n", LOG_FLAG, __func__);
 
 	/* get chip type name */
 	ret = of_property_read_string_index(pdev->dev.of_node,
@@ -2223,7 +2223,7 @@ static int sia81xx_probe(struct platform_device *pdev)
 	/* Liang.Huang@MULTIMEDIA.AUDIODRIVER.SMARTPA, 2020/09/20, set or get boost voltage for sia8109 */
 	ret = of_property_read_u32(pdev->dev.of_node,
 			"si,sia_boost_vol_support", &sia_boost_vol);
-	pr_info("[ info][%s]  %s: line = %d  sia81xx_sia_boost_vol = %d\r\n", LOG_FLAG, __func__,__LINE__,sia_boost_vol);
+	pr_debug("[ info][%s]  %s: line = %d  sia81xx_sia_boost_vol = %d\r\n", LOG_FLAG, __func__,__LINE__,sia_boost_vol);
 	if(0 != ret) {
 		pr_err("[  err][%s] %s: get si,sia_boost_vol_support return %d !!! \r\n",
 			LOG_FLAG, __func__, ret);
@@ -2387,7 +2387,7 @@ static int sia81xx_remove(struct platform_device *pdev)
 	int ret = 0;
 	sia81xx_dev_t *sia81xx = NULL;
 
-	pr_info("[ info][%s] %s: remove \r\n", LOG_FLAG, __func__);
+	pr_debug("[ info][%s] %s: remove \r\n", LOG_FLAG, __func__);
 
 	sia81xx = (sia81xx_dev_t *)dev_get_drvdata(&pdev->dev);
 	if(NULL == sia81xx)
@@ -2444,7 +2444,7 @@ static int __init sia81xx_pa_init(void)
 {	
 	int ret = 0;
 	
-	pr_info("[ info][%s] %s: sia81xx driver version : %s \r\n", 
+	pr_debug("[ info][%s] %s: sia81xx driver version : %s \r\n", 
 		LOG_FLAG, __func__, SIA81XX_DRIVER_VERSION);
 
 	sia81xx_timer_task_init();
@@ -2481,7 +2481,7 @@ static int __init sia81xx_pa_init(void)
 
 static void __exit sia81xx_pa_exit(void) 
 {
-	pr_info("[ info][%s] %s: running \r\n", LOG_FLAG, __func__);
+	pr_debug("[ info][%s] %s: running \r\n", LOG_FLAG, __func__);
 
 	//exit online tuning funtion
 #ifdef SIA81XX_TUNING

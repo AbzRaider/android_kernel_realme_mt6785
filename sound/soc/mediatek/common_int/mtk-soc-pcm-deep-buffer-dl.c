@@ -597,7 +597,7 @@ static struct snd_soc_platform_driver mtk_deep_buffer_dl_soc_platform = {
 
 static int mtk_deep_buffer_dl_probe(struct platform_device *pdev)
 {
-	pr_info("%s\n", __func__);
+	pr_debug("%s\n", __func__);
 
 
 	if (pdev->dev.of_node) {

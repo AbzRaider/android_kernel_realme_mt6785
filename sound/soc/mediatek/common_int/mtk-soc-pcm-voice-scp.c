@@ -744,7 +744,7 @@ static int mtk_pcm_scp_voice_open(struct snd_pcm_substream *substream)
 	mscp_voice_iv_meminterface_type =
 		get_usage_digital_block(AUDIO_USAGE_SCP_SPK_IV_DATA);
 	if (mscp_voice_iv_meminterface_type < 0) {
-		pr_info("%s get_pcm_mem_id err using VUL_Data2 as default\n",
+		pr_debug("%s get_pcm_mem_id err using VUL_Data2 as default\n",
 			__func__);
 		mscp_voice_iv_meminterface_type =
 			Soc_Aud_Digital_Block_MEM_VUL_DATA2;

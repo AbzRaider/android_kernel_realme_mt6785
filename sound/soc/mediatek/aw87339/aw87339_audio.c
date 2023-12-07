@@ -53,12 +53,12 @@ struct aw87339_container *aw87339_rcvspk_cnt;
 /*liugezi@awinic 20191203*/
 struct aw87339_container *aw87339_voicespk_cnt;
 
-static char *aw87339_kspk_name = "aw87339/aw87339_kspk.bin";
-static char *aw87339_drcv_name = "aw87339/aw87339_drcv.bin";
-static char *aw87339_abrcv_name = "aw87339/aw87339_abrcv.bin";
-static char *aw87339_rcvspk_name = "aw87339/aw87339_rcvspk.bin";
+static char *aw87339_kspk_name = "../../odm/firmware/aw87339/aw87339_kspk.bin";
+static char *aw87339_drcv_name = "../../odm/firmware/aw87339/aw87339_drcv.bin";
+static char *aw87339_abrcv_name = "../../odm/firmware/aw87339/aw87339_abrcv.bin";
+static char *aw87339_rcvspk_name = "../../odm/firmware/aw87339/aw87339_rcvspk.bin";
 /*liugezi@awinic 20191203*/
-static char *aw87339_voicespk_name = "aw87339/aw87339_voicespk.bin";
+static char *aw87339_voicespk_name = "../../odm/firmware/aw87339/aw87339_voicespk.bin";
 
 unsigned int kspk_load_cont;
 unsigned int drcv_load_cont;
@@ -122,7 +122,7 @@ static int aw87339_i2c_read(struct aw87339 *aw87339,
 *******************************************************/
 unsigned int aw87339_hw_on(struct aw87339 *aw87339)
 {
-	pr_info("%s enter\n", __func__);
+	pr_debug("%s enter\n", __func__);
 
 	if (aw87339 && gpio_is_valid(aw87339->reset_gpio)) {
 		gpio_set_value_cansleep(aw87339->reset_gpio, 0);
@@ -139,7 +139,7 @@ unsigned int aw87339_hw_on(struct aw87339 *aw87339)
 
 unsigned int aw87339_hw_off(struct aw87339 *aw87339)
 {
-	pr_info("%s enter\n", __func__);
+	pr_debug("%s enter\n", __func__);
 
 	if (aw87339 && gpio_is_valid(aw87339->reset_gpio)) {
 		gpio_set_value_cansleep(aw87339->reset_gpio, 0);
@@ -163,7 +163,7 @@ unsigned char aw87339_audio_kspk(void)
 	if(0 == aw87339_probed)
 		return 0;
 
-	pr_info("%s enter\n", __func__);
+	pr_debug("%s enter\n", __func__);
 
 	if (aw87339 == NULL)
 		return 2;
@@ -195,7 +195,7 @@ unsigned char aw87339_audio_drcv(void)
 	unsigned int i;
 	unsigned int length;
 
-	pr_info("%s enter\n", __func__);
+	pr_debug("%s enter\n", __func__);
 
 	if (aw87339 == NULL)
 		return 2;
@@ -227,7 +227,7 @@ unsigned char aw87339_audio_abrcv(void)
 	unsigned int i;
 	unsigned int length;
 
-	pr_info("%s enter\n", __func__);
+	pr_debug("%s enter\n", __func__);
 
 	if (aw87339 == NULL)
 		return 2;
@@ -260,7 +260,7 @@ unsigned char aw87339_audio_rcvspk(void)
 	unsigned int i;
 	unsigned int length;
 
-	pr_info("%s enter\n", __func__);
+	pr_debug("%s enter\n", __func__);
 
 	if (aw87339 == NULL)
 		return 2;
@@ -298,7 +298,7 @@ unsigned char aw87339_audio_voicespk(void)
 	if(0 == aw87339_probed)
 		return 0;
 
-	pr_info("%s enter\n", __func__);
+	pr_debug("%s enter\n", __func__);
 
 	if (aw87339 == NULL)
 		return 2;
@@ -361,7 +361,7 @@ static void aw87339_rcvspk_cfg_loaded(const struct firmware *cont,
 	int i = 0;
 	int ram_timer_val = 2000;
 
-	pr_info("%s enter\n", __func__);
+	pr_debug("%s enter\n", __func__);
 
 	rcvspk_load_cont++;
 	if (!cont) {
@@ -371,17 +371,17 @@ static void aw87339_rcvspk_cfg_loaded(const struct firmware *cont,
 		if (rcvspk_load_cont <= 2) {
 			schedule_delayed_work(&aw87339->ram_work,
 					msecs_to_jiffies(ram_timer_val));
-			pr_info("%s:restart hrtimer to load firmware\n",
+			pr_debug("%s:restart hrtimer to load firmware\n",
 			__func__);
 		}
 		return;
 	}
 
-	pr_info("%s: loaded %s - size: %zu\n", __func__, aw87339_rcvspk_name,
+	pr_debug("%s: loaded %s - size: %zu\n", __func__, aw87339_rcvspk_name,
 				cont ? cont->size : 0);
 
 	for (i = 0; i < cont->size; i = i+2) {
-		pr_info("%s: addr:0x%04x, data:0x%02x\n",
+		pr_debug("%s: addr:0x%04x, data:0x%02x\n",
 		__func__, *(cont->data+i), *(cont->data+i+1));
 	}
 	/* aw87339 ram update */
@@ -396,12 +396,12 @@ static void aw87339_rcvspk_cfg_loaded(const struct firmware *cont,
 	release_firmware(cont);
 	aw87339->rcvspk_cfg_update_flag = 1;
 
-	pr_info("%s: all fw update complete\n", __func__);
+	pr_debug("%s: all fw update complete\n", __func__);
 }
 
 static int aw87339_rcvspk_update(struct aw87339 *aw87339)
 {
-	pr_info("%s enter\n", __func__);
+	pr_debug("%s enter\n", __func__);
 	return request_firmware_nowait(THIS_MODULE,
 					FW_ACTION_HOTPLUG,
 					aw87339_rcvspk_name,
@@ -417,7 +417,7 @@ static void aw87339_abrcv_cfg_loaded(const struct firmware *cont,
 	int i = 0;
 	int ram_timer_val = 2000;
 
-	pr_info("%s enter\n", __func__);
+	pr_debug("%s enter\n", __func__);
 
 	abrcv_load_cont++;
 	if (!cont) {
@@ -427,17 +427,17 @@ static void aw87339_abrcv_cfg_loaded(const struct firmware *cont,
 		if (abrcv_load_cont <= 2) {
 			schedule_delayed_work(&aw87339->ram_work,
 					msecs_to_jiffies(ram_timer_val));
-			pr_info("%s:restart hrtimer to load firmware\n",
+			pr_debug("%s:restart hrtimer to load firmware\n",
 			__func__);
 		}
 		return;
 	}
 
-	pr_info("%s: loaded %s - size: %zu\n", __func__, aw87339_abrcv_name,
+	pr_debug("%s: loaded %s - size: %zu\n", __func__, aw87339_abrcv_name,
 					cont ? cont->size : 0);
 
 	for (i = 0; i < cont->size; i = i+2) {
-		pr_info("%s: addr:0x%04x, data:0x%02x\n",
+		pr_debug("%s: addr:0x%04x, data:0x%02x\n",
 		__func__, *(cont->data+i), *(cont->data+i+1));
 	}
 
@@ -454,12 +454,12 @@ static void aw87339_abrcv_cfg_loaded(const struct firmware *cont,
 	release_firmware(cont);
 	aw87339->abrcv_cfg_update_flag = 1;
 
-	pr_info("%s: fw update complete\n", __func__);
+	pr_debug("%s: fw update complete\n", __func__);
 }
 
 static int aw87339_abrcv_update(struct aw87339 *aw87339)
 {
-	pr_info("%s enter\n", __func__);
+	pr_debug("%s enter\n", __func__);
 	return request_firmware_nowait(THIS_MODULE,
 					FW_ACTION_HOTPLUG,
 					aw87339_abrcv_name,
@@ -474,7 +474,7 @@ static void aw87339_drcv_cfg_loaded(const struct firmware *cont, void *context)
 	int i = 0;
 	int ram_timer_val = 2000;
 
-	pr_info("%s enter\n", __func__);
+	pr_debug("%s enter\n", __func__);
 
 	drcv_load_cont++;
 	if (!cont) {
@@ -483,17 +483,17 @@ static void aw87339_drcv_cfg_loaded(const struct firmware *cont, void *context)
 		if (drcv_load_cont <= 2) {
 			schedule_delayed_work(&aw87339->ram_work,
 					msecs_to_jiffies(ram_timer_val));
-			pr_info("%s:restart hrtimer to load firmware\n",
+			pr_debug("%s:restart hrtimer to load firmware\n",
 			__func__);
 		}
 		return;
 	}
 
-	pr_info("%s: loaded %s - size: %zu\n", __func__, aw87339_drcv_name,
+	pr_debug("%s: loaded %s - size: %zu\n", __func__, aw87339_drcv_name,
 					cont ? cont->size : 0);
 
 	for (i = 0; i < cont->size; i = i+2) {
-		pr_info("%s: addr:0x%04x, data:0x%02x\n",
+		pr_debug("%s: addr:0x%04x, data:0x%02x\n",
 		__func__, *(cont->data+i), *(cont->data+i+1));
 	}
 
@@ -512,12 +512,12 @@ static void aw87339_drcv_cfg_loaded(const struct firmware *cont, void *context)
 	release_firmware(cont);
 	aw87339->drcv_cfg_update_flag = 1;
 
-	pr_info("%s: fw update complete\n", __func__);
+	pr_debug("%s: fw update complete\n", __func__);
 }
 
 static int aw87339_drcv_update(struct aw87339 *aw87339)
 {
-	pr_info("%s enter\n", __func__);
+	pr_debug("%s enter\n", __func__);
 	return request_firmware_nowait(THIS_MODULE,
 					FW_ACTION_HOTPLUG,
 					aw87339_drcv_name,
@@ -532,7 +532,7 @@ static void aw87339_kspk_cfg_loaded(const struct firmware *cont, void *context)
 	int i = 0;
 	int ram_timer_val = 2000;
 
-	pr_info("%s enter\n", __func__);
+	pr_debug("%s enter\n", __func__);
 	kspk_load_cont++;
 	if (!cont) {
 		pr_err("%s: failed to read %s\n", __func__, aw87339_kspk_name);
@@ -540,17 +540,17 @@ static void aw87339_kspk_cfg_loaded(const struct firmware *cont, void *context)
 		if (kspk_load_cont <= 2) {
 			schedule_delayed_work(&aw87339->ram_work,
 					msecs_to_jiffies(ram_timer_val));
-			pr_info("%s:restart hrtimer to load firmware\n",
+			pr_debug("%s:restart hrtimer to load firmware\n",
 			__func__);
 		}
 	return;
 	}
 
-	pr_info("%s: loaded %s - size: %zu\n", __func__, aw87339_kspk_name,
+	pr_debug("%s: loaded %s - size: %zu\n", __func__, aw87339_kspk_name,
 				  cont ? cont->size : 0);
 
 	for (i = 0; i < cont->size; i = i+2) {
-		pr_info("%s: addr:0x%04x, data:0x%02x\n",
+		pr_debug("%s: addr:0x%04x, data:0x%02x\n",
 		__func__, *(cont->data+i), *(cont->data+i+1));
 	}
 
@@ -569,13 +569,13 @@ static void aw87339_kspk_cfg_loaded(const struct firmware *cont, void *context)
 	release_firmware(cont);
 	aw87339->kspk_cfg_update_flag = 1;
 
-	pr_info("%s: fw update complete\n", __func__);
+	pr_debug("%s: fw update complete\n", __func__);
 }
 
 #ifdef AWINIC_CFG_UPDATE_DELAY
 static int aw87339_kspk_update(struct aw87339 *aw87339)
 {
-	pr_info("%s enter\n", __func__);
+	pr_debug("%s enter\n", __func__);
 
 	return request_firmware_nowait(THIS_MODULE,
 					FW_ACTION_HOTPLUG,
@@ -593,7 +593,7 @@ static void aw87339_voicespk_cfg_loaded(const struct firmware *cont,
 	int i = 0;
 	int ram_timer_val = 2000;
 
-	pr_info("%s enter\n", __func__);
+	pr_debug("%s enter\n", __func__);
 
 	voicespk_load_cont++;
 	if (!cont) {
@@ -603,17 +603,17 @@ static void aw87339_voicespk_cfg_loaded(const struct firmware *cont,
 		if (voicespk_load_cont <= 2) {
 			schedule_delayed_work(&aw87339->ram_work,
 					      msecs_to_jiffies(ram_timer_val));
-			pr_info("%s:restart hrtimer to load firmware\n",
+			pr_debug("%s:restart hrtimer to load firmware\n",
 				__func__);
 		}
 		return;
 	}
 
-	pr_info("%s: loaded %s - size: %zu\n", __func__, aw87339_voicespk_name,
+	pr_debug("%s: loaded %s - size: %zu\n", __func__, aw87339_voicespk_name,
 		cont ? cont->size : 0);
 
 	for (i = 0; i < cont->size; i = i + 2) {
-		pr_info("%s: addr:0x%04x, data:0x%02x\n",
+		pr_debug("%s: addr:0x%04x, data:0x%02x\n",
 			__func__, *(cont->data + i), *(cont->data + i + 1));
 	}
 	/* aw87339 ram update */
@@ -628,13 +628,13 @@ static void aw87339_voicespk_cfg_loaded(const struct firmware *cont,
 	release_firmware(cont);
 	aw87339->voicespk_cfg_update_flag = 1;
 
-	pr_info("%s: all fw update complete\n", __func__);
+	pr_debug("%s: all fw update complete\n", __func__);
 }
 
 /*liugezi@awinic 20191203*/
 static int aw87339_voicespk_update(struct aw87339 *aw87339)
 {
-	pr_info("%s enter\n", __func__);
+	pr_debug("%s enter\n", __func__);
 	return request_firmware_nowait(THIS_MODULE,
 				       FW_ACTION_HOTPLUG,
 				       aw87339_voicespk_name,
@@ -645,7 +645,7 @@ static int aw87339_voicespk_update(struct aw87339 *aw87339)
 
 static void aw87339_cfg_work_routine(struct work_struct *work)
 {
-	pr_info("%s enter\n", __func__);
+	pr_debug("%s enter\n", __func__);
 	if (aw87339->kspk_cfg_update_flag == 0)
 		aw87339_kspk_update(aw87339);
 	if (0) /*aw87339->drcv_cfg_update_flag == 0)*/
@@ -881,7 +881,7 @@ static int aw87339_parse_dt(struct device *dev, struct device_node *np)
 
 int aw87339_hw_reset(struct aw87339 *aw87339)
 {
-	pr_info("%s enter\n", __func__);
+	pr_debug("%s enter\n", __func__);
 
 	if (aw87339 && gpio_is_valid(aw87339->reset_gpio)) {
 		gpio_set_value_cansleep(aw87339->reset_gpio, 0);
@@ -908,7 +908,7 @@ int aw87339_read_chipid(struct aw87339 *aw87339)
 	while (cnt < AW_READ_CHIPID_RETRIES) {
 		ret = aw87339_i2c_read(aw87339, AW87339_REG_CHIPID, &reg_val);
 		if (reg_val == AW87339_CHIPID) {
-			pr_info("%s This Chip is  AW87339 chipid=0x%x\n",
+			pr_debug("%s This Chip is  AW87339 chipid=0x%x\n",
 				__func__, reg_val);
 			return 0;
 		}
@@ -916,7 +916,7 @@ int aw87339_read_chipid(struct aw87339 *aw87339)
 
 		mdelay(AW_READ_CHIPID_RETRY_DELAY);
 	}
-	pr_info("%s: aw87339 chipid=0x%x error\n", __func__, reg_val);
+	pr_debug("%s: aw87339 chipid=0x%x error\n", __func__, reg_val);
 	return -EINVAL;
 }
 
@@ -931,7 +931,7 @@ aw87339_i2c_probe(struct i2c_client *client, const struct i2c_device_id *id)
 	struct device_node *np = client->dev.of_node;
 	int ret = -1;
 
-	pr_info("%s Enter\n", __func__);
+	pr_debug("%s Enter\n", __func__);
 
 	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) {
 		dev_err(&client->dev, "%s: check_functionality failed\n",
@@ -1064,12 +1064,12 @@ static int __init aw87339_pa_init(void)
 {
 	int ret;
 
-	pr_info("%s enter\n", __func__);
-	pr_info("%s: driver version: %s\n", __func__, AW87339_DRIVER_VERSION);
+	pr_debug("%s enter\n", __func__);
+	pr_debug("%s: driver version: %s\n", __func__, AW87339_DRIVER_VERSION);
 
 	ret = i2c_add_driver(&aw87339_i2c_driver);
 	if (ret) {
-		pr_info("****[%s] Unable to register driver (%d)\n",
+		pr_debug("****[%s] Unable to register driver (%d)\n",
 				__func__, ret);
 		return ret;
 	}
@@ -1078,7 +1078,7 @@ static int __init aw87339_pa_init(void)
 
 static void __exit aw87339_pa_exit(void)
 {
-	pr_info("%s enter\n", __func__);
+	pr_debug("%s enter\n", __func__);
 	i2c_del_driver(&aw87339_i2c_driver);
 }
 

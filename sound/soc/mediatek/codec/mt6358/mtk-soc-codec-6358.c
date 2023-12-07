@@ -2649,7 +2649,7 @@ EXIT:
 	    (finetriml < 0 || finetriml > 0x3) ||
 	    (trimcoder < 0 || trimcoder > 0xf) ||
 	    (finetrimr < 0 || finetrimr > 0x3))
-		pr_info("%s(), [Warning], invalid trimcode(3pole), trimcodel = %d, finetriml = %d, trimcoder = %d, finetrimr = %d\n",
+		pr_debug("%s(), [Warning], invalid trimcode(3pole), trimcodel = %d, finetriml = %d, trimcoder = %d, finetrimr = %d\n",
 			__func__, trimcodel, finetriml, trimcoder, finetrimr);
 
 	if ((hpl_min < 0) && (finetriml == 0x0)) {
@@ -2684,7 +2684,7 @@ EXIT:
 	    (finetriml < 0 || finetriml > 0x3) ||
 	    (trimcoder < 0 || trimcoder > 0xf) ||
 	    (finetrimr < 0 || finetrimr > 0x3))
-		pr_info("%s(), [Warning], invalid trimcode(4pole), trimcodel = %d, finetriml = %d, trimcoder = %d, finetrimr = %d\n",
+		pr_debug("%s(), [Warning], invalid trimcode(4pole), trimcodel = %d, finetriml = %d, trimcoder = %d, finetrimr = %d\n",
 			__func__, trimcodel, finetriml, trimcoder, finetrimr);
 
 	hp_3_pole_trim_setting =
@@ -2917,7 +2917,7 @@ EXIT:
 	/* check trimcode is valid */
 	if ((trimcode < 0 || trimcode > 0xf) ||
 	    (finetrim < 0 || finetrim > 0x3))
-		pr_info("%s(), [Warning], invalid trimcode(3pole), trimcode = %d, finetrim = %d\n",
+		pr_debug("%s(), [Warning], invalid trimcode(3pole), trimcode = %d, finetrim = %d\n",
 			__func__, trimcode, finetrim);
 
 	/* 4 pole fine trim */
@@ -2943,7 +2943,7 @@ EXIT:
 	/* check trimcode is valid */
 	if ((trimcode < 0 || trimcode > 0xf) ||
 	    (finetrim < 0 || finetrim > 0x3))
-		pr_info("%s(), [Warning], invalid trimcode(4pole), trimcode = %d, finetrim = %d\n",
+		pr_debug("%s(), [Warning], invalid trimcode(4pole), trimcode = %d, finetrim = %d\n",
 			__func__, trimcode, finetrim);
 
 	spk_hp_3_pole_trim_setting =
@@ -5204,7 +5204,7 @@ static int Audio_MIC_Mode_Get(struct snd_kcontrol *kcontrol,
 		ucontrol->value.integer.value[0] = mic_mode;
 	else
 		ucontrol->value.integer.value[0] = AUDIO_MIC_MODE_ACC;
-	pr_info("%s(), return MIC_MODE: %ld\n",
+	pr_debug("%s(), return MIC_MODE: %ld\n",
 		__func__, ucontrol->value.integer.value[0]);
 	return 0;
 }
@@ -5267,7 +5267,7 @@ static int hp_plugged_in_set(struct snd_kcontrol *kcontrol,
 
 	if (ucontrol->value.integer.value[0] == 1) {
 		mic_vinp_mv = get_accdet_auxadc();
-		pr_info("%s(), mic_vinp_mv = %d\n", __func__, mic_vinp_mv);
+		pr_debug("%s(), mic_vinp_mv = %d\n", __func__, mic_vinp_mv);
 	}
 
 	hp_plugged = ucontrol->value.integer.value[0];

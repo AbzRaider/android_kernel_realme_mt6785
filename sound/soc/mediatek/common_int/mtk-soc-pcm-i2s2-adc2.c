@@ -197,7 +197,7 @@ static int mtk_i2s2_adc2_pcm_open(struct snd_pcm_substream *substream)
 					    SNDRV_PCM_HW_PARAM_PERIODS);
 
 	if (ret < 0)
-		pr_info("snd_pcm_hw_constraint_integer failed\n");
+		pr_debug("snd_pcm_hw_constraint_integer failed\n");
 
 	runtime->hw.info |= SNDRV_PCM_INFO_INTERLEAVED;
 	runtime->hw.info |= SNDRV_PCM_INFO_NONINTERLEAVED;

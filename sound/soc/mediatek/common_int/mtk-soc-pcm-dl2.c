@@ -404,7 +404,7 @@ static int mtk_pcm_dl2_prepare(struct snd_pcm_substream *substream)
 	pr_debug("%s\n", __func__);
 
 	if (mPrepareDone == false) {
-		pr_info(
+		pr_debug(
 			"%s format = %d SNDRV_PCM_FORMAT_S32_LE = %d SNDRV_PCM_FORMAT_U32_LE = %d, fast_dl_hdoutput = %d\n",
 			__func__, runtime->format, SNDRV_PCM_FORMAT_S32_LE,
 			SNDRV_PCM_FORMAT_U32_LE, fast_dl_hdoutput);
@@ -737,7 +737,7 @@ void mtk_dl2_copy2buffer(const void *addr, uint32_t size)
 retry:
 
 	if (unlikely(ISRCopyBuffer.u4BufferSize)) {
-		pr_info("%s, remaining data %d\n", __func__,
+		pr_debug("%s, remaining data %d\n", __func__,
 			ISRCopyBuffer.u4BufferSize);
 		if (unlikely(get_LowLatencyDebug() & DEBUG_DL2_AEE_OTHERS))
 			AUDIO_AEE("ISRCopy has remaining data !!");

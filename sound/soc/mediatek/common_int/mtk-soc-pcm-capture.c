@@ -377,7 +377,7 @@ static int mtk_capture_pcm_hw_params(struct snd_pcm_substream *substream,
 		mCaptureUseSram = true;
 		AudDrv_Emi_Clk_On();
 	} else {
-		pr_info("capture_pcm_hw_params snd_pcm_lib_malloc_pages\n");
+		pr_debug("capture_pcm_hw_params snd_pcm_lib_malloc_pages\n");
 		ret = snd_pcm_lib_malloc_pages(substream,
 					       params_buffer_bytes(hw_params));
 	}
@@ -631,7 +631,7 @@ static int __init mtk_soc_capture_platform_init(void)
 {
 	int ret = 0;
 
-	pr_info("%s\n", __func__);
+	pr_debug("%s\n", __func__);
 #ifndef CONFIG_OF
 	soc_mtkafe_capture_dev = platform_device_alloc(MT_SOC_UL1_PCM, -1);
 	if (!soc_mtkafe_capture_dev)

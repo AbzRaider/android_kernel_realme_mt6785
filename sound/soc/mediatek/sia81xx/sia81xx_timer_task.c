@@ -353,7 +353,7 @@ int sia81xx_timer_task_init(void)
 {
 	int i = 0, j = 0;
 	
-	pr_info("[ info][%s] %s: run !! ", 
+	pr_debug("[ info][%s] %s: run !! ", 
 			LOG_FLAG, __func__);
 
 	for(i = 0; i < ARRAY_SIZE(timer_tasks); i++) {
@@ -376,7 +376,7 @@ void sia81xx_timer_task_exit(void)
 {
 	int i = 0;
 	
-	pr_info("[ info][%s] %s: run !! ", 
+	pr_debug("[ info][%s] %s: run !! ", 
 		LOG_FLAG, __func__);
 
 	for(i = 0; i < ARRAY_SIZE(timer_tasks); i++) {

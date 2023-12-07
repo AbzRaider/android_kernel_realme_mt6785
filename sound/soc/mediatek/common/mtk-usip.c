@@ -78,7 +78,7 @@ static long usip_ioctl(struct file *fp, unsigned int cmd, unsigned long arg)
 
 	case GET_USIP_EMI_SIZE:
 		if (usip.addr_phy == 0) {
-			pr_info("no phy addr from ccci");
+			pr_debug("no phy addr from ccci");
 			ret = -ENODEV;
 		} else if (copy_to_user((void __user *)arg, &size_for_spe,
 			sizeof(size_for_spe))) {
@@ -207,7 +207,7 @@ static void usip_send_emi_info_to_dsp(void)
 	phys_addr_t offset = 0;
 
 	if (usip.addr_phy == 0) {
-		pr_info("%s(), cannot get emi addr from ccci", __func__);
+		pr_debug("%s(), cannot get emi addr from ccci", __func__);
 		return;
 	}
 
@@ -239,7 +239,7 @@ static void usip_send_emi_info_to_dsp(void)
 	adsp_deregister_feature(VOICE_CALL_FEATURE_ID);
 
 	if (send_result != 0)
-		pr_info("%s(), scp_ipi send fail\n", __func__);
+		pr_debug("%s(), scp_ipi send fail\n", __func__);
 	else
 		pr_debug("%s(), scp_ipi send succeed\n", __func__);
 }
@@ -256,7 +256,7 @@ static int audio_call_event_receive(struct notifier_block *this,
 		usip_send_emi_info_to_dsp();
 		break;
 	default:
-		pr_info("event %lu err", event);
+		pr_debug("event %lu err", event);
 	}
 	return 0;
 }
@@ -287,7 +287,7 @@ static int __init usip_init(void)
 	SMEM_USER_RAW_USIP, &size_o);
 
 	if (phys_addr == 0)
-		pr_info("%s(), cannot get emi addr from ccci", __func__);
+		pr_debug("%s(), cannot get emi addr from ccci", __func__);
 
 	ret = misc_register(&usip_miscdevice);
 	if (ret) {

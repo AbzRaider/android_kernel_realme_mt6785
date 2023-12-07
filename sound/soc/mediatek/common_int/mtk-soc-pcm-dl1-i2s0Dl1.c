@@ -109,7 +109,7 @@ static int Audio_I2S0dl1_hdoutput_Set(struct snd_kcontrol *kcontrol,
 	mI2S0dl1_hdoutput_control = ucontrol->value.integer.value[0];
 
 	if (GetMemoryPathEnable(Soc_Aud_Digital_Block_MEM_HDMI) == true) {
-		pr_info("return HDMI enabled\n");
+		pr_debug("return HDMI enabled\n");
 		return 0;
 	}
 

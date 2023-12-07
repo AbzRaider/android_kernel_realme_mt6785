@@ -77,7 +77,7 @@ static int dsp_pcm_taskattr_init(struct platform_device *pdev)
 	struct mtk_base_dsp *dsp = platform_get_drvdata(pdev);
 	int ret = 0;
 	int dsp_id = 0;
-	pr_info("%s\n", __func__);
+	pr_debug("%s\n", __func__);
 
 	if (!dsp)
 		return -1;
@@ -89,7 +89,7 @@ static int dsp_pcm_taskattr_init(struct platform_device *pdev)
 						 (unsigned int *)&task_attr,
 						 SND_DSP_DTS_SIZE);
 			if (ret != 0) {
-				pr_info("%s error dsp_id[%d]\n",
+				pr_debug("%s error dsp_id[%d]\n",
 					__func__, dsp_id);
 				continue;
 			}
@@ -113,7 +113,7 @@ static int dsp_pcm_taskattr_init(struct platform_device *pdev)
 					   "mtk_dsp_ver",
 					   &dsp->dsp_ver);
 		if (ret != 0)
-			pr_info("%s mtk_dsp_ver error\n", __func__);
+			pr_debug("%s mtk_dsp_ver error\n", __func__);
 
 		ret = of_property_read_u32(pdev->dev.of_node,
 			"swdsp_smartpa_process_enable",
@@ -156,7 +156,7 @@ static int dsp_pcm_dev_probe(struct platform_device *pdev)
 	pm_runtime_enable(&pdev->dev);
 
 	if (pdev->dev.of_node) {
-		pr_info("%s of_node->name:%s fullname:%s\n", __func__,
+		pr_debug("%s of_node->name:%s fullname:%s\n", __func__,
 			pdev->dev.of_node->name, pdev->dev.of_node->full_name);
 	}
 
@@ -176,14 +176,14 @@ static int dsp_pcm_dev_probe(struct platform_device *pdev)
 
 	ret = init_mtk_adsp_dram_segment();
 	if (ret) {
-		pr_info("init_mtk_adsp_dram_segment fail\n");
+		pr_debug("init_mtk_adsp_dram_segment fail\n");
 		goto err_platform;
 	}
 	dump_all_adsp_dram();
 
 	ret = mtk_adsp_init_gen_pool(dsp);
 	if (ret) {
-		pr_info("init_gen_pool fail\n");
+		pr_debug("init_gen_pool fail\n");
 		goto err_platform;
 	}
 
@@ -191,11 +191,11 @@ static int dsp_pcm_dev_probe(struct platform_device *pdev)
 	if (get_mtk_enable_common_mem_mpu())
 		ret = set_mtk_adsp_mpu_sharedram(AUDIO_DSP_AFE_SHARE_MEM_ID);
 	if (ret)
-		pr_info("set_mtk_adsp_mpu_sharedram fail\n");
+		pr_debug("set_mtk_adsp_mpu_sharedram fail\n");
 
 	ret = mtk_init_adsp_audio_share_mem(dsp);
 	if (ret) {
-		pr_info("init share mem fail\n");
+		pr_debug("init share mem fail\n");
 		goto err_platform;
 	}
 

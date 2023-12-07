@@ -751,7 +751,7 @@ static int ktvdevw_open(struct inode *inode, struct file *fp)
 	dl_drop_size = 25; //200ms
 	spin_unlock_irqrestore(&ktv_dl_ctrl_lock, flags);
 
-	pr_info("%s: \n", __func__);
+	pr_debug("%s: \n", __func__);
 	return 0;
 }
 
@@ -778,7 +778,7 @@ static ssize_t ktvdev_write(struct file *fp, const char __user *data, size_t cou
 
 	spin_lock_irqsave(&ktv_dl_ctrl_lock, flags);
 	if(write_access == 0) {
-		pr_info("%s: playback not start yet, return\n", __func__);
+		pr_debug("%s: playback not start yet, return\n", __func__);
 		spin_unlock_irqrestore(&ktv_dl_ctrl_lock, flags);
 		return count;
 	}
@@ -786,7 +786,7 @@ static ssize_t ktvdev_write(struct file *fp, const char __user *data, size_t cou
 
 	spin_lock_irqsave(&ktv_dl_ctrl_lock, flags);
 	if(dl_drop_size > 0) {
-		pr_info("%s: Drop periods to avoid pop when init\n", __func__);
+		pr_debug("%s: Drop periods to avoid pop when init\n", __func__);
 		dl_drop_size--;
 		spin_unlock_irqrestore(&ktv_dl_ctrl_lock, flags);
 		return count;
@@ -806,12 +806,12 @@ static ssize_t ktvdev_write(struct file *fp, const char __user *data, size_t cou
 
 	tmp = kmalloc(ktvUnitSize, GFP_KERNEL);
 	if (tmp == NULL) {
-		pr_info("%s: kmalloc error, return\n", __func__);
+		pr_debug("%s: kmalloc error, return\n", __func__);
 		return -ENOMEM;
 	}
 
 	if (copy_from_user(tmp, data_w_ptr, count)) {
-		pr_info("%s: copy_from_user error, return\n", __func__);
+		pr_debug("%s: copy_from_user error, return\n", __func__);
 		kfree(tmp);
 		return -EFAULT;
 	}
@@ -837,7 +837,7 @@ static ssize_t ktvdev_write(struct file *fp, const char __user *data, size_t cou
 /* Yongzhi.Zhang@PSW.MM.AudioDriver.feature, 2019/11/25, add for KTV 2.0 */
 static int ktvdev_release(struct inode *inode, struct file *file)
 {
-	pr_info("%s: \n", __func__);
+	pr_debug("%s: \n", __func__);
 	ktv_running = 0;
 	return 0;
 }

@@ -117,7 +117,7 @@ static int Audio_i2s0_SideGen_Set(struct snd_kcontrol *kcontrol,
 #ifdef OPLUS_BUG_COMPATIBILITY
 	/* Hongxiang.Jin@MULTIMEDIA.AUDIODRIVER.MACHINE, 2019/08/26,,
 	 * add for P40 audio debugging */
-	pr_info("%s(), sidegen = %d, hdoutput = %d, extcodec_echoref = %d, always_hd = %d\n",
+	pr_debug("%s(), sidegen = %d, hdoutput = %d, extcodec_echoref = %d, always_hd = %d\n",
 		 __func__,
 		 mi2s0_sidegen_control,
 		 hdoutput_control,
@@ -367,7 +367,7 @@ static int Audio_i2s0_hdoutput_Set(struct snd_kcontrol *kcontrol,
 #ifdef OPLUS_BUG_COMPATIBILITY
 	/* Hongxiang.Jin@MULTIMEDIA.AUDIODRIVER.MACHINE, 2019/08/26,,
 	 * add for P40 audio debugging */
-	pr_info("+%s() set %d\n", __func__, ucontrol->value.enumerated.item[0]);
+	pr_debug("+%s() set %d\n", __func__, ucontrol->value.enumerated.item[0]);
 #else /* OPLUS_BUG_COMPATIBILITY */
 	pr_debug("+%s()\n", __func__);
 #endif /* OPLUS_BUG_COMPATIBILITY */
@@ -409,7 +409,7 @@ static int Audio_i2s0_ExtCodec_EchoRef_Set(struct snd_kcontrol *kcontrol,
 #ifdef OPLUS_BUG_COMPATIBILITY
 	/* Hongxiang.Jin@MULTIMEDIA.AUDIODRIVER.MACHINE, 2019/08/26,,
 	 * add for P40 audio debugging */
-	pr_info("%s() set %d\n", __func__, ucontrol->value.enumerated.item[0]);
+	pr_debug("%s() set %d\n", __func__, ucontrol->value.enumerated.item[0]);
 #else /* OPLUS_BUG_COMPATIBILITY */
 	pr_debug("%s()\n", __func__);
 #endif /* OPLUS_BUG_COMPATIBILITY */

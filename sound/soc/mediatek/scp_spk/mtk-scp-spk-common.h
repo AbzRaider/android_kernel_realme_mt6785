@@ -12,7 +12,7 @@
 #undef scp_spk_debug
 #endif
 #if 0 /* debug only. might make performace degrade */
-#define scp_spk_debug(x...) pr_info(x)
+#define scp_spk_debug(x...) pr_debug(x)
 #else
 #define scp_spk_debug(x...)
 #endif

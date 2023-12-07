@@ -633,7 +633,7 @@ int mtk_dsp_memif_set_enable(struct mtk_base_afe *afe, int id)
 		release_adsp_semaphore(SEMA_AUDIOREG);
 	} else {
 		if (adsp_sem_ret == ADSP_SEMAPHORE_BUSY)
-			pr_info("%s adsp_sem_ret[%d]\n",
+			pr_debug("%s adsp_sem_ret[%d]\n",
 				__func__, adsp_sem_ret);
 		ret = mtk_memif_set_enable(afe, id);
 	}
@@ -652,7 +652,7 @@ int mtk_dsp_memif_set_disable(struct mtk_base_afe *afe, int id)
 		release_adsp_semaphore(SEMA_AUDIOREG);
 	} else {
 		if (adsp_sem_ret == ADSP_SEMAPHORE_BUSY)
-			pr_info("%s adsp_sem_ret[%d]\n",
+			pr_debug("%s adsp_sem_ret[%d]\n",
 				__func__, adsp_sem_ret);
 		ret = mtk_memif_set_disable(afe, id);
 	}
@@ -680,7 +680,7 @@ int mtk_dsp_irq_set_enable(struct mtk_base_afe *afe,
 		release_adsp_semaphore(SEMA_AUDIOREG);
 	} else {
 		if (adsp_sem_ret == ADSP_SEMAPHORE_BUSY)
-			pr_info("%s adsp_sem_ret[%d]\n",
+			pr_debug("%s adsp_sem_ret[%d]\n",
 				__func__, adsp_sem_ret);
 		regmap_update_bits(afe->regmap, irq_data->irq_en_reg,
 				   1 << irq_data->irq_en_shift,
@@ -710,7 +710,7 @@ int mtk_dsp_irq_set_disable(struct mtk_base_afe *afe,
 		release_adsp_semaphore(SEMA_AUDIOREG);
 	} else {
 		if (adsp_sem_ret == ADSP_SEMAPHORE_BUSY)
-			pr_info("%s adsp_sem_ret[%d]\n",
+			pr_debug("%s adsp_sem_ret[%d]\n",
 				__func__, adsp_sem_ret);
 		regmap_update_bits(afe->regmap, irq_data->irq_en_reg,
 				   1 << irq_data->irq_en_shift,

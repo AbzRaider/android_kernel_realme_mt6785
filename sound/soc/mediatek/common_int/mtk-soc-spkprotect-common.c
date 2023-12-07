@@ -68,7 +68,7 @@ void init_spkscp_reserved_dram(void)
 	resv_dram_spkprotect.size =
 		(uint32_t)scp_get_reserve_mem_size(SPK_PROTECT_MEM_ID);
 
-	pr_info("resv_dram: pa %p, va %p, sz 0x%x\n",
+	pr_debug("resv_dram: pa %p, va %p, sz 0x%x\n",
 		resv_dram_spkprotect.phy_addr, resv_dram_spkprotect.vir_addr,
 		resv_dram_spkprotect.size);
 

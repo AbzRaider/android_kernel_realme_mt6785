@@ -1169,7 +1169,7 @@ static int detect_impedance(void)
 			}
 			if ((dcSum / kDetectTimes) >
 			    hpdet_param.auxadc_upper_bound) {
-				pr_info("%s(), dcValue == 0, auxadc value %d > auxadc_upper_bound %d\n",
+				pr_debug("%s(), dcValue == 0, auxadc value %d > auxadc_upper_bound %d\n",
 					__func__, dcSum / kDetectTimes,
 					hpdet_param.auxadc_upper_bound);
 				impedance = auxcable_impedance;
@@ -1183,7 +1183,7 @@ static int detect_impedance(void)
 			detectSum = audio_get_auxadc_value();
 
 			if ((dcSum / kDetectTimes) == detectSum) {
-				pr_info("%s(), dcSum / kDetectTimes %d == detectSum %d\n",
+				pr_debug("%s(), dcSum / kDetectTimes %d == detectSum %d\n",
 					__func__, dcSum / kDetectTimes,
 					detectSum);
 				impedance = auxcable_impedance;
@@ -2160,7 +2160,7 @@ EXIT:
 	    trimcode[AUDIO_ANALOG_CHANNELS_RIGHT1] > 0xf) ||
 	    (finetrim[AUDIO_ANALOG_CHANNELS_RIGHT1] < 0 ||
 	    finetrim[AUDIO_ANALOG_CHANNELS_RIGHT1] > 0x3))
-		pr_info("%s(), [Warning], invalid trimcode/finetrime (3pole)\n",
+		pr_debug("%s(), [Warning], invalid trimcode/finetrime (3pole)\n",
 			__func__);
 
 	set_anaoffset_value(&hp_3pole_anaoffset,
@@ -2200,7 +2200,7 @@ EXIT:
 	    trimcode[AUDIO_ANALOG_CHANNELS_RIGHT1] > 0xf) ||
 	    (finetrim[AUDIO_ANALOG_CHANNELS_RIGHT1] < 0 ||
 	    finetrim[AUDIO_ANALOG_CHANNELS_RIGHT1] > 0x3))
-		pr_info("%s(), [Warning], invalid trimcode/finetrime (4pole)\n",
+		pr_debug("%s(), [Warning], invalid trimcode/finetrime (4pole)\n",
 			__func__);
 
 	set_anaoffset_value(&hp_4pole_anaoffset,
@@ -2416,7 +2416,7 @@ EXIT:
 	    trimcode[AUDIO_ANALOG_CHANNELS_LEFT1] > 0xf) ||
 	    (finetrim[AUDIO_ANALOG_CHANNELS_LEFT1] < 0 ||
 	    finetrim[AUDIO_ANALOG_CHANNELS_LEFT1] > 0x3))
-		pr_info("%s(), [Warning], invalid trimcode/finetrime (3pole)\n",
+		pr_debug("%s(), [Warning], invalid trimcode/finetrime (3pole)\n",
 			__func__);
 
 	set_anaoffset_value(&hp_3pole_anaoffset,
@@ -2441,7 +2441,7 @@ EXIT:
 	    trimcode[AUDIO_ANALOG_CHANNELS_LEFT1] > 0xf) ||
 	    (finetrim[AUDIO_ANALOG_CHANNELS_LEFT1] < 0 ||
 	    finetrim[AUDIO_ANALOG_CHANNELS_LEFT1] > 0x3))
-		pr_info("%s(), [Warning], invalid trimcode/finetrime (4pole)\n",
+		pr_debug("%s(), [Warning], invalid trimcode/finetrime (4pole)\n",
 			__func__);
 
 	set_anaoffset_value(&spk_4pole_anaoffset,
@@ -4341,7 +4341,7 @@ static int hp_plugged_in_set(struct snd_kcontrol *kcontrol,
 
 	if (ucontrol->value.integer.value[0] == 1) {
 		mic_vinp_mv = get_accdet_auxadc();
-		pr_info("%s(), mic_vinp_mv = %d\n", __func__, mic_vinp_mv);
+		pr_debug("%s(), mic_vinp_mv = %d\n", __func__, mic_vinp_mv);
 	}
 
 	hp_plugged = ucontrol->value.integer.value[0];
@@ -5833,7 +5833,7 @@ static int read_efuse_hp_impedance_current_calibration(void)
 	int ret = 0;
 	int value, sign;
 
-	pr_info("+%s()\n", __func__);
+	pr_debug("+%s()\n", __func__);
 	/* 1. enable efuse ctrl engine clock */
 	Ana_Set_Reg(TOP_CKHWEN_CON0_CLR, 0x1 << 2, 0x1 << 2);
 	Ana_Set_Reg(TOP_CKPDN_CON0_CLR, 0x1 << 4, 0x1 << 4);
@@ -5854,13 +5854,13 @@ static int read_efuse_hp_impedance_current_calibration(void)
 	do {
 		ret = Ana_Get_Reg(OTP_CON13) & 0x0001;
 		usleep_range(100, 200);
-		pr_info("%s(), polling OTP_CON13 = 0x%x\n", __func__, ret);
+		pr_debug("%s(), polling OTP_CON13 = 0x%x\n", __func__, ret);
 	} while (ret == 1);
 	/* Need to delay at least 1ms for 0xC1A and than can read */
 	usleep_range(500, 1000);
 	/* 6. Read RG_OTP_DOUT_SW */
 	ret = Ana_Get_Reg(OTP_CON12);
-	pr_info("%s(), efuse = 0x%x\n", __func__, ret);
+	pr_debug("%s(), efuse = 0x%x\n", __func__, ret);
 	sign = (ret >> 7) & 0x1;
 	value = ret & 0x7f;
 	value = sign ? -value : value;
@@ -5868,12 +5868,12 @@ static int read_efuse_hp_impedance_current_calibration(void)
 	Ana_Set_Reg(OTP_CON11, 0x0000, 0x0001);
 	Ana_Set_Reg(TOP_CKPDN_CON0_SET, 0x1 << 4, 0x1 << 4);
 	Ana_Set_Reg(TOP_CKHWEN_CON0_SET, 0x1 << 2, 0x1 << 2);
-	pr_info("-%s(), efuse: %d\n", __func__, value);
+	pr_debug("-%s(), efuse: %d\n", __func__, value);
 	return value;
 }
 static void mt6357_codec_init_reg(struct snd_soc_codec *codec)
 {
-	pr_info("%s\n", __func__);
+	pr_debug("%s\n", __func__);
 	audckbufEnable(true);
 	Ana_Set_Reg(AUDENC_ANA_CON6, 0x0000, 0x0001);
 	/* disable AUDGLB */
@@ -5895,7 +5895,7 @@ static void mt6357_codec_init_reg(struct snd_soc_codec *codec)
 }
 void InitCodecDefault(void)
 {
-	pr_info("%s\n", __func__);
+	pr_debug("%s\n", __func__);
 	mCodec_data->mAudio_Ana_Volume[AUDIO_ANALOG_VOLUME_MICAMP1] = 3;
 	mCodec_data->mAudio_Ana_Volume[AUDIO_ANALOG_VOLUME_MICAMP2] = 3;
 	mCodec_data->mAudio_Ana_Volume[AUDIO_ANALOG_VOLUME_MICAMP3] = 3;

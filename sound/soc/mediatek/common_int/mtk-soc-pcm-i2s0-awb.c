@@ -224,7 +224,7 @@ static int mtk_i2s0_awb_pcm_open(struct snd_pcm_substream *substream)
 	runtime->hw.info |= SNDRV_PCM_INFO_MMAP_VALID;
 
 	if (substream->stream == SNDRV_PCM_STREAM_CAPTURE)
-		pr_info("SNDRV_PCM_STREAM_CAPTURE\n");
+		pr_debug("SNDRV_PCM_STREAM_CAPTURE\n");
 	else
 		return -1;
 

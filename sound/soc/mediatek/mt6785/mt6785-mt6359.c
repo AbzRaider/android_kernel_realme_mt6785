@@ -48,7 +48,7 @@ static inline int audio_exthpamp_setup_gpio(struct platform_device *device)
 	pinctrl_ext_hp_amp = devm_pinctrl_get(&device->dev);
 	if (IS_ERR(pinctrl_ext_hp_amp)) {
 		ret = PTR_ERR(pinctrl_ext_hp_amp);
-		pr_info("[audio] Cannot find ext_hp_amp ret = %d !\n", ret);
+		pr_debug("[audio] Cannot find ext_hp_amp ret = %d !\n", ret);
 		return ret;
 	}
 	for (index_gpio = 0; index_gpio < ARRAY_SIZE(audhpamp_gpios);
@@ -58,7 +58,7 @@ static inline int audio_exthpamp_setup_gpio(struct platform_device *device)
 			audhpamp_gpios[index_gpio].name);
 		if (IS_ERR(audhpamp_gpios[index_gpio].gpioctrl)) {
 			ret = PTR_ERR(audhpamp_gpios[index_gpio].gpioctrl);
-			pr_info("[audio] %s lookup_state %s fail %d\n",
+			pr_debug("[audio] %s lookup_state %s fail %d\n",
 			__func__, audhpamp_gpios[index_gpio].name, ret);
 		} else {
 			audhpamp_gpios[index_gpio].gpio_prepare = true;
@@ -74,9 +74,9 @@ static void audio_exthpamp_enable(void)
 	if (audhpamp_gpios[GPIO_EXTHPAMP_ON].gpio_prepare) {
 		pinctrl_select_state(pinctrl_ext_hp_amp,
 			audhpamp_gpios[GPIO_EXTHPAMP_ON].gpioctrl);
-		pr_info("[audio] set audhpamp_gpios[GPIO_EXTHPAMP_ON] pins\n");
+		pr_debug("[audio] set audhpamp_gpios[GPIO_EXTHPAMP_ON] pins\n");
 	} else {
-		pr_info("[audio] audhpamp_gpios[GPIO_EXTHPAMP_ON] pins are not prepared!\n");
+		pr_debug("[audio] audhpamp_gpios[GPIO_EXTHPAMP_ON] pins are not prepared!\n");
 	}
 }
 
@@ -85,9 +85,9 @@ static void audio_exthpamp_disable(void)
 	if (audhpamp_gpios[GPIO_EXTHPAMP_OFF].gpio_prepare) {
 		pinctrl_select_state(pinctrl_ext_hp_amp,
 			audhpamp_gpios[GPIO_EXTHPAMP_OFF].gpioctrl);
-		pr_info("[audio] set aud_gpios[GPIO_EXTHPAMP_OFF] pins\n");
+		pr_debug("[audio] set aud_gpios[GPIO_EXTHPAMP_OFF] pins\n");
 	} else {
-		pr_info("[audio] aud_gpios[GPIO_EXTHPAMP_OFF] pins are not prepared!\n");
+		pr_debug("[audio] aud_gpios[GPIO_EXTHPAMP_OFF] pins are not prepared!\n");
 	}
 }
 #endif

@@ -279,7 +279,7 @@ void Afe_Set_Reg(unsigned int offset, unsigned int value, unsigned int mask)
 	/* Hongxiang.Jin@MULTIMEDIA.AUDIODRIVER.MACHINE, 2019/08/26,
 	 * add log for debug */
 	if ((offset != 0x3a8) && (offset != 0x03b4)) {
-		pr_info("Afe_Set_Reg offset=%x, value=%x, mask=%x \n",
+		pr_debug("Afe_Set_Reg offset=%x, value=%x, mask=%x \n",
 			offset, value, mask);
 	}
 #endif /* OPLUS_BUG_COMPATIBILITY */

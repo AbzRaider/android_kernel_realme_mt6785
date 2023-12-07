@@ -81,7 +81,7 @@ void set_ipi_recv_private(void *priv)
 
 void mtk_scp_spk_dump_msg(struct mtk_base_scp_spk_dump *spk_dump)
 {
-	pr_info("%s()\n", __func__);
+	pr_debug("%s()\n", __func__);
 
 	spk_dump->dump_ops->spk_dump_callback = spkprotect_dump_message;
 }

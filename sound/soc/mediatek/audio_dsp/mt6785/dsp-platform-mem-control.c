@@ -216,7 +216,7 @@ static struct audio_dsp_dram
 struct audio_dsp_dram *mtk_get_adsp_sharemem_block(int audio_task_id)
 {
 	if (audio_task_id > AUDIO_TASK_DAI_NUM)
-		pr_info("%s err\n", __func__);
+		pr_debug("%s err\n", __func__);
 
 	switch (audio_task_id) {
 	case AUDIO_TASK_VOIP_ID:
@@ -244,7 +244,7 @@ struct audio_dsp_dram *mtk_get_adsp_sharemem_block(int audio_task_id)
 	case AUDIO_TASK_CAPTURE_RAW_ID:
 		return adsp_sharemem_capture_raw_mblock;
 	default:
-		pr_info("%s err audio_task_id = %d\n", __func__, audio_task_id);
+		pr_debug("%s err audio_task_id = %d\n", __func__, audio_task_id);
 	}
 
 	return NULL;
@@ -253,7 +253,7 @@ struct audio_dsp_dram *mtk_get_adsp_sharemem_block(int audio_task_id)
 struct mtk_adsp_task_attr *mtk_get_adsp_task_attr(int adsp_id)
 {
 	if (adsp_id >= AUDIO_TASK_DAI_NUM)
-		pr_info("%s adsp_id = %d\n", __func__, adsp_id);
+		pr_debug("%s adsp_id = %d\n", __func__, adsp_id);
 
 	switch (adsp_id) {
 	case AUDIO_TASK_VOIP_ID:

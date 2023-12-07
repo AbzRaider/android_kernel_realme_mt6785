@@ -258,7 +258,7 @@ static int sia81xx_sock_proc(
 				cal->rep_code = REP_CODE_EXEC_ERR;
 				ret = sia81xx_sock_write(sock, buf, len);
 			} else {
-				pr_info("[ info][%s] %s: write module_id = 0x%08x, "
+				pr_debug("[ info][%s] %s: write module_id = 0x%08x, "
 					"param_id = 0x%08x, payload_size = %u, "
 					"payload = %u, ret = %d \r\n", 
 					LOG_FLAG, __func__, cal->module_id, cal->param_id, 
@@ -303,7 +303,7 @@ static int sia81xx_sock_proc(
 				cal->rep_code = REP_CODE_EXEC_ERR;
 				ret = sia81xx_sock_write(sock, buf, len);
 			} else {
-				pr_info("[ info][%s] %s: read module_id = 0x%08x, "
+				pr_debug("[ info][%s] %s: read module_id = 0x%08x, "
 					"param_id = 0x%08x, payload_size = %u, "
 					"payload = %u, ret = %d \r\n", 
 					LOG_FLAG, __func__, cal->module_id, cal->param_id, 
@@ -370,7 +370,7 @@ static int sia81xx_sock_proc(
 		{
 			map = is_cal_id_exist(cal->cal_id);
 			if(NULL == map) {
-				pr_info("[ info][%s] %s: NULL == map, id = %d \r\n",
+				pr_debug("[ info][%s] %s: NULL == map, id = %d \r\n",
 					LOG_FLAG, __func__, cal->cal_id);
 
 				cal->rep_code = REP_CODE_CAL_ID_NOT_EXIST;
@@ -656,7 +656,7 @@ int sia81xx_sock_init(void)
 {
 	int ret = 0;
 
-	pr_info("[ info][%s] %s: run !! \r\n", LOG_FLAG, __func__);
+	pr_debug("[ info][%s] %s: run !! \r\n", LOG_FLAG, __func__);
 
 	sia81xx_close_sock_server();
 
@@ -670,7 +670,7 @@ int sia81xx_sock_init(void)
 
 void sia81xx_sock_exit(void)
 {
-	pr_info("[ info][%s] %s: run !! \r\n", LOG_FLAG, __func__);
+	pr_debug("[ info][%s] %s: run !! \r\n", LOG_FLAG, __func__);
 
 	sia81xx_close_sock_server();
 

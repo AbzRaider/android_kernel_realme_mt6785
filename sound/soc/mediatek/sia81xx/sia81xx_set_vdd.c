@@ -317,7 +317,7 @@ static int sia81xx_close_set_vdd_server(
 {
 	struct sia81xx_set_vdd_info *info = is_cal_id_exist(cal_id);
 	if(NULL == info) {
-		pr_info("[ info][%s] %s: NULL == map, id = %d \r\n",
+		pr_debug("[ info][%s] %s: NULL == map, id = %d \r\n",
 			LOG_FLAG, __func__, cal_id);
 		return 0;
 	}
@@ -467,7 +467,7 @@ int sia81xx_set_vdd_init(void)
 
 	delete_all_info();
 
-	pr_info("[ info][%s] %s: run !! ", 
+	pr_debug("[ info][%s] %s: run !! ", 
 		LOG_FLAG, __func__);
 
 	return ret;
@@ -478,7 +478,7 @@ void sia81xx_set_vdd_exit(void)
 {
 	delete_all_info();
 	
-	pr_info("[ info][%s] %s: run !! ", 
+	pr_debug("[ info][%s] %s: run !! ", 
 		LOG_FLAG, __func__);
 }
 

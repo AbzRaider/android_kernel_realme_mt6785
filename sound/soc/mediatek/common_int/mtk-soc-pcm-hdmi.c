@@ -197,7 +197,7 @@ static void copysinewavetohdmi(unsigned int channels)
 	if (channels == 0) {
 		memset_io((void *)(Bufferaddr), 0x7f7f7f7f,
 			  Hdmi_Buffer_length); /* using for observe data */
-		pr_info("use fix pattern Bufferaddr = %p Hhdmi_Buffer_length = %d\n",
+		pr_debug("use fix pattern Bufferaddr = %p Hhdmi_Buffer_length = %d\n",
 			Bufferaddr, Hdmi_Buffer_length);
 		return;
 	}

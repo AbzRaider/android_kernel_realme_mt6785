@@ -40,7 +40,7 @@ int audio_set_dsp_afe(struct mtk_base_afe *afe)
 struct mtk_base_afe *get_afe_base(void)
 {
 	if (local_dsp_afe == NULL)
-		pr_info("%s local_base_dsp == NULL", __func__);
+		pr_debug("%s local_base_dsp == NULL", __func__);
 
 	return local_dsp_afe;
 }
@@ -48,7 +48,7 @@ struct mtk_base_afe *get_afe_base(void)
 int set_dsp_base(struct mtk_base_dsp *pdsp)
 {
 	if (pdsp == NULL)
-		pr_info("%s pdsp == NULL", __func__);
+		pr_debug("%s pdsp == NULL", __func__);
 
 	local_base_dsp = pdsp;
 	return 0;
@@ -99,14 +99,14 @@ int mtk_scp_ipi_send(int task_scene, int data_type, int ack_type,
 	memset((void *)&ipi_msg, 0, sizeof(struct ipi_msg_t));
 
 	if (!is_audio_task_dsp_ready(task_scene)) {
-		pr_info("%s(), is_adsp_ready send false\n", __func__);
+		pr_debug("%s(), is_adsp_ready send false\n", __func__);
 		send_result = -1;
 		return send_result;
 	}
 
 	if (get_task_attr(get_dspdaiid_by_dspscene(task_scene),
 			  ADSP_TASK_ATTR_DEFAULT) == 0) {
-		pr_info("%s() task_scene[%d] not enable\n",
+		pr_debug("%s() task_scene[%d] not enable\n",
 			__func__, task_scene);
 		send_result = -1;
 		return send_result;
@@ -119,7 +119,7 @@ int mtk_scp_ipi_send(int task_scene, int data_type, int ack_type,
 		(char *)payload);
 
 	if (send_result)
-		pr_info("%s(),scp_ipi send fail\n",
+		pr_debug("%s(),scp_ipi send fail\n",
 			__func__);
 
 	return send_result;
@@ -192,7 +192,7 @@ int get_dspdaiid_by_dspscene(int dspscene)
 	case TASK_SCENE_CAPTURE_RAW:
 		return AUDIO_TASK_CAPTURE_RAW_ID;
 	default:
-		pr_info("%s() err dspscene=%d\n", __func__, dspscene);
+		pr_debug("%s() err dspscene=%d\n", __func__, dspscene);
 		return -1;
 	}
 	return 0;
@@ -262,7 +262,7 @@ int get_dsp_task_id_from_str(const char *task_name)
 	else if (strstr(task_name, "fast"))
 		ret = AUDIO_TASK_FAST_ID;
 	else
-		pr_info("%s(), %s has no task id, ret %d",
+		pr_debug("%s(), %s has no task id, ret %d",
 			__func__, task_name, ret);
 
 	return ret;
@@ -278,25 +278,25 @@ static int set_aud_buf_attr(struct audio_hw_buffer *audio_hwbuf,
 
 	ret = set_afe_audio_pcmbuf(audio_hwbuf, substream);
 	if (ret < 0) {
-		pr_info("set_afe_audio_pcmbuf fail\n");
+		pr_debug("set_afe_audio_pcmbuf fail\n");
 		return -1;
 	}
 
 	ret = set_audiobuffer_hw(audio_hwbuf, BUFFER_TYPE_HW_MEM);
 	if (ret < 0) {
-		pr_info("set_audiobuffer_hw fail\n");
+		pr_debug("set_audiobuffer_hw fail\n");
 		return -1;
 	}
 
 	ret = set_audiobuffer_audio_irq_num(audio_hwbuf, irq_usage);
 	if (ret < 0) {
-		pr_info("set_audiobuffer_audio_irq_num fail\n");
+		pr_debug("set_audiobuffer_audio_irq_num fail\n");
 		return -1;
 	}
 
 	ret = set_audiobuffer_audio_memiftype(audio_hwbuf, dai->id);
 	if (ret < 0) {
-		pr_info("set_audiobuffer_audio_memiftype fail\n");
+		pr_debug("set_audiobuffer_audio_memiftype fail\n");
 		return -1;
 	}
 
@@ -304,7 +304,7 @@ static int set_aud_buf_attr(struct audio_hw_buffer *audio_hwbuf,
 		audio_hwbuf,
 		get_audio_memery_type(substream));
 	if (ret < 0) {
-		pr_info("set_audiobuffer_memorytype fail\n");
+		pr_debug("set_audiobuffer_memorytype fail\n");
 		return -1;
 	}
 
@@ -313,17 +313,17 @@ static int set_aud_buf_attr(struct audio_hw_buffer *audio_hwbuf,
 		substream, params,
 		afe_get_pcmdir(substream->stream, *audio_hwbuf));
 	if (ret < 0) {
-		pr_info("set_audiobuffer_attribute fail\n");
+		pr_debug("set_audiobuffer_attribute fail\n");
 		return -1;
 	}
 
 	ret = set_audiobuffer_threshold(audio_hwbuf, substream);
 	if (ret < 0) {
-		pr_info("set_audiobuffer_threshold fail\n");
+		pr_debug("set_audiobuffer_threshold fail\n");
 		return -1;
 	}
 
-	pr_info("%s() memiftype: %d ch: %u fmt: %u rate: %u dir: %d, start_thres: %u stop_thres: %u period_size: %d period_cnt: %d\n",
+	pr_debug("%s() memiftype: %d ch: %u fmt: %u rate: %u dir: %d, start_thres: %u stop_thres: %u period_size: %d period_cnt: %d\n",
 		__func__,
 		audio_hwbuf->audio_memiftype,
 		audio_hwbuf->aud_buffer.buffer_attr.channel,
@@ -358,7 +358,7 @@ int afe_pcm_ipi_to_dsp(int command, struct snd_pcm_substream *substream,
 	    get_task_attr(task_id, ADSP_TASK_ATTR_DEFAULT) <= 0)
 		return -1;
 
-	pr_info("%s(), command 0x%x\n", __func__, command);
+	pr_debug("%s(), command 0x%x\n", __func__, command);
 
 	dsp_memif = (struct mtk_base_dsp_mem *)&dsp->dsp_mem[task_id];
 
@@ -452,12 +452,12 @@ void mtk_dsp_pcm_ipi_recv(struct ipi_msg_t *ipi_msg)
 	struct mtk_base_dsp *dsp = get_ipi_recv_private();
 
 	if (ipi_msg == NULL) {
-		pr_info("%s ipi_msg == NULL\n", __func__);
+		pr_debug("%s ipi_msg == NULL\n", __func__);
 		return;
 	}
 
 	if (!is_audio_task_dsp_ready(ipi_msg->task_scene)) {
-		pr_info("%s(), is_adsp_ready send false\n", __func__);
+		pr_debug("%s(), is_adsp_ready send false\n", __func__);
 		return;
 	}
 
@@ -511,7 +511,7 @@ static int mtk_audio_dsp_event_receive(
 		mtk_reinit_adsp();
 		break;
 	default:
-		pr_info("event %lu err", event);
+		pr_debug("event %lu err", event);
 	}
 	return 0;
 }
@@ -537,12 +537,12 @@ int mtk_audio_set_adsp_reset_status(int status)
 	dsp = get_dsp_base();
 
 	if (dsp == NULL) {
-		pr_info("%s dsp == NULL\n", __func__);
+		pr_debug("%s dsp == NULL\n", __func__);
 		return -1;
 	}
 
 	dsp->adsp_reset = status;
-	pr_info("%s adsp_reset[%d]\n", __func__, dsp->adsp_reset);
+	pr_debug("%s adsp_reset[%d]\n", __func__, dsp->adsp_reset);
 
 	return 0;
 }
@@ -556,7 +556,7 @@ bool mtk_audio_get_adsp_reset_status(void)
 	dsp = get_dsp_base();
 
 	if (dsp == NULL) {
-		pr_info("%s dsp == NULL\n", __func__);
+		pr_debug("%s dsp == NULL\n", __func__);
 		return -1;
 	}
 
@@ -567,7 +567,7 @@ bool mtk_audio_get_adsp_reset_status(void)
 
 	dsp->adsp_reset = false;
 
-	pr_info("%s ret[%d] dsp->adsp_reset[%d]\n", __func__, ret, dsp->adsp_reset);
+	pr_debug("%s ret[%d] dsp->adsp_reset[%d]\n", __func__, ret, dsp->adsp_reset);
 
 	return ret;
 }

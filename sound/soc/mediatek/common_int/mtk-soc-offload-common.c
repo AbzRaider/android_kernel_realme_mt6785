@@ -176,7 +176,7 @@ static int offloadservice_getformat(struct snd_kcontrol *kcontrol,
 {
 	ucontrol->value.integer.value[0] = 0;
 	if (afe_offload_service.decode_error == true) {
-		pr_info("offloadgetformat decode_error\n");
+		pr_debug("offloadgetformat decode_error\n");
 		ucontrol->value.integer.value[0] = 1;
 	}
 	return 0;
@@ -261,7 +261,7 @@ static int mtk_compr_offload_drain(struct snd_compr_stream *stream)
 		ringbufbridge_writebk = buf_bridge->pWrite;
 		afe_offload_service.needdata = false;
 
-		pr_info("%s, OFFLOAD_DRAIN", __func__);
+		pr_debug("%s, OFFLOAD_DRAIN", __func__);
 		mtk_scp_ipi_send(get_dspscene_by_dspdaiid(ID),
 			AUDIO_IPI_MSG_ONLY, AUDIO_IPI_MSG_NEED_ACK,
 			OFFLOAD_DRAIN, buf_bridge->pWrite, 0, NULL);
@@ -271,7 +271,7 @@ static int mtk_compr_offload_drain(struct snd_compr_stream *stream)
 #ifdef use_wake_lock
 	mtk_compr_offload_int_wakelock(false);
 #endif
-	pr_info("%s-", __func__);
+	pr_debug("%s-", __func__);
 	return 1;  /* make compress driver drain failed */
 }
 
@@ -519,7 +519,7 @@ static void offloadservice_ipicmd_received(struct ipi_msg_t *ipi_msg)
 	int id = 0;
 
 	if (ipi_msg == NULL) {
-		pr_info("%s ipi_msg == NULL\n", __func__);
+		pr_debug("%s ipi_msg == NULL\n", __func__);
 		return;
 	}
 
@@ -545,13 +545,13 @@ static void offloadservice_ipicmd_received(struct ipi_msg_t *ipi_msg)
 		afe_offload_block.copied_total = ipi_msg->param1;
 		break;
 	case OFFLOAD_DRAINDONE:
-		pr_info("%s mtk_compr_offload_draindone\n", __func__);
+		pr_debug("%s mtk_compr_offload_draindone\n", __func__);
 		afe_offload_block.drain_state = AUDIO_DRAIN_ALL;
 		mtk_compr_offload_draindone();
 		break;
 	case OFFLOAD_DECODE_ERROR:
 		afe_offload_service.decode_error = true;
-		pr_info("%s decode_error\n", __func__);
+		pr_debug("%s decode_error\n", __func__);
 		break;
 	default:
 		break;
@@ -904,7 +904,7 @@ static int mtk_dloffload_probe(struct platform_device *dev)
 		pr_debug("%s(), dev->dev.of_node = NULL!!!\n", __func__);
 	}
 
-	pr_info("%s: dev name %s\n", __func__, dev_name(&dev->dev));
+	pr_debug("%s: dev name %s\n", __func__, dev_name(&dev->dev));
 
 	offload_dev = &dev->dev;
 	dsp = (struct mtk_base_dsp *)get_dsp_base();

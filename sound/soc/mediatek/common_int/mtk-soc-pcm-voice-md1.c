@@ -191,7 +191,7 @@ static int speech_property_get(struct snd_kcontrol *kcontrol,
 	sph_property = (int *)get_sph_property_by_name(&voice_property,
 						       kcontrol->id.name);
 	if (!sph_property) {
-		pr_info("%s(), sph_property == NULL\n", __func__);
+		pr_debug("%s(), sph_property == NULL\n", __func__);
 		return -EINVAL;
 	}
 	ucontrol->value.integer.value[0] = *sph_property;
@@ -207,7 +207,7 @@ static int speech_property_set(struct snd_kcontrol *kcontrol,
 	sph_property = (int *)get_sph_property_by_name(&voice_property,
 						       kcontrol->id.name);
 	if (!sph_property) {
-		pr_info("%s(), sph_property == NULL\n", __func__);
+		pr_debug("%s(), sph_property == NULL\n", __func__);
 		return -EINVAL;
 	}
 	*sph_property = ucontrol->value.integer.value[0];
@@ -261,7 +261,7 @@ static int mtk_voice_pcm_open(struct snd_pcm_substream *substream)
 
 	AudDrv_Clk_On();
 
-	pr_info("%s(), stream(%d)\n", __func__, substream->stream);
+	pr_debug("%s(), stream(%d)\n", __func__, substream->stream);
 
 	runtime->hw = mtk_pcm_hardware;
 	memcpy((void *)(&(runtime->hw)), (void *)&mtk_pcm_hardware,
@@ -289,7 +289,7 @@ static int mtk_voice_pcm_open(struct snd_pcm_substream *substream)
 
 static int mtk_voice_close(struct snd_pcm_substream *substream)
 {
-	pr_info("%s(), stream(%d)\n", __func__, substream->stream);
+	pr_debug("%s(), stream(%d)\n", __func__, substream->stream);
 
 	if (substream->stream == SNDRV_PCM_STREAM_CAPTURE) {
 		/* 3-mic setting */
@@ -363,7 +363,7 @@ static int mtk_voice1_prepare(struct snd_pcm_substream *substream)
 {
 	struct snd_pcm_runtime *runtimeStream = substream->runtime;
 
-	pr_info("%s(), stream(%d), rate = %d  channels = %d period_size = %lu\n",
+	pr_debug("%s(), stream(%d), rate = %d  channels = %d period_size = %lu\n",
 		__func__, substream->stream, runtimeStream->rate,
 		runtimeStream->channels, runtimeStream->period_size);
 
@@ -464,14 +464,14 @@ static int mtk_voice_probe(struct platform_device *pdev)
 		pr_debug("%s(), pdev->dev.of_node = NULL!!!\n", __func__);
 	}
 
-	pr_info("%s(), dev name %s\n", __func__, dev_name(&pdev->dev));
+	pr_debug("%s(), dev name %s\n", __func__, dev_name(&pdev->dev));
 	return snd_soc_register_platform(&pdev->dev,
 					 &mtk_soc_voice_platform);
 }
 
 static int mtk_voice_platform_probe(struct snd_soc_platform *platform)
 {
-	pr_info("%s()\n", __func__);
+	pr_debug("%s()\n", __func__);
 
 	snd_soc_add_platform_controls(platform, mtk_voice_speech_controls,
 				      ARRAY_SIZE(mtk_voice_speech_controls));
@@ -481,7 +481,7 @@ static int mtk_voice_platform_probe(struct snd_soc_platform *platform)
 
 static int mtk_voice_remove(struct platform_device *pdev)
 {
-	pr_info("%s()\n", __func__);
+	pr_debug("%s()\n", __func__);
 	snd_soc_unregister_platform(&pdev->dev);
 	return 0;
 }
@@ -587,7 +587,7 @@ static int __init mtk_soc_voice_platform_init(void)
 {
 	int ret = 0;
 
-	pr_info("%s()\n", __func__);
+	pr_debug("%s()\n", __func__);
 #ifndef CONFIG_OF
 	soc_mtk_voice_dev = platform_device_alloc(MT_SOC_VOICE_MD1, -1);
 
@@ -609,7 +609,7 @@ module_init(mtk_soc_voice_platform_init);
 
 static void __exit mtk_soc_voice_platform_exit(void)
 {
-	pr_info("%s()\n", __func__);
+	pr_debug("%s()\n", __func__);
 	platform_driver_unregister(&mtk_voice_driver);
 }
 module_exit(mtk_soc_voice_platform_exit);

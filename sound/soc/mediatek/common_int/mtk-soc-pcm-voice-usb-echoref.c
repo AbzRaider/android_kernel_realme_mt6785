@@ -385,7 +385,7 @@ mtk_usb_echoref_pointer(struct snd_pcm_substream *substream)
 
 	hw_ptr = Afe_Get_Reg(AFE_DL1_CUR);
 	if (hw_ptr == 0) {
-		pr_info("%s(), hw_ptr == 0\n", __func__);
+		pr_debug("%s(), hw_ptr == 0\n", __func__);
 		hw_ptr = Afe_Block->pucPhysBufAddr;
 	}
 

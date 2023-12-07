@@ -324,7 +324,7 @@ mtk_pcm_dl1spk_pointer(struct snd_pcm_substream *substream)
 		Afe_Block->u4DMAReadIdx += Afe_consumed_bytes;
 		Afe_Block->u4DMAReadIdx %= Afe_Block->u4BufferSize;
 		if (Afe_Block->u4DataRemained < 0) {
-			pr_info("[AudioWarn] u4DataRemained=0x%x\n",
+			pr_debug("[AudioWarn] u4DataRemained=0x%x\n",
 				Afe_Block->u4DataRemained);
 			underflow = true;
 		};
@@ -664,7 +664,7 @@ static int mtk_pcm_dl1spk_open(struct snd_pcm_substream *substream)
 	mspkiv_meminterface_type =
 		get_usage_digital_block(AUDIO_USAGE_SCP_SPK_IV_DATA);
 	if (mspkiv_meminterface_type < 0) {
-		pr_info("%s get_pcm_mem_id err using VUL_Data2 as default\n",
+		pr_debug("%s get_pcm_mem_id err using VUL_Data2 as default\n",
 			__func__);
 		mspkiv_meminterface_type = Soc_Aud_Digital_Block_MEM_VUL_DATA2;
 	}
@@ -1060,7 +1060,7 @@ static int mtk_dl1spk_probe(struct platform_device *pdev)
 		pr_debug("%s(), pdev->dev.of_node = NULL!!!\n", __func__);
 	}
 
-	pr_info("%s: dev name %s\n", __func__, dev_name(&pdev->dev));
+	pr_debug("%s: dev name %s\n", __func__, dev_name(&pdev->dev));
 
 	mDev = &pdev->dev;
 
@@ -1073,7 +1073,7 @@ static struct spk_dump_ops dump_ops = {
 
 static int mtk_afe_dl1spk_probe(struct snd_soc_platform *platform)
 {
-	pr_info("afe_dl1spk_probe\n");
+	pr_debug("afe_dl1spk_probe\n");
 	snd_soc_add_platform_controls(platform, Audio_snd_dl1spk_controls,
 				      ARRAY_SIZE(Audio_snd_dl1spk_controls));
 	/* allocate dram */
