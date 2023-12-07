@@ -1569,7 +1569,7 @@ bool oplus_vooc_wake_fastchg_work(struct oplus_vooc_chip *chip)
 {
 	return schedule_delayed_work(&chip->fastchg_work, 0);
 }
-
+/*
 void oplus_vooc_print_log(void)
 {
 	if (!g_vooc_chip) {
@@ -1579,7 +1579,7 @@ void oplus_vooc_print_log(void)
 		g_vooc_chip->fastchg_allow, g_vooc_chip->fastchg_started, g_vooc_chip->fastchg_dummy_started,
 		g_vooc_chip->fastchg_to_normal, g_vooc_chip->fastchg_to_warm, g_vooc_chip->btb_temp_over);
 }
-
+*/
 bool oplus_vooc_get_allow_reading(void)
 {
 	if (!g_vooc_chip) {
