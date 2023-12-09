@@ -237,7 +237,7 @@ static int __init br_init(void)
 #endif
 
 #if IS_MODULE(CONFIG_BRIDGE_NETFILTER)
-	pr_info("bridge: filtering via arp/ip/ip6tables is no longer available "
+	pr_debug("bridge: filtering via arp/ip/ip6tables is no longer available "
 		"by default. Update your scripts to load br_netfilter if you "
 		"need this.\n");
 #endif

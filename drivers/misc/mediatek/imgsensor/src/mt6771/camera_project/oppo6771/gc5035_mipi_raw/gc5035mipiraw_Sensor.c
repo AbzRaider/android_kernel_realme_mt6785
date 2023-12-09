@@ -253,7 +253,7 @@ static void read_eeprom_SN(void)
 	for (idx = 0; idx <CAMERA_MODULE_SN_LENGTH; idx++) {
 		char pusendcmd[2] = {0x00 , (char)((0xE0 + idx) & 0xFF) };
 		iReadRegI2C(pusendcmd , 2, (u8*)&get_byte[idx],1, 0xA0);
-		pr_info("gGc5035_SN[%d]: 0x%x  0x%x\n", idx, get_byte[idx], gGc5035_SN[idx]);
+		pr_debug("gGc5035_SN[%d]: 0x%x  0x%x\n", idx, get_byte[idx], gGc5035_SN[idx]);
 	}
 }
 

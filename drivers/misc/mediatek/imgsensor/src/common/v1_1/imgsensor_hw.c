@@ -178,7 +178,7 @@ static enum IMGSENSOR_RETURN imgsensor_hw_power_sequence(
 					phw->pdev[psensor_pwr->id[ppwr_info->pin]];
 
 					if (__ratelimit(&ratelimit))
-						pr_info(
+						pr_debug(
 						"sensor_idx %d, ppwr_info->pin %d, ppwr_info->pin_state_on %d, delay %u",
 						sensor_idx,
 						ppwr_info->pin,
@@ -324,7 +324,7 @@ enum IMGSENSOR_RETURN imgsensor_hw_power(
 	/*Henry.Chang@Camera.Drv add for hwcfg MIPISWITCH 20200728*/
 	struct IMGSENSOR_HW_POWER_SEQ *ppwr_seq = NULL;
 	#endif
-	pr_info("sensor_idx %d, power %d curr_sensor_name %s, enable list %s\n",
+	pr_debug("sensor_idx %d, power %d curr_sensor_name %s, enable list %s\n",
 		sensor_idx,
 		pwr_status,
 		curr_sensor_name,
@@ -338,7 +338,7 @@ enum IMGSENSOR_RETURN imgsensor_hw_power(
 
 	ret = snprintf(str_index, sizeof(str_index), "%d", sensor_idx);
 	if (ret < 0) {
-		pr_info("Error! snprintf allocate 0");
+		pr_debug("Error! snprintf allocate 0");
 		ret = IMGSENSOR_RETURN_ERROR;
 		return ret;
 	}

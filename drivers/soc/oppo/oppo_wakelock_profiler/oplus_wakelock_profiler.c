@@ -23,44 +23,44 @@ static int get_platform(void)
 	const char *comp_str;
 
 	if (!of_root) {
-		pr_info("of_root is null!\n");
+		pr_debug("of_root is null!\n");
 		return -1;
 	}
 
 	of_node_get(of_root);
 	comp_str = of_get_property(of_root, "compatible", NULL);
 	if (!comp_str) {
-		pr_info("of_root's compatible is null!\n");
+		pr_debug("of_root's compatible is null!\n");
 		of_node_put(of_root);
 		return -1;
 	}
-	pr_info("comp_str = %s\n", comp_str);
+	pr_debug("comp_str = %s\n", comp_str);
 
 	if (strstr(comp_str, PLATFORM_KONA)) {
 		platform_id = KONA;
 		comm_all_modules = (struct wakeup_count_desc_t **)all_modules_kona;
 		modem_report_exchange = modem_report_exchange_kona;
-		pr_info("platform is %s\n", PLATFORM_KONA);
+		pr_debug("platform is %s\n", PLATFORM_KONA);
 	} else if (strstr(comp_str, PLATFORM_LITO)) {
 		platform_id = LITO;
 		comm_all_modules = (struct wakeup_count_desc_t **)all_modules_lito;
 		modem_report_exchange = modem_report_exchange_lito;
-		pr_info("platform is %s\n", PLATFORM_LITO);
+		pr_debug("platform is %s\n", PLATFORM_LITO);
 	} else if (strstr(comp_str, PLATFORM_TRINKET)) {
 		platform_id = TRINKET;
 		comm_all_modules = (struct wakeup_count_desc_t **)all_modules_trinket;
 		modem_report_exchange = modem_report_exchange_trinket;
-		pr_info("platform is %s\n", PLATFORM_TRINKET);
+		pr_debug("platform is %s\n", PLATFORM_TRINKET);
 	} else if (strstr(comp_str, PLATFORM_LAHAINA)) {
 		platform_id = LAHAINA;
 		comm_all_modules = (struct wakeup_count_desc_t **)all_modules_lahaina;
 		modem_report_exchange = modem_report_exchange_lahaina;
-		pr_info("platform is %s\n", PLATFORM_LAHAINA);
+		pr_debug("platform is %s\n", PLATFORM_LAHAINA);
 	} else {
 		platform_id = 0;
 		comm_all_modules = NULL;
 		modem_report_exchange = NULL;
-		pr_info("platform not matched!\n");
+		pr_debug("platform not matched!\n");
 		of_node_put(of_root);
 		return -1;
 	}
@@ -87,7 +87,7 @@ int wakeup_reasons_statics(const char *irq_name, int choose_flag)
 	if (irq_name == NULL) {
 		return false;
 	}
-	pr_info("Enter: %s, irq_name=%s, choose_flag=0x%x", __func__,
+	pr_debug("Enter: %s, irq_name=%s, choose_flag=0x%x", __func__,
 		irq_name, choose_flag);
 
 	for (i = 0; (desc = comm_all_modules[i]) != NULL; i++) {
@@ -120,7 +120,7 @@ void wakeup_reasons_clear(int choose_flag)
 		return;
 	}
 
-	pr_info("Enter: %s, choose_flag=0x%x", __func__, choose_flag);
+	pr_debug("Enter: %s, choose_flag=0x%x", __func__, choose_flag);
 	for (i = 0; (desc = comm_all_modules[i]) != NULL; i++) {
 		if (desc->module_mask & choose_flag) {
 			for (j = 0; j < desc->ws_number; j++) {
@@ -147,11 +147,11 @@ void wakeup_reasons_print(int choose_flag, int datil)
 
 	for (i = 0; (desc = comm_all_modules[i]) != NULL; i++) {
 		if (desc->module_mask & choose_flag) {
-			pr_info("%s %lld times,\n", desc->module_name, desc->module_all_count);
+			pr_debug("%s %lld times,\n", desc->module_name, desc->module_all_count);
 			if (datil) {
 				for (j = 0; j < desc->ws_number; j++) {
 					if (desc->ws_desc[j].prop & (IRQ_PROP_REAL|IRQ_PROP_EXCHANGE)) {
-						pr_info("%s wakeup %lld times\n", desc->ws_desc[j].name, desc->ws_desc[j].count);
+						pr_debug("%s wakeup %lld times\n", desc->ws_desc[j].name, desc->ws_desc[j].count);
 					}
 				}
 			}
@@ -213,7 +213,7 @@ void alarmtimer_wakeup_count(struct alarm *alarm)
 			if(alarmtimer_busy_flag_get())
 				alarmtimer_busy_flag_clear();
 			if (alarm->function)
-				pr_info("%s: alarm_type=%d, not_netalarm_count=%lld, not_netalarm_wakeup_count=%lld, alarm_func=%pf\n",
+				pr_debug("%s: alarm_type=%d, not_netalarm_count=%lld, not_netalarm_wakeup_count=%lld, alarm_func=%pf\n",
 					__func__, alarm->type, awuc.alarm_count, awuc.alarm_wakeup_count, alarm->function);
 		}
 	}
@@ -231,7 +231,7 @@ static ssize_t ap_resume_reason_stastics_show (
 
 	for (i = 0; (desc = comm_all_modules[i]) != NULL && buf_offset < PAGE_SIZE; i++) {
 		buf_offset += sprintf(buf + buf_offset, "%s: %lld\n", desc->module_name, desc->module_all_count);
-		pr_info("%s: %lld times.\n", desc->module_name, desc->module_all_count);
+		pr_debug("%s: %lld times.\n", desc->module_name, desc->module_all_count);
 	}
 
 	return buf_offset;
@@ -284,7 +284,7 @@ static ssize_t modem_resume_reason_stastics_show(
 		if (desc->module_mask & WS_CNT_MODEM) {
 			/* find the one which wakes up most */
 			for (j = 0; j < desc->ws_number; j++) {
-				pr_info("%s wakeup %d times, modem total wakeup %d times.\n",
+				pr_debug("%s wakeup %d times, modem total wakeup %d times.\n",
 					desc->ws_desc[j].name, desc->ws_desc[j].count, desc->module_all_count);
 				if (desc->ws_desc[j].count > other_count) {
 					other_count = desc->ws_desc[j].count;
@@ -326,7 +326,7 @@ static ssize_t modem_resume_reason_stastics_show(
 		}
 		return ret;
 	} else {
-		pr_info("Modem module not found!\n");
+		pr_debug("Modem module not found!\n");
 		return -EINVAL;
 	}
 }
@@ -578,15 +578,15 @@ static int ws_fb_notify_callback(struct notifier_block *nb, unsigned long event,
 
 	if (evdata && evdata->data) {
 		blank = evdata->data;
-		pr_info("[%s], val=%ld, blank=%d\n", __func__, event, *blank);
+		pr_debug("[%s], val=%ld, blank=%d\n", __func__, event, *blank);
 
 		if (*blank == MSM_DRM_BLANK_POWERDOWN) { /*suspend*/
 			if (event == MSM_DRM_EARLY_EVENT_BLANK) { /*early event*/
-				pr_info("[%s], POWERDOWN.\n", __func__);
+				pr_debug("[%s], POWERDOWN.\n", __func__);
 			}
 		} else if (*blank == MSM_DRM_BLANK_UNBLANK) { /*resume*/
 			if (event == MSM_DRM_EVENT_BLANK) { /*event*/
-				pr_info("[%s], UNBLANK\n", __func__);
+				pr_debug("[%s], UNBLANK\n", __func__);
 			}
 		}
 
@@ -597,7 +597,7 @@ static int ws_fb_notify_callback(struct notifier_block *nb, unsigned long event,
 		} else if (event == MSM_DRM_EARLY_EVENT_BLANK) {
 			if (*blank == MSM_DRM_BLANK_POWERDOWN) {
 				/* But the real clean up operation is done by the upper layer */
-				pr_info("[%s] clean all wakeup counts.\n", __func__);
+				pr_debug("[%s] clean all wakeup counts.\n", __func__);
 			}
 		}
 	}
@@ -618,18 +618,18 @@ static int __init wakelock_statistics_function_init(void)
 	active_max_reset_time = ktime_set(0, 0);
 	wakelock_profiler = kobject_create_and_add("wakelock_profiler", kernel_kobj);
 	if (!wakelock_profiler) {
-		pr_info("[%s] failed to create a sysfs kobject\n", __func__);
+		pr_debug("[%s] failed to create a sysfs kobject\n", __func__);
 		return -ENOMEM;
 	}
 	retval = sysfs_create_group(wakelock_profiler, &ws_attr_group);
 	if (retval) {
 		kobject_put(wakelock_profiler);
-		pr_info("[%s] failed to create a sysfs group %d\n", __func__, retval);
+		pr_debug("[%s] failed to create a sysfs group %d\n", __func__, retval);
 	}
 
 	retval = msm_drm_register_client(&ws_fb_notify_block);
 	if (retval) {
-		pr_info("[%s] register drm notifier failed.\n", __func__);
+		pr_debug("[%s] register drm notifier failed.\n", __func__);
 	}
 
 	return 0;
@@ -652,7 +652,7 @@ static int __pm_print_active_wakeup_sources(void)
 	wakeup_srcu_read_lock(&srcuidx);
 	list_for_each_entry_rcu(ws, ws_listhead, entry) {
 		if (ws->active) {
-			pr_info("active wakeup source: %s, %ld, %ld\n", ws->name,
+			pr_debug("active wakeup source: %s, %ld, %ld\n", ws->name,
 				ws->active_count, ktime_to_ms(ws->total_time));
 			active = 1;
 		} else if (!active &&
@@ -664,7 +664,7 @@ static int __pm_print_active_wakeup_sources(void)
 	}
 
 	if (!active && last_activity_ws)
-		pr_info("last active wakeup source: %s, %ld, %ld\n", last_activity_ws->name,
+		pr_debug("last active wakeup source: %s, %ld, %ld\n", last_activity_ws->name,
 			last_activity_ws->active_count, ktime_to_ms(last_activity_ws->total_time));
 	wakeup_srcu_read_unlock(srcuidx);
 
@@ -722,7 +722,7 @@ static int __init wakelock_printk_function_init(void)
 
 	ret = register_pm_notifier(&wakelock_printk_pm_nb);
 	if (ret) {
-		pr_info("%s wakelock_printk_pm_nb error %d\n", __func__, ret);
+		pr_debug("%s wakelock_printk_pm_nb error %d\n", __func__, ret);
 		return -1;
 	}
 	wakelock_printk_control(1);
@@ -734,7 +734,7 @@ static int __init wakelock_profile_init(void) {
 	get_platform();
 	wakelock_statistics_function_init();
 	wakelock_printk_function_init();
-	pr_info("wakelock_profile probed!\n");
+	pr_debug("wakelock_profile probed!\n");
 
 	return 0;
 }

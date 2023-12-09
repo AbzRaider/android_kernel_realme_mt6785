@@ -712,7 +712,7 @@ int __ceph_open_session(struct ceph_client *client, unsigned long started)
 			return client->auth_err;
 	}
 
-	pr_info("client%llu fsid %pU\n", ceph_client_gid(client),
+	pr_debug("client%llu fsid %pU\n", ceph_client_gid(client),
 		&client->fsid);
 	ceph_debugfs_client_init(client);
 
@@ -773,7 +773,7 @@ static int __init init_ceph_lib(void)
 	if (ret < 0)
 		goto out_msgr;
 
-	pr_info("loaded (mon/osd proto %d/%d)\n",
+	pr_debug("loaded (mon/osd proto %d/%d)\n",
 		CEPH_MONC_PROTOCOL, CEPH_OSDC_PROTOCOL);
 
 	return 0;

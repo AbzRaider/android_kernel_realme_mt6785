@@ -216,7 +216,7 @@ int register_ip_vs_scheduler(struct ip_vs_scheduler *scheduler)
 	list_add(&scheduler->n_list, &ip_vs_schedulers);
 	mutex_unlock(&ip_vs_sched_mutex);
 
-	pr_info("[%s] scheduler registered.\n", scheduler->name);
+	pr_debug("[%s] scheduler registered.\n", scheduler->name);
 
 	return 0;
 }
@@ -249,7 +249,7 @@ int unregister_ip_vs_scheduler(struct ip_vs_scheduler *scheduler)
 	/* decrease the module use count */
 	ip_vs_use_count_dec();
 
-	pr_info("[%s] scheduler unregistered.\n", scheduler->name);
+	pr_debug("[%s] scheduler unregistered.\n", scheduler->name);
 
 	return 0;
 }

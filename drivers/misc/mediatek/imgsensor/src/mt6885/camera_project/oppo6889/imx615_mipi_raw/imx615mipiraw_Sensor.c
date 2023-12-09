@@ -3349,9 +3349,9 @@ static void custom3_setting(void)
     imx615_table_write_cmos_sensor(imx615_custom3_setting,
         sizeof(imx615_custom3_setting)/sizeof(kal_uint16));
     if (Eeprom_1ByteDataRead(0x1418, 0xA8) == 1) {
-        pr_info("OTP QSC Data Valid, enable qsc register");
+        pr_debug("OTP QSC Data Valid, enable qsc register");
     } else {
-        pr_info("OTP no QSC Data, close qsc register");
+        pr_debug("OTP no QSC Data, close qsc register");
         write_cmos_sensor_8(0x3621, 0x00);
     }
     LOG_INF("%s end\n", __func__);

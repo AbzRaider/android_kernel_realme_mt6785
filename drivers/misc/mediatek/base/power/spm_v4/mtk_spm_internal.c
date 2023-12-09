@@ -335,7 +335,7 @@ unsigned int __spm_output_wake_reason(const struct wake_status *wakesta,
 
 	//R12_EINT_EVENT_B wakeup statistics in other place
 	if(suspend==true && (!(wakesta->r12 & R12_EINT_EVENT_B))){
-		pr_info("%s:wakeup_reson=%d scenario=%s wakeupby(buf)=%s",__func__,wr,scenario,buf);
+		pr_debug("%s:wakeup_reson=%d scenario=%s wakeupby(buf)=%s",__func__,wr,scenario,buf);
 		wakeup_state=false;
 		wakeup_state=wakeup_reasons_statics(buf, WS_CNT_WLAN|WS_CNT_ADSP|WS_CNT_SENSOR|WS_CNT_MODEM);
 		if((wakeup_state==false)&&(strlen(buf)!=0)){

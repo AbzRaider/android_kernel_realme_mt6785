@@ -38,7 +38,7 @@
 #define LOG_1 cam_pr_debug("GC2375H, MIPI 1LANE\n")
 /********************   Modify end    *********************************/
 #define LOG_INF(format, args...)    \
-	pr_info(PFX "[%s] " format, __func__, ##args)
+	pr_debug(PFX "[%s] " format, __func__, ##args)
 
 #define cam_pr_debug(format, args...) \
 	pr_debug(PFX "[%s] " format, __func__, ##args)

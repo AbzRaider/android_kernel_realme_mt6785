@@ -542,7 +542,7 @@ static u64 update_triggers(struct psi_group *group, u64 now)
 
 		/* Generate an event */
 		if (cmpxchg(&t->event, 0, 1) == 0) {
-			pr_info("%s: group:%p t:%p triggered!\n",
+			pr_debug("%s: group:%p t:%p triggered!\n",
 				__func__, group, t);
 			wake_up_interruptible(&t->event_wait);
 		}
@@ -1159,7 +1159,7 @@ void psi_trigger_destroy(struct psi_trigger *t)
 		kthread_destroy_worker(kworker_to_destroy);
 	}
 
-	pr_info("update_trigger:%s, old:%p\n", __func__, t);
+	pr_debug("update_trigger:%s, old:%p\n", __func__, t);
 	kfree(t);
 }
 
@@ -1225,7 +1225,7 @@ static ssize_t psi_write(struct file *file, const char __user *user_buf,
 	smp_store_release(&seq->private, new);
 	mutex_unlock(&seq->lock);
 
-	pr_info("%s: new:%p\n", __func__, new);
+	pr_debug("%s: new:%p\n", __func__, new);
 
 	return nbytes;
 }

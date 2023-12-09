@@ -183,7 +183,7 @@ static const struct net_protocol net_gre_protocol = {
 
 static int __init gre_init(void)
 {
-	pr_info("GRE over IPv4 demultiplexor driver\n");
+	pr_debug("GRE over IPv4 demultiplexor driver\n");
 
 	if (inet_add_protocol(&net_gre_protocol, IPPROTO_GRE) < 0) {
 		pr_err("can't add protocol\n");

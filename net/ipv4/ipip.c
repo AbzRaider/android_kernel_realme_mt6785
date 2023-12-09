@@ -676,20 +676,20 @@ static int __init ipip_init(void)
 {
 	int err;
 
-	pr_info("ipip: IPv4 and MPLS over IPv4 tunneling driver\n");
+	pr_debug("ipip: IPv4 and MPLS over IPv4 tunneling driver\n");
 
 	err = register_pernet_device(&ipip_net_ops);
 	if (err < 0)
 		return err;
 	err = xfrm4_tunnel_register(&ipip_handler, AF_INET);
 	if (err < 0) {
-		pr_info("%s: can't register tunnel\n", __func__);
+		pr_debug("%s: can't register tunnel\n", __func__);
 		goto xfrm_tunnel_ipip_failed;
 	}
 #if IS_ENABLED(CONFIG_MPLS)
 	err = xfrm4_tunnel_register(&mplsip_handler, AF_MPLS);
 	if (err < 0) {
-		pr_info("%s: can't register tunnel\n", __func__);
+		pr_debug("%s: can't register tunnel\n", __func__);
 		goto xfrm_tunnel_mplsip_failed;
 	}
 #endif
@@ -716,10 +716,10 @@ static void __exit ipip_fini(void)
 {
 	rtnl_link_unregister(&ipip_link_ops);
 	if (xfrm4_tunnel_deregister(&ipip_handler, AF_INET))
-		pr_info("%s: can't deregister tunnel\n", __func__);
+		pr_debug("%s: can't deregister tunnel\n", __func__);
 #if IS_ENABLED(CONFIG_MPLS)
 	if (xfrm4_tunnel_deregister(&mplsip_handler, AF_MPLS))
-		pr_info("%s: can't deregister tunnel\n", __func__);
+		pr_debug("%s: can't deregister tunnel\n", __func__);
 #endif
 	unregister_pernet_device(&ipip_net_ops);
 }

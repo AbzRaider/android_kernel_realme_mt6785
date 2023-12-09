@@ -904,7 +904,7 @@ static int __init inet6_init(void)
 		INIT_LIST_HEAD(r);
 
 	if (disable_ipv6_mod) {
-		pr_info("Loaded, but administratively disabled, reboot required to enable\n");
+		pr_debug("Loaded, but administratively disabled, reboot required to enable\n");
 		goto out;
 	}
 

@@ -945,7 +945,7 @@ schedtune_init_cgroups(void)
 		raw_spin_lock_init(&bg->lock);
 	}
 
-	pr_info("schedtune: configured to support %d boost groups\n",
+	pr_debug("schedtune: configured to support %d boost groups\n",
 		BOOSTGROUPS_COUNT);
 
 	schedtune_initialized = true;

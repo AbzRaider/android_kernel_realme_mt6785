@@ -202,7 +202,7 @@ static void __open_session(struct ceph_mon_client *monc)
 static void reopen_session(struct ceph_mon_client *monc)
 {
 	if (!monc->hunting)
-		pr_info("mon%d %s session lost, hunting for new mon\n",
+		pr_debug("mon%d %s session lost, hunting for new mon\n",
 		    monc->cur_mon, ceph_pr_addr(&monc->con.peer_addr.in_addr));
 
 	__close_session(monc);
@@ -1178,7 +1178,7 @@ static void handle_auth_reply(struct ceph_mon_client *monc,
 		__send_subscribe(monc);
 		__resend_generic_request(monc);
 
-		pr_info("mon%d %s session established\n", monc->cur_mon,
+		pr_debug("mon%d %s session established\n", monc->cur_mon,
 			ceph_pr_addr(&monc->con.peer_addr.in_addr));
 	}
 
@@ -1310,7 +1310,7 @@ static struct ceph_msg *mon_alloc_msg(struct ceph_connection *con,
 	}
 
 	if (!m) {
-		pr_info("alloc_msg unknown type %d\n", type);
+		pr_debug("alloc_msg unknown type %d\n", type);
 		*skip = 1;
 	} else if (front_len > m->front_alloc_len) {
 		pr_warn("mon_alloc_msg front %d > prealloc %d (%u#%llu)\n",

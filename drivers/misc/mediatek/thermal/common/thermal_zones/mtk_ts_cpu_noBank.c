@@ -1616,7 +1616,7 @@ static void read_all_tc_temperature(void)
 			if (get_eng_version() != HIGH_TEMP_AGING)
 				BUG();
 			else
-				pr_info("%s should reset but bypass\n", __func__);
+				pr_debug("%s should reset but bypass\n", __func__);
 		} else {
 			tscpu_printk("thermal_hw_protect_dis\n");
 		}

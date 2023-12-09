@@ -279,7 +279,7 @@ static int __init ic_open_devs(void)
 
 		elapsed = jiffies_to_msecs(jiffies - start);
 		wait = (CONF_CARRIER_TIMEOUT - elapsed + 500)/1000;
-		pr_info("Waiting up to %d more seconds for network.\n", wait);
+		pr_debug("Waiting up to %d more seconds for network.\n", wait);
 		next_msg = jiffies + msecs_to_jiffies(CONF_CARRIER_TIMEOUT/12);
 	}
 have_carrier:
@@ -719,7 +719,7 @@ ic_dhcp_init_options(u8 *options, struct ic_device *d)
 			e += len;
 		}
 		if (*vendor_class_identifier) {
-			pr_info("DHCP: sending class identifier \"%s\"\n",
+			pr_debug("DHCP: sending class identifier \"%s\"\n",
 				vendor_class_identifier);
 			*e++ = 60;	/* Class-identifier */
 			len = strlen(vendor_class_identifier);
@@ -1287,7 +1287,7 @@ static int __init ic_dynamic(void)
 		return -1;
 	}
 
-	pr_info("IP-Config: Got %s answer from %pI4, my address is %pI4\n",
+	pr_debug("IP-Config: Got %s answer from %pI4, my address is %pI4\n",
 		((ic_got_reply & IC_RARP) ? "RARP"
 		: (ic_proto_enabled & IC_USE_DHCP) ? "DHCP" : "BOOTP"),
 		&ic_addrservaddr, &ic_myaddr);
@@ -1519,14 +1519,14 @@ static int __init ip_auto_config(void)
 	/*
 	 * Clue in the operator.
 	 */
-	pr_info("IP-Config: Complete:\n");
+	pr_debug("IP-Config: Complete:\n");
 
-	pr_info("     device=%s, hwaddr=%*phC, ipaddr=%pI4, mask=%pI4, gw=%pI4\n",
+	pr_debug("     device=%s, hwaddr=%*phC, ipaddr=%pI4, mask=%pI4, gw=%pI4\n",
 		ic_dev->dev->name, ic_dev->dev->addr_len, ic_dev->dev->dev_addr,
 		&ic_myaddr, &ic_netmask, &ic_gateway);
-	pr_info("     host=%s, domain=%s, nis-domain=%s\n",
+	pr_debug("     host=%s, domain=%s, nis-domain=%s\n",
 		utsname()->nodename, ic_domain, utsname()->domainname);
-	pr_info("     bootserver=%pI4, rootserver=%pI4, rootpath=%s",
+	pr_debug("     bootserver=%pI4, rootserver=%pI4, rootpath=%s",
 		&ic_servaddr, &root_server_addr, root_server_path);
 	if (ic_dev_mtu)
 		pr_cont(", mtu=%d", ic_dev_mtu);

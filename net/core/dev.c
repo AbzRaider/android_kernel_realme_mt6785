@@ -6884,7 +6884,7 @@ static int __dev_set_promiscuity(struct net_device *dev, int inc, bool notify)
 		}
 	}
 	if (dev->flags != old_flags) {
-		pr_info("device %s %s promiscuous mode\n",
+		pr_debug("device %s %s promiscuous mode\n",
 			dev->name,
 			dev->flags & IFF_PROMISC ? "entered" : "left");
 		if (audit_enabled) {

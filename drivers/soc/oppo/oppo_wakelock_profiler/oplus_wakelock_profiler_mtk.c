@@ -273,17 +273,17 @@ int wakeup_reasons_statics(const char *irq_name, int choose_flag)
 	if (irq_name == NULL) {
 		return state;
 	}
-	pr_info("Enter: %s, irq_name=%s, choose_flag=0x%x", __func__,
+	pr_debug("Enter: %s, irq_name=%s, choose_flag=0x%x", __func__,
 		irq_name, choose_flag);
 
 	for (i = 0; (desc = all_modules[i]) != NULL; i++) {
-		//pr_info("Enter: %s, module_name=%s, (desc->module_mask & choose_flag)=0x%x", __func__,desc->module_name,(desc->module_mask & choose_flag));		
+		//pr_debug("Enter: %s, module_name=%s, (desc->module_mask & choose_flag)=0x%x", __func__,desc->module_name,(desc->module_mask & choose_flag));		
 		if (desc->module_mask & choose_flag) {
 			for (j = 0; j < desc->ws_number; j++) {
 				ws_desc = &desc->ws_desc[j];
-				//pr_info("Enter: %s, len irq_name=%d,len ws_desc->name=%d", __func__,strlen(irq_name),strlen(ws_desc->name));
+				//pr_debug("Enter: %s, len irq_name=%d,len ws_desc->name=%d", __func__,strlen(irq_name),strlen(ws_desc->name));
 				if (!strncmp(irq_name, ws_desc->name, strlen(ws_desc->name))) {
-					//pr_info("Enter: %s, irq_name=%s", __func__,irq_name);
+					//pr_debug("Enter: %s, irq_name=%s", __func__,irq_name);
 					ws_desc->count++;
 					desc->module_all_count++;
 					wc_sum.module_all_count++;
@@ -345,7 +345,7 @@ void alarmtimer_wakeup_count(struct alarm *alarm)
 			if(alarmtimer_busy_flag_get())
 					alarmtimer_busy_flag_clear();
 			if (alarm->function){
-					pr_info("%s: alarm_type=%d, not_netalarm_count=%lld, not_netalarm_wakeup_count=%lld,owner=%s,alarm_func=%pf\n",
+					pr_debug("%s: alarm_type=%d, not_netalarm_count=%lld, not_netalarm_wakeup_count=%lld,owner=%s,alarm_func=%pf\n",
 						__func__, alarm->type, awuc.alarm_count, awuc.alarm_wakeup_count,alarm->comm,alarm->function);
 	        }
 	    }
@@ -360,7 +360,7 @@ void wakeup_reasons_clear(int choose_flag)
 	struct wakeup_count_desc_t *desc;
 	struct ws_desc_t *ws_desc;
 
-	pr_info("Enter: %s, choose_flag=0x%x", __func__, choose_flag);
+	pr_debug("Enter: %s, choose_flag=0x%x", __func__, choose_flag);
 	for (i = 0; (desc = all_modules[i]) != NULL; i++) {
 		if (desc->module_mask & choose_flag) {
 			for (j = 0; j < desc->ws_number; j++) {
@@ -377,16 +377,16 @@ void wakeup_reasons_print(int choose_flag, int datil)
 {
 	int i, j;
 	struct wakeup_count_desc_t *desc;
-	pr_info("%s:\n",__func__);
+	pr_debug("%s:\n",__func__);
 	for (i = 0; (desc = all_modules[i]) != NULL; i++) {
 		if (desc->module_mask & choose_flag) {
 			
-			pr_info("%s %lld times,\n", desc->module_name, desc->module_all_count);
+			pr_debug("%s %lld times,\n", desc->module_name, desc->module_all_count);
 			if (datil) {
-				pr_info("%s detail:\n",__func__);
+				pr_debug("%s detail:\n",__func__);
 				for (j = 0; j < desc->ws_number; j++) {
 					if (desc->ws_desc[j].prop & (IRQ_PROP_REAL|IRQ_PROP_EXCHANGE)) {
-						pr_info("%s wakeup %lld times\n", desc->ws_desc[j].name, desc->ws_desc[j].count);
+						pr_debug("%s wakeup %lld times\n", desc->ws_desc[j].name, desc->ws_desc[j].count);
 					}
 				}
 			}
@@ -405,10 +405,10 @@ char *buf)
 	for (i = 0; (desc = all_modules[i]) != NULL && buf_offset < PAGE_SIZE; i++) {
 		if(!strncmp(desc->module_name,"abort", strlen("abort"))||!strncmp(desc->module_name,"other", strlen("other"))||!strncmp(desc->module_name,"wakeup_sum", strlen("wakeup_sum"))){
 			buf_offset += sprintf(buf + buf_offset, "%s= %lld\n", desc->module_name, desc->module_all_count);
-			pr_info("%s= %lld times.\n", desc->module_name, desc->module_all_count);
+			pr_debug("%s= %lld times.\n", desc->module_name, desc->module_all_count);
 		}else{
 			buf_offset += sprintf(buf + buf_offset, "%s: %lld\n", desc->module_name, desc->module_all_count);
-			pr_info("%s: %lld times.\n", desc->module_name, desc->module_all_count);
+			pr_debug("%s: %lld times.\n", desc->module_name, desc->module_all_count);
 	    }
 	}
 	return buf_offset;
@@ -777,7 +777,7 @@ static int __pm_print_active_wakeup_sources(void)
 	wakeup_srcu_read_lock(&srcuidx);
 	list_for_each_entry_rcu(ws, ws_listhead, entry) {
 		if (ws->active) {
-			pr_info("print active wakeup source: %s, %ld, %ld\n", ws->name,
+			pr_debug("print active wakeup source: %s, %ld, %ld\n", ws->name,
 				ws->active_count, ktime_to_ms(ws->total_time));
 			active = 1;
 		} else if (!active &&
@@ -789,7 +789,7 @@ static int __pm_print_active_wakeup_sources(void)
 	}
 
 	if (!active && last_activity_ws)
-		pr_info("print last active wakeup source: %s, %ld, %ld\n", last_activity_ws->name,
+		pr_debug("print last active wakeup source: %s, %ld, %ld\n", last_activity_ws->name,
 			last_activity_ws->active_count, ktime_to_ms(last_activity_ws->total_time));
 	wakeup_srcu_read_unlock(srcuidx);
 
@@ -847,7 +847,7 @@ static int __init wakelock_printk_function_init(void)
 
 	ret = register_pm_notifier(&wakelock_printk_pm_nb);
 	if (ret) {
-		pr_info("%s wakelock_printk_pm_nb error %d\n", __func__, ret);
+		pr_debug("%s wakelock_printk_pm_nb error %d\n", __func__, ret);
 		return -1;
 	}
 	wakelock_printk_control(1);
@@ -861,7 +861,7 @@ static int __init wakelock_printk_function_init(void)
 static int __init oppo_wakelock_profile_init(void) {
 	wakelock_statistics_function_init();
 	wakelock_printk_function_init();
-	pr_info("oppo_wakelock_profile probed!\n");
+	pr_debug("oppo_wakelock_profile probed!\n");
 	return 0;
 }
 

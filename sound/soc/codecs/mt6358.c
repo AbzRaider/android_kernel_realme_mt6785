@@ -7560,7 +7560,7 @@ static unsigned int codec_get_reg(unsigned int offset)
 	int ret = 0;
 	unsigned int data = 0;
 #ifdef DEBUG_PMIC_WRAP
-	pr_info("%s(), call pwrap_read, offset = 0x%x\n",
+	pr_debug("%s(), call pwrap_read, offset = 0x%x\n",
 			__func__, offset);
 #endif
 	ret = pwrap_read(offset, &data);
@@ -7585,7 +7585,7 @@ static void codec_set_reg(unsigned int offset,
 	reg_value &= (~mask);
 	reg_value |= (value & mask);
 #ifdef DEBUG_PMIC_WRAP
-	pr_info("%s(), call pwrap_write, offset = 0x%x, value = 0x%x, mask = 0x%x\n",
+	pr_debug("%s(), call pwrap_write, offset = 0x%x, value = 0x%x, mask = 0x%x\n",
 			__func__, offset, value, mask);
 #endif
 	ret = pwrap_write(offset, reg_value);

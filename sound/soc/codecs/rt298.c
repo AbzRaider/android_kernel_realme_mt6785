@@ -511,7 +511,7 @@ static int rt298_adc_event(struct snd_soc_dapm_widget *w,
 			0x7080, 0x7000);
 		 /* If MCLK doesn't exist, reset AD filter */
 		if (!(snd_soc_read(codec, RT298_VAD_CTRL) & 0x200)) {
-			pr_info("NO MCLK\n");
+			pr_debug("NO MCLK\n");
 			switch (nid) {
 			case RT298_ADC_IN1:
 				snd_soc_update_bits(codec,

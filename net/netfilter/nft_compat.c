@@ -932,7 +932,7 @@ static int __init nft_compat_module_init(void)
 		goto err_target;
 	}
 
-	pr_info("nf_tables_compat: (c) 2012 Pablo Neira Ayuso <pablo@netfilter.org>\n");
+	pr_debug("nf_tables_compat: (c) 2012 Pablo Neira Ayuso <pablo@netfilter.org>\n");
 
 	return ret;
 

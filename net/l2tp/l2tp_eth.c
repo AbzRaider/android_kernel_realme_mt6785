@@ -386,7 +386,7 @@ static int __init l2tp_eth_init(void)
 	if (err)
 		goto err;
 
-	pr_info("L2TP ethernet pseudowire support (L2TPv3)\n");
+	pr_debug("L2TP ethernet pseudowire support (L2TPv3)\n");
 
 	return 0;
 

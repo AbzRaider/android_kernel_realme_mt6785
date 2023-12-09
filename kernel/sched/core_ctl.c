@@ -1075,7 +1075,7 @@ static int __init core_ctl_disable_setup(char *str)
 	}
 
 	core_ctl_disable_cpumask_present = true;
-	pr_info("disable_cpumask=%*pbl\n",
+	pr_debug("disable_cpumask=%*pbl\n",
 			cpumask_pr_args(core_ctl_disable_cpumask));
 
 	return 0;
@@ -1126,7 +1126,7 @@ static int cluster_init(const struct cpumask *mask)
 	if (!dev)
 		return -ENODEV;
 
-	pr_info("Creating CPU group %d\n", first_cpu);
+	pr_debug("Creating CPU group %d\n", first_cpu);
 
 	if (num_clusters == MAX_CLUSTERS) {
 		pr_err("Unsupported number of clusters. Only %u supported\n",
@@ -1160,7 +1160,7 @@ static int cluster_init(const struct cpumask *mask)
 	spin_lock_init(&cluster->pending_lock);
 
 	for_each_cpu(cpu, mask) {
-		pr_info("Init CPU%u state\n", cpu);
+		pr_debug("Init CPU%u state\n", cpu);
 
 		state = &per_cpu(cpu_state, cpu);
 		state->cluster = cluster;

@@ -260,7 +260,7 @@ rpcrdma_conn_upcall(struct rdma_cm_id *id, struct rdma_cm_event *event)
 		break;
 	case RDMA_CM_EVENT_DEVICE_REMOVAL:
 #if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
-		pr_info("rpcrdma: removing device %s for %pIS:%u\n",
+		pr_debug("rpcrdma: removing device %s for %pIS:%u\n",
 			ia->ri_device->name,
 			sap, rpc_get_port(sap));
 #endif
@@ -676,7 +676,7 @@ rpcrdma_ep_recreate_xprt(struct rpcrdma_xprt *r_xprt,
 	struct sockaddr *sap = (struct sockaddr *)&r_xprt->rx_data.addr;
 	int rc, err;
 
-	pr_info("%s: r_xprt = %p\n", __func__, r_xprt);
+	pr_debug("%s: r_xprt = %p\n", __func__, r_xprt);
 
 	rc = -EHOSTUNREACH;
 	if (rpcrdma_ia_open(r_xprt, sap))

@@ -61,7 +61,7 @@ static kal_uint32 streaming_control(kal_bool enable);
 #endif
 
 #define PFX "S5K3P9SP_camera_sensor"
-#define LOG_INF(format,  args...)	pr_info(PFX "[%s] " format,  __FUNCTION__,  ##args)
+#define LOG_INF(format,  args...)	pr_debug(PFX "[%s] " format,  __FUNCTION__,  ##args)
 extern int iBurstWriteReg_multi(u8 *pData, u32 bytes, u16 i2cId, u16 transfer_length, u16 timing);
 
 static DEFINE_SPINLOCK(imgsensor_drv_lock);

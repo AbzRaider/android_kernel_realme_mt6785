@@ -39,7 +39,7 @@ nfacct_mt_checkentry(const struct xt_mtchk_param *par)
 
 	nfacct = nfnl_acct_find_get(par->net, info->name);
 	if (nfacct == NULL) {
-		pr_info("xt_nfacct: accounting object with name `%s' "
+		pr_debug("xt_nfacct: accounting object with name `%s' "
 			"does not exists\n", info->name);
 		return -ENOENT;
 	}

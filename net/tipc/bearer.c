@@ -353,7 +353,7 @@ restart:
 		return -ENOMEM;
 	}
 
-	pr_info("Enabled bearer <%s>, discovery domain %s, priority %u\n",
+	pr_debug("Enabled bearer <%s>, discovery domain %s, priority %u\n",
 		name,
 		tipc_addr_string_fill(addr_string, disc_domain), priority);
 	return res;
@@ -364,7 +364,7 @@ restart:
  */
 static int tipc_reset_bearer(struct net *net, struct tipc_bearer *b)
 {
-	pr_info("Resetting bearer <%s>\n", b->name);
+	pr_debug("Resetting bearer <%s>\n", b->name);
 	tipc_node_delete_links(net, b->identity);
 	tipc_disc_reset(net, b);
 	return 0;
@@ -380,7 +380,7 @@ static void bearer_disable(struct net *net, struct tipc_bearer *b)
 	struct tipc_net *tn = tipc_net(net);
 	int bearer_id = b->identity;
 
-	pr_info("Disabling bearer <%s>\n", b->name);
+	pr_debug("Disabling bearer <%s>\n", b->name);
 	clear_bit_unlock(0, &b->up);
 	tipc_node_delete_links(net, bearer_id);
 	b->media->disable_media(b);

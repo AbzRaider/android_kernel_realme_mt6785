@@ -1511,7 +1511,7 @@ static __init int sctp_init(void)
 	if (status)
 		goto err_thash_alloc;
 
-	pr_info("Hash tables configured (bind %d/%d)\n", sctp_port_hashsize,
+	pr_debug("Hash tables configured (bind %d/%d)\n", sctp_port_hashsize,
 		num_entries);
 
 	sctp_sysctl_register();

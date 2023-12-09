@@ -683,7 +683,7 @@ int ip6_fragment(struct net *net, struct sock *sk, struct sk_buff *skb,
 
 	mtu = ip6_skb_dst_mtu(skb);
 	if (ignore_double_fragment(skb) && skb->len > mtu) {
-		pr_info_ratelimited("[mtk_net] %s ignore to avoid double fragment\n",
+		pr_debug_ratelimited("[mtk_net] %s ignore to avoid double fragment\n",
 				    __func__);
 		err = output(net, sk, skb);
 		return err;
@@ -695,7 +695,7 @@ int ip6_fragment(struct net *net, struct sock *sk, struct sk_buff *skb,
 	if (unlikely(!skb->ignore_df && skb->len > mtu)) {
 		if (ipv6_hdr(skb)->nexthdr != NEXTHDR_ESP)
 			goto fail_toobig;
-		pr_info_ratelimited("[mtk_net] fix tcp packet_too_big\n");
+		pr_debug_ratelimited("[mtk_net] fix tcp packet_too_big\n");
 	}
 
 	if (IP6CB(skb)->frag_max_size) {

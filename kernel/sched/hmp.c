@@ -39,11 +39,11 @@ void hmp_cpu_mask_setup(void)
 	struct list_head *pos;
 	int cpu;
 
-	pr_info("Initializing HMP scheduler:\n");
+	pr_debug("Initializing HMP scheduler:\n");
 
 	/* Initialize hmp_domains using platform code */
 	if (list_empty(&hmp_domains)) {
-		pr_info("HMP domain list is empty!\n");
+		pr_debug("HMP domain list is empty!\n");
 		return;
 	}
 
@@ -54,7 +54,7 @@ void hmp_cpu_mask_setup(void)
 		for_each_cpu(cpu, &domain->possible_cpus)
 			per_cpu(hmp_cpu_domain, cpu) = domain;
 	}
-	pr_info("Initializing HMP scheduler done\n");
+	pr_debug("Initializing HMP scheduler done\n");
 }
 
 /*
@@ -85,7 +85,7 @@ static inline void fillin_cluster(struct cluster_info *cinfo,
 	cinfo->cpu_perf = cpu_perf;
 
 	if (cpu_perf == 0)
-		pr_info("Uninitialized CPU performance (CPU mask: %lx)",
+		pr_debug("Uninitialized CPU performance (CPU mask: %lx)",
 				cpumask_bits(&hmpd->possible_cpus)[0]);
 }
 
@@ -135,9 +135,9 @@ void init_hmp_domains(void)
 	 * Sorting HMP domain by CPU capacity
 	 */
 	list_sort(NULL, &hmp_domains, &hmp_compare);
-	pr_info("Sort hmp_domains from little to big:\n");
+	pr_debug("Sort hmp_domains from little to big:\n");
 	for_each_hmp_domain_L_first(domain) {
-		pr_info("    cpumask: 0x%02lx\n",
+		pr_debug("    cpumask: 0x%02lx\n",
 				*cpumask_bits(&domain->possible_cpus));
 	}
 	hmp_cpu_mask_setup();

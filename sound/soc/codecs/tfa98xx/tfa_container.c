@@ -82,14 +82,14 @@ void tfaContShowHeader(struct nxpTfaHeader *hdr)
 {
 	char _id[2];
 
-	pr_info("File header\n");
+	pr_debug("File header\n");
 
 	_id[1] = hdr->id >> 8;
 	_id[0] = hdr->id & 0xff;
-	pr_info("\tid:%.2s version:%.2s subversion:%.2s\n", _id,
+	pr_debug("\tid:%.2s version:%.2s subversion:%.2s\n", _id,
 		   hdr->version, hdr->subversion);
-	pr_info("\tsize:%d CRC:0x%08x\n", hdr->size, hdr->CRC);
-	pr_info("\tcustomer:%.8s application:%.8s type:%.8s\n", hdr->customer,
+	pr_debug("\tsize:%d CRC:0x%08x\n", hdr->size, hdr->CRC);
+	pr_debug("\tcustomer:%.8s application:%.8s type:%.8s\n", hdr->customer,
 			   hdr->application, hdr->type);
 }
 
@@ -284,7 +284,7 @@ struct nxpTfaFileDsc *tfacont_getfiledata(struct tfa_device *tfa,
 	}
 
 	if (tfa->verbose)
-		pr_info("%s: no file found of type %d\n", __func__, type);
+		pr_debug("%s: no file found of type %d\n", __func__, type);
 
 	return NULL;
 }
@@ -1206,7 +1206,7 @@ enum Tfa98xx_Error tfaContWriteRegsProf(struct tfa_device *tfa, int prof_idx)
 		return Tfa98xx_Error_Bad_Parameter;
 
 	if (tfa->verbose)
-		pr_info("----- profile: %s (%d) -----\n",
+		pr_debug("----- profile: %s (%d) -----\n",
 			tfaContGetString(tfa->cnt,
 			&prof->name),
 			prof_idx);
@@ -1626,7 +1626,7 @@ unsigned int tfa98xx_get_profile_sr(struct tfa_device *tfa,
 	}
 
 	if (tfa->verbose)
-		pr_info("%s - profile fs: 0x%x = %dHz (%d - %d)\n",
+		pr_debug("%s - profile fs: 0x%x = %dHz (%d - %d)\n",
 				__func__, fs_profile,
 				tfa98xx_sr_from_field(fs_profile),
 				tfa->dev_idx, prof_idx);
@@ -1654,7 +1654,7 @@ unsigned int tfa98xx_get_profile_sr(struct tfa_device *tfa,
 	}
 
 	if (tfa->verbose)
-		pr_info("%s - default fs: 0x%x = %dHz (%d - %d)\n",
+		pr_debug("%s - default fs: 0x%x = %dHz (%d - %d)\n",
 				__func__, fs_profile,
 				tfa98xx_sr_from_field(fs_profile),
 				tfa->dev_idx, prof_idx);
@@ -1860,18 +1860,18 @@ enum Tfa98xx_Error tfaContWriteProfile(struct tfa_device *tfa, int prof_idx,
 			} while (tries <= 100);
 
 			if (tries > 100) {
-				pr_info("Wait for PLL powerdown timed out!\n");
+				pr_debug("Wait for PLL powerdown timed out!\n");
 				return Tfa98xx_Error_StateTimedOut;
 			}
 		} else {
-			pr_info("No need to go to powerdown now\n");
+			pr_debug("No need to go to powerdown now\n");
 		}
 	}
 
 	/* set all bitfield settings */
 	/* First set all default settings */
 	if (tfa->verbose) {
-		pr_info("---------- default settings profile: %s (%d) ----------\n",
+		pr_debug("---------- default settings profile: %s (%d) ----------\n",
 				tfaContGetString(tfa->cnt,
 					&previous_prof->name),
 			tfa_dev_get_swprof(tfa));

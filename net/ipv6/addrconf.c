@@ -330,10 +330,10 @@ static int inet6_fill_nora(struct sk_buff *skb, struct inet6_dev *idev,
 		/*hdr->ifi_flags = dev_get_flags(dev); */
 		if (idev->if_flags & IF_RS_VZW_SENT) {
 			flag = 0;
-			pr_info("[mtk_net][IPv6] RA refresh Fail\n");
+			pr_debug("[mtk_net][IPv6] RA refresh Fail\n");
 		} else {
 			flag = 1;
-			pr_info("[mtk_net][IPv6] RA init Fail\n");
+			pr_debug("[mtk_net][IPv6] RA init Fail\n");
 		}
 	}
 
@@ -518,7 +518,7 @@ static struct inet6_dev *ipv6_add_dev(struct net_device *dev)
 
 #if IS_ENABLED(CONFIG_IPV6_SIT)
 	if (dev->type == ARPHRD_SIT && (dev->priv_flags & IFF_ISATAP)) {
-		pr_info("%s: Disabled Multicast RS\n", dev->name);
+		pr_debug("%s: Disabled Multicast RS\n", dev->name);
 		ndev->cnf.rtr_solicits = 0;
 	}
 #endif
@@ -1331,7 +1331,7 @@ retry:
 	in6_dev_hold(idev);
 	if (idev->cnf.use_tempaddr <= 0) {
 		write_unlock_bh(&idev->lock);
-		pr_info("%s: use_tempaddr is disabled\n", __func__);
+		pr_debug("%s: use_tempaddr is disabled\n", __func__);
 		in6_dev_put(idev);
 		ret = -1;
 		goto out;
@@ -1413,7 +1413,7 @@ retry:
 	if (IS_ERR(ift)) {
 		in6_ifa_put(ifp);
 		in6_dev_put(idev);
-		pr_info("%s: retry temporary address regeneration\n", __func__);
+		pr_debug("%s: retry temporary address regeneration\n", __func__);
 		write_lock_bh(&idev->lock);
 		goto retry;
 	}
@@ -3534,7 +3534,7 @@ static int addrconf_notify(struct notifier_block *this, unsigned long event,
 
 			if (!addrconf_link_ready(dev)) {
 				/* device is not ready yet. */
-				pr_info("ADDRCONF(NETDEV_UP): %s: link is not ready\n",
+				pr_debug("ADDRCONF(NETDEV_UP): %s: link is not ready\n",
 					dev->name);
 				break;
 			}
@@ -3565,7 +3565,7 @@ static int addrconf_notify(struct notifier_block *this, unsigned long event,
 				idev->if_flags |= IF_READY;
 			}
 
-			pr_info("ADDRCONF(NETDEV_CHANGE): %s: link becomes ready\n",
+			pr_debug("ADDRCONF(NETDEV_CHANGE): %s: link becomes ready\n",
 				dev->name);
 
 			run_pending = 1;
@@ -4071,7 +4071,7 @@ static void addrconf_dad_work(struct work_struct *w)
 				/* DAD failed for link-local based on MAC */
 				idev->cnf.disable_ipv6 = 1;
 
-				pr_info("%s: IPv6 being disabled!\n",
+				pr_debug("%s: IPv6 being disabled!\n",
 					ifp->idev->dev->name);
 				disable_ipv6 = true;
 			}
@@ -4433,7 +4433,7 @@ static void inet6_send_rs_vzw(struct inet6_ifaddr *ifp)
 	struct net_device *dev = ifp->idev->dev;
 
 	/*struct inet6_ifaddr *linklocal_ifp = NULL;*/
-	pr_info("[mtk_net][IPv6][%s] dev name:%s\n", __func__, dev->name);
+	pr_debug("[mtk_net][IPv6][%s] dev name:%s\n", __func__, dev->name);
 
 	/*because of using link local address will triger KE
 	 *so this first using global address
@@ -4441,7 +4441,7 @@ static void inet6_send_rs_vzw(struct inet6_ifaddr *ifp)
 	if (ipv6_accept_ra(ifp->idev) &&
 	    ifp->idev->cnf.rtr_solicits > 0 &&
 	    (dev->flags & IFF_LOOPBACK) == 0) {
-		pr_info("[mtk_net][IPv6][%s] send refresh rs: dev name:%s\n",
+		pr_debug("[mtk_net][IPv6][%s] send refresh rs: dev name:%s\n",
 			__func__, dev->name);
 		ndisc_send_rs(ifp->idev->dev, &ifp->addr,
 			      &in6addr_linklocal_allrouters);
@@ -4456,7 +4456,7 @@ static void inet6_send_rs_vzw(struct inet6_ifaddr *ifp)
 		ifp->idev->if_flags |= IF_RS_VZW_SENT;
 
 		if (ifp->idev->if_flags & IF_RA_RCVD) {
-			pr_info("[mtk_net][IPv6] ifp: has IF_RA_RCVD flag, and will clear it\n");
+			pr_debug("[mtk_net][IPv6] ifp: has IF_RA_RCVD flag, and will clear it\n");
 			ifp->idev->if_flags &= ~IF_RA_RCVD;
 		}
 		/*Kernel3.10 addrconf_mod_timer
@@ -4478,7 +4478,7 @@ struct rt6_info *calc_lft_vzw(struct inet6_ifaddr *ifp,
 	if (rt && (rt->rt6i_flags & RTF_EXPIRES)) {
 		route_lft = (rt->dst.expires - ifp->tstamp) / HZ;
 		*minimum_lft = min(ifp->prefered_lft, route_lft);
-		pr_info("[mtk_net]RA: min_lft %lld\n",
+		pr_debug("[mtk_net]RA: min_lft %lld\n",
 			(u64)(*minimum_lft));
 	} else {
 		*minimum_lft = ifp->prefered_lft;
@@ -4495,7 +4495,7 @@ static void calc_next_vzw(struct inet6_ifaddr *ifp, struct rt6_info *rt,
 			if (!(ifp->idev->if_flags & IF_RS_VZW_SENT) &&
 			    age >= (minimum_lft * 3 / 4))
 				inet6_send_rs_vzw(ifp);
-			pr_info("[mtk_net][IPv6] min_lft %lld, age %lld, is_expires %d\n",
+			pr_debug("[mtk_net][IPv6] min_lft %lld, age %lld, is_expires %d\n",
 				(u64)minimum_lft, (u64)age, is_expires);
 			if (!(ifp->idev->if_flags & IF_RS_VZW_SENT) &&
 			    time_before(ifp->tstamp +

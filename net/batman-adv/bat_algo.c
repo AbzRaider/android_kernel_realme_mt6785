@@ -65,7 +65,7 @@ int batadv_algo_register(struct batadv_algo_ops *bat_algo_ops)
 
 	bat_algo_ops_tmp = batadv_algo_get(bat_algo_ops->name);
 	if (bat_algo_ops_tmp) {
-		pr_info("Trying to register already registered routing algorithm: %s\n",
+		pr_debug("Trying to register already registered routing algorithm: %s\n",
 			bat_algo_ops->name);
 		return -EEXIST;
 	}
@@ -77,7 +77,7 @@ int batadv_algo_register(struct batadv_algo_ops *bat_algo_ops)
 	    !bat_algo_ops->iface.primary_set ||
 	    !bat_algo_ops->neigh.cmp ||
 	    !bat_algo_ops->neigh.is_similar_or_better) {
-		pr_info("Routing algo '%s' does not implement required ops\n",
+		pr_debug("Routing algo '%s' does not implement required ops\n",
 			bat_algo_ops->name);
 		return -EINVAL;
 	}

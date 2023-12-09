@@ -176,9 +176,9 @@ static int fsl_guts_probe(struct platform_device *pdev)
 	if (IS_ERR(soc_dev))
 		return PTR_ERR(soc_dev);
 
-	pr_info("Machine: %s\n", soc_dev_attr.machine);
-	pr_info("SoC family: %s\n", soc_dev_attr.family);
-	pr_info("SoC ID: %s, Revision: %s\n",
+	pr_debug("Machine: %s\n", soc_dev_attr.machine);
+	pr_debug("SoC family: %s\n", soc_dev_attr.family);
+	pr_debug("SoC ID: %s, Revision: %s\n",
 		soc_dev_attr.soc_id, soc_dev_attr.revision);
 	return 0;
 }

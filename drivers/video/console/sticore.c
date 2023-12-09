@@ -505,7 +505,7 @@ sti_select_fbfont(struct sti_cooked_rom *cooked_rom, const char *fbfont_name)
 	if (!fbfont)
 		return NULL;
 
-	pr_info("STI selected %dx%d framebuffer font %s for sticon\n",
+	pr_debug("STI selected %dx%d framebuffer font %s for sticon\n",
 			fbfont->width, fbfont->height, fbfont->name);
 			
 	bpc = ((fbfont->width+7)/8) * fbfont->height; 
@@ -755,7 +755,7 @@ static int sti_read_rom(int wordmode, struct sti_struct *sti,
 
 	address = (unsigned long) STI_PTR(raw);
 
-	pr_info("STI ROM supports 32 %sbit firmware functions.\n",
+	pr_debug("STI ROM supports 32 %sbit firmware functions.\n",
 		raw->alt_code_type == ALT_CODE_TYPE_PA_RISC_64
 		? "and 64 " : "");
 
@@ -917,7 +917,7 @@ test_rom:
 	sti_dump_globcfg(sti->glob_cfg, sti->sti_mem_request);
 	sti_dump_outptr(sti);
 	
-	pr_info("    graphics card name: %s\n",
+	pr_debug("    graphics card name: %s\n",
 		sti->sti_data->inq_outptr.dev_name);
 
 	sti_roms[num_sti_roms] = sti;

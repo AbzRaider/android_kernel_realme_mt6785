@@ -2103,7 +2103,7 @@ ip_set_init(void)
 		return ret;
 	}
 
-	pr_info("ip_set: protocol %u\n", IPSET_PROTOCOL);
+	pr_debug("ip_set: protocol %u\n", IPSET_PROTOCOL);
 	return 0;
 }
 

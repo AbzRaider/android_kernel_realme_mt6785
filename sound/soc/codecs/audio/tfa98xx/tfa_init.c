@@ -639,7 +639,7 @@ static enum Tfa98xx_Error tfa9872_specific(struct tfa_device *tfa)
 		/* ----- generated code end   ----- */
 		break;
 	default:
-		pr_info("\nWarning: Optimal settings not found for device with revid = 0x%x\n",
+		pr_debug("\nWarning: Optimal settings not found for device with revid = 0x%x\n",
 			tfa->rev);
 		break;
 	}
@@ -804,7 +804,7 @@ static enum Tfa98xx_Error tfa9874_specific(struct tfa_device *tfa)
 		/* ----- generated code end   ----- */
 		break;
 	default:
-		pr_info("\nWarning: Optimal settings not found for device with revid = 0x%x\n",
+		pr_debug("\nWarning: Optimal settings not found for device with revid = 0x%x\n",
 			tfa->rev);
 		break;
 	}

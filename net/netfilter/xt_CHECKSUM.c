@@ -36,11 +36,11 @@ static int checksum_tg_check(const struct xt_tgchk_param *par)
 	const struct xt_CHECKSUM_info *einfo = par->targinfo;
 
 	if (einfo->operation & ~XT_CHECKSUM_OP_FILL) {
-		pr_info("unsupported CHECKSUM operation %x\n", einfo->operation);
+		pr_debug("unsupported CHECKSUM operation %x\n", einfo->operation);
 		return -EINVAL;
 	}
 	if (!einfo->operation) {
-		pr_info("no CHECKSUM operation enabled\n");
+		pr_debug("no CHECKSUM operation enabled\n");
 		return -EINVAL;
 	}
 	return 0;

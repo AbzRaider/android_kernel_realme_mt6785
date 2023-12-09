@@ -173,7 +173,7 @@ static __init int dccpprobe_init(void)
 	if (ret)
 		goto err1;
 
-	pr_info("DCCP watch registered (port=%d)\n", port);
+	pr_debug("DCCP watch registered (port=%d)\n", port);
 	return 0;
 err1:
 	remove_proc_entry(procname, init_net.proc_net);

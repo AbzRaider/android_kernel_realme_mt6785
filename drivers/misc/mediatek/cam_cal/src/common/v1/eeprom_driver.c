@@ -47,7 +47,7 @@
 /* Quan.Zhen@Camera.Driver, 2019/10/12, add for [otp bringup] */
 /*#include <linux/log.h>*/
 #define PK_INF(format, args...) \
-	pr_info(PFX "[%s] " format, __func__, ##args)
+	pr_debug(PFX "[%s] " format, __func__, ##args)
 #define PK_DBG(format, args...) \
 	pr_debug(PFX "[%s] " format, __func__, ##args)
 #define PK_ERR(format, args...) \

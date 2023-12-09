@@ -71,11 +71,11 @@ static int CHIP_TYPE;
 
 /*----------------------------------------------------------------------------*/
 #define GSE_TAG			"[Gsensor] "
-#define GSE_FUN(f)		pr_info(GSE_TAG"%s\n", __func__)
-#define GSE_ERR(fmt, args...)	pr_info(GSE_TAG"%s %d : "fmt,\
+#define GSE_FUN(f)		pr_debug(GSE_TAG"%s\n", __func__)
+#define GSE_ERR(fmt, args...)	pr_debug(GSE_TAG"%s %d : "fmt,\
 				__func__, __LINE__, ##args)
 #define GSE_DBG(fmt, args...)	pr_debug(GSE_TAG fmt, ##args)
-#define GSE_LOG(fmt, args...)	pr_info(GSE_TAG fmt, ##args)
+#define GSE_LOG(fmt, args...)	pr_debug(GSE_TAG fmt, ##args)
 /*----------------------------------------------------------------------------*/
 
 /*----------------------------------------------------------------------------*/

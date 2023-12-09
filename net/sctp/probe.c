@@ -222,7 +222,7 @@ static __init int sctpprobe_init(void)
 	if (ret)
 		goto remove_proc;
 
-	pr_info("probe registered (port=%d/fwmark=%u) bufsize=%u\n",
+	pr_debug("probe registered (port=%d/fwmark=%u) bufsize=%u\n",
 		port, fwmark, bufsize);
 	return 0;
 

@@ -724,13 +724,13 @@ enum Tfa98xx_Error tfa98xx_get_mtp_v6(struct tfa_device *tfa, uint16_t *value)
 
 	/* not possible if PLL in powerdown */
 	if ( TFA_GET_BF(tfa, PWDN) ) {
-		pr_info("PLL in powerdown\n");
+		pr_debug("PLL in powerdown\n");
 		return Tfa98xx_Error_NoClock;
 	}
 
 	tfa98xx_dsp_system_stable_v6(tfa, &status);
 	if (status==0) {
-		pr_info("PLL not running\n");
+		pr_debug("PLL not running\n");
 		return Tfa98xx_Error_NoClock;
 	}
 
@@ -804,7 +804,7 @@ enum Tfa98xx_Error tfa98xx_set_mtp_v6(struct tfa_device *tfa, uint16_t value, ui
 
 	if ( mtp_old == mtp_new) /* no change */ {
 		if (tfa->verbose)
-			pr_info("No change in MTP. Value not written! \n");
+			pr_debug("No change in MTP. Value not written! \n");
 		return Tfa98xx_Error_Ok;
 	}
 
@@ -2522,7 +2522,7 @@ enum Tfa98xx_Error tfa_cf_powerup_v6(struct tfa_device *tfa)
 
 	// wait until everything is stable, in case clock has been off
 	if (tfa->verbose)
-		pr_info("Waiting for DSP system stable...\n");
+		pr_debug("Waiting for DSP system stable...\n");
 	for ( tries=CFSTABLE_TRIES; tries > 0; tries-- ) {
 		err = tfa98xx_dsp_system_stable_v6(tfa, &status);
 		_ASSERT(err == Tfa98xx_Error_Ok);
@@ -2770,20 +2770,20 @@ enum Tfa98xx_Error tfaRunSpeakerCalibration_result_v6(struct tfa_device *tfa, in
 		err = tfa_supported_speakers(tfa, &spkr_count);
 
 		if (spkr_count == 1) {
-			pr_info("%s:%d mOhms\n", __func__, tfa->mohm[0]);
+			pr_debug("%s:%d mOhms\n", __func__, tfa->mohm[0]);
 		} else {
-			pr_info("%s:Prim:%d mOhms, Sec:%d mOhms\n", __func__, tfa->mohm[0], tfa->mohm[1]);
+			pr_debug("%s:Prim:%d mOhms, Sec:%d mOhms\n", __func__, tfa->mohm[0], tfa->mohm[1]);
 		}
 
 		if (get_project() == 19531) {
 			min_mohm = 4800;
 			max_mohm = 7800;
 		}
-		pr_info("%s:min_mohm = %d, max_mohm = %d\n", __func__, min_mohm, max_mohm);
+		pr_debug("%s:min_mohm = %d, max_mohm = %d\n", __func__, min_mohm, max_mohm);
 
 		//impedance check
 		if ((tfa->mohm[0] < min_mohm) || (tfa->mohm[0] > max_mohm)) {
-			pr_info("speaker_resistance_fail\n");
+			pr_debug("speaker_resistance_fail\n");
 			g_speaker_resistance_fail = true;
 
 			/* When MTPOTC is set (cal=once) re-lock key2 */
@@ -3044,7 +3044,7 @@ enum Tfa98xx_Error tfaRunWaitCalibration_v6(struct tfa_device *tfa, int *calibra
 
 	*calibrateDone = 0;
 	
-	pr_info("tfaRunWaitCalibration enter\n");
+	pr_debug("tfaRunWaitCalibration enter\n");
 
 	/* in case of calibrate once wait for MTPEX */
 	if (TFA_GET_BF(tfa, MTPOTC)) {
@@ -3126,7 +3126,7 @@ enum Tfa98xx_Error tfa_dev_start(struct tfa_device *tfa, int next_profile, int v
 	enum Tfa98xx_Error err = Tfa98xx_Error_Ok;
 	int active_profile = -1;
 
-	pr_info("tfa_dev_start enter\n");
+	pr_debug("tfa_dev_start enter\n");
 
 	/* Get currentprofile */
 	active_profile = tfa_dev_get_swprof(tfa);
@@ -3134,7 +3134,7 @@ enum Tfa98xx_Error tfa_dev_start(struct tfa_device *tfa, int next_profile, int v
 		active_profile = -1;
 
 	/* TfaRun_SpeakerBoost implies un-mute */
-	pr_info("Active_profile:%s, next_profile:%s\n",
+	pr_debug("Active_profile:%s, next_profile:%s\n",
 			tfaContProfileName_v6(tfa->cnt, tfa->dev_idx, active_profile),
 			tfaContProfileName_v6(tfa->cnt, tfa->dev_idx, next_profile));
 
@@ -3210,7 +3210,7 @@ enum Tfa98xx_Error tfa_dev_start(struct tfa_device *tfa, int next_profile, int v
 		/* PLMA5539: Gives information about current setting of powerswitch */
 		if (tfa->verbose) {
 			if (!tfa98xx_powerswitch_is_enabled(tfa))
-				pr_info("Device start without powerswitch enabled!\n");
+				pr_debug("Device start without powerswitch enabled!\n");
 		}
 
 error_exit:
@@ -3224,7 +3224,7 @@ enum Tfa98xx_Error tfa_dev_stop(struct tfa_device *tfa)
 	enum Tfa98xx_Error err = Tfa98xx_Error_Ok;
 	int times = 0, ready;
 	
-	pr_info("%s\n", __func__);
+	pr_debug("%s\n", __func__);
     dump_stack();
 	/* mute */
 	tfaRunMute_v6(tfa);
@@ -3241,7 +3241,7 @@ enum Tfa98xx_Error tfa_dev_stop(struct tfa_device *tfa)
 	err = tfa98xx_aec_output(tfa, 0);
 	
 	while ((TFA_GET_BF(tfa, MANSTATE) != 0) && (times++ < 20)) {
-		pr_info("tfa stop wait state machine goto powerdown mode.\n");
+		pr_debug("tfa stop wait state machine goto powerdown mode.\n");
 		err = tfa98xx_dsp_system_stable_v6(tfa, &ready);
 		if (err != Tfa98xx_Error_Ok || !ready) {
 			pr_err("tfa stop: No I2S CLK\n");
@@ -3251,9 +3251,9 @@ enum Tfa98xx_Error tfa_dev_stop(struct tfa_device *tfa)
 	}
 	
 	if (times < 20) {
-		pr_info("tfa stop: already in PowerDown\n");
+		pr_debug("tfa stop: already in PowerDown\n");
 	} else {
-		pr_info("tfa stop: Not in PowerDown\n");
+		pr_debug("tfa stop: Not in PowerDown\n");
 	}
 
 	return err;
@@ -3273,7 +3273,7 @@ int tfa_reset_v6(struct tfa_device *tfa)
 	if (tfa->verbose) {
 		if (((tfa->tfa_family == 1) && state != TFA_STATE_RESET) ||
 			((tfa->tfa_family == 2) && state != TFA_STATE_POWERDOWN)) {
-				pr_info("WARNING: Device reset should be performed in POWERDOWN state\n");
+				pr_debug("WARNING: Device reset should be performed in POWERDOWN state\n");
 		}
 	}
 
@@ -4085,12 +4085,12 @@ int tfa_plop_noise_interrupt(struct tfa_device *tfa, int profile, int vstep)
 		/* Detect for clock is lost! (clock is not stable) */
 		if (no_clk == 1) {
 			/* Clock is lost. Set I2CR to remove POP noise */
-			pr_info("No clock detected. Resetting the I2CR to avoid pop on 72! \n");
+			pr_debug("No clock detected. Resetting the I2CR to avoid pop on 72! \n");
 			err = tfa_dev_start(tfa, profile, vstep);
 			if (err != Tfa98xx_Error_Ok) {
 				pr_err("Error loading i2c registers (tfa_dev_start), err=%d\n", err);
 			} else {
-				pr_info("Setting i2c registers after I2CR succesfull\n");
+				pr_debug("Setting i2c registers after I2CR succesfull\n");
 				tfa_dev_set_state(tfa, TFA_STATE_UNMUTE);
 			}
 
@@ -4102,7 +4102,7 @@ int tfa_plop_noise_interrupt(struct tfa_device *tfa, int profile, int vstep)
 			   However: Not tested yet! But also does not harm normal flow!
 			*/
 			if (strstr(tfaContProfileName_v6(tfa->cnt, tfa->dev_idx, profile), ".saam")) {
-				pr_info("Powering down from a SAAM profile, workaround PLMA4766 used! \n");
+				pr_debug("Powering down from a SAAM profile, workaround PLMA4766 used! \n");
 				TFA_SET_BF(tfa, PWDN, 1);
 				TFA_SET_BF(tfa, AMPE, 0);
 				TFA_SET_BF(tfa, SAMMODE, 0);
@@ -4128,9 +4128,9 @@ void tfa_lp_mode_interrupt(struct tfa_device *tfa)
 	if (tfa_irq_get(tfa, irq_stclp0)) {
 		lp0 = TFA_GET_BF(tfa, LP0);
 		if (lp0 > 0) {
-			pr_info("lowpower mode 0 detected\n");
+			pr_debug("lowpower mode 0 detected\n");
 		} else {
-			pr_info("lowpower mode 0 not detected\n");
+			pr_debug("lowpower mode 0 not detected\n");
 		}
 
 		tfa_irq_set_pol(tfa, irq_stclp0, (lp0 == 0));
@@ -4142,9 +4142,9 @@ void tfa_lp_mode_interrupt(struct tfa_device *tfa)
 	if (tfa_irq_get(tfa, tfa9912_irq_stclpr)) {
 		lp1 = TFA_GET_BF(tfa, LP1);
 		if (lp1 > 0) {
-			pr_info("lowpower mode 1 detected\n");
+			pr_debug("lowpower mode 1 detected\n");
 		} else {
-			pr_info("lowpower mode 1 not detected\n");
+			pr_debug("lowpower mode 1 not detected\n");
 		}
 
 		tfa_irq_set_pol(tfa, tfa9912_irq_stclpr, (lp1 == 0));

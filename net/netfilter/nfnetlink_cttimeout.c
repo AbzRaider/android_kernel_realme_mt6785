@@ -615,7 +615,7 @@ err_out:
 
 static void __exit cttimeout_exit(void)
 {
-	pr_info("cttimeout: unregistering from nfnetlink.\n");
+	pr_debug("cttimeout: unregistering from nfnetlink.\n");
 
 	nfnetlink_subsys_unregister(&cttimeout_subsys);
 

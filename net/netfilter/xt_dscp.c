@@ -47,7 +47,7 @@ static int dscp_mt_check(const struct xt_mtchk_param *par)
 	const struct xt_dscp_info *info = par->matchinfo;
 
 	if (info->dscp > XT_DSCP_MAX) {
-		pr_info("dscp %x out of range\n", info->dscp);
+		pr_debug("dscp %x out of range\n", info->dscp);
 		return -EDOM;
 	}
 

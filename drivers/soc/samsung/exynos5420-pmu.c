@@ -270,7 +270,7 @@ static void exynos5420_pmu_init(void)
 
 	pmu_raw_writel(0x1, EXYNOS5420_UP_SCHEDULER);
 
-	pr_info("EXYNOS5420 PMU initialized\n");
+	pr_debug("EXYNOS5420 PMU initialized\n");
 }
 
 const struct exynos_pmu_data exynos5420_pmu_data = {

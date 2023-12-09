@@ -290,10 +290,10 @@ static int tipc_udp_rcast_add(struct tipc_bearer *b,
 	memcpy(&rcast->addr, addr, sizeof(struct udp_media_addr));
 
 	if (ntohs(addr->proto) == ETH_P_IP)
-		pr_info("New replicast peer: %pI4\n", &rcast->addr.ipv4);
+		pr_debug("New replicast peer: %pI4\n", &rcast->addr.ipv4);
 #if IS_ENABLED(CONFIG_IPV6)
 	else if (ntohs(addr->proto) == ETH_P_IPV6)
-		pr_info("New replicast peer: %pI6\n", &rcast->addr.ipv6);
+		pr_debug("New replicast peer: %pI6\n", &rcast->addr.ipv6);
 #endif
 	b->bcast_addr.broadcast = TIPC_REPLICAST_SUPPORT;
 	list_add_rcu(&rcast->list, &ub->rcast.list);

@@ -281,9 +281,9 @@ static int efifb_probe(struct platform_device *dev)
 		goto err_release_fb;
 	}
 
-	pr_info("efifb: framebuffer at 0x%lx, using %dk, total %dk\n",
+	pr_debug("efifb: framebuffer at 0x%lx, using %dk, total %dk\n",
 	       efifb_fix.smem_start, size_remap/1024, size_total/1024);
-	pr_info("efifb: mode is %dx%dx%d, linelength=%d, pages=%d\n",
+	pr_debug("efifb: mode is %dx%dx%d, linelength=%d, pages=%d\n",
 	       efifb_defined.xres, efifb_defined.yres,
 	       efifb_defined.bits_per_pixel, efifb_fix.line_length,
 	       screen_info.pages);
@@ -291,7 +291,7 @@ static int efifb_probe(struct platform_device *dev)
 	efifb_defined.xres_virtual = efifb_defined.xres;
 	efifb_defined.yres_virtual = efifb_fix.smem_len /
 					efifb_fix.line_length;
-	pr_info("efifb: scrolling: redraw\n");
+	pr_debug("efifb: scrolling: redraw\n");
 	efifb_defined.yres_virtual = efifb_defined.yres;
 
 	/* some dummy values for timing to make fbset happy */
@@ -309,7 +309,7 @@ static int efifb_probe(struct platform_device *dev)
 	efifb_defined.transp.offset = screen_info.rsvd_pos;
 	efifb_defined.transp.length = screen_info.rsvd_size;
 
-	pr_info("efifb: %s: "
+	pr_debug("efifb: %s: "
 	       "size=%d:%d:%d:%d, shift=%d:%d:%d:%d\n",
 	       "Truecolor",
 	       screen_info.rsvd_size,

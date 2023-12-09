@@ -155,7 +155,7 @@ void init_sched_energy_costs(void)
 			check_max_cap_vs_cpu_scale(cpu, sge_array[cpu][SD_LEVEL0]);
 	}
 	sge_ready = true;
-	pr_info("Sched-energy-costs installed from DT\n");
+	pr_debug("Sched-energy-costs installed from DT\n");
 	return;
 
 out:

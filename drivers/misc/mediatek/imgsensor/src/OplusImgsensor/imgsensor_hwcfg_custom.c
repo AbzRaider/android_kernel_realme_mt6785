@@ -28,7 +28,7 @@ struct IMGSENSOR_SENSOR_LIST *Oplusimgsensor_Sensorlist(void)
     pr_debug("Oplusimgsensor_Sensorlist enter:\n");
     /*Henry.Chang@Cam.Drv, 20200725, add for project CHAKA 20131,20133*/
     pOplusImglist = oplus_gimgsensor_sensor_list;
-    pr_info("oplus_gimgsensor_sensor_list Selected\n");
+    pr_debug("oplus_gimgsensor_sensor_list Selected\n");
 
     return pOplusImglist;
 }
@@ -38,7 +38,7 @@ struct IMGSENSOR_HW_CFG *Oplusimgsensor_Custom_Config(void)
     struct IMGSENSOR_HW_CFG *pOplusImgHWCfg = imgsensor_custom_config;
 
     pOplusImgHWCfg = oplus_imgsensor_custom_config;
-    pr_info("oplus_imgsensor_custom_config Selected\n");
+    pr_debug("oplus_imgsensor_custom_config Selected\n");
 
     return pOplusImgHWCfg;
 }
@@ -50,7 +50,7 @@ enum IMGSENSOR_RETURN Oplusimgsensor_i2c_init(
     struct IMGSENSOR_HW_CFG *pOplusImgHWCfg = imgsensor_custom_config;
 
     if (psensor_inst == NULL) {
-        pr_info("Oplusimgsensor_i2c_init psensor_inst is NULL\n");
+        pr_debug("Oplusimgsensor_i2c_init psensor_inst is NULL\n");
         return IMGSENSOR_RETURN_ERROR;
     }
 
@@ -78,11 +78,11 @@ struct IMGSENSOR_HW_POWER_SEQ *Oplusimgsensor_matchhwcfg_power(
 
     if (pwr_actidx == IMGSENSOR_POWER_MATCHSENSOR_HWCFG_INDEX) {
         ppwr_seq = oplus_sensor_power_sequence;
-        pr_info("[%s] match oplus_sensor_power_sequence\n", __func__);
+        pr_debug("[%s] match oplus_sensor_power_sequence\n", __func__);
 #ifdef SENSOR_PLATFORM_5G_B
     } else if (pwr_actidx == IMGSENSOR_POWER_MATCHMIPI_HWCFG_INDEX){
             ppwr_seq = oplus_platform_power_sequence;
-            pr_info("[%s] enter for 20075 IMGSENSOR_POWER_MATCHMIPI_HWCFG_INDEX \n", __func__);
+            pr_debug("[%s] enter for 20075 IMGSENSOR_POWER_MATCHMIPI_HWCFG_INDEX \n", __func__);
             return NULL;
 #endif
 
@@ -90,25 +90,25 @@ struct IMGSENSOR_HW_POWER_SEQ *Oplusimgsensor_matchhwcfg_power(
     } else if (pwr_actidx == IMGSENSOR_POWER_MATCHMIPI_HWCFG_INDEX){
             if (is_project(20682) || is_project(19661)) {
                 ppwr_seq = oplus_platform_power_sequence;
-                pr_info("[%s] match 20682 19661 IMGSENSOR_POWER_MATCHMIPI_HWCFG_INDEX \n", __func__);
+                pr_debug("[%s] match 20682 19661 IMGSENSOR_POWER_MATCHMIPI_HWCFG_INDEX \n", __func__);
             }
 #endif
 
 #ifdef SENSOR_PLATFORM_5G_A
     } else if (pwr_actidx == IMGSENSOR_POWER_MATCHMIPI_HWCFG_INDEX){
             ppwr_seq = oplus_platform_power_sequence;
-            pr_info("[%s] match 19131 19420 IMGSENSOR_POWER_MATCHMIPI_HWCFG_INDEX \n", __func__);
+            pr_debug("[%s] match 19131 19420 IMGSENSOR_POWER_MATCHMIPI_HWCFG_INDEX \n", __func__);
 #endif
 
 #ifdef SENSOR_PLATFORM_MT6771
     } else if (pwr_actidx == IMGSENSOR_POWER_MATCHMIPI_HWCFG_INDEX){
             if (is_project(19531)) {
                 ppwr_seq = oplus_platform_power_sequence;
-                pr_info("[%s] MT6771 19531 IMGSENSOR_POWER_MATCHMIPI_HWCFG_INDEX \n", __func__);
+                pr_debug("[%s] MT6771 19531 IMGSENSOR_POWER_MATCHMIPI_HWCFG_INDEX \n", __func__);
             }
 #endif
     } else {
-        pr_info("[%s] NOT Support MIPISWITCH\n", __func__);
+        pr_debug("[%s] NOT Support MIPISWITCH\n", __func__);
     }
 
     return ppwr_seq;
@@ -331,7 +331,7 @@ void Oplusimgsensor_Registdeviceinfo(char *name, char *version, kal_uint8 module
     char *manufacture;
     if (name == NULL || version == NULL)
     {
-        pr_info("name or version is NULL");
+        pr_debug("name or version is NULL");
         return;
     }
     switch (module_id)
@@ -373,7 +373,7 @@ void Oplusimgsensor_powerstate_notify(bool val)
 {
     if (is_project(20131) || is_project(20133)
           || is_project(20255) || is_project(20257)) {
-        pr_info("[%s] val:%d", __func__, val);
+        pr_debug("[%s] val:%d", __func__, val);
         oplus_chg_set_camera_status(val);
         oplus_chg_set_camera_on(val);
     }

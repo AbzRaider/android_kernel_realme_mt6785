@@ -131,7 +131,7 @@ static int get_protocol_version(char *s)
 		version = p9_proto_2000L;
 		p9_debug(P9_DEBUG_9P, "Protocol version: 9P2000.L\n");
 	} else
-		pr_info("Unknown protocol version %s\n", s);
+		pr_debug("Unknown protocol version %s\n", s);
 
 	return version;
 }
@@ -199,7 +199,7 @@ static int parse_opts(char *opts, struct p9_client *clnt)
 			 }
 			clnt->trans_mod = v9fs_get_trans_by_name(s);
 			if (clnt->trans_mod == NULL) {
-				pr_info("Could not find request transport: %s\n",
+				pr_debug("Could not find request transport: %s\n",
 					s);
 				ret = -EINVAL;
 				kfree(s);
@@ -1115,7 +1115,7 @@ void p9_client_destroy(struct p9_client *clnt)
 	v9fs_put_trans(clnt->trans_mod);
 
 	list_for_each_entry_safe(fid, fidptr, &clnt->fidlist, flist) {
-		pr_info("Found fid %d not clunked\n", fid->fid);
+		pr_debug("Found fid %d not clunked\n", fid->fid);
 		p9_fid_destroy(fid);
 	}
 

@@ -37,7 +37,7 @@ int hal_feedback_config_set(struct snd_kcontrol *kcontrol,
 
 	if (len > HAL_FEEDBACK_MAX_BYTES) {
 		len = HAL_FEEDBACK_MAX_BYTES;
-		pr_info("%s(), size(%d) > Max bytes(%d)",
+		pr_debug("%s(), size(%d) > Max bytes(%d)",
 				__func__, size, HAL_FEEDBACK_MAX_BYTES);
 	}
 

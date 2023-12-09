@@ -4886,7 +4886,7 @@ static void _dsi_basic_irq_enable(enum DISP_MODULE_ENUM module, void *cmdq)
 	SET_VAL_MASK(value, mask, 1, FLD_INP_UNFINISH_INT_EN);
 	SET_VAL_MASK(value, mask, 1, FLD_BUFFER_UNDERRUN_INT_EN);
 	DISP_REG_MASK(cmdq, &DSI_REG[i]->DSI_INTEN, value, mask);
-	pr_info("%s line:%d", __func__, __LINE__);
+	pr_debug("%s line:%d", __func__, __LINE__);
 }
 
 /**

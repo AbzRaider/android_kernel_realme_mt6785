@@ -218,6 +218,6 @@ void action_fifos_exit(void);
 #define OVS_NLERR(logging_allowed, fmt, ...)			\
 do {								\
 	if (logging_allowed && net_ratelimit())			\
-		pr_info("netlink: " fmt "\n", ##__VA_ARGS__);	\
+		pr_debug("netlink: " fmt "\n", ##__VA_ARGS__);	\
 } while (0)
 #endif /* datapath.h */

@@ -196,7 +196,7 @@ static int __net_init ipv6_sysctl_net_init(struct net *net)
 
 	vzw_hdr = register_net_sysctl(net, "net", net_table);
 	if (!vzw_hdr)
-		pr_info("[mtk_net] register net sysctl optr is fail.\n");
+		pr_debug("[mtk_net] register net sysctl optr is fail.\n");
 
 	err = 0;
 out:

@@ -239,8 +239,8 @@ struct soc_device * __init at91_soc_init(const struct at91_soc *socs)
 	}
 
 	if (soc->family)
-		pr_info("Detected SoC family: %s\n", soc->family);
-	pr_info("Detected SoC: %s, revision %X\n", soc->name,
+		pr_debug("Detected SoC family: %s\n", soc->family);
+	pr_debug("Detected SoC: %s, revision %X\n", soc->name,
 		AT91_CIDR_VERSION(cidr));
 
 	return soc_dev;

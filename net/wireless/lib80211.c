@@ -243,7 +243,7 @@ static struct lib80211_crypto_ops lib80211_crypt_null = {
 
 static int __init lib80211_init(void)
 {
-	pr_info(DRV_DESCRIPTION "\n");
+	pr_debug(DRV_DESCRIPTION "\n");
 	return lib80211_register_crypto_ops(&lib80211_crypt_null);
 }
 

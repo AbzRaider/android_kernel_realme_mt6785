@@ -127,7 +127,7 @@ static struct dentry *rpc_setup_pipedir_sb(struct super_block *sb,
 
 	dir = rpc_d_lookup_sb(sb, dir_name);
 	if (dir == NULL) {
-		pr_info("RPC: pipefs directory doesn't exist: %s\n", dir_name);
+		pr_debug("RPC: pipefs directory doesn't exist: %s\n", dir_name);
 		return dir;
 	}
 	for (;;) {
@@ -2664,7 +2664,7 @@ int rpc_clnt_setup_test_and_add_xprt(struct rpc_clnt *clnt,
 out_err:
 	xprt_put(xprt);
 	xprt_switch_put(xps);
-	pr_info("RPC:   rpc_clnt_test_xprt failed: %d addr %s not added\n",
+	pr_debug("RPC:   rpc_clnt_test_xprt failed: %d addr %s not added\n",
 		status, xprt->address_strings[RPC_DISPLAY_ADDR]);
 	return status;
 }

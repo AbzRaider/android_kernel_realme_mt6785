@@ -1104,7 +1104,7 @@ static int mt6873_adsp_mem_get(struct snd_kcontrol *kcontrol,
 					      ADSP_TASK_ATTR_MEMUL);
 		break;
 	default:
-		pr_info("%s(), task_id %d do not use shared mem\n",
+		pr_debug("%s(), task_id %d do not use shared mem\n",
 			__func__, task_id);
 		break;
 	};
@@ -1153,7 +1153,7 @@ static int mt6873_adsp_mem_set(struct snd_kcontrol *kcontrol,
 						  ADSP_TASK_ATTR_MEMREF);
 		break;
 	default:
-		pr_info("%s(), task_id %d do not use shared mem\n",
+		pr_debug("%s(), task_id %d do not use shared mem\n",
 			__func__, task_id);
 		break;
 	};

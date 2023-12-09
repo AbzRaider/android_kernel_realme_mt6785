@@ -198,7 +198,7 @@ static void rds_ib_add_one(struct ib_device *device)
 		 rds_ibdev->fmr_max_remaps, rds_ibdev->max_1m_mrs,
 		 rds_ibdev->max_8k_mrs);
 
-	pr_info("RDS/IB: %s: %s supported and preferred\n",
+	pr_debug("RDS/IB: %s: %s supported and preferred\n",
 		device->name,
 		rds_ibdev->use_fastreg ? "FRMR" : "FMR");
 

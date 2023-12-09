@@ -1055,7 +1055,7 @@ EXPORT_SYMBOL_GPL(l2tp_nl_unregister_ops);
 
 static int __init l2tp_nl_init(void)
 {
-	pr_info("L2TP netlink interface\n");
+	pr_debug("L2TP netlink interface\n");
 	return genl_register_family(&l2tp_nl_family);
 }
 

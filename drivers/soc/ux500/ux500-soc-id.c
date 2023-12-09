@@ -52,7 +52,7 @@ static void ux500_print_soc_info(unsigned int asicid)
 {
 	unsigned int rev = dbx500_id.revision;
 
-	pr_info("DB%4x ", dbx500_id.partnumber);
+	pr_debug("DB%4x ", dbx500_id.partnumber);
 
 	if (rev == 0x01)
 		pr_cont("Early Drop");

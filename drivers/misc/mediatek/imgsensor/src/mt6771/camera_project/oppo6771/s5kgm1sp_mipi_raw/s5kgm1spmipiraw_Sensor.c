@@ -327,7 +327,7 @@ static void read_eeprom_SN(void)
 	for (idx = 0; idx <CAMERA_MODULE_SN_LENGTH; idx++) {
 		char pusendcmd[2] = {0x00 , (char)((0xB0 + idx) & 0xFF) };
 		iReadRegI2C(pusendcmd , 2, (u8*)&get_byte[idx],1, 0xA0);
-		pr_info("s5kgm1_SN[%d]: 0x%x  0x%x\n", idx, get_byte[idx], gS5kgm1_SN[idx]);
+		pr_debug("s5kgm1_SN[%d]: 0x%x  0x%x\n", idx, get_byte[idx], gS5kgm1_SN[idx]);
 	}
 }
 
@@ -5476,7 +5476,7 @@ static kal_uint32 get_imgsensor_id(UINT32 *sensor_id)
 				#endif
 				pr_err("i2c write id: 0x%x, sensor id: 0x%x\n", imgsensor.i2c_write_id,*sensor_id);
 				if (is_project(OPPO_18561)) {
-						pr_info("18561: gm1 custom1 setmirrorflip\n");
+						pr_debug("18561: gm1 custom1 setmirrorflip\n");
 						imgsensor.mirror = IMAGE_HV_MIRROR;
 						imgsensor_info.sensor_output_dataformat = SENSOR_OUTPUT_FORMAT_RAW_Gb;
 						imgsensor_info.isp_driving_current = ISP_DRIVING_4MA;

@@ -307,12 +307,12 @@ static int pmicWd_pm_notifier(struct notifier_block *nb,
 	switch (event) {
 	case PM_SUSPEND_PREPARE:
 		pon->suspend_state = 0x80 ;
-		pr_info("pmicwd start suspend\n");
+		pr_debug("pmicwd start suspend\n");
 		break;
 
 	case PM_POST_SUSPEND:
 		pon->suspend_state = 0;
-		pr_info("pmicwd finish resume\n");
+		pr_debug("pmicwd finish resume\n");
 		break;
 	}
 

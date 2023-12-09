@@ -1836,7 +1836,7 @@ static const struct nla_policy nft_expr_policy[NFTA_EXPR_MAX + 1] = {
 	[NFTA_EXPR_DATA]	= { .type = NLA_NESTED },
 };
 
-static int nf_tables_fill_expr_info(struct sk_buff *skb,
+static int nf_tables_fill_expr_debug(struct sk_buff *skb,
 				    const struct nft_expr *expr)
 {
 	if (nla_put_string(skb, NFTA_EXPR_NAME, expr->ops->type->name))
@@ -1865,7 +1865,7 @@ int nft_expr_dump(struct sk_buff *skb, unsigned int attr,
 	nest = nla_nest_start(skb, attr);
 	if (!nest)
 		goto nla_put_failure;
-	if (nf_tables_fill_expr_info(skb, expr) < 0)
+	if (nf_tables_fill_expr_debug(skb, expr) < 0)
 		goto nla_put_failure;
 	nla_nest_end(skb, nest);
 	return 0;
@@ -1874,14 +1874,14 @@ nla_put_failure:
 	return -1;
 }
 
-struct nft_expr_info {
+struct nft_expr_debug {
 	const struct nft_expr_ops	*ops;
 	struct nlattr			*tb[NFT_EXPR_MAXATTR + 1];
 };
 
 static int nf_tables_expr_parse(const struct nft_ctx *ctx,
 				const struct nlattr *nla,
-				struct nft_expr_info *info)
+				struct nft_expr_debug *info)
 {
 	const struct nft_expr_type *type;
 	const struct nft_expr_ops *ops;
@@ -1923,7 +1923,7 @@ err1:
 }
 
 static int nf_tables_newexpr(const struct nft_ctx *ctx,
-			     const struct nft_expr_info *info,
+			     const struct nft_expr_debug *info,
 			     struct nft_expr *expr)
 {
 	const struct nft_expr_ops *ops = info->ops;
@@ -1965,7 +1965,7 @@ static void nf_tables_expr_destroy(const struct nft_ctx *ctx,
 struct nft_expr *nft_expr_init(const struct nft_ctx *ctx,
 			       const struct nlattr *nla)
 {
-	struct nft_expr_info info;
+	struct nft_expr_debug info;
 	struct nft_expr *expr;
 	int err;
 
@@ -2321,7 +2321,7 @@ static void nf_tables_rule_release(const struct nft_ctx *ctx,
 
 #define NFT_RULE_MAXEXPRS	128
 
-static struct nft_expr_info *info;
+static struct nft_expr_debug *info;
 
 static int nf_tables_newrule(struct net *net, struct sock *nlsk,
 			     struct sk_buff *skb, const struct nlmsghdr *nlh,
@@ -6160,7 +6160,7 @@ static int __init nf_tables_module_init(void)
 {
 	int err;
 
-	info = kmalloc(sizeof(struct nft_expr_info) * NFT_RULE_MAXEXPRS,
+	info = kmalloc(sizeof(struct nft_expr_debug) * NFT_RULE_MAXEXPRS,
 		       GFP_KERNEL);
 	if (info == NULL) {
 		err = -ENOMEM;
@@ -6180,7 +6180,7 @@ static int __init nf_tables_module_init(void)
 	if (err < 0)
 		goto err4;
 
-	pr_info("nf_tables: (c) 2007-2009 Patrick McHardy <kaber@trash.net>\n");
+	pr_debug("nf_tables: (c) 2007-2009 Patrick McHardy <kaber@trash.net>\n");
 	return err;
 err4:
 	nf_tables_core_module_exit();

@@ -2049,7 +2049,7 @@ int rt5509_i2c_probe(struct i2c_client *client,
 	static int dev_cnt;
 	int ret = 0;
 
-	pr_info("+%s\n", __func__);
+	pr_debug("+%s\n", __func__);
 
 	if (client->dev.of_node) {
 		pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
@@ -2200,7 +2200,7 @@ EXPORT_SYMBOL(rt5509_i2c_shutdown);
 
 static int __init rt5509_driver_init(void)
 {
-	pr_info("%s\n", __func__);
+	pr_debug("%s\n", __func__);
 	platform_driver_register(&rt5509_param_driver);
 	return 0;
 }
@@ -2208,7 +2208,7 @@ module_init(rt5509_driver_init);
 
 static void __exit rt5509_driver_exit(void)
 {
-	pr_info("%s\n", __func__);
+	pr_debug("%s\n", __func__);
 	platform_driver_unregister(&rt5509_param_driver);
 }
 module_exit(rt5509_driver_exit);

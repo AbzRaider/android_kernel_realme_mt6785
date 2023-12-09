@@ -736,7 +736,7 @@ static irqreturn_t err_handler(int irq, void *dev_id)
 	}
 
 	if (status & (TOVF|TUVF|ROVF|RUVF)) {
-		pr_info("sport status error:%s%s%s%s\n",
+		pr_debug("sport status error:%s%s%s%s\n",
 				status & TOVF ? " TOVF" : "",
 				status & TUVF ? " TUVF" : "",
 				status & ROVF ? " ROVF" : "",

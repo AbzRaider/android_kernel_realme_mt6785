@@ -809,7 +809,7 @@ static int __init create_log(char *log_name, int size)
 		goto out_free_misc_name;
 	}
 
-	pr_info("created %luK log '%s'\n",
+	pr_debug("created %luK log '%s'\n",
 		(unsigned long) log->size >> 10, log->misc.name);
 
 	global_log = log;

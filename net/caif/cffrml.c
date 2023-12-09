@@ -113,7 +113,7 @@ static int cffrml_receive(struct cflayer *layr, struct cfpkt *pkt)
 			cfpkt_add_trail(pkt, &tmp, 2);
 			++cffrml_rcv_error;
 			++cffrml_rcv_checsum_error;
-			pr_info("Frame checksum error (0x%x != 0x%x)\n",
+			pr_debug("Frame checksum error (0x%x != 0x%x)\n",
 				hdrchks, pktchks);
 			return -EILSEQ;
 		}

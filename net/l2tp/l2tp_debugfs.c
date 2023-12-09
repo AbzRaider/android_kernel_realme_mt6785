@@ -331,7 +331,7 @@ static int __init l2tp_debugfs_init(void)
 	if (tunnels == NULL)
 		rc = -EIO;
 
-	pr_info("L2TP debugfs support\n");
+	pr_debug("L2TP debugfs support\n");
 
 out:
 	if (rc)

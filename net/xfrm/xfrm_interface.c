@@ -919,7 +919,7 @@ static int __init xfrmi_init(void)
 	const char *msg;
 	int err;
 
-	pr_info("IPsec XFRM device driver\n");
+	pr_debug("IPsec XFRM device driver\n");
 
 	msg = "tunnel device";
 	err = register_pernet_device(&xfrmi_net_ops);

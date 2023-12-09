@@ -3755,7 +3755,7 @@ static int krtatm_thread(void *arg)
 				/* dump more info when atm is deactivated */
 				if (!cl_dev_adp_cpu_state_active) {
 #ifdef CONFIG_MTK_TINYSYS_SSPM_SUPPORT
-					pr_info_ratelimited(TSCPU_LOG_TAG
+					pr_debug_ratelimited(TSCPU_LOG_TAG
 					"tjs %d ttj %d %d on %d sspm %d %d\n",
 					TARGET_TJS[0], TARGET_TJ,
 					current_ETJ, ctm_on,
@@ -3771,7 +3771,7 @@ static int krtatm_thread(void *arg)
 					0);
 #endif
 #else /* !CONFIG_MTK_TINYSYS_SSPM_SUPPORT */
-					pr_info_ratelimited(TSCPU_LOG_TAG
+					pr_debug_ratelimited(TSCPU_LOG_TAG
 					"tjs %d ttj %d %d on %d\n",
 					TARGET_TJS[0], TARGET_TJ,
 					current_ETJ, ctm_on);

@@ -1362,7 +1362,7 @@ static void set_logging_uevent_env(struct acm_lnode *node)
 	logging_env.envp[idx++] = logging_env.op;
 	logging_env.envp[idx] = NULL;
 	/* for test */
-	pr_info("ACM: %s %s %s %s %s %s %s\n",
+	pr_debug("ACM: %s %s %s %s %s %s %s\n",
 		logging_env.envp[0], logging_env.envp[1], logging_env.envp[2],
 		logging_env.envp[4], logging_env.envp[5],
 		logging_env.envp[6], logging_env.envp[7]);
@@ -1554,7 +1554,7 @@ static void set_fwk_uevent_env(struct acm_lnode *node)
 
 	/* for test */
 	/*
-	pr_info("ACM: %s %s %s %s %s\n", fwk_env.envp[0],
+	pr_debug("ACM: %s %s %s %s %s\n", fwk_env.envp[0],
 		fwk_env.envp[1], fwk_env.envp[2], fwk_env.envp[3], fwk_env.envp[4]);
 	*/
 }
@@ -1766,7 +1766,7 @@ static int __init acm_init(void)
 		goto fail_task;
 	}
 
-	pr_info("ACM: Initialize ACM moudule succeed!\n");
+	pr_debug("ACM: Initialize ACM moudule succeed!\n");
 
 	acm_init_state = err;
 	return err;
@@ -1829,7 +1829,7 @@ static void __exit acm_exit(void)
 	acm_list_cleanup(&acm_dir_list);
 	acm_list_cleanup(&acm_nomediadir_list);
 
-	pr_info("ACM: Exited from ACM module.\n");
+	pr_debug("ACM: Exited from ACM module.\n");
 }
 
 MODULE_LICENSE("GPL");

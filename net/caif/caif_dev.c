@@ -476,7 +476,7 @@ static int caif_device_notify(struct notifier_block *me, unsigned long what,
 		if (caifd_refcnt_read(caifd) != 0 ||
 			cfcnfg_del_phy_layer(cfg, &caifd->layer) != 0) {
 
-			pr_info("Wait for device inuse\n");
+			pr_debug("Wait for device inuse\n");
 			/* Enrole device if CAIF Stack is still in use */
 			list_add_rcu(&caifd->list, &caifdevs->list);
 			mutex_unlock(&caifdevs->lock);
@@ -532,7 +532,7 @@ static void caif_exit_net(struct net *net)
 			(caifd_refcnt_read(caifd) != 0 ||
 			cfcnfg_del_phy_layer(cfg, &caifd->layer) != 0)) {
 
-			pr_info("Wait for device inuse\n");
+			pr_debug("Wait for device inuse\n");
 			msleep(250);
 			i++;
 		}

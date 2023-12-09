@@ -765,7 +765,7 @@ static int xfrm_del_sa(struct sk_buff *skb, struct nlmsghdr *nlh,
 		goto out;
 	}
 #ifdef CONFIG_MTK_ENG_BUILD
-	pr_info("[xfrm_state]:xfrm_del_sa_lookup ,x: %px refcnt: %d\n",
+	pr_debug("[xfrm_state]:xfrm_del_sa_lookup ,x: %px refcnt: %d\n",
 		x, refcount_read(&x->refcnt));
 #endif
 	err = xfrm_state_delete(x);

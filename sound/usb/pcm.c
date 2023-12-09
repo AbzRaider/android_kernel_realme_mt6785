@@ -47,7 +47,7 @@
 #define MTK_SND_USB_DBG(fmt, args...) \
 	pr_notice("<%s(), %d> " fmt, __func__, __LINE__, ## args)
 
-#define mtk_pr_info(FREQ, fmt, args...) do {\
+#define mtk_pr_debug(FREQ, fmt, args...) do {\
 	static DEFINE_RATELIMIT_STATE(ratelimit, HZ, FREQ);\
 	static int skip_cnt;\
 	\
@@ -120,7 +120,7 @@ static snd_pcm_uframes_t snd_usb_pcm_pointer(struct snd_pcm_substream *substream
 			avail = snd_pcm_capture_avail(runtime);
 
 		if (avail >= runtime->buffer_size)
-			mtk_pr_info(3, "dir<%d>,avail<%ld>,thld<%ld>,sz<%ld>,bound<%ld>",
+			mtk_pr_debug(3, "dir<%d>,avail<%ld>,thld<%ld>,sz<%ld>,bound<%ld>",
 			substream->stream,
 			avail,
 			runtime->stop_threshold,
@@ -817,12 +817,12 @@ static int snd_usb_hw_params(struct snd_pcm_substream *substream,
 	if (pm_qos_request_active(&subs->pm_qos)) {
 		pm_qos_update_request(&subs->pm_qos,
 					US_PER_FRAME * PM_QOS_COUNT);
-		pr_info("%s: (pm_qos @%p) update\n",
+		pr_debug("%s: (pm_qos @%p) update\n",
 			   __func__, &subs->pm_qos);
 	} else {
 		pm_qos_add_request(&subs->pm_qos,
 			   PM_QOS_CPU_DMA_LATENCY, US_PER_FRAME * PM_QOS_COUNT);
-		pr_info("%s: (pm_qos @%p) request\n",
+		pr_debug("%s: (pm_qos @%p) request\n",
 			   __func__, &subs->pm_qos);
 	}
 
@@ -851,10 +851,10 @@ static int snd_usb_hw_free(struct snd_pcm_substream *substream)
 	/* remove the qos request */
 	if (pm_qos_request_active(&subs->pm_qos)) {
 		pm_qos_remove_request(&subs->pm_qos);
-		pr_info("%s: (pm_qos @%p) remove\n",
+		pr_debug("%s: (pm_qos @%p) remove\n",
 			   __func__, &subs->pm_qos);
 	} else
-		pr_info("%s: (pm_qos @%p) remove again\n",
+		pr_debug("%s: (pm_qos @%p) remove again\n",
 			   __func__, &subs->pm_qos);
 
 	return snd_pcm_lib_free_vmalloc_buffer(substream);
@@ -930,7 +930,7 @@ static int snd_usb_pcm_prepare(struct snd_pcm_substream *substream)
 			subs->data_endpoint &&
 			subs->buffer_periods != 4) {
 		runtime->stop_threshold *= 10;
-		pr_info("adjust stop_threshold to %ld frames",
+		pr_debug("adjust stop_threshold to %ld frames",
 				runtime->stop_threshold);
 
 	}

@@ -479,7 +479,7 @@ static void dsa_dst_unapply(struct dsa_switch_tree *dst)
 		dst->cpu_dp = NULL;
 	}
 
-	pr_info("DSA: tree %d unapplied\n", dst->tree);
+	pr_debug("DSA: tree %d unapplied\n", dst->tree);
 	dst->applied = false;
 }
 
@@ -555,7 +555,7 @@ static int dsa_ds_parse(struct dsa_switch_tree *dst, struct dsa_switch *ds)
 
 	}
 
-	pr_info("DSA: switch %d %d parsed\n", dst->tree, ds->index);
+	pr_debug("DSA: switch %d %d parsed\n", dst->tree, ds->index);
 
 	return 0;
 }
@@ -600,7 +600,7 @@ static int dsa_dst_parse(struct dsa_switch_tree *dst)
 		}
 	}
 
-	pr_info("DSA: tree %d parsed\n", dst->tree);
+	pr_debug("DSA: tree %d parsed\n", dst->tree);
 
 	return 0;
 }
@@ -758,7 +758,7 @@ static int _dsa_register_switch(struct dsa_switch *ds)
 	}
 
 	if (dst->applied) {
-		pr_info("DSA: Disjoint trees?\n");
+		pr_debug("DSA: Disjoint trees?\n");
 		return -EINVAL;
 	}
 

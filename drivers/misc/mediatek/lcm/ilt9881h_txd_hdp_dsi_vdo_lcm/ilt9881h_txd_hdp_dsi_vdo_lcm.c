@@ -584,7 +584,7 @@ static void lcm_shudown_power(void)
 
 static void lcm_resume_power(void)
 {
-	pr_info("lcm_resume_power\n");
+	pr_debug("lcm_resume_power\n");
 	SET_LCM_VSP_PIN(1);
 	MDELAY(3);
 	SET_LCM_VSN_PIN(1);
@@ -653,7 +653,7 @@ static struct LCM_setting_table_V3 set_cabc_move[] = {
 };
 static int cabc_status;
  static void lcm_set_cabc_cmdq(void *handle, unsigned int level){
-	pr_info("[lcm] cabc set level %d\n", level);
+	pr_debug("[lcm] cabc set level %d\n", level);
 	if (level==0){
 		push_table_cust(handle, set_cabc_off, sizeof(set_cabc_off) / sizeof(struct LCM_setting_table_V3), 0);
 
@@ -666,7 +666,7 @@ static int cabc_status;
 		push_table_cust(handle, set_cabc_move, sizeof(set_cabc_move) / sizeof(struct LCM_setting_table_V3), 0);
 
 	}else{
-		pr_info("[lcm]  level %d is not support\n", level);
+		pr_debug("[lcm]  level %d is not support\n", level);
 	}
 	cabc_status = level;
 }
@@ -743,7 +743,7 @@ static unsigned int lcm_esd_recover(void)
 		pr_debug("ili9881h_txd_lcm_mode = cmd mode esd recovery :%d----\n", lcm_dsi_mode);
 	} else {
 		push_table(NULL, init_setting_vdo, sizeof(init_setting_vdo) / sizeof(struct LCM_setting_table), 1);
-		pr_info("ili9881h_txd_lcm_mode = vdo mode esd recovery :%d----\n", lcm_dsi_mode);
+		pr_debug("ili9881h_txd_lcm_mode = vdo mode esd recovery :%d----\n", lcm_dsi_mode);
 	}
 	lcm_set_cabc_cmdq(NULL, cabc_status);
 	pr_debug("lcm_esd_recovery\n");

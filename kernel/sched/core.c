@@ -832,7 +832,7 @@ static int system_opp_count(void)
 			sge = sg->sge;
 		} else {
 			rcu_read_unlock();
-			pr_info("sched: %s no sd\n", __func__);
+			pr_debug("sched: %s no sd\n", __func__);
 			return -1;
 		}
 		count += sge->nr_cap_states;
@@ -900,13 +900,13 @@ void init_opp_capacity_tbl(void)
 			sg = sd->groups;
 			sge = sg->sge;
 		} else {
-			pr_info("sched: %s no sd\n", __func__);
+			pr_debug("sched: %s no sd\n", __func__);
 			goto free_unlock;
 		}
 
 		policy = cpufreq_cpu_get(cpu);
 		if (!policy) {
-			pr_info("policy not ready\n");
+			pr_debug("policy not ready\n");
 			goto free_unlock;
 		}
 
@@ -3590,7 +3590,7 @@ static void set_schedstats(bool enabled)
 void force_schedstat_enabled(void)
 {
 	if (!schedstat_enabled()) {
-		pr_info("kernel profiling enabled schedstats, disable via kernel.sched_schedstats.\n");
+		pr_debug("kernel profiling enabled schedstats, disable via kernel.sched_schedstats.\n");
 		static_branch_enable(&sched_schedstats);
 	}
 }
@@ -8883,7 +8883,7 @@ struct cgroup_subsys cpu_cgrp_subsys = {
 
 void dump_cpu_task(int cpu)
 {
-	pr_info("Task dump for CPU %d:\n", cpu);
+	pr_debug("Task dump for CPU %d:\n", cpu);
 	sched_show_task(cpu_curr(cpu));
 }
 

@@ -314,24 +314,24 @@ static int hmark_tg_check(const struct xt_tgchk_param *par)
 	const struct xt_hmark_info *info = par->targinfo;
 
 	if (!info->hmodulus) {
-		pr_info("xt_HMARK: hash modulus can't be zero\n");
+		pr_debug("xt_HMARK: hash modulus can't be zero\n");
 		return -EINVAL;
 	}
 	if (info->proto_mask &&
 	    (info->flags & XT_HMARK_FLAG(XT_HMARK_METHOD_L3))) {
-		pr_info("xt_HMARK: proto mask must be zero with L3 mode\n");
+		pr_debug("xt_HMARK: proto mask must be zero with L3 mode\n");
 		return -EINVAL;
 	}
 	if (info->flags & XT_HMARK_FLAG(XT_HMARK_SPI_MASK) &&
 	    (info->flags & (XT_HMARK_FLAG(XT_HMARK_SPORT_MASK) |
 			     XT_HMARK_FLAG(XT_HMARK_DPORT_MASK)))) {
-		pr_info("xt_HMARK: spi-mask and port-mask can't be combined\n");
+		pr_debug("xt_HMARK: spi-mask and port-mask can't be combined\n");
 		return -EINVAL;
 	}
 	if (info->flags & XT_HMARK_FLAG(XT_HMARK_SPI) &&
 	    (info->flags & (XT_HMARK_FLAG(XT_HMARK_SPORT) |
 			     XT_HMARK_FLAG(XT_HMARK_DPORT)))) {
-		pr_info("xt_HMARK: spi-set and port-set can't be combined\n");
+		pr_debug("xt_HMARK: spi-set and port-set can't be combined\n");
 		return -EINVAL;
 	}
 	return 0;

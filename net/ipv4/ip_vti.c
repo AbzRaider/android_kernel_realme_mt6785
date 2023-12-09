@@ -666,7 +666,7 @@ static int __init vti_init(void)
 	const char *msg;
 	int err;
 
-	pr_info("IPv4 over IPsec tunneling driver\n");
+	pr_debug("IPv4 over IPsec tunneling driver\n");
 
 	msg = "tunnel device";
 	err = register_pernet_device(&vti_net_ops);

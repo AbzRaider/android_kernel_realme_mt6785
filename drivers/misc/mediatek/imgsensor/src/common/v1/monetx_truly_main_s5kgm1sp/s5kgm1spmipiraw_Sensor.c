@@ -62,7 +62,7 @@ struct pm_qos_request emi_opp_request;
 //#define LOG_WRN(format, args...) xlog_printk(ANDROID_LOG_WARN ,PFX, "[%S] " format, __FUNCTION__, ##args)
 //#defineLOG_INF(format, args...) xlog_printk(ANDROID_LOG_INFO ,PFX, "[%s] " format, __FUNCTION__, ##args)
 //#define LOG_DBG(format, args...) xlog_printk(ANDROID_LOG_DEBUG ,PFX, "[%S] " format, __FUNCTION__, ##args)
-#define LOG_INF(format, args...)	pr_info(PFX "[%s] " format, __func__, ##args)
+#define LOG_INF(format, args...)	pr_debug(PFX "[%s] " format, __func__, ##args)
 
 #if 0 //ifdef S5KGM1SP_VENDOR_EDIT
 /*zhaozhengtao 2016/02/19,modify for different module*/
@@ -5997,7 +5997,7 @@ static kal_uint32 get_imgsensor_id(UINT32 *sensor_id)
 				pr_err("i2c write id: 0x%x, sensor id: 0x%x\n", imgsensor.i2c_write_id,*sensor_id);
                     #if 0
 					if (is_project(OPPO_18561)) {
-						pr_info("18561: gm1 custom1 setmirrorflip\n");
+						pr_debug("18561: gm1 custom1 setmirrorflip\n");
 						imgsensor.mirror = IMAGE_HV_MIRROR;
 						imgsensor_info.sensor_output_dataformat = SENSOR_OUTPUT_FORMAT_RAW_Gb;
 						imgsensor_info.isp_driving_current = ISP_DRIVING_4MA;

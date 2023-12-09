@@ -789,7 +789,7 @@ static int get_loss_clg(struct netem_sched_data *q, const struct nlattr *attr)
 			const struct tc_netem_gimodel *gi = nla_data(la);
 
 			if (nla_len(la) < sizeof(struct tc_netem_gimodel)) {
-				pr_info("netem: incorrect gi model size\n");
+				pr_debug("netem: incorrect gi model size\n");
 				return -EINVAL;
 			}
 
@@ -808,7 +808,7 @@ static int get_loss_clg(struct netem_sched_data *q, const struct nlattr *attr)
 			const struct tc_netem_gemodel *ge = nla_data(la);
 
 			if (nla_len(la) < sizeof(struct tc_netem_gemodel)) {
-				pr_info("netem: incorrect ge model size\n");
+				pr_debug("netem: incorrect ge model size\n");
 				return -EINVAL;
 			}
 
@@ -822,7 +822,7 @@ static int get_loss_clg(struct netem_sched_data *q, const struct nlattr *attr)
 		}
 
 		default:
-			pr_info("netem: unknown loss type %u\n", type);
+			pr_debug("netem: unknown loss type %u\n", type);
 			return -EINVAL;
 		}
 	}
@@ -846,7 +846,7 @@ static int parse_attr(struct nlattr *tb[], int maxtype, struct nlattr *nla,
 	int nested_len = nla_len(nla) - NLA_ALIGN(len);
 
 	if (nested_len < 0) {
-		pr_info("netem: invalid attributes len %d\n", nested_len);
+		pr_debug("netem: invalid attributes len %d\n", nested_len);
 		return -EINVAL;
 	}
 
@@ -954,7 +954,7 @@ static int netem_init(struct Qdisc *sch, struct nlattr *opt)
 	q->loss_model = CLG_RANDOM;
 	ret = netem_change(sch, opt);
 	if (ret)
-		pr_info("netem: change failed\n");
+		pr_debug("netem: change failed\n");
 	return ret;
 }
 
@@ -1152,7 +1152,7 @@ static struct Qdisc_ops netem_qdisc_ops __read_mostly = {
 
 static int __init netem_module_init(void)
 {
-	pr_info("netem: version " VERSION "\n");
+	pr_debug("netem: version " VERSION "\n");
 	return register_qdisc(&netem_qdisc_ops);
 }
 static void __exit netem_module_exit(void)

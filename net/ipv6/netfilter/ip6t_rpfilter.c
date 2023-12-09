@@ -115,13 +115,13 @@ static int rpfilter_check(const struct xt_mtchk_param *par)
 	unsigned int options = ~XT_RPFILTER_OPTION_MASK;
 
 	if (info->flags & options) {
-		pr_info("unknown options encountered");
+		pr_debug("unknown options encountered");
 		return -EINVAL;
 	}
 
 	if (strcmp(par->table, "mangle") != 0 &&
 	    strcmp(par->table, "raw") != 0) {
-		pr_info("match only valid in the \'raw\' "
+		pr_debug("match only valid in the \'raw\' "
 			"or \'mangle\' tables, not \'%s\'.\n", par->table);
 		return -EINVAL;
 	}

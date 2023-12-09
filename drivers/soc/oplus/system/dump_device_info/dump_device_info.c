@@ -69,7 +69,7 @@ __setup("androidboot.baseband=", get_baseband_init);
 static int __init get_serialno_init(char *str)
 {
         strcpy(serialno,str);
-        pr_info("kernel serialno %s\n",str);
+        pr_debug("kernel serialno %s\n",str);
         return 0;
 }
 __setup("androidboot.serialno=", get_serialno_init);
@@ -162,7 +162,7 @@ static void get_version_info_handle(struct work_struct *work)
         printk("[get_version_info_handle]\n");
         fp = filp_open(BUILD_PROP, O_RDONLY, 0600);
         if (IS_ERR(fp)) {
-                pr_info("open %s file fail fp:%p %d \n", BUILD_PROP, fp,PTR_ERR(fp));
+                pr_debug("open %s file fail fp:%p %d \n", BUILD_PROP, fp,PTR_ERR(fp));
                 goto out;
         }
 
@@ -172,12 +172,12 @@ static void get_version_info_handle(struct work_struct *work)
         pos = 0;
         len = vfs_read(fp, buf, sizeof(buf), &pos);
         if (len < 0) {
-                pr_info("read %s file error\n", BUILD_PROP);
+                pr_debug("read %s file error\n", BUILD_PROP);
         }
 
         substr = strstr(buf, build_version_key);
-        pr_info("\n");
-        pr_info("build_version:-%s--\n", substr);
+        pr_debug("\n");
+        pr_debug("build_version:-%s--\n", substr);
 
         if(substr != NULL){
             while(*substr != '\n') {
@@ -192,13 +192,13 @@ static void get_version_info_handle(struct work_struct *work)
             }
         }
 
-        pr_info("build_version_value:%s--\n", build_version);
+        pr_debug("build_version_value:%s--\n", build_version);
         write_device_info("software version", build_version);
 
 
 out:
 	if (IS_ERR(fp)) {
-                pr_info("open is failed, cannot to read\n");
+                pr_debug("open is failed, cannot to read\n");
         }else{
                 filp_close(fp, NULL);
                 set_fs(old_fs);

@@ -1584,7 +1584,7 @@ static int __init ipgre_init(void)
 {
 	int err;
 
-	pr_info("GRE over IPv4 tunneling driver\n");
+	pr_debug("GRE over IPv4 tunneling driver\n");
 
 	err = register_pernet_device(&ipgre_net_ops);
 	if (err < 0)
@@ -1600,7 +1600,7 @@ static int __init ipgre_init(void)
 
 	err = gre_add_protocol(&ipgre_protocol, GREPROTO_CISCO);
 	if (err < 0) {
-		pr_info("%s: can't add protocol\n", __func__);
+		pr_debug("%s: can't add protocol\n", __func__);
 		goto add_proto_failed;
 	}
 

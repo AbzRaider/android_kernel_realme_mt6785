@@ -393,7 +393,7 @@ struct thermal_cooling_device *cdev, unsigned long state)
 		if (get_eng_version() != HIGH_TEMP_AGING)
 			BUG();
 		else
-			pr_info("%s should reset but bypass\n", __func__);
+			pr_debug("%s should reset but bypass\n", __func__);
 	}
 
 	return 0;

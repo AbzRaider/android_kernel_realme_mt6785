@@ -594,7 +594,7 @@ static int tcf_ife_dump(struct sk_buff *skb, struct tc_action *a, int bind,
 
 	if (dump_metalist(skb, ife)) {
 		/*ignore failure to dump metalist */
-		pr_info("Failed to dump metalist\n");
+		pr_debug("Failed to dump metalist\n");
 	}
 
 	return skb->len;
@@ -664,7 +664,7 @@ static int tcf_ife_decode(struct sk_buff *skb, const struct tc_action *a,
 			/* abuse overlimits to count when we receive metadata
 			 * but dont have an ops for it
 			 */
-			pr_info_ratelimited("Unknown metaid %d dlen %d\n",
+			pr_debug_ratelimited("Unknown metaid %d dlen %d\n",
 					    mtype, dlen);
 			ife->tcf_qstats.overlimits++;
 		}
@@ -794,7 +794,7 @@ static int tcf_ife_act(struct sk_buff *skb, const struct tc_action *a,
 	if (!(ife->flags & IFE_ENCODE))
 		return tcf_ife_decode(skb, a, res);
 
-	pr_info_ratelimited("unknown failure(policy neither de/encode\n");
+	pr_debug_ratelimited("unknown failure(policy neither de/encode\n");
 	spin_lock(&ife->tcf_lock);
 	bstats_update(&ife->tcf_bstats, skb);
 	tcf_lastuse_update(&ife->tcf_tm);

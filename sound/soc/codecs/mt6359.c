@@ -957,7 +957,7 @@ static int ext_drcv_amp_put_rcv(struct snd_kcontrol *kcontrol, struct snd_ctl_el
 static int ext_amp_low_voltage_get(struct snd_kcontrol *kcontrol, struct snd_ctl_elem_value *ucontrol)
 {
         ucontrol->value.integer.value[0] = aw87339_spk_low_voltage_status;
-        pr_info("%s: aw87339_spk_low_voltage_status = %d\n", __func__, aw87339_spk_low_voltage_status);
+        pr_debug("%s: aw87339_spk_low_voltage_status = %d\n", __func__, aw87339_spk_low_voltage_status);
         return 0;
 }
 
@@ -971,7 +971,7 @@ static int ext_amp_low_voltage_set(struct snd_kcontrol *kcontrol, struct snd_ctl
                 aw87339_audio_spk_low_voltage_status(0);
         }
 
-        pr_info("%s: value.integer.value = %ld\n", __func__, ucontrol->value.integer.value[0]);
+        pr_debug("%s: value.integer.value = %ld\n", __func__, ucontrol->value.integer.value[0]);
         return 0;
 }
 
@@ -980,7 +980,7 @@ static int ext_amp_low_voltage_set(struct snd_kcontrol *kcontrol, struct snd_ctl
 static int ext_amp_voice_get(struct snd_kcontrol *kcontrol, struct snd_ctl_elem_value *ucontrol)
 {
 	ucontrol->value.integer.value[0] = aw87339_voice_status;
-	pr_info("%s: aw87339_voice_status = %d\n", __func__, aw87339_voice_status);
+	pr_debug("%s: aw87339_voice_status = %d\n", __func__, aw87339_voice_status);
 	return 0;
 }
 
@@ -994,7 +994,7 @@ static int ext_amp_voice_set(struct snd_kcontrol *kcontrol, struct snd_ctl_elem_
 		aw87339_voice_setting(0);
 	}
 
-	pr_info("%s: value.integer.value = %ld\n", __func__, ucontrol->value.integer.value[0]);
+	pr_debug("%s: value.integer.value = %ld\n", __func__, ucontrol->value.integer.value[0]);
 	return 0;
 }
 

@@ -99,7 +99,7 @@ static inline void _batadv_dbg(int type __always_unused,
 		struct net_device *_netdev = (net_dev);                 \
 		struct batadv_priv *_batpriv = netdev_priv(_netdev);    \
 		batadv_dbg(BATADV_DBG_ALL, _batpriv, fmt, ## arg);	\
-		pr_info("%s: " fmt, _netdev->name, ## arg);		\
+		pr_debug("%s: " fmt, _netdev->name, ## arg);		\
 	} while (0)
 #define batadv_err(net_dev, fmt, arg...)				\
 	do {								\

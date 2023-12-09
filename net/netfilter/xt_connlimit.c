@@ -410,7 +410,7 @@ static int connlimit_mt_check(const struct xt_mtchk_param *par)
 
 	ret = nf_ct_netns_get(par->net, par->family);
 	if (ret < 0) {
-		pr_info("cannot load conntrack support for "
+		pr_debug("cannot load conntrack support for "
 			"address family %u\n", par->family);
 		return ret;
 	}

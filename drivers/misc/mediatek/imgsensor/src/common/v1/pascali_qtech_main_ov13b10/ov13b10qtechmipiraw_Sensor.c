@@ -30,7 +30,7 @@
         pr_debug(PFX "[%s] " format, __func__, ##args)
 #include "cam_cal_define.h"
 #define LOG_DBG(format, args...)    pr_debug(PFX "[%s] " format, __FUNCTION__, ##args)
-#define LOG_INF(format, args...)    pr_info(PFX "[%s] " format, __FUNCTION__, ##args)
+#define LOG_INF(format, args...)    pr_debug(PFX "[%s] " format, __FUNCTION__, ##args)
 #define LOG_ERR(format, args...)    pr_err(PFX "[%s] " format, __FUNCTION__, ##args)
 #define ENABLE_OV13B10_OTP 1
 #define MULTI_WRITE 1

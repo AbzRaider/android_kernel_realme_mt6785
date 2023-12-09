@@ -91,7 +91,7 @@ static struct packet_offload mpls_uc_offload __read_mostly = {
 
 static int __init mpls_gso_init(void)
 {
-	pr_info("MPLS GSO support\n");
+	pr_debug("MPLS GSO support\n");
 
 	dev_add_offload(&mpls_uc_offload);
 	dev_add_offload(&mpls_mc_offload);

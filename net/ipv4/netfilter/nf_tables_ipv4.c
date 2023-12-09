@@ -36,7 +36,7 @@ static unsigned int nft_ipv4_output(void *priv,
 	if (unlikely(skb->len < sizeof(struct iphdr) ||
 		     ip_hdr(skb)->ihl < sizeof(struct iphdr) / 4)) {
 		if (net_ratelimit())
-			pr_info("nf_tables_ipv4: ignoring short SOCK_RAW "
+			pr_debug("nf_tables_ipv4: ignoring short SOCK_RAW "
 				"packet\n");
 		return NF_ACCEPT;
 	}

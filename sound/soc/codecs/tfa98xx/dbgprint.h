@@ -34,7 +34,7 @@
 #define _DEBUG(level, fmt, va...)                                         \
 	do {                                                              \
 		if (unlikely(debug >= (level)))                           \
-			pr_info(PREFIX "%s:%d: " fmt, __func__, __LINE__, \
+			pr_debug(PREFIX "%s:%d: " fmt, __func__, __LINE__, \
 				##va);                                    \
 	} while (0)
 
@@ -44,7 +44,7 @@
 	} while (0)
 #endif
 
-#define MSG(fmt, va...) pr_info(PREFIX "%s:%d: " fmt, __func__, __LINE__, ##va)
+#define MSG(fmt, va...) pr_debug(PREFIX "%s:%d: " fmt, __func__, __LINE__, ##va)
 #define _ERRORMSG(fmt, va...) \
 	pr_err(PREFIX "ERROR %s:%d: " fmt, __func__, __LINE__, ##va)
 
@@ -54,7 +54,7 @@
 #define DEBUG3(x...) _DEBUG(3, x)
 #define ERRORMSG(x...) _ERRORMSG(x)
 #define PRINT(x...) printk(x)
-#define PRINT_ERROR(x...) pr_info(PREFIX " **ERROR** " x)
+#define PRINT_ERROR(x...) pr_debug(PREFIX " **ERROR** " x)
 #define PRINT_ASSERT(e)                                                  \
 	do {                                                             \
 		if ((e))                                                 \

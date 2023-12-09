@@ -203,11 +203,11 @@ static struct xfrm6_protocol ipcomp6_protocol = {
 static int __init ipcomp6_init(void)
 {
 	if (xfrm_register_type(&ipcomp6_type, AF_INET6) < 0) {
-		pr_info("%s: can't add xfrm type\n", __func__);
+		pr_debug("%s: can't add xfrm type\n", __func__);
 		return -EAGAIN;
 	}
 	if (xfrm6_protocol_register(&ipcomp6_protocol, IPPROTO_COMP) < 0) {
-		pr_info("%s: can't add protocol\n", __func__);
+		pr_debug("%s: can't add protocol\n", __func__);
 		xfrm_unregister_type(&ipcomp6_type, AF_INET6);
 		return -EAGAIN;
 	}
@@ -217,9 +217,9 @@ static int __init ipcomp6_init(void)
 static void __exit ipcomp6_fini(void)
 {
 	if (xfrm6_protocol_deregister(&ipcomp6_protocol, IPPROTO_COMP) < 0)
-		pr_info("%s: can't remove protocol\n", __func__);
+		pr_debug("%s: can't remove protocol\n", __func__);
 	if (xfrm_unregister_type(&ipcomp6_type, AF_INET6) < 0)
-		pr_info("%s: can't remove xfrm type\n", __func__);
+		pr_debug("%s: can't remove xfrm type\n", __func__);
 }
 
 module_init(ipcomp6_init);

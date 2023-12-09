@@ -329,7 +329,7 @@ static const struct xfrm_type_offload esp6_type_offload = {
 static int __init esp6_offload_init(void)
 {
 	if (xfrm_register_type_offload(&esp6_type_offload, AF_INET6) < 0) {
-		pr_info("%s: can't add xfrm type offload\n", __func__);
+		pr_debug("%s: can't add xfrm type offload\n", __func__);
 		return -EAGAIN;
 	}
 
@@ -339,7 +339,7 @@ static int __init esp6_offload_init(void)
 static void __exit esp6_offload_exit(void)
 {
 	if (xfrm_unregister_type_offload(&esp6_type_offload, AF_INET6) < 0)
-		pr_info("%s: can't remove xfrm type offload\n", __func__);
+		pr_debug("%s: can't remove xfrm type offload\n", __func__);
 
 	inet6_del_offload(&esp6_offload, IPPROTO_ESP);
 }

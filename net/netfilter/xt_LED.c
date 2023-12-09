@@ -111,7 +111,7 @@ static int led_tg_check(const struct xt_tgchk_param *par)
 	int err;
 
 	if (ledinfo->id[0] == '\0') {
-		pr_info("No 'id' parameter given.\n");
+		pr_debug("No 'id' parameter given.\n");
 		return -EINVAL;
 	}
 

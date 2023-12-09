@@ -41,7 +41,7 @@ static int tcf_simp(struct sk_buff *skb, const struct tc_action *a,
 	 * Example if this was the 3rd packet and the string was "hello"
 	 * then it would look like "hello_3" (without quotes)
 	 */
-	pr_info("simple: %s_%d\n",
+	pr_debug("simple: %s_%d\n",
 	       (char *)d->tcfd_defdata, d->tcf_bstats.packets);
 	spin_unlock(&d->tcf_lock);
 	return d->tcf_action;
@@ -223,7 +223,7 @@ static int __init simp_init_module(void)
 {
 	int ret = tcf_register_action(&act_simp_ops, &simp_net_ops);
 	if (!ret)
-		pr_info("Simple TC action Loaded\n");
+		pr_debug("Simple TC action Loaded\n");
 	return ret;
 }
 

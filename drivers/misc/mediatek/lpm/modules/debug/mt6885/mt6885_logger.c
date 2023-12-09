@@ -155,7 +155,7 @@ static void mt6885_get_spm_wakesrc_irq(void)
 		node = of_find_compatible_node(NULL, NULL,
 			mt6885_spm_wakesrc_irqs[i].name);
 		if (!node) {
-			pr_info("[name:spm&][SPM] find '%s' node failed\n",
+			pr_debug("[name:spm&][SPM] find '%s' node failed\n",
 				mt6885_spm_wakesrc_irqs[i].name);
 			continue;
 		}
@@ -165,7 +165,7 @@ static void mt6885_get_spm_wakesrc_irq(void)
 				mt6885_spm_wakesrc_irqs[i].order);
 
 		if (!mt6885_spm_wakesrc_irqs[i].irq_no) {
-			pr_info("[name:spm&][SPM] get '%s' failed\n",
+			pr_debug("[name:spm&][SPM] get '%s' failed\n",
 				mt6885_spm_wakesrc_irqs[i].name);
 		}
 	}
@@ -623,7 +623,7 @@ static int mt6885_show_message(struct mt6885_spm_wake_status *wakesrc, int type,
 		//yunqing.zeng@bsp.power.basic 2019-11-30 Modify for statistics of deepsleep r13 blocker.
 		record_suspend_r13_info(mt6885_wake.r13, mt6885_wake.debug_flag, mt6885_wake.timer_out, plat_mmio_read(SPM_BK_VTCXO_DUR));
 		if (!(wakesrc->r12 & R12_EINT_EVENT_B)) {
-			pr_info("%s:wakeup_reson=%d scenario=%s wakeupby(buf)=%s",__func__,wr,scenario,buf);
+			pr_debug("%s:wakeup_reson=%d scenario=%s wakeupby(buf)=%s",__func__,wr,scenario,buf);
 			wakeup_state=false;
 			wakeup_state=wakeup_reasons_statics(buf, WS_CNT_WLAN|WS_CNT_ADSP|WS_CNT_SENSOR|WS_CNT_MODEM);
 			if((wakeup_state==false)&&(strlen(buf)!=0)){
@@ -642,7 +642,7 @@ static int mt6885_show_message(struct mt6885_spm_wake_status *wakesrc, int type,
 		/* Eable rcu lock checking */
 		rcu_irq_exit_irqson();
 	} else
-		pr_info("[name:spm&][SPM] %s", log_buf);
+		pr_debug("[name:spm&][SPM] %s", log_buf);
 
 	return wr;
 }
@@ -699,7 +699,7 @@ static int mt6885_log_timer_func(unsigned long long dur, void *priv)
 					"MCUSYSOFF", NULL);
 		mt6885_logger_help.prev = mt6885_logger_help.cur;
 	} else
-		pr_info("[name:spm&][SPM] MCUSYSOFF Didn't enter low power scenario\n");
+		pr_debug("[name:spm&][SPM] MCUSYSOFF Didn't enter low power scenario\n");
 
 	timer->fired = info->fired;
 	return 0;
@@ -798,7 +798,7 @@ int __init mt6885_logger_init(void)
 	if (mt6885_spm_base)
 		mtk_lp_issuer_register(&mt6885_issuer);
 	else
-		pr_info("[name:mtk_lpm][P] - Don't register the issue by error! (%s:%d)\n",
+		pr_debug("[name:mtk_lpm][P] - Don't register the issue by error! (%s:%d)\n",
 			__func__, __LINE__);
 
 	mt6885_get_spm_wakesrc_irq();

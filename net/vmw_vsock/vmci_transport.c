@@ -2034,7 +2034,7 @@ static bool vmci_transport_old_proto_override(bool *old_pkt_proto)
 		else
 			*old_pkt_proto = false;
 
-		pr_info("Proto override in use\n");
+		pr_debug("Proto override in use\n");
 		return true;
 	}
 

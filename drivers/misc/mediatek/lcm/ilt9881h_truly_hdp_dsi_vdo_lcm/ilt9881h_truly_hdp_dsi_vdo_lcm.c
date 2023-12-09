@@ -481,7 +481,7 @@ static struct LCM_setting_table_V3 set_cabc_move[] = {
 };
 static int cabc_status;
  static void lcm_set_cabc_cmdq(void *handle, unsigned int level){
-	pr_info("[lcm] cabc set level %d\n", level);
+	pr_debug("[lcm] cabc set level %d\n", level);
 	if (level==0){
 		push_table_cust(handle, set_cabc_off, sizeof(set_cabc_off) / sizeof(struct LCM_setting_table_V3), 0);
 
@@ -494,7 +494,7 @@ static int cabc_status;
 		push_table_cust(handle, set_cabc_move, sizeof(set_cabc_move) / sizeof(struct LCM_setting_table_V3), 0);
 
 	}else{
-		pr_info("[lcm]  level %d is not support\n", level);
+		pr_debug("[lcm]  level %d is not support\n", level);
 	}
 	cabc_status = level;
 }
@@ -516,14 +516,14 @@ static void lcm_init(void)
 		pr_debug("ili9881h_truly_lcm_mode = cmd mode :%d----\n", lcm_dsi_mode);
 	} else {
 		push_table(NULL, init_setting_vdo, sizeof(init_setting_vdo) / sizeof(struct LCM_setting_table), 1);
-		pr_info("ili9881h_truly_lcm_mode = vdo mode :%d----\n", lcm_dsi_mode);
+		pr_debug("ili9881h_truly_lcm_mode = vdo mode :%d----\n", lcm_dsi_mode);
 	}
 	lcm_set_cabc_cmdq(NULL, cabc_status);
 }
 
 static void lcm_suspend(void)
 {
-	pr_info("truly lcm_suspend\n");
+	pr_debug("truly lcm_suspend\n");
 	push_table(NULL, lcm_suspend_setting, sizeof(lcm_suspend_setting) / sizeof(struct LCM_setting_table), 1);
 }
 
@@ -533,7 +533,7 @@ static void lcm_resume(void)
 }
 
  static void lcm_get_cabc_status(int *status){
-	pr_info("[lcm] cabc get to %d\n", cabc_status);
+	pr_debug("[lcm] cabc get to %d\n", cabc_status);
 	*status = cabc_status;
 }
 

@@ -74,7 +74,7 @@ static int cfdgml_receive(struct cflayer *layr, struct cfpkt *pkt)
 		return 0;
 	default:
 		cfpkt_destroy(pkt);
-		pr_info("Unknown datagram control %d (0x%x)\n", cmd, cmd);
+		pr_debug("Unknown datagram control %d (0x%x)\n", cmd, cmd);
 		return -EPROTO;
 	}
 }

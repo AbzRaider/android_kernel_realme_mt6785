@@ -1072,7 +1072,7 @@ long __frame_config(unsigned long arg)
 	int ret = 0;
 
 	if (!cfg) {
-		pr_info("error: kzalloc %zu memory fail!\n", sizeof(*cfg));
+		pr_debug("error: kzalloc %zu memory fail!\n", sizeof(*cfg));
 		return -ENOMEM;
 	}
 

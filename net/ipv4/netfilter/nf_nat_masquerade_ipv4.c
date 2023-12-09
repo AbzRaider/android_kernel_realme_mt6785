@@ -51,7 +51,7 @@ nf_nat_masquerade_ipv4(struct sk_buff *skb, unsigned int hooknum,
 	nh = rt_nexthop(rt, ip_hdr(skb)->daddr);
 	newsrc = inet_select_addr(out, nh, RT_SCOPE_UNIVERSE);
 	if (!newsrc) {
-		pr_info("%s ate my IP address\n", out->name);
+		pr_debug("%s ate my IP address\n", out->name);
 		return NF_DROP;
 	}
 

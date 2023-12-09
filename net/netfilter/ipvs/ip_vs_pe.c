@@ -87,7 +87,7 @@ int register_ip_vs_pe(struct ip_vs_pe *pe)
 	list_add_rcu(&pe->n_list, &ip_vs_pe);
 	mutex_unlock(&ip_vs_pe_mutex);
 
-	pr_info("[%s] pe registered.\n", pe->name);
+	pr_debug("[%s] pe registered.\n", pe->name);
 
 	return 0;
 }
@@ -104,7 +104,7 @@ int unregister_ip_vs_pe(struct ip_vs_pe *pe)
 	/* decrease the module use count */
 	ip_vs_use_count_dec();
 
-	pr_info("[%s] pe unregistered.\n", pe->name);
+	pr_debug("[%s] pe unregistered.\n", pe->name);
 
 	return 0;
 }

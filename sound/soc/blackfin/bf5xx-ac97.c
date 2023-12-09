@@ -194,7 +194,7 @@ static void bf5xx_ac97_cold_reset(struct snd_ac97 *ac97)
 	/* Wait for bit clock recover */
 	mdelay(1);
 #else
-	pr_info("%s: Not implemented\n", __func__);
+	pr_debug("%s: Not implemented\n", __func__);
 #endif
 }
 

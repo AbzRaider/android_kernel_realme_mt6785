@@ -33,7 +33,7 @@ static unsigned int nft_ipv6_output(void *priv,
 {
 	if (unlikely(skb->len < sizeof(struct ipv6hdr))) {
 		if (net_ratelimit())
-			pr_info("nf_tables_ipv6: ignoring short SOCK_RAW "
+			pr_debug("nf_tables_ipv6: ignoring short SOCK_RAW "
 				"packet\n");
 		return NF_ACCEPT;
 	}

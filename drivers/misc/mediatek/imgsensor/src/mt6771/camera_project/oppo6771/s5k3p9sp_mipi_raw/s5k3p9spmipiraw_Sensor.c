@@ -247,7 +247,7 @@ static void read_eeprom_SN(void)
 	for (idx = 0; idx <CAMERA_MODULE_SN_LENGTH; idx++) {
 		char pusendcmd[2] = {0x00 , (char)((0xE0 + idx) & 0xFF) };
 		iReadRegI2C(pusendcmd , 2, (u8*)&get_byte[idx],1, 0xA8);
-		pr_info("gS5k3p9sp_SN[%d]: 0x%x  0x%x\n", idx, get_byte[idx], gS5k3p9sp_SN[idx]);
+		pr_debug("gS5k3p9sp_SN[%d]: 0x%x  0x%x\n", idx, get_byte[idx], gS5k3p9sp_SN[idx]);
 	}
 }
 static kal_uint16 read_cmos_eeprom_8(kal_uint16 addr)
@@ -4188,16 +4188,16 @@ static kal_uint32 get_imgsensor_id(UINT32 *sensor_id)
 		spin_unlock(&imgsensor_drv_lock);
 		do {
 			*sensor_id = ((read_cmos_sensor_16_8(0x0000) << 8) | read_cmos_sensor_16_8(0x0001));
-			pr_info("read out sensor id 0x%x \n", *sensor_id);
+			pr_debug("read out sensor id 0x%x \n", *sensor_id);
 			if (*sensor_id == imgsensor_info.sensor_id) {
-				pr_info("i2c write id: 0x%x, sensor id: 0x%x\n", imgsensor.i2c_write_id, *sensor_id);
+				pr_debug("i2c write id: 0x%x, sensor id: 0x%x\n", imgsensor.i2c_write_id, *sensor_id);
 				*sensor_id = S5K3P9SP_SENSOR_ID;
 				#ifdef OPLUS_FEATURE_CAMERA_COMMON
 				/*Caohua.Lin@Camera.Driver add for 18011/18311  board 20180723*/
 				imgsensor_info.module_id = read_module_id();
                 /*Henry.Chang@Camera.Driver add for ModuleSN  20181216*/
 				read_eeprom_SN();
-				pr_info("s5k3p9sp_module_id=%d\n",imgsensor_info.module_id);
+				pr_debug("s5k3p9sp_module_id=%d\n",imgsensor_info.module_id);
 				if(deviceInfo_register_value == 0x00){
 					Oplusimgsensor_Registdeviceinfo("Cam_f", DEVICE_VERSION_S5k3P9SP, imgsensor_info.module_id);
 					deviceInfo_register_value = 0x01;

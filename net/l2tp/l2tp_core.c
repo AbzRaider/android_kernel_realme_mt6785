@@ -1911,7 +1911,7 @@ static int __init l2tp_init(void)
 		goto out;
 	}
 
-	pr_info("L2TP core driver, %s\n", L2TP_DRV_VERSION);
+	pr_debug("L2TP core driver, %s\n", L2TP_DRV_VERSION);
 
 out:
 	return rc;

@@ -3448,7 +3448,7 @@ static int __init ctnetlink_init(void)
 {
 	int ret;
 
-	pr_info("ctnetlink v%s: registering with nfnetlink.\n", version);
+	pr_debug("ctnetlink v%s: registering with nfnetlink.\n", version);
 	ret = nfnetlink_subsys_register(&ctnl_subsys);
 	if (ret < 0) {
 		pr_err("ctnetlink_init: cannot register with nfnetlink.\n");
@@ -3482,7 +3482,7 @@ err_out:
 
 static void __exit ctnetlink_exit(void)
 {
-	pr_info("ctnetlink: unregistering from nfnetlink.\n");
+	pr_debug("ctnetlink: unregistering from nfnetlink.\n");
 
 	unregister_pernet_subsys(&ctnetlink_net_ops);
 	nfnetlink_subsys_unregister(&ctnl_exp_subsys);

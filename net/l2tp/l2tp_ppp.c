@@ -1882,7 +1882,7 @@ static int __init pppol2tp_init(void)
 		goto out_unregister_pppox;
 #endif
 
-	pr_info("PPPoL2TP kernel driver, %s\n", PPPOL2TP_DRV_VERSION);
+	pr_debug("PPPoL2TP kernel driver, %s\n", PPPOL2TP_DRV_VERSION);
 
 out:
 	return err;

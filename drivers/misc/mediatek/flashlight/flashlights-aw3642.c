@@ -393,7 +393,7 @@ static int aw3642_ioctl(unsigned int cmd, unsigned long arg)
 		break;
 
 	default:
-		pr_info("No such command and arg(%d): (%d, %d)\n",
+		pr_debug("No such command and arg(%d): (%d, %d)\n",
 				channel, _IOC_NR(cmd), (int)fl_arg->arg);
 		return -ENOTTY;
 	}
@@ -492,13 +492,13 @@ static int aw3642_parse_dt(struct device *dev,
 
 	pdata->channel_num = of_get_child_count(np);
 	if (!pdata->channel_num) {
-		pr_info("Parse no dt, node.\n");
+		pr_debug("Parse no dt, node.\n");
 		return 0;
 	}
 	pr_err("1111 Channel number(%d).\n", pdata->channel_num);
 
 	if (of_property_read_u32(np, "decouple", &decouple))
-		pr_info("Parse no dt, decouple.\n");
+		pr_debug("Parse no dt, decouple.\n");
 
 	pdata->dev_id = devm_kzalloc(dev,
 			pdata->channel_num * sizeof(struct flashlight_device_id),

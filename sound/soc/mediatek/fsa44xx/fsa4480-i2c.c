@@ -344,7 +344,7 @@ int fsa4480_switch_event(struct device_node *node,
 	if (!fsa_priv->regmap)
 		return -EINVAL;
 
-	pr_info("%s - switch event: %d\n", __func__, event);
+	pr_debug("%s - switch event: %d\n", __func__, event);
 
 	switch (event) {
 	case FSA_MIC_GND_SWAP:

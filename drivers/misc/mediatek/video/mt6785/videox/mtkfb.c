@@ -1361,7 +1361,7 @@ static int mtkfb_ioctl(struct fb_info *info, unsigned int cmd,
 	}
 	case MTKFB_ERROR_INDEX_UPDATE_TIMEOUT:
 	{
-		pr_info("[DDP] %s():MTKFB_ERROR_INDEX_UPDATE_TIMEOUT\n",
+		pr_debug("[DDP] %s():MTKFB_ERROR_INDEX_UPDATE_TIMEOUT\n",
 			__func__);
 		/* call info dump function here */
 		/* mtkfb_dump_layer_info(); */
@@ -1369,7 +1369,7 @@ static int mtkfb_ioctl(struct fb_info *info, unsigned int cmd,
 	}
 	case MTKFB_ERROR_INDEX_UPDATE_TIMEOUT_AEE:
 	{
-		pr_info("[DDP] %s():MTKFB_ERROR_INDEX_UPDATE_TIMEOUT\n",
+		pr_debug("[DDP] %s():MTKFB_ERROR_INDEX_UPDATE_TIMEOUT\n",
 			__func__);
 		/* call info dump function here */
 		/* mtkfb_dump_layer_info(); */
@@ -2683,19 +2683,19 @@ static int mtkfb_probe(struct platform_device *pdev)
 	 */
 //#ifdef MTK_FB_ION_SUPPORT
 	ion_drv_create_FB_heap(mtkfb_get_fb_base(), DISP_GetFBRamSize());
-	pr_info("%s DISP_GetFBRamSize size:%d\n",
+	pr_debug("%s DISP_GetFBRamSize size:%d\n",
 		__func__, DISP_GetFBRamSize());
 #endif
 	fbdev->state = MTKFB_ACTIVE;
 
 	MSG_FUNC_LEAVE();
-	pr_info("disp driver(2) %s end\n", __func__);
+	pr_debug("disp driver(2) %s end\n", __func__);
 	return 0;
 
 cleanup:
 	mtkfb_free_resources(fbdev, init_state);
 
-	pr_info("disp driver(3) %s end\n", __func__);
+	pr_debug("disp driver(3) %s end\n", __func__);
 	return ret;
 }
 

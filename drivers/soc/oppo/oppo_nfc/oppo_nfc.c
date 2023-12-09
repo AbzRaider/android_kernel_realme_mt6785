@@ -157,7 +157,7 @@ static int oppo_nfc_probe(struct platform_device *pdev)
 	if (support_nfc)
 	{
 	    proc_symlink(nfc_feature, nfc_info, feature_src);
-	    pr_info("proc nfc feature symlink generated");
+	    pr_debug("proc nfc feature symlink generated");
 	}
 
 	return 0;

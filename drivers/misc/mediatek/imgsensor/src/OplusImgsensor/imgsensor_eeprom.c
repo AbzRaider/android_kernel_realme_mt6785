@@ -81,7 +81,7 @@ static enum IMGSENSOR_RETURN Eeprom_WriteProtectEnable(kal_uint16 enable, kal_ui
         pusendcmd[2] = 0x00;
 
     ret = iBurstWriteReg((kal_uint8 *)pusendcmd , 3, i4SlaveAddr);
-    pr_info("[%s] enable: %d ret: %d", enable, ret);
+    pr_debug("[%s] enable: %d ret: %d", enable, ret);
     return ret;
 }
 
@@ -241,12 +241,12 @@ enum IMGSENSOR_RETURN Eeprom_SensorInfoValid(
 {
     struct CAMERA_DEVICE_INFO *pCamDeviceObj = &gImgEepromInfo;
     if (sensor_idx > pCamDeviceObj->i4SensorNum - 1) {
-        pr_info("[%s] sensor_idx:%d > i4SensorNum: %d", __func__, sensor_idx, pCamDeviceObj->i4SensorNum);
+        pr_debug("[%s] sensor_idx:%d > i4SensorNum: %d", __func__, sensor_idx, pCamDeviceObj->i4SensorNum);
         return IMGSENSOR_RETURN_ERROR;
     }
 
     if (sensorID != pCamDeviceObj->pCamModuleInfo[sensor_idx].i4Sensorid) {
-        pr_info("[%s] sensorID:%d mismatch i4Sensorid: %d",
+        pr_debug("[%s] sensorID:%d mismatch i4Sensorid: %d",
                 __func__, sensorID, pCamDeviceObj->pCamModuleInfo[sensor_idx].i4Sensorid);
         return IMGSENSOR_RETURN_ERROR;
     }
@@ -303,13 +303,13 @@ enum IMGSENSOR_RETURN Eeprom_CallWriteService(ACDK_SENSOR_ENGMODE_STEREO_STRUCT 
 
     /*Check sensorid & senidx*/
     if (Eeprom_SensorInfoValid(sensor_idx, uSensorId) != IMGSENSOR_RETURN_SUCCESS) {
-        pr_info("[%s]sensor_idx:%d, uSensorId:0x%x Invalid", __func__, sensor_idx, uSensorId);
+        pr_debug("[%s]sensor_idx:%d, uSensorId:0x%x Invalid", __func__, sensor_idx, uSensorId);
         return IMGSENSOR_RETURN_ERROR;
     }
     /*Match EEPROM IIC-ADDR EEPROM OFFSET*/
     i4SlaveAddr = pCamDeviceObj->pCamModuleInfo[sensor_idx].i4SlaveAddr;
     if (i4SlaveAddr == 0xFF || i4SlaveAddr == 0) {
-        pr_info("[%s] uSensorId:%d is not support Eeprom Hardware", __func__, uSensorId);
+        pr_debug("[%s] uSensorId:%d is not support Eeprom Hardware", __func__, uSensorId);
         return IMGSENSOR_RETURN_ERROR;
     }
 
@@ -447,13 +447,13 @@ enum IMGSENSOR_RETURN Eeprom_DataInit(
     struct CAMERA_DEVICE_INFO *pCamDeviceObj = &gImgEepromInfo;
 
     if (Eeprom_SensorInfoValid(sensor_idx, sensorID) != IMGSENSOR_RETURN_SUCCESS) {
-        pr_info("[%s]sensor_idx:%d, sensorID:0x%x Invalid", __func__, sensor_idx, sensorID);
+        pr_debug("[%s]sensor_idx:%d, sensorID:0x%x Invalid", __func__, sensor_idx, sensorID);
         return IMGSENSOR_RETURN_ERROR;
     }
     /*Match EEPROM IIC-ADDR EEPROM OFFSET*/
     slaveAddr = pCamDeviceObj->pCamModuleInfo[sensor_idx].i4SlaveAddr;
     if (slaveAddr == 0xFF) {
-        pr_info("[%s] sensorID:%d is not support Eeprom Hardware", __func__, sensorID);
+        pr_debug("[%s] sensorID:%d is not support Eeprom Hardware", __func__, sensorID);
         Oplusimgsensor_Registdeviceinfo(pCamDeviceObj->pCamModuleInfo[sensor_idx].name,
                                         pCamDeviceObj->pCamModuleInfo[sensor_idx].version,
                                         module_id);
@@ -491,7 +491,7 @@ enum CUSTOM_CAMERA_ERROR_CODE_ENUM Eeprom_Control(
         case SENSOR_FEATURE_GET_EEPROM_COMDATA:
         {
             if (Eeprom_SensorInfoValid(i4Sensor_idx, i4SensorID) != IMGSENSOR_RETURN_SUCCESS) {
-                pr_info("[%s]_COMDATA i4Sensor_idx:%d, i4SensorID:0x%x Invalid",
+                pr_debug("[%s]_COMDATA i4Sensor_idx:%d, i4SensorID:0x%x Invalid",
                                                 __func__, i4Sensor_idx, i4SensorID);
                 return ERROR_MSDK_IS_ACTIVATED;
             }
@@ -504,7 +504,7 @@ enum CUSTOM_CAMERA_ERROR_CODE_ENUM Eeprom_Control(
         case SENSOR_FEATURE_GET_EEPROM_STEREODATA:
         {
             if (Eeprom_SensorInfoValid(i4Sensor_idx, i4SensorID) != IMGSENSOR_RETURN_SUCCESS) {
-                pr_info("[%s]_STEREODATA i4Sensor_idx:%d, i4SensorID:0x%x Invalid",
+                pr_debug("[%s]_STEREODATA i4Sensor_idx:%d, i4SensorID:0x%x Invalid",
                                                 __func__, i4Sensor_idx, i4SensorID);
                 return ERROR_MSDK_IS_ACTIVATED;
             }

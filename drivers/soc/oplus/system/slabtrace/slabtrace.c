@@ -419,11 +419,11 @@ static ssize_t slabcfg_write(struct file *filp, const char *ubuf, size_t cnt, lo
 	if (copy_from_user(&buf, ubuf, cnt))
 		return -EFAULT;
 	buf[cnt] = 0;
-	pr_info("debug for slabconfig\n");
+	pr_debug("debug for slabconfig\n");
 
 	mutex_lock(&sort_mutex);
 	sscanf(buf,"%s %s %lx %lx %lx %lx", argv1, argv2, &sort_addrs[0], &sort_addrs[1], &sort_addrs[2], &sort_addrs[3]);
-	pr_info("slabtrace:%s %s %lx %lx %lx %lx\n", argv1, argv2, sort_addrs[0], sort_addrs[1], sort_addrs[2], sort_addrs[3]);
+	pr_debug("slabtrace:%s %s %lx %lx %lx %lx\n", argv1, argv2, sort_addrs[0], sort_addrs[1], sort_addrs[2], sort_addrs[3]);
 
 	/* reset */
 	if (!strcmp(argv1, "reset"))
@@ -448,24 +448,24 @@ static ssize_t slabcfg_write(struct file *filp, const char *ubuf, size_t cnt, lo
 	/* pick kmalloc-x */
 	if (strncmp(argv1, mchar, strlen(mchar)))
 	{
-		pr_info("slabtrace config args invalid\n");
+		pr_debug("slabtrace config args invalid\n");
 		goto out;
 	}
 	strcpy(sort_cache_name, argv1);
-	pr_info("slabtrace sort_cache_name:%s\n", sort_cache_name);
+	pr_debug("slabtrace sort_cache_name:%s\n", sort_cache_name);
 
 	/* only by pid */
 	if (!strcmp(argv2, "pid"))
 	{
 		isbypid = true;
-		pr_info("slabtrace sort simple by pid\n");
+		pr_debug("slabtrace sort simple by pid\n");
 		goto out;
 	}
 	/* specific stack sort by pid */
 	if (!strcmp(argv2, "stacks"))
 	{
 		isbystacks = true;
-		pr_info("slabtrace sort by stacks\n");
+		pr_debug("slabtrace sort by stacks\n");
 	}
 out:
 	mutex_unlock(&sort_mutex);
@@ -488,14 +488,14 @@ static int __init oplus_memcfg_late_init(void)
 
 	oplus_memcfg_dir = proc_mkdir("slab_memcfg", NULL);
 	if(!oplus_memcfg_dir) {
-		pr_info("%s mkdir /proc/slab_memcfg failed\n", __func__);
+		pr_debug("%s mkdir /proc/slab_memcfg failed\n", __func__);
 	} else {
 		pEntry = proc_create("slabtrace", 0400, oplus_memcfg_dir, &proc_slabtrace_operations);
 		if(!pEntry)
-			pr_info("create slabtrace proc entry failed\n");
+			pr_debug("create slabtrace proc entry failed\n");
 		pEntry = proc_create("slabcfg", 0600, oplus_memcfg_dir, &proc_slabcfg_operations);
 		if(!pEntry)
-			pr_info("create slabcfg proc entry failed\n");
+			pr_debug("create slabcfg proc entry failed\n");
 	}
 	mutex_init(&sort_mutex);
 	return 0;

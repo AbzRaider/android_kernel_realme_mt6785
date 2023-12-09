@@ -1795,7 +1795,7 @@ static int __init bcm_module_init(void)
 {
 	int err;
 
-	pr_info("can: broadcast manager protocol (rev " CAN_BCM_VERSION " t)\n");
+	pr_debug("can: broadcast manager protocol (rev " CAN_BCM_VERSION " t)\n");
 
 	err = can_proto_register(&bcm_can_proto);
 	if (err < 0) {

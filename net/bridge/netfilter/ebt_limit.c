@@ -72,7 +72,7 @@ static int ebt_limit_mt_check(const struct xt_mtchk_param *par)
 	/* Check for overflow. */
 	if (info->burst == 0 ||
 	    user2credits(info->avg * info->burst) < user2credits(info->avg)) {
-		pr_info("overflow, try lower: %u/%u\n",
+		pr_debug("overflow, try lower: %u/%u\n",
 			info->avg, info->burst);
 		return -EINVAL;
 	}

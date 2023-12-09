@@ -264,7 +264,7 @@ static int __init renesas_soc_init(void)
 						   ((product >> 4) & 0x0f) + 1,
 						   product & 0xf);
 
-	pr_info("Detected Renesas %s %s %s\n", soc_dev_attr->family,
+	pr_debug("Detected Renesas %s %s %s\n", soc_dev_attr->family,
 		soc_dev_attr->soc_id, soc_dev_attr->revision ?: "");
 
 	soc_dev = soc_device_register(soc_dev_attr);

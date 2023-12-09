@@ -181,7 +181,7 @@ static int bootloader_log_probe(struct platform_device *pdev)
 	proc_bootloader_log_init();
 
 
-	pr_info("bootloader_log!\n");
+	pr_debug("bootloader_log!\n");
 
 	return 0;
 

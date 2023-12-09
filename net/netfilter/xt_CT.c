@@ -82,7 +82,7 @@ xt_ct_set_helper(struct nf_conn *ct, const char *helper_name,
 
 	proto = xt_ct_find_proto(par);
 	if (!proto) {
-		pr_info("You must specify a L4 protocol, and not use "
+		pr_debug("You must specify a L4 protocol, and not use "
 			"inversions on it.\n");
 		return -ENOENT;
 	}
@@ -90,7 +90,7 @@ xt_ct_set_helper(struct nf_conn *ct, const char *helper_name,
 	helper = nf_conntrack_helper_try_module_get(helper_name, par->family,
 						    proto);
 	if (helper == NULL) {
-		pr_info("No such helper \"%s\"\n", helper_name);
+		pr_debug("No such helper \"%s\"\n", helper_name);
 		return -ENOENT;
 	}
 
@@ -131,14 +131,14 @@ xt_ct_set_timeout(struct nf_conn *ct, const struct xt_tgchk_param *par,
 	timeout_find_get = rcu_dereference(nf_ct_timeout_find_get_hook);
 	if (timeout_find_get == NULL) {
 		ret = -ENOENT;
-		pr_info("Timeout policy base is empty\n");
+		pr_debug("Timeout policy base is empty\n");
 		goto out;
 	}
 
 	proto = xt_ct_find_proto(par);
 	if (!proto) {
 		ret = -EINVAL;
-		pr_info("You must specify a L4 protocol, and not use "
+		pr_debug("You must specify a L4 protocol, and not use "
 			"inversions on it.\n");
 		goto out;
 	}
@@ -146,13 +146,13 @@ xt_ct_set_timeout(struct nf_conn *ct, const struct xt_tgchk_param *par,
 	timeout = timeout_find_get(par->net, timeout_name);
 	if (timeout == NULL) {
 		ret = -ENOENT;
-		pr_info("No such timeout policy \"%s\"\n", timeout_name);
+		pr_debug("No such timeout policy \"%s\"\n", timeout_name);
 		goto out;
 	}
 
 	if (timeout->l3num != par->family) {
 		ret = -EINVAL;
-		pr_info("Timeout policy `%s' can only be used by L3 protocol "
+		pr_debug("Timeout policy `%s' can only be used by L3 protocol "
 			"number %d\n", timeout_name, timeout->l3num);
 		goto err_put_timeout;
 	}
@@ -162,7 +162,7 @@ xt_ct_set_timeout(struct nf_conn *ct, const struct xt_tgchk_param *par,
 	l4proto = __nf_ct_l4proto_find(par->family, proto);
 	if (timeout->l4proto->l4proto != l4proto->l4proto) {
 		ret = -EINVAL;
-		pr_info("Timeout policy `%s' can only be used by L4 protocol "
+		pr_debug("Timeout policy `%s' can only be used by L4 protocol "
 			"number %d\n",
 			timeout_name, timeout->l4proto->l4proto);
 		goto err_put_timeout;
@@ -428,7 +428,7 @@ notrack_tg(struct sk_buff *skb, const struct xt_action_param *par)
 static int notrack_chk(const struct xt_tgchk_param *par)
 {
 	if (!par->net->xt.notrack_deprecated_warning) {
-		pr_info("netfilter: NOTRACK target is deprecated, "
+		pr_debug("netfilter: NOTRACK target is deprecated, "
 			"use CT instead or upgrade iptables\n");
 		par->net->xt.notrack_deprecated_warning = true;
 	}

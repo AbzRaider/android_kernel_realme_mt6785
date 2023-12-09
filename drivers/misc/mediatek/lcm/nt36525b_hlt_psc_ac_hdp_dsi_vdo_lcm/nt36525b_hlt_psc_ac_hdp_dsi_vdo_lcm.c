@@ -589,7 +589,7 @@ static int cabc_status;
 	}else if(level==3){
 		push_table(handle, set_cabc_move, sizeof(set_cabc_move) / sizeof(struct LCM_setting_table), 1);
 	}else{
-		pr_info("[lcm]  level %d is not support\n", level);
+		pr_debug("[lcm]  level %d is not support\n", level);
 	}
 	cabc_status = level;
 	//dump_stack();

@@ -2194,7 +2194,7 @@ static void imx319_apply_SPC(void)
 #if 0
     /* for verify */
     for (i = 0x7c00; i < 0x7c00+352; i++)
-        pr_info(
+        pr_debug(
         "SPC read out : Addr[%3d] Data[%x], Ref[%x]",
         i, read_cmos_sensor(i), imx230_SPC_data[i-0x7c00]);
 #endif

@@ -40,14 +40,14 @@ int display_bias_regulator_init(void)
 	disp_bias_pos = regulator_get(NULL, "dsv_pos");
 	if (IS_ERR(disp_bias_pos)) { /* handle return value */
 		ret = PTR_ERR(disp_bias_pos);
-		pr_info("get dsv_pos fail, error: %d\n", ret);
+		pr_debug("get dsv_pos fail, error: %d\n", ret);
 		return ret;
 	}
 
 	disp_bias_neg = regulator_get(NULL, "dsv_neg");
 	if (IS_ERR(disp_bias_neg)) { /* handle return value */
 		ret = PTR_ERR(disp_bias_neg);
-		pr_info("get dsv_neg fail, error: %d\n", ret);
+		pr_debug("get dsv_neg fail, error: %d\n", ret);
 		return ret;
 	}
 
@@ -66,13 +66,13 @@ int disp_late_bias_enable(void)
 
 	ret = regulator_enable(disp_bias_pos);
 	if (ret < 0)
-		pr_info("enable regulator disp_bias_pos fail, ret = %d\n",
+		pr_debug("enable regulator disp_bias_pos fail, ret = %d\n",
 		ret);
 	retval |= ret;
 
 	ret = regulator_enable(disp_bias_neg);
 	if (ret < 0)
-		pr_info("enable regulator disp_bias_neg fail, ret = %d\n",
+		pr_debug("enable regulator disp_bias_neg fail, ret = %d\n",
 		ret);
 	retval |= ret;
 
@@ -90,36 +90,36 @@ int display_bias_enable(void)
 	/* set voltage with min & max*/
 	ret = regulator_set_voltage(disp_bias_pos, 5400000, 5400000);
 	if (ret < 0)
-		pr_info("set voltage disp_bias_pos fail, ret = %d\n", ret);
+		pr_debug("set voltage disp_bias_pos fail, ret = %d\n", ret);
 	retval |= ret;
 
 	ret = regulator_set_voltage(disp_bias_neg, 5400000, 5400000);
 	if (ret < 0)
-		pr_info("set voltage disp_bias_neg fail, ret = %d\n", ret);
+		pr_debug("set voltage disp_bias_neg fail, ret = %d\n", ret);
 	retval |= ret;
 
 #if 0
 	/* get voltage */
 	ret = mtk_regulator_get_voltage(&disp_bias_pos);
 	if (ret < 0)
-		pr_info("get voltage disp_bias_pos fail\n");
+		pr_debug("get voltage disp_bias_pos fail\n");
 	pr_debug("pos voltage = %d\n", ret);
 
 	ret = mtk_regulator_get_voltage(&disp_bias_neg);
 	if (ret < 0)
-		pr_info("get voltage disp_bias_neg fail\n");
+		pr_debug("get voltage disp_bias_neg fail\n");
 	pr_debug("neg voltage = %d\n", ret);
 #endif
 	/* enable regulator */
 	ret = regulator_enable(disp_bias_pos);
 	if (ret < 0)
-		pr_info("enable regulator disp_bias_pos fail, ret = %d\n",
+		pr_debug("enable regulator disp_bias_pos fail, ret = %d\n",
 			ret);
 	retval |= ret;
 
 	ret = regulator_enable(disp_bias_neg);
 	if (ret < 0)
-		pr_info("enable regulator disp_bias_neg fail, ret = %d\n",
+		pr_debug("enable regulator disp_bias_neg fail, ret = %d\n",
 			ret);
 	retval |= ret;
 
@@ -136,13 +136,13 @@ int display_bias_disable(void)
 
 	ret = regulator_disable(disp_bias_neg);
 	if (ret < 0)
-		pr_info("disable regulator disp_bias_neg fail, ret = %d\n",
+		pr_debug("disable regulator disp_bias_neg fail, ret = %d\n",
 			ret);
 	retval |= ret;
 
 	ret = regulator_disable(disp_bias_pos);
 	if (ret < 0)
-		pr_info("disable regulator disp_bias_pos fail, ret = %d\n",
+		pr_debug("disable regulator disp_bias_pos fail, ret = %d\n",
 			ret);
 	retval |= ret;
 
@@ -190,11 +190,11 @@ void pmi_lcd_bias_set_vspn_vol(unsigned int value)
 
 	ret = regulator_set_voltage(disp_bias_pos, level, level);
 	if (ret < 0)
-		pr_info("set voltage disp_bias_pos fail, ret = %d\n", ret);
+		pr_debug("set voltage disp_bias_pos fail, ret = %d\n", ret);
 
 	ret = regulator_set_voltage(disp_bias_neg, level, level);
 	if (ret < 0)
-		pr_info("set voltage disp_bias_neg fail, ret = %d\n", ret);
+		pr_debug("set voltage disp_bias_neg fail, ret = %d\n", ret);
 }
 EXPORT_SYMBOL(pmi_lcd_bias_set_vspn_vol);
 
@@ -216,7 +216,7 @@ void pmi_lcd_bias_set_vspn_en(unsigned int en, unsigned int seq)
 
 		}
 		if (retval < 0)
-		pr_info("enable regulator disp_bias fail, retval = %d\n", retval);
+		pr_debug("enable regulator disp_bias fail, retval = %d\n", retval);
     } else {			/* disable regulator */
         if (seq == FIRST_VSP_AFTER_VSN) {
 			retval |= regulator_disable(disp_bias_pos);
@@ -228,7 +228,7 @@ void pmi_lcd_bias_set_vspn_en(unsigned int en, unsigned int seq)
 			retval |= regulator_disable(disp_bias_pos);
         }
 		if (retval < 0)
-		pr_info("disable regulator disp_bias fail, retval = %d\n", retval);
+		pr_debug("disable regulator disp_bias fail, retval = %d\n", retval);
     }
 }
 EXPORT_SYMBOL(pmi_lcd_bias_set_vspn_en);

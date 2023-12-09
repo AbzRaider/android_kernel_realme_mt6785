@@ -149,7 +149,7 @@ int fan53870_ldo1_20601_set_voltage(int set_uV)
 
     pr_err("fan53870_ldo1_set_voltage: voltage = %d!\n", set_uV);
     ret = regmap_write(pchip->regmap, FAN53870_LDO1_VOUT_REG, reg_value);
-    pr_info("Writing 0x%02x to 0x%02x \n", reg_value, FAN53870_LDO1_VOUT_REG);
+    pr_debug("Writing 0x%02x to 0x%02x \n", reg_value, FAN53870_LDO1_VOUT_REG);
     if (ret < 0)
         goto out;
 
@@ -349,11 +349,11 @@ int fan53870_cam_ldo_disable(unsigned int LDO_NUM)
 {
     int ret;
     struct fan53870_pw_chip *pchip = fan53870_pchip;
-    pr_info("fan53870_cam_ldo_disable LDO-%d\n", LDO_NUM);
+    pr_debug("fan53870_cam_ldo_disable LDO-%d\n", LDO_NUM);
     if (LDO_NUM > 0 && LDO_NUM < FAN53870_LDO_NUM_MAX) {
         LDO_NUM = 1 << (LDO_NUM - 1);
         ret = fan53870_mask_write_reg(pchip->regmap, FAN53870_LDO_ENABLE_REG, LDO_NUM, 0x00);
-        pr_info("fan53870_cam_ldo_disable channel:0x%x!\n", LDO_NUM);
+        pr_debug("fan53870_cam_ldo_disable channel:0x%x!\n", LDO_NUM);
     } else {
         ret = -1;
         pr_err("fan53870_cam_ldo_disable invalid LDO_NUM\n");
@@ -487,7 +487,7 @@ static int fan53870_pmic_probe(struct i2c_client *client,
     }
 
     if (ldo5_power_on == 1) { //for fingerprint 3.3v
-        pr_info("%s set fan53870 ldo5 alway on 3.3v\n", __func__);
+        pr_debug("%s set fan53870 ldo5 alway on 3.3v\n", __func__);
         fan53870_cam_ldo_set_voltage(5, 3300);
     }
 

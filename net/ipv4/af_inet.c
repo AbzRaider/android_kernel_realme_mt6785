@@ -1151,7 +1151,7 @@ static int inet_sk_reselect_saddr(struct sock *sk)
 		return 0;
 
 	if (READ_ONCE(sock_net(sk)->ipv4.sysctl_ip_dynaddr) > 1) {
-		pr_info("%s(): shifting inet->saddr from %pI4 to %pI4\n",
+		pr_debug("%s(): shifting inet->saddr from %pI4 to %pI4\n",
 			__func__, &old_saddr, &new_saddr);
 	}
 

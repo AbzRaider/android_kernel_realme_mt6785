@@ -120,8 +120,8 @@ int tipc_net_start(struct net *net, u32 addr)
 	tipc_nametbl_publish(net, TIPC_CFG_SRV, tn->own_addr, tn->own_addr,
 			     TIPC_ZONE_SCOPE, 0, tn->own_addr);
 
-	pr_info("Started in network mode\n");
-	pr_info("Own node address %s, network identity %u\n",
+	pr_debug("Started in network mode\n");
+	pr_debug("Own node address %s, network identity %u\n",
 		tipc_addr_string_fill(addr_string, tn->own_addr),
 		tn->net_id);
 	return 0;
@@ -141,7 +141,7 @@ void tipc_net_stop(struct net *net)
 	tipc_node_stop(net);
 	rtnl_unlock();
 
-	pr_info("Left network mode\n");
+	pr_debug("Left network mode\n");
 }
 
 static int __tipc_nl_add_net(struct net *net, struct tipc_nl_msg *msg)

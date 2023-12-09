@@ -47,10 +47,10 @@
 #define stk3x1x_DEV_NAME "stk3x1x"
 #define APS_TAG			"[ALS/PS] "
 #define APS_FUN(f)		pr_debug(APS_TAG"%s\n", __func__)
-#define APS_ERR(fmt, args...)	pr_info(APS_TAG"%s %d : "fmt,\
+#define APS_ERR(fmt, args...)	pr_debug(APS_TAG"%s %d : "fmt,\
 				__func__, __LINE__, ##args)
 #define APS_DBG(fmt, args...)	pr_debug(APS_TAG fmt, ##args)
-#define APS_LOG(fmt, args...)	pr_info(APS_TAG fmt, ##args)
+#define APS_LOG(fmt, args...)	pr_debug(APS_TAG fmt, ##args)
 /*
  * extern functions
  */
@@ -1168,7 +1168,7 @@ static int stk3x1x_enable_ps(struct i2c_client *client,
 	}
 
 #endif
-	pr_info("%s: enable=%d\n", __func__, enable);
+	pr_debug("%s: enable=%d\n", __func__, enable);
 	cur = old;
 	cur &= (~(0x45));
 
@@ -1180,7 +1180,7 @@ static int stk3x1x_enable_ps(struct i2c_client *client,
 	}
 
 	if (0 == (cur ^ old)) {
-		pr_info("%s: repeat enable=%d, reg=0x%x\n",
+		pr_debug("%s: repeat enable=%d, reg=0x%x\n",
 			__func__, enable, cur);
 		return 0;
 	}
@@ -1626,7 +1626,7 @@ err_i2c_rw:
 #if defined(CONFIG_OF)
 static irqreturn_t stk3x1x_eint_handler(int irq, void *desc)
 {
-	pr_info("%s\n", __func__);
+	pr_debug("%s\n", __func__);
 	disable_irq_nosync(stk3x1x_obj->irq);
 	stk3x1x_eint_func();
 	return IRQ_HANDLED;
@@ -3518,7 +3518,7 @@ static int __init stk3x1x_init(void)
 {
 	alsps_driver_add(&stk3x1x_init_info);
 	/* hwmsen_alsps_add(&stk3x1x_init_info);*/
-	pr_info("%s done\n", __func__);
+	pr_debug("%s done\n", __func__);
 	return 0;
 }
 /*----------------------------------------------------------------------------*/

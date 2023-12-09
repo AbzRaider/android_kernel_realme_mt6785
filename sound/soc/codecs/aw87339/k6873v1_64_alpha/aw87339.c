@@ -201,7 +201,7 @@ static unsigned char i2c_read_reg(unsigned char reg_addr, struct aw87339_t *aw87
  ******************************************************************************/
 unsigned char aw87339_hw_on(struct aw87339_t *aw87339)
 {
-    pr_info("%s enter\n", __func__);
+    pr_debug("%s enter\n", __func__);
 
     if (aw87339 && gpio_is_valid(aw87339->reset_gpio)) {
         gpio_set_value_cansleep(aw87339->reset_gpio, 0);
@@ -218,7 +218,7 @@ unsigned char aw87339_hw_on(struct aw87339_t *aw87339)
 
 unsigned char aw87339_hw_off(struct aw87339_t *aw87339)
 {
-    pr_info("%s enter\n", __func__);
+    pr_debug("%s enter\n", __func__);
 
     if (aw87339 && gpio_is_valid(aw87339->reset_gpio)) {
         gpio_set_value_cansleep(aw87339->reset_gpio, 0);
@@ -241,7 +241,7 @@ unsigned char aw87339_kspk_reg_val(unsigned char reg, struct aw87339_t *aw87339)
         /* Yongzhi.Zhang@PSW.MM.AudioDriver.Codec, 2019/11/19,
          * add for setting different registers in voice */
         if (aw87339_voice_status > 0) {
-            pr_info("%s: aw87339 return voice reg 0x%x 0x%x\n", __func__, reg, aw87339_kspk_cfg_voice[reg]);
+            pr_debug("%s: aw87339 return voice reg 0x%x 0x%x\n", __func__, reg, aw87339_kspk_cfg_voice[reg]);
             return aw87339_kspk_cfg_voice[reg];
         } else {
             return *(aw87339->aw87339_kspk_cnt->data+reg);
@@ -296,10 +296,10 @@ void aw87339_audio_spk_low_voltage_status(int bStatus)
 
     if (aw87339_spk->hwen_flag == 1) {
         if (aw87339_spk_low_voltage_status > 0) {
-            pr_info("%s: aw87339 write vol reg 0 when playing\n", __func__);
+            pr_debug("%s: aw87339 write vol reg 0 when playing\n", __func__);
             i2c_write_reg(aw87339_REG_CPOVP, 0x00, aw87339_spk);
         } else {
-            pr_info("%s: aw87339 write vol reg normal when playing\n", __func__);
+            pr_debug("%s: aw87339 write vol reg normal when playing\n", __func__);
             i2c_write_reg(aw87339_REG_CPOVP, aw87339_kspk_reg_val(aw87339_REG_CPOVP,aw87339_spk), aw87339_spk);
         }
     }
@@ -312,7 +312,7 @@ void aw87339_voice_setting(int bStatus)
 {
     aw87339_voice_status = bStatus;
 
-    pr_info("%s: aw87339 voice status %d\n", __func__, aw87339_voice_status);
+    pr_debug("%s: aw87339 voice status %d\n", __func__, aw87339_voice_status);
     return;
 }
 
@@ -503,11 +503,11 @@ static void aw87339_rcvspk_cfg_loaded_spk(const struct firmware *cont, void *con
         return;
     }
 
-    pr_info("%s: loaded %s - size: %zu\n", __func__, aw87339_rcvspk_name_spk,
+    pr_debug("%s: loaded %s - size: %zu\n", __func__, aw87339_rcvspk_name_spk,
                     cont ? cont->size : 0);
 
     for(i=0; i<cont->size; i++) {
-        pr_info("%s: cont: addr:0x%02x, data:0x%02x\n", __func__, i, *(cont->data+i));
+        pr_debug("%s: cont: addr:0x%02x, data:0x%02x\n", __func__, i, *(cont->data+i));
     }
 
     aw87339_spk->aw87339_rcvspk_cnt = kzalloc(cont->size+sizeof(int), GFP_KERNEL);
@@ -521,7 +521,7 @@ static void aw87339_rcvspk_cfg_loaded_spk(const struct firmware *cont, void *con
     release_firmware(cont);
 
     for(i=0; i<aw87339_spk->aw87339_rcvspk_cnt->len; i++) {
-        pr_info("%s: rcv_cnt: addr:0x%02x, data:0x%02x\n",
+        pr_debug("%s: rcv_cnt: addr:0x%02x, data:0x%02x\n",
                 __func__, i, aw87339_rcvspk_reg_val(i,aw87339_spk));
     }
 
@@ -546,11 +546,11 @@ static void aw87339_abrcv_cfg_loaded_spk(const struct firmware *cont, void *cont
         return;
     }
 
-    pr_info("%s: loaded %s - size: %zu\n", __func__, aw87339_abrcv_name_spk,
+    pr_debug("%s: loaded %s - size: %zu\n", __func__, aw87339_abrcv_name_spk,
                     cont ? cont->size : 0);
 
     for(i=0; i<cont->size; i++) {
-        pr_info("%s: cont: addr:0x%02x, data:0x%02x\n", __func__, i, *(cont->data+i));
+        pr_debug("%s: cont: addr:0x%02x, data:0x%02x\n", __func__, i, *(cont->data+i));
     }
 
     aw87339_spk->aw87339_abrcv_cnt = kzalloc(cont->size+sizeof(int), GFP_KERNEL);
@@ -564,7 +564,7 @@ static void aw87339_abrcv_cfg_loaded_spk(const struct firmware *cont, void *cont
     release_firmware(cont);
 
     for(i=0; i<aw87339_spk->aw87339_abrcv_cnt->len; i++) {
-        pr_info("%s: rcv_cnt: addr:0x%02x, data:0x%02x\n",
+        pr_debug("%s: rcv_cnt: addr:0x%02x, data:0x%02x\n",
                 __func__, i, aw87339_abrcv_reg_val(i,aw87339_spk));
     }
 
@@ -598,11 +598,11 @@ static void aw87339_drcv_cfg_loaded_spk(const struct firmware *cont, void *conte
         return;
     }
 
-    pr_info("%s: loaded %s - size: %zu\n", __func__, aw87339_drcv_name_spk,
+    pr_debug("%s: loaded %s - size: %zu\n", __func__, aw87339_drcv_name_spk,
                     cont ? cont->size : 0);
 
     for(i=0; i<cont->size; i++) {
-        pr_info("%s: cont: addr:0x%02x, data:0x%02x\n", __func__, i, *(cont->data+i));
+        pr_debug("%s: cont: addr:0x%02x, data:0x%02x\n", __func__, i, *(cont->data+i));
     }
 
     aw87339_spk->aw87339_drcv_cnt = kzalloc(cont->size+sizeof(int), GFP_KERNEL);
@@ -616,7 +616,7 @@ static void aw87339_drcv_cfg_loaded_spk(const struct firmware *cont, void *conte
     release_firmware(cont);
 
     for(i=0; i<aw87339_spk->aw87339_drcv_cnt->len; i++) {
-        pr_info("%s: rcv_cnt: addr:0x%02x, data:0x%02x\n",
+        pr_debug("%s: rcv_cnt: addr:0x%02x, data:0x%02x\n",
                 __func__, i, aw87339_drcv_reg_val(i,aw87339_spk));
     }
 
@@ -649,11 +649,11 @@ static void aw87339_kspk_cfg_loaded_spk(const struct firmware *cont, void *conte
         return;
     }
 
-    pr_info("%s: loaded %s - size: %zu\n", __func__, aw87339_kspk_name_spk,
+    pr_debug("%s: loaded %s - size: %zu\n", __func__, aw87339_kspk_name_spk,
                     cont ? cont->size : 0);
 
     for(i=0; i<cont->size; i++) {
-        pr_info("%s: cont: addr:0x%02x, data:0x%02x\n",
+        pr_debug("%s: cont: addr:0x%02x, data:0x%02x\n",
                 __func__, i, *(cont->data+i));
     }
 
@@ -668,7 +668,7 @@ static void aw87339_kspk_cfg_loaded_spk(const struct firmware *cont, void *conte
     release_firmware(cont);
 
     for(i=0; i<aw87339_spk->aw87339_kspk_cnt->len; i++) {
-        pr_info("%s: spk_cnt: addr:0x%02x, data:0x%02x\n",
+        pr_debug("%s: spk_cnt: addr:0x%02x, data:0x%02x\n",
                 __func__, i, aw87339_kspk_reg_val(i,aw87339_spk));
     }
 
@@ -697,11 +697,11 @@ static void aw87339_rcvspk_cfg_loaded_rec(const struct firmware *cont, void *con
         return;
     }
 
-    pr_info("%s: loaded %s - size: %zu\n", __func__, aw87339_rcvspk_name_rec,
+    pr_debug("%s: loaded %s - size: %zu\n", __func__, aw87339_rcvspk_name_rec,
                     cont ? cont->size : 0);
 
     for(i=0; i<cont->size; i++) {
-        pr_info("%s: cont: addr:0x%02x, data:0x%02x\n", __func__, i, *(cont->data+i));
+        pr_debug("%s: cont: addr:0x%02x, data:0x%02x\n", __func__, i, *(cont->data+i));
     }
 
     aw87339_rec->aw87339_rcvspk_cnt = kzalloc(cont->size+sizeof(int), GFP_KERNEL);
@@ -715,7 +715,7 @@ static void aw87339_rcvspk_cfg_loaded_rec(const struct firmware *cont, void *con
     release_firmware(cont);
 
     for(i=0; i<aw87339_rec->aw87339_rcvspk_cnt->len; i++) {
-        pr_info("%s: rcv_cnt: addr:0x%02x, data:0x%02x\n",
+        pr_debug("%s: rcv_cnt: addr:0x%02x, data:0x%02x\n",
                 __func__, i, aw87339_rcvspk_reg_val(i,aw87339_rec));
     }
 
@@ -740,11 +740,11 @@ static void aw87339_abrcv_cfg_loaded_rec(const struct firmware *cont, void *cont
         return;
     }
 
-    pr_info("%s: loaded %s - size: %zu\n", __func__, aw87339_abrcv_name_rec,
+    pr_debug("%s: loaded %s - size: %zu\n", __func__, aw87339_abrcv_name_rec,
                     cont ? cont->size : 0);
 
     for(i=0; i<cont->size; i++) {
-        pr_info("%s: cont: addr:0x%02x, data:0x%02x\n", __func__, i, *(cont->data+i));
+        pr_debug("%s: cont: addr:0x%02x, data:0x%02x\n", __func__, i, *(cont->data+i));
     }
 
     aw87339_rec->aw87339_abrcv_cnt = kzalloc(cont->size+sizeof(int), GFP_KERNEL);
@@ -758,7 +758,7 @@ static void aw87339_abrcv_cfg_loaded_rec(const struct firmware *cont, void *cont
     release_firmware(cont);
 
     for(i=0; i<aw87339_rec->aw87339_abrcv_cnt->len; i++) {
-        pr_info("%s: rcv_cnt: addr:0x%02x, data:0x%02x\n",
+        pr_debug("%s: rcv_cnt: addr:0x%02x, data:0x%02x\n",
                 __func__, i, aw87339_abrcv_reg_val(i,aw87339_rec));
     }
 
@@ -792,11 +792,11 @@ static void aw87339_drcv_cfg_loaded_rec(const struct firmware *cont, void *conte
         return;
     }
 
-    pr_info("%s: loaded %s - size: %zu\n", __func__, aw87339_drcv_name_rec,
+    pr_debug("%s: loaded %s - size: %zu\n", __func__, aw87339_drcv_name_rec,
                     cont ? cont->size : 0);
 
     for(i=0; i<cont->size; i++) {
-        pr_info("%s: cont: addr:0x%02x, data:0x%02x\n", __func__, i, *(cont->data+i));
+        pr_debug("%s: cont: addr:0x%02x, data:0x%02x\n", __func__, i, *(cont->data+i));
     }
 
     aw87339_rec->aw87339_drcv_cnt = kzalloc(cont->size+sizeof(int), GFP_KERNEL);
@@ -810,7 +810,7 @@ static void aw87339_drcv_cfg_loaded_rec(const struct firmware *cont, void *conte
     release_firmware(cont);
 
     for(i=0; i<aw87339_rec->aw87339_drcv_cnt->len; i++) {
-        pr_info("%s: rcv_cnt: addr:0x%02x, data:0x%02x\n",
+        pr_debug("%s: rcv_cnt: addr:0x%02x, data:0x%02x\n",
                 __func__, i, aw87339_drcv_reg_val(i,aw87339_rec));
     }
 
@@ -843,11 +843,11 @@ static void aw87339_kspk_cfg_loaded_rec(const struct firmware *cont, void *conte
         return;
     }
 
-    pr_info("%s: loaded %s - size: %zu\n", __func__, aw87339_kspk_name_rec,
+    pr_debug("%s: loaded %s - size: %zu\n", __func__, aw87339_kspk_name_rec,
                     cont ? cont->size : 0);
 
     for(i=0; i<cont->size; i++) {
-        pr_info("%s: cont: addr:0x%02x, data:0x%02x\n",
+        pr_debug("%s: cont: addr:0x%02x, data:0x%02x\n",
                 __func__, i, *(cont->data+i));
     }
 
@@ -862,7 +862,7 @@ static void aw87339_kspk_cfg_loaded_rec(const struct firmware *cont, void *conte
     release_firmware(cont);
 
     for(i=0; i<aw87339_rec->aw87339_kspk_cnt->len; i++) {
-        pr_info("%s: spk_cnt: addr:0x%02x, data:0x%02x\n",
+        pr_debug("%s: spk_cnt: addr:0x%02x, data:0x%02x\n",
                 __func__, i, aw87339_kspk_reg_val(i,aw87339_rec));
     }
 
@@ -881,7 +881,7 @@ static void aw87339_kspk_cfg_loaded_rec(const struct firmware *cont, void *conte
 #ifdef AWINIC_CFG_UPDATE_DELAY
 static enum hrtimer_restart cfg_timer_func_spk(struct hrtimer *timer)
 {
-    pr_info("%s enter\n", __func__);
+    pr_debug("%s enter\n", __func__);
 
     schedule_work(&aw87339_spk->cfg_work);
 
@@ -892,7 +892,7 @@ static void cfg_work_routine_spk(struct work_struct *work)
 {
     int ret = -1;
 
-    pr_info("%s enter\n", __func__);
+    pr_debug("%s enter\n", __func__);
 
     ret = request_firmware_nowait(THIS_MODULE, FW_ACTION_HOTPLUG, aw87339_kspk_name_spk,
             &aw87339_spk->i2c_client->dev, GFP_KERNEL, NULL, aw87339_kspk_cfg_loaded_spk);
@@ -904,7 +904,7 @@ static void cfg_work_routine_spk(struct work_struct *work)
 }
 static enum hrtimer_restart cfg_timer_func_rec(struct hrtimer *timer)
 {
-    pr_info("%s enter\n", __func__);
+    pr_debug("%s enter\n", __func__);
 
     schedule_work(&aw87339_rec->cfg_work);
 
@@ -915,7 +915,7 @@ static void cfg_work_routine_rec(struct work_struct *work)
 {
     int ret = -1;
 
-    pr_info("%s enter\n", __func__);
+    pr_debug("%s enter\n", __func__);
 
     ret = request_firmware_nowait(THIS_MODULE, FW_ACTION_HOTPLUG, aw87339_kspk_name_rec,
             &aw87339_rec->i2c_client->dev, GFP_KERNEL, NULL, aw87339_kspk_cfg_loaded_rec);
@@ -1248,7 +1248,7 @@ static int aw87339_parse_dt(struct device *dev, struct device_node *np, struct a
 
 int aw87339_hw_reset(struct aw87339_t *aw87339)
 {
-    pr_info("%s enter\n", __func__);
+    pr_debug("%s enter\n", __func__);
 
     if (aw87339 && gpio_is_valid(aw87339->reset_gpio)) {
         gpio_set_value_cansleep(aw87339->reset_gpio, 0);
@@ -1274,10 +1274,10 @@ int aw87339_read_chipid(struct aw87339_t *aw87339)
     while(cnt < AW_READ_CHIPID_RETRIES) {
         reg = i2c_read_reg(0x00, aw87339);
         if(reg == 0x39) {
-            pr_info("%s: aw87339 chipid=0x%x\n", __func__, reg);
+            pr_debug("%s: aw87339 chipid=0x%x\n", __func__, reg);
             return 0;
         } else {
-            pr_info("%s: aw87339 chipid=0x%x error\n", __func__, reg);
+            pr_debug("%s: aw87339 chipid=0x%x error\n", __func__, reg);
         }
         cnt ++;
 
@@ -1313,7 +1313,7 @@ static int aw87339_i2c_probe_spk(struct i2c_client *client, const struct i2c_dev
 {
     struct device_node *np = client->dev.of_node;
     int ret = -1;
-    pr_info("%s Enter\n", __func__);
+    pr_debug("%s Enter\n", __func__);
 
     if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) {
         dev_err(&client->dev, "%s: check_functionality failed\n", __func__);
@@ -1403,7 +1403,7 @@ static int aw87339_i2c_probe_rec(struct i2c_client *client, const struct i2c_dev
 {
     struct device_node *np = client->dev.of_node;
     int ret = -1;
-    pr_info("%s Enter\n", __func__);
+    pr_debug("%s Enter\n", __func__);
 
     if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) {
         dev_err(&client->dev, "%s: check_functionality failed\n", __func__);
@@ -1530,18 +1530,18 @@ static struct i2c_driver aw87339_i2c_driver_rec = {
 static int __init aw87339_pa_init(void) {
     int ret;
 
-    pr_info("%s enter\n", __func__);
-    pr_info("%s: driver version: %s\n", __func__, AW87339_DRIVER_VERSION);
+    pr_debug("%s enter\n", __func__);
+    pr_debug("%s: driver version: %s\n", __func__, AW87339_DRIVER_VERSION);
 
     ret = i2c_add_driver(&aw87339_i2c_driver_spk);
     if (ret) {
-        pr_info("****[%s] Unable to register speaker pa driver (%d)\n",
+        pr_debug("****[%s] Unable to register speaker pa driver (%d)\n",
                 __func__, ret);
         return ret;
     }
     ret = i2c_add_driver(&aw87339_i2c_driver_rec);
     if (ret) {
-        pr_info("****[%s] Unable to register receiver pa driver (%d)\n",
+        pr_debug("****[%s] Unable to register receiver pa driver (%d)\n",
                 __func__, ret);
         return ret;
     }
@@ -1549,7 +1549,7 @@ static int __init aw87339_pa_init(void) {
 }
 
 static void __exit aw87339_pa_exit(void) {
-    pr_info("%s enter\n", __func__);
+    pr_debug("%s enter\n", __func__);
     i2c_del_driver(&aw87339_i2c_driver_spk);
     i2c_del_driver(&aw87339_i2c_driver_rec);
 }

@@ -103,7 +103,7 @@ char *leds_name[TYPE_TOTAL] = {
 static int debug_enable_led_hal = 1;
 #define LEDS_DEBUG(format, args...) do { \
 	if (debug_enable_led_hal) {	\
-		pr_info("[LED]"format, ##args);\
+		pr_debug("[LED]"format, ##args);\
 	} \
 } while (0)
 /*****************PWM *************************************************/
@@ -141,7 +141,7 @@ static void backlight_debug_log(int level, int mappingLevel)
 	count++;
 
 	if (ret < 0 || ret >= 4096) {
-		pr_info("print log error!");
+		pr_debug("print log error!");
 		count = 5;
 	}
 
@@ -170,7 +170,7 @@ struct cust_mt65xx_led *get_cust_led_dtsi(void)
 	if (pled_dtsi)
 		goto out;
 
-	pr_info("[LED] %s pled_dtsi is null, load dts file\n", __func__);
+	pr_debug("[LED] %s pled_dtsi is null, load dts file\n", __func__);
 	pled_dtsi = kmalloc_array(TYPE_TOTAL, sizeof(struct cust_mt65xx_led),
 			GFP_KERNEL);
 	if (pled_dtsi == NULL) {
@@ -195,7 +195,7 @@ struct cust_mt65xx_led *get_cust_led_dtsi(void)
 			strncat(node_name, leds_name[i],
 			sizeof(node_name) - strlen(node_name) - 1));
 		if (!led_node) {
-			pr_info("[LED]Cannot find LED node from dts\n");
+			pr_debug("[LED]Cannot find LED node from dts\n");
 			pled_dtsi[i].mode = 0;
 			pled_dtsi[i].data = -1;
 			continue;
@@ -841,7 +841,7 @@ int mt_mt65xx_led_set_cust(struct cust_mt65xx_led *cust, int level)
 		if (enable_met_backlight_tag())
 			output_met_backlight_tag(level);
 #endif
-		pr_info("[LED] disp_bls_set_backlight: %d", level);
+		pr_debug("[LED] disp_bls_set_backlight: %d", level);
 		return ((cust_set_brightness) (cust->data)) (level);
 
 	case MT65XX_LED_MODE_NONE:

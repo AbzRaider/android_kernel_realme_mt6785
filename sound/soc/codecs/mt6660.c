@@ -846,14 +846,14 @@ EXPORT_SYMBOL(mt6660_i2c_remove);
 
 static int __init mt6660_driver_init(void)
 {
-	pr_info("%s\n", __func__);
+	pr_debug("%s\n", __func__);
 	return 0;
 }
 module_init(mt6660_driver_init);
 
 static void __exit mt6660_driver_exit(void)
 {
-	pr_info("%s\n", __func__);
+	pr_debug("%s\n", __func__);
 }
 module_exit(mt6660_driver_exit);
 

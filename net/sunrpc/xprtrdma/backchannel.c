@@ -290,9 +290,9 @@ void rpcrdma_bc_receive_call(struct rpcrdma_xprt *r_xprt,
 	size = xdr_stream_remaining(&rep->rr_stream);
 
 #ifdef RPCRDMA_BACKCHANNEL_DEBUG
-	pr_info("RPC:       %s: callback XID %08x, length=%u\n",
+	pr_debug("RPC:       %s: callback XID %08x, length=%u\n",
 		__func__, be32_to_cpup(p), size);
-	pr_info("RPC:       %s: %*ph\n", __func__, size, p);
+	pr_debug("RPC:       %s: %*ph\n", __func__, size, p);
 #endif
 
 	/* Grab a free bc rqst */

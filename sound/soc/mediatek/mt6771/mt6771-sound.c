@@ -3423,7 +3423,7 @@ static int set_rch_dc_compensation(int value)
 
 static int set_ap_dmic(bool enable)
 {
-	pr_info("%s(), enable = %d\n", __func__, enable);
+	pr_debug("%s(), enable = %d\n", __func__, enable);
 
 	if (enable) {
 		if (GetMemoryPathEnable(Soc_Aud_Digital_Block_ADDA_UL2)) {

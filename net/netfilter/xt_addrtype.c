@@ -171,7 +171,7 @@ static int addrtype_mt_checkentry_v1(const struct xt_mtchk_param *par)
 
 	if (info->flags & XT_ADDRTYPE_LIMIT_IFACE_IN &&
 	    info->flags & XT_ADDRTYPE_LIMIT_IFACE_OUT) {
-		pr_info("both incoming and outgoing "
+		pr_debug("both incoming and outgoing "
 			"interface limitation cannot be selected\n");
 		return -EINVAL;
 	}
@@ -179,7 +179,7 @@ static int addrtype_mt_checkentry_v1(const struct xt_mtchk_param *par)
 	if (par->hook_mask & ((1 << NF_INET_PRE_ROUTING) |
 	    (1 << NF_INET_LOCAL_IN)) &&
 	    info->flags & XT_ADDRTYPE_LIMIT_IFACE_OUT) {
-		pr_info("output interface limitation "
+		pr_debug("output interface limitation "
 			"not valid in PREROUTING and INPUT\n");
 		return -EINVAL;
 	}
@@ -187,7 +187,7 @@ static int addrtype_mt_checkentry_v1(const struct xt_mtchk_param *par)
 	if (par->hook_mask & ((1 << NF_INET_POST_ROUTING) |
 	    (1 << NF_INET_LOCAL_OUT)) &&
 	    info->flags & XT_ADDRTYPE_LIMIT_IFACE_IN) {
-		pr_info("input interface limitation "
+		pr_debug("input interface limitation "
 			"not valid in POSTROUTING and OUTPUT\n");
 		return -EINVAL;
 	}

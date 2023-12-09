@@ -123,7 +123,7 @@ int rds_rdma_cm_event_handler(struct rdma_cm_id *cm_id,
 
 	case RDMA_CM_EVENT_TIMEWAIT_EXIT:
 		if (conn) {
-			pr_info("RDS: RDMA_CM_EVENT_TIMEWAIT_EXIT event: dropping connection %pI4->%pI4\n",
+			pr_debug("RDS: RDMA_CM_EVENT_TIMEWAIT_EXIT event: dropping connection %pI4->%pI4\n",
 				&conn->c_laddr, &conn->c_faddr);
 			rds_conn_drop(conn);
 		}

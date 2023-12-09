@@ -803,7 +803,7 @@ static int __init l2tp_ip6_init(void)
 {
 	int err;
 
-	pr_info("L2TP IP encapsulation support for IPv6 (L2TPv3)\n");
+	pr_debug("L2TP IP encapsulation support for IPv6 (L2TPv3)\n");
 
 	err = proto_register(&l2tp_ip6_prot, 1);
 	if (err != 0)

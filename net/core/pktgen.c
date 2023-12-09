@@ -1014,7 +1014,7 @@ static ssize_t pktgen_if_write(struct file *file,
 			return len;
 		pkt_dev->delay = pkt_dev->min_pkt_size*8*NSEC_PER_USEC/value;
 		if (debug)
-			pr_info("Delay set at: %llu ns\n", pkt_dev->delay);
+			pr_debug("Delay set at: %llu ns\n", pkt_dev->delay);
 
 		sprintf(pg_result, "OK: rate=%lu", value);
 		return count;
@@ -1029,7 +1029,7 @@ static ssize_t pktgen_if_write(struct file *file,
 			return len;
 		pkt_dev->delay = NSEC_PER_SEC/value;
 		if (debug)
-			pr_info("Delay set at: %llu ns\n", pkt_dev->delay);
+			pr_debug("Delay set at: %llu ns\n", pkt_dev->delay);
 
 		sprintf(pg_result, "OK: rate=%lu", value);
 		return count;
@@ -3951,7 +3951,7 @@ static int __init pg_init(void)
 {
 	int ret = 0;
 
-	pr_info("%s", version);
+	pr_debug("%s", version);
 	ret = register_pernet_subsys(&pg_net_ops);
 	if (ret)
 		return ret;

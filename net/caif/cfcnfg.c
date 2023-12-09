@@ -586,7 +586,7 @@ int cfcnfg_del_phy_layer(struct cfcnfg *cnfg, struct cflayer *phy_layer)
 
 	/* Fail if reference count is not zero */
 	if (cffrml_refcnt_read(phyinfo->frm_layer) != 0) {
-		pr_info("Wait for device inuse\n");
+		pr_debug("Wait for device inuse\n");
 		list_add_rcu(&phyinfo->node, &cnfg->phys);
 		mutex_unlock(&cnfg->lock);
 		return -EAGAIN;

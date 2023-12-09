@@ -1843,7 +1843,7 @@ static int __init x25_init(void)
 	if (rc)
 		goto out_sysctl;
 
-	pr_info("Linux Version 0.2\n");
+	pr_debug("Linux Version 0.2\n");
 
 out:
 	return rc;

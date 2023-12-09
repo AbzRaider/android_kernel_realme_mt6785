@@ -247,7 +247,7 @@ bool rpc_xprt_switch_has_addr(struct rpc_xprt_switch *xps,
 	head = &xps->xps_xprt_list;
 	list_for_each_entry_rcu(pos, head, xprt_switch) {
 		if (rpc_cmp_addr_port(sap, (struct sockaddr *)&pos->addr)) {
-			pr_info("RPC:   addr %s already in xprt switch\n",
+			pr_debug("RPC:   addr %s already in xprt switch\n",
 				pos->address_strings[RPC_DISPLAY_ADDR]);
 			return true;
 		}

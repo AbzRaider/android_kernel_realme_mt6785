@@ -1203,7 +1203,7 @@ ip_vs_add_service(struct netns_ipvs *ipvs, struct ip_vs_service_user_kern *u,
 	if (strcmp(u->sched_name, "none")) {
 		sched = ip_vs_scheduler_get(u->sched_name);
 		if (!sched) {
-			pr_info("Scheduler module ip_vs_%s not found\n",
+			pr_debug("Scheduler module ip_vs_%s not found\n",
 				u->sched_name);
 			ret = -ENOENT;
 			goto out_err;
@@ -1213,7 +1213,7 @@ ip_vs_add_service(struct netns_ipvs *ipvs, struct ip_vs_service_user_kern *u,
 	if (u->pe_name && *u->pe_name) {
 		pe = ip_vs_pe_getbyname(u->pe_name);
 		if (pe == NULL) {
-			pr_info("persistence engine module ip_vs_pe_%s "
+			pr_debug("persistence engine module ip_vs_pe_%s "
 				"not found\n", u->pe_name);
 			ret = -ENOENT;
 			goto out_err;
@@ -1338,7 +1338,7 @@ ip_vs_edit_service(struct ip_vs_service *svc, struct ip_vs_service_user_kern *u)
 	if (strcmp(u->sched_name, "none")) {
 		sched = ip_vs_scheduler_get(u->sched_name);
 		if (!sched) {
-			pr_info("Scheduler module ip_vs_%s not found\n",
+			pr_debug("Scheduler module ip_vs_%s not found\n",
 				u->sched_name);
 			return -ENOENT;
 		}
@@ -1348,7 +1348,7 @@ ip_vs_edit_service(struct ip_vs_service *svc, struct ip_vs_service_user_kern *u)
 	if (u->pe_name && *u->pe_name) {
 		pe = ip_vs_pe_getbyname(u->pe_name);
 		if (pe == NULL) {
-			pr_info("persistence engine module ip_vs_pe_%s "
+			pr_debug("persistence engine module ip_vs_pe_%s "
 				"not found\n", u->pe_name);
 			ret = -ENOENT;
 			goto out;

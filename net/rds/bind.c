@@ -180,7 +180,7 @@ int rds_bind(struct socket *sock, struct sockaddr *uaddr, int addr_len)
 	if (!trans) {
 		ret = -EADDRNOTAVAIL;
 		rds_remove_bound(rs);
-		pr_info_ratelimited("RDS: %s could not find a transport for %pI4, load rds_tcp or rds_rdma?\n",
+		pr_debug_ratelimited("RDS: %s could not find a transport for %pI4, load rds_tcp or rds_rdma?\n",
 				    __func__, &sin->sin_addr.s_addr);
 		goto out;
 	}

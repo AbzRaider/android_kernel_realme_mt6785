@@ -2331,10 +2331,10 @@ static void __exit ip6_tunnel_cleanup(void)
 {
 	rtnl_link_unregister(&ip6_link_ops);
 	if (xfrm6_tunnel_deregister(&ip4ip6_handler, AF_INET))
-		pr_info("%s: can't deregister ip4ip6\n", __func__);
+		pr_debug("%s: can't deregister ip4ip6\n", __func__);
 
 	if (xfrm6_tunnel_deregister(&ip6ip6_handler, AF_INET6))
-		pr_info("%s: can't deregister ip6ip6\n", __func__);
+		pr_debug("%s: can't deregister ip6ip6\n", __func__);
 
 	unregister_pernet_device(&ip6_tnl_net_ops);
 }

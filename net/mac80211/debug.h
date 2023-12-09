@@ -99,7 +99,7 @@ void __wiphy_dbg(struct wiphy *wiphy, bool print, const char *fmt, ...)
 #else
 #define _sdata_info(sdata, fmt, ...)					\
 do {									\
-	pr_info("%s: " fmt,						\
+	pr_debug("%s: " fmt,						\
 		(sdata)->name, ##__VA_ARGS__);				\
 } while (0)
 

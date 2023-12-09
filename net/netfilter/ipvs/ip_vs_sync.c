@@ -1678,7 +1678,7 @@ static int sync_thread_master(void *data)
 	struct sock *sk = tinfo->sock->sk;
 	struct ip_vs_sync_buff *sb;
 
-	pr_info("sync thread started: state = MASTER, mcast_ifn = %s, "
+	pr_debug("sync thread started: state = MASTER, mcast_ifn = %s, "
 		"syncid = %d, id = %d\n",
 		ipvs->mcfg.mcast_ifn, ipvs->mcfg.syncid, tinfo->id);
 
@@ -1730,7 +1730,7 @@ static int sync_thread_backup(void *data)
 	struct udp_sock *up = udp_sk(sk);
 	int len;
 
-	pr_info("sync thread started: state = BACKUP, mcast_ifn = %s, "
+	pr_debug("sync thread started: state = BACKUP, mcast_ifn = %s, "
 		"syncid = %d, id = %d\n",
 		ipvs->bcfg.mcast_ifn, ipvs->bcfg.syncid, tinfo->id);
 
@@ -1986,7 +1986,7 @@ int stop_sync_thread(struct netns_ipvs *ipvs, int state)
 			int ret;
 
 			tinfo = &ti[id];
-			pr_info("stopping master sync thread %d ...\n",
+			pr_debug("stopping master sync thread %d ...\n",
 				task_pid_nr(tinfo->task));
 			cancel_delayed_work_sync(&ms->master_wakeup_work);
 			ret = kthread_stop(tinfo->task);
@@ -2008,7 +2008,7 @@ int stop_sync_thread(struct netns_ipvs *ipvs, int state)
 			int ret;
 
 			tinfo = &ti[id];
-			pr_info("stopping backup sync thread %d ...\n",
+			pr_debug("stopping backup sync thread %d ...\n",
 				task_pid_nr(tinfo->task));
 			ret = kthread_stop(tinfo->task);
 			if (retc >= 0)

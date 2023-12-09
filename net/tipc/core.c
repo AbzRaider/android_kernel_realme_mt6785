@@ -115,7 +115,7 @@ static int __init tipc_init(void)
 {
 	int err;
 
-	pr_info("Activated (version " TIPC_MOD_VER ")\n");
+	pr_debug("Activated (version " TIPC_MOD_VER ")\n");
 
 	sysctl_tipc_rmem[0] = RCVBUF_MIN;
 	sysctl_tipc_rmem[1] = RCVBUF_DEF;
@@ -149,7 +149,7 @@ static int __init tipc_init(void)
 	if (err)
 		goto out_netlink_compat;
 
-	pr_info("Started in single node mode\n");
+	pr_debug("Started in single node mode\n");
 	return 0;
 
 out_netlink_compat:
@@ -179,7 +179,7 @@ static void __exit tipc_exit(void)
 	unregister_pernet_device(&tipc_net_ops);
 	tipc_unregister_sysctl();
 
-	pr_info("Deactivated\n");
+	pr_debug("Deactivated\n");
 }
 
 module_init(tipc_init);

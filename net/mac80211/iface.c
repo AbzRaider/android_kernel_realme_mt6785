@@ -1689,7 +1689,7 @@ static void ieee80211_assign_perm_addr(struct ieee80211_local *local,
 
 		if (__ffs64(mask) + hweight64(mask) != fls64(mask)) {
 			/* not a contiguous mask ... not handled now! */
-			pr_info("not contiguous\n");
+			pr_debug("not contiguous\n");
 			break;
 		}
 

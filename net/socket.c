@@ -1234,7 +1234,7 @@ int __sock_create(struct net *net, int family, int type, int protocol,
 	   deadlock in module load.
 	 */
 	if (family == PF_INET && type == SOCK_PACKET) {
-		pr_info_once("%s uses obsolete (PF_INET,SOCK_PACKET)\n",
+		pr_debug_once("%s uses obsolete (PF_INET,SOCK_PACKET)\n",
 			     current->comm);
 		family = PF_PACKET;
 	}
@@ -2627,7 +2627,7 @@ int sock_register(const struct net_proto_family *ops)
 	}
 	spin_unlock(&net_family_lock);
 
-	pr_info("NET: Registered protocol family %d\n", ops->family);
+	pr_debug("NET: Registered protocol family %d\n", ops->family);
 	return err;
 }
 EXPORT_SYMBOL(sock_register);
@@ -2655,7 +2655,7 @@ void sock_unregister(int family)
 
 	synchronize_rcu();
 
-	pr_info("NET: Unregistered protocol family %d\n", family);
+	pr_debug("NET: Unregistered protocol family %d\n", family);
 }
 EXPORT_SYMBOL(sock_unregister);
 

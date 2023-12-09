@@ -75,7 +75,7 @@ void calculate_default_stune_threshold(void)
 		/* lowest capacity CPU in system */
 		sge_core = cpu_core_energy(cluster_first_cpu);
 		if (!sge_core) {
-			pr_info("schedtune: no energy model data\n");
+			pr_debug("schedtune: no energy model data\n");
 		} else {
 			default_stune_threshold = sge_core->cap_states[0].cap;
 			if (default_stune_threshold) {

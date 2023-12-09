@@ -117,8 +117,8 @@ void rtnl_print_btrace(unsigned long data)
 		show_trace.nr_entries = rtnl_instance.entry_nr;
 		show_trace.entries = rtnl_instance.addrs;
 		show_trace.max_entries = RTNL_DEBUG_ADDRS_COUNT;
-		pr_info("-----------%s start-----------\n", __func__);
-		pr_info("[mtk_net][rtnl_lock] %s[%d][%c] hold lock more than 2 sec,start time: %lld\n",
+		pr_debug("-----------%s start-----------\n", __func__);
+		pr_debug("[mtk_net][rtnl_lock] %s[%d][%c] hold lock more than 2 sec,start time: %lld\n",
 			rtnl_instance.task->comm,
 			rtnl_instance.pid,
 			task_state_to_char(rtnl_instance.task),
@@ -126,9 +126,9 @@ void rtnl_print_btrace(unsigned long data)
 
 		print_stack_trace(&show_trace, 0);
 		show_stack(rtnl_instance.task, NULL);
-		pr_info("------------%s end-----------\n", __func__);
+		pr_debug("------------%s end-----------\n", __func__);
 	} else {
-		pr_info("[mtk_net][rtnl_lock]There is no process hold rtnl lock\n");
+		pr_debug("[mtk_net][rtnl_lock]There is no process hold rtnl lock\n");
 	}
 }
 
@@ -174,7 +174,7 @@ void __rtnl_unlock(void)
 
 	rtnl_instance.end = sched_clock();
 	if (rtnl_instance.end - rtnl_instance.start > 4000000000ULL)//4 second
-		pr_info("[mtk_net][rtnl_unlock] rtnl_lock is held by [%d] from [%llu] to [%llu]\n",
+		pr_debug("[mtk_net][rtnl_unlock] rtnl_lock is held by [%d] from [%llu] to [%llu]\n",
 			rtnl_instance.pid,
 			rtnl_instance.start, rtnl_instance.end);
 
@@ -3132,12 +3132,12 @@ int ndo_dflt_fdb_add(struct ndmsg *ndm,
 	 * implement its own handler for this.
 	 */
 	if (ndm->ndm_state && !(ndm->ndm_state & NUD_PERMANENT)) {
-		pr_info("%s: FDB only supports static addresses\n", dev->name);
+		pr_debug("%s: FDB only supports static addresses\n", dev->name);
 		return err;
 	}
 
 	if (vid) {
-		pr_info("%s: vlans aren't supported yet for dev_uc|mc_add()\n", dev->name);
+		pr_debug("%s: vlans aren't supported yet for dev_uc|mc_add()\n", dev->name);
 		return err;
 	}
 
@@ -3160,14 +3160,14 @@ static int fdb_vid_parse(struct nlattr *vlan_attr, u16 *p_vid)
 
 	if (vlan_attr) {
 		if (nla_len(vlan_attr) != sizeof(u16)) {
-			pr_info("PF_BRIDGE: RTM_NEWNEIGH with invalid vlan\n");
+			pr_debug("PF_BRIDGE: RTM_NEWNEIGH with invalid vlan\n");
 			return -EINVAL;
 		}
 
 		vid = nla_get_u16(vlan_attr);
 
 		if (!vid || vid >= VLAN_VID_MASK) {
-			pr_info("PF_BRIDGE: RTM_NEWNEIGH with invalid vlan id %d\n",
+			pr_debug("PF_BRIDGE: RTM_NEWNEIGH with invalid vlan id %d\n",
 				vid);
 			return -EINVAL;
 		}
@@ -3193,18 +3193,18 @@ static int rtnl_fdb_add(struct sk_buff *skb, struct nlmsghdr *nlh,
 
 	ndm = nlmsg_data(nlh);
 	if (ndm->ndm_ifindex == 0) {
-		pr_info("PF_BRIDGE: RTM_NEWNEIGH with invalid ifindex\n");
+		pr_debug("PF_BRIDGE: RTM_NEWNEIGH with invalid ifindex\n");
 		return -EINVAL;
 	}
 
 	dev = __dev_get_by_index(net, ndm->ndm_ifindex);
 	if (dev == NULL) {
-		pr_info("PF_BRIDGE: RTM_NEWNEIGH with unknown ifindex\n");
+		pr_debug("PF_BRIDGE: RTM_NEWNEIGH with unknown ifindex\n");
 		return -ENODEV;
 	}
 
 	if (!tb[NDA_LLADDR] || nla_len(tb[NDA_LLADDR]) != ETH_ALEN) {
-		pr_info("PF_BRIDGE: RTM_NEWNEIGH with invalid address\n");
+		pr_debug("PF_BRIDGE: RTM_NEWNEIGH with invalid address\n");
 		return -EINVAL;
 	}
 
@@ -3269,7 +3269,7 @@ int ndo_dflt_fdb_del(struct ndmsg *ndm,
 	 * implement its own handler for this.
 	 */
 	if (!(ndm->ndm_state & NUD_PERMANENT)) {
-		pr_info("%s: FDB only supports static addresses\n", dev->name);
+		pr_debug("%s: FDB only supports static addresses\n", dev->name);
 		return err;
 	}
 
@@ -3302,18 +3302,18 @@ static int rtnl_fdb_del(struct sk_buff *skb, struct nlmsghdr *nlh,
 
 	ndm = nlmsg_data(nlh);
 	if (ndm->ndm_ifindex == 0) {
-		pr_info("PF_BRIDGE: RTM_DELNEIGH with invalid ifindex\n");
+		pr_debug("PF_BRIDGE: RTM_DELNEIGH with invalid ifindex\n");
 		return -EINVAL;
 	}
 
 	dev = __dev_get_by_index(net, ndm->ndm_ifindex);
 	if (dev == NULL) {
-		pr_info("PF_BRIDGE: RTM_DELNEIGH with unknown ifindex\n");
+		pr_debug("PF_BRIDGE: RTM_DELNEIGH with unknown ifindex\n");
 		return -ENODEV;
 	}
 
 	if (!tb[NDA_LLADDR] || nla_len(tb[NDA_LLADDR]) != ETH_ALEN) {
-		pr_info("PF_BRIDGE: RTM_DELNEIGH with invalid address\n");
+		pr_debug("PF_BRIDGE: RTM_DELNEIGH with invalid address\n");
 		return -EINVAL;
 	}
 
@@ -3782,7 +3782,7 @@ static int rtnl_bridge_setlink(struct sk_buff *skb, struct nlmsghdr *nlh,
 
 	dev = __dev_get_by_index(net, ifm->ifi_index);
 	if (!dev) {
-		pr_info("PF_BRIDGE: RTM_SETLINK with unknown ifindex\n");
+		pr_debug("PF_BRIDGE: RTM_SETLINK with unknown ifindex\n");
 		return -ENODEV;
 	}
 
@@ -3857,7 +3857,7 @@ static int rtnl_bridge_dellink(struct sk_buff *skb, struct nlmsghdr *nlh,
 
 	dev = __dev_get_by_index(net, ifm->ifi_index);
 	if (!dev) {
-		pr_info("PF_BRIDGE: RTM_SETLINK with unknown ifindex\n");
+		pr_debug("PF_BRIDGE: RTM_SETLINK with unknown ifindex\n");
 		return -ENODEV;
 	}
 

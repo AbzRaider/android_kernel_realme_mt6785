@@ -370,7 +370,7 @@ static int __init mirred_init_module(void)
 	if (err)
 		return err;
 
-	pr_info("Mirror/redirect action on\n");
+	pr_debug("Mirror/redirect action on\n");
 	err = tcf_register_action(&act_mirred_ops, &mirred_net_ops);
 	if (err)
 		unregister_netdevice_notifier(&mirred_device_notifier);

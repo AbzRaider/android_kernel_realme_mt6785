@@ -91,7 +91,7 @@ static int __init start_reason_init(void)
 	}
 
 	pwron_event[i] = '\0';
-	pr_info("parse poweron reason %s i = %d\n", pwron_event, i);
+	pr_debug("parse poweron reason %s i = %d\n", pwron_event, i);
 
 	return 0;
 }
@@ -146,7 +146,7 @@ static int __init oppo_charger_reboot(void)
 			charger_reboot[i] = substr[i];
 		}
 		charger_reboot[i] = '\0';
-		pr_info("%s: parse charger_reboot %s\n", __func__, charger_reboot);
+		pr_debug("%s: parse charger_reboot %s\n", __func__, charger_reboot);
 	}
 	return 0;
 }
@@ -173,7 +173,7 @@ static int __init boot_mode_init(void)
 {
 	int rc = 0;
 
-	pr_info("%s: parse boot_mode\n", __func__);
+	pr_debug("%s: parse boot_mode\n", __func__);
 
 	board_boot_mode_init();
 	board_ftm_mode_init();

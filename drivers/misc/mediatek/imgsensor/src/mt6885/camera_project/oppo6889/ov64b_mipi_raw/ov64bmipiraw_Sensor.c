@@ -374,7 +374,7 @@ static void read_EepromQSC(void)
     Dac_mac = (Eeprom_1ByteDataRead(0x93, 0xA0) << 8) | Eeprom_1ByteDataRead(0x92, 0xA0);
     Dac_inf = (Eeprom_1ByteDataRead(0x95, 0xA0) << 8) | Eeprom_1ByteDataRead(0x94, 0xA0);
     Dac_master = (5*Dac_mac+36*Dac_inf)/41;
-    pr_info("Dac_inf:%d Dac_Mac:%d Dac_master:%d\n", Dac_inf, Dac_mac, Dac_master);
+    pr_debug("Dac_inf:%d Dac_Mac:%d Dac_master:%d\n", Dac_inf, Dac_mac, Dac_master);
     memcpy(&gImgEepromInfo.camNormdata[2][28], &Dac_master, 4);
     /*Read stereo eeprom data*/
     for (i = 0; i < CALI_DATA_MASTER_LENGTH; i ++) {
@@ -392,25 +392,25 @@ static kal_uint16 read_cmos_sensor(kal_uint32 addr)
 }
 static void write_sensor_OVPD_QSC(void)
 {
-    pr_info("%s start\n", __func__);
+    pr_debug("%s start\n", __func__);
     if(Eeprom_1ByteDataRead(0x1BDC, 0xA0) == 1 && !ovpd_qsc_flag) //OVPD-1 Flag valid
     {
         ov64b2q_table_write_cmos_sensor(ov64b_QSC_OVPD_setting,
             sizeof(ov64b_QSC_OVPD_setting) / sizeof(kal_uint16));
         ovpd_qsc_flag = 1;
     }
-    pr_info("%s end\n", __func__);
+    pr_debug("%s end\n", __func__);
 }
 static void write_sensor_CT_QSC(void)
 {
-    pr_info("%s start\n", __func__);
+    pr_debug("%s start\n", __func__);
     if(Eeprom_1ByteDataRead(0x1D20, 0xA0) == 1 && !ct_qsc_flag) //crosstalk Flag valid
     {
         ov64b2q_table_write_cmos_sensor(ov64b_QSC_CT_setting,
             sizeof(ov64b_QSC_CT_setting) / sizeof(kal_uint16));
         ct_qsc_flag = 1;
     }
-    pr_info("%s end\n", __func__);
+    pr_debug("%s end\n", __func__);
 }
 
 static void write_cmos_sensor(kal_uint32 addr, kal_uint32 para)

@@ -48,7 +48,7 @@
 
 #define PFX "OV8856"
 
-#define LOG_INF(fmt, args...)   pr_info(PFX "[%s] " fmt, __func__, ##args)
+#define LOG_INF(fmt, args...)   pr_debug(PFX "[%s] " fmt, __func__, ##args)
 
 static DEFINE_SPINLOCK(imgsensor_drv_lock);
 

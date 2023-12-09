@@ -1649,7 +1649,7 @@ int mtk_nanohub_set_cmd_to_hub(uint8_t sensor_id,
 	case CUST_ACTION_GET_SENSOR_INFO:
 		if (req.set_cust_rsp.getInfo.action !=
 			CUST_ACTION_GET_SENSOR_INFO) {
-			pr_info("get_info failed!\n");
+			pr_debug("get_info failed!\n");
 			return -1;
 		}
 		memcpy((struct sensorInfo_t *)data,
@@ -2714,7 +2714,7 @@ static int mtk_nanohub_probe(struct platform_device *pdev)
 		goto exit_attr;
 	}
 
-	pr_info("init done, data_unit_t:%d, SCP_SENSOR_HUB_DATA:%d\n",
+	pr_debug("init done, data_unit_t:%d, SCP_SENSOR_HUB_DATA:%d\n",
 		(int)sizeof(struct data_unit_t),
 		(int)sizeof(union SCP_SENSOR_HUB_DATA));
 	BUG_ON(sizeof(struct data_unit_t) != SENSOR_DATA_SIZE

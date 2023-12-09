@@ -69,7 +69,7 @@ static ssize_t vpu_pw_off_latency_proc_write(struct file *file, const char __use
 		pr_err("write failed, ret=%d\n", ret);
 		return -EINVAL;
 	}
-	pr_info("latency_ms cmd:%llu\n", latency_ms);
+	pr_debug("latency_ms cmd:%llu\n", latency_ms);
 
 	set_all_vpu_power_off_latency(latency_ms);
 

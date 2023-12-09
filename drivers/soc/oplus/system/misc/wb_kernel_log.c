@@ -43,7 +43,7 @@ void wb_workqueue_handler(struct work_struct *work)
 		ret = PTR_ERR(log_res_filp);
 		log_res_filp = NULL;
 		/*
-		 * pr_info("[Op_kernel_log] Open fail %s error number is %d\n",
+		 * pr_debug("[Op_kernel_log] Open fail %s error number is %d\n",
 		 * LOG_RESOURCE, ret);
 		 */
 		goto out;
@@ -54,7 +54,7 @@ void wb_workqueue_handler(struct work_struct *work)
 		ret = PTR_ERR(log_tar_filp);
 		log_tar_filp = NULL;
 		/*
-		 * pr_info("[Op_kernel_log] Open fail %s error number is %d\n",
+		 * pr_debug("[Op_kernel_log] Open fail %s error number is %d\n",
 		 * LOG_TARGET, ret);
 		 */
 		goto out;
@@ -68,7 +68,7 @@ void wb_workqueue_handler(struct work_struct *work)
 		goto out;
 	memset(buf, 0, WB_BLOCK_SIZE);
 
-	pr_info("[Op_kernel_log] syncing...\n");
+	pr_debug("[Op_kernel_log] syncing...\n");
 
 	while ((ret = vfs_read(log_res_filp, buf, WB_BLOCK_SIZE,
 		&log_res_filp->f_pos)) > 0) {
@@ -76,7 +76,7 @@ void wb_workqueue_handler(struct work_struct *work)
 		write_size = 0;
 
 		if ((stop_size + ret) > LOG_SIZE) {
-			pr_info("[Op_kernel_log] Record stop\n");
+			pr_debug("[Op_kernel_log] Record stop\n");
 			break;
 		}
 
@@ -84,7 +84,7 @@ void wb_workqueue_handler(struct work_struct *work)
 			write_size = vfs_write
 				(log_tar_filp, buf, ret, &log_tar_filp->f_pos);
 			if (write_size <= 0) {
-				pr_info("[Op_kernel_log] Write back log fail\n");
+				pr_debug("[Op_kernel_log] Write back log fail\n");
 				goto out;
 			}
 			stop_size += write_size;
@@ -104,16 +104,16 @@ out:
 		schedule_delayed_work(&wb_workq, HZ/10);
 	else {
 		cancel_delayed_work(&wb_workq);
-		pr_info("[Op_kernel_log] Stop write back from work queue\n");
+		pr_debug("[Op_kernel_log] Stop write back from work queue\n");
 	}
 }
 
 static int kernel_log_wb_int(void)
 {
-	pr_info("[Op_kernel_log] Start init\n");
+	pr_debug("[Op_kernel_log] Start init\n");
 	INIT_DELAYED_WORK(&wb_workq, wb_workqueue_handler);
 	schedule_delayed_work(&wb_workq, HZ/10);
-	pr_info("[Op_kernel_log] End init\n");
+	pr_debug("[Op_kernel_log] End init\n");
 	return 0;
 }
 

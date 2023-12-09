@@ -269,7 +269,7 @@ static int __init cr_backlight_init(void)
 		return PTR_ERR(crp);
 	}
 
-	pr_info("Carillo Ranch Backlight Driver Initialized.\n");
+	pr_debug("Carillo Ranch Backlight Driver Initialized.\n");
 
 	return 0;
 }

@@ -82,7 +82,7 @@ do {									\
 } while (0)
 
 #define mtkts_flashlight_printk(fmt, args...)   \
-pr_info("[Thermal/TZ/flashlight]" fmt, ##args)
+pr_debug("[Thermal/TZ/flashlight]" fmt, ##args)
 
 struct FLASHLIGHT_TEMPERATURE {
 	__s32 FLASHLIGHT_Temp;

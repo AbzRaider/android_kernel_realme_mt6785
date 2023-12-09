@@ -277,7 +277,7 @@ xprt_rdma_inject_disconnect(struct rpc_xprt *xprt)
 	struct rpcrdma_xprt *r_xprt = container_of(xprt, struct rpcrdma_xprt,
 						   rx_xprt);
 
-	pr_info("rpcrdma: injecting transport disconnect on xprt=%p\n", xprt);
+	pr_debug("rpcrdma: injecting transport disconnect on xprt=%p\n", xprt);
 	rdma_disconnect(r_xprt->rx_ia.ri_id);
 }
 

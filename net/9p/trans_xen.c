@@ -551,7 +551,7 @@ static int p9_trans_xen_init(void)
 	if (!xen_domain())
 		return -ENODEV;
 
-	pr_info("Initialising Xen transport for 9pfs\n");
+	pr_debug("Initialising Xen transport for 9pfs\n");
 
 	v9fs_register_trans(&p9_xen_trans);
 	rc = xenbus_register_frontend(&xen_9pfs_front_driver);

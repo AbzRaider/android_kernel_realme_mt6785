@@ -34,7 +34,7 @@ static int __bpf_mt_check_bytecode(struct sock_filter *insns, __u16 len,
 	program.filter = insns;
 
 	if (bpf_prog_create(ret, &program)) {
-		pr_info("bpf: check failed: parse error\n");
+		pr_debug("bpf: check failed: parse error\n");
 		return -EINVAL;
 	}
 

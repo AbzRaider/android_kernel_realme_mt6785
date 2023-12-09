@@ -111,7 +111,7 @@ static int __init batadv_init(void)
 	rtnl_link_register(&batadv_link_ops);
 	batadv_netlink_register();
 
-	pr_info("B.A.T.M.A.N. advanced %s (compatibility version %i) loaded\n",
+	pr_debug("B.A.T.M.A.N. advanced %s (compatibility version %i) loaded\n",
 		BATADV_SOURCE_VERSION, BATADV_COMPAT_VERSION);
 
 	return 0;

@@ -777,7 +777,7 @@ static int fdb_add_entry(struct net_bridge *br, struct net_bridge_port *source,
 		return -EPERM;
 
 	if (!source && !(state & NUD_PERMANENT)) {
-		pr_info("bridge: RTM_NEWNEIGH %s without NUD_PERMANENT\n",
+		pr_debug("bridge: RTM_NEWNEIGH %s without NUD_PERMANENT\n",
 			br->dev->name);
 		return -EINVAL;
 	}
@@ -844,7 +844,7 @@ static int __br_fdb_add(struct ndmsg *ndm, struct net_bridge *br,
 
 	if (ndm->ndm_flags & NTF_USE) {
 		if (!p) {
-			pr_info("bridge: RTM_NEWNEIGH %s with NTF_USE is not supported\n",
+			pr_debug("bridge: RTM_NEWNEIGH %s with NTF_USE is not supported\n",
 				br->dev->name);
 			return -EINVAL;
 		}
@@ -879,12 +879,12 @@ int br_fdb_add(struct ndmsg *ndm, struct nlattr *tb[],
 	trace_br_fdb_add(ndm, dev, addr, vid, nlh_flags);
 
 	if (!(ndm->ndm_state & (NUD_PERMANENT|NUD_NOARP|NUD_REACHABLE))) {
-		pr_info("bridge: RTM_NEWNEIGH with invalid state %#x\n", ndm->ndm_state);
+		pr_debug("bridge: RTM_NEWNEIGH with invalid state %#x\n", ndm->ndm_state);
 		return -EINVAL;
 	}
 
 	if (is_zero_ether_addr(addr)) {
-		pr_info("bridge: RTM_NEWNEIGH with invalid ether address\n");
+		pr_debug("bridge: RTM_NEWNEIGH with invalid ether address\n");
 		return -EINVAL;
 	}
 
@@ -894,7 +894,7 @@ int br_fdb_add(struct ndmsg *ndm, struct nlattr *tb[],
 	} else {
 		p = br_port_get_rtnl(dev);
 		if (!p) {
-			pr_info("bridge: RTM_NEWNEIGH %s not a bridge port\n",
+			pr_debug("bridge: RTM_NEWNEIGH %s not a bridge port\n",
 				dev->name);
 			return -EINVAL;
 		}
@@ -905,7 +905,7 @@ int br_fdb_add(struct ndmsg *ndm, struct nlattr *tb[],
 	if (vid) {
 		v = br_vlan_find(vg, vid);
 		if (!v || !br_vlan_should_use(v)) {
-			pr_info("bridge: RTM_NEWNEIGH with unconfigured vlan %d on %s\n", vid, dev->name);
+			pr_debug("bridge: RTM_NEWNEIGH with unconfigured vlan %d on %s\n", vid, dev->name);
 			return -EINVAL;
 		}
 
@@ -978,7 +978,7 @@ int br_fdb_delete(struct ndmsg *ndm, struct nlattr *tb[],
 	} else {
 		p = br_port_get_rtnl(dev);
 		if (!p) {
-			pr_info("bridge: RTM_DELNEIGH %s not a bridge port\n",
+			pr_debug("bridge: RTM_DELNEIGH %s not a bridge port\n",
 				dev->name);
 			return -EINVAL;
 		}
@@ -989,7 +989,7 @@ int br_fdb_delete(struct ndmsg *ndm, struct nlattr *tb[],
 	if (vid) {
 		v = br_vlan_find(vg, vid);
 		if (!v) {
-			pr_info("bridge: RTM_DELNEIGH with unconfigured vlan %d on %s\n", vid, dev->name);
+			pr_debug("bridge: RTM_DELNEIGH with unconfigured vlan %d on %s\n", vid, dev->name);
 			return -EINVAL;
 		}
 

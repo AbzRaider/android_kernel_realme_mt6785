@@ -1894,7 +1894,7 @@ static int ceph_dns_resolve_name(const char *name, size_t namelen,
 
 	*ipend = end;
 
-	pr_info("resolve '%.*s' (ret=%d): %s\n", (int)(end - name), name,
+	pr_debug("resolve '%.*s' (ret=%d): %s\n", (int)(end - name), name,
 			ret, ret ? "failed" : ceph_pr_addr(ss));
 
 	return ret;
@@ -2146,7 +2146,7 @@ static int process_connect(struct ceph_connection *con)
 
 		/* Tell ceph about it. */
 		mutex_unlock(&con->mutex);
-		pr_info("reset on %s%lld\n", ENTITY_NAME(con->peer_name));
+		pr_debug("reset on %s%lld\n", ENTITY_NAME(con->peer_name));
 		if (con->ops->peer_reset)
 			con->ops->peer_reset(con);
 		mutex_lock(&con->mutex);
@@ -2394,7 +2394,7 @@ static int read_partial_message(struct ceph_connection *con)
 	/* verify seq# */
 	seq = le64_to_cpu(con->in_hdr.seq);
 	if ((s64)seq - (s64)con->in_seq < 1) {
-		pr_info("skipping %s%lld %s seq %lld expected %lld\n",
+		pr_debug("skipping %s%lld %s seq %lld expected %lld\n",
 			ENTITY_NAME(con->peer_name),
 			ceph_pr_addr(&con->peer_addr.in_addr),
 			seq, con->in_seq + 1);

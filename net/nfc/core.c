@@ -1197,7 +1197,7 @@ static int __init nfc_init(void)
 {
 	int rc;
 
-	pr_info("NFC Core ver %s\n", VERSION);
+	pr_debug("NFC Core ver %s\n", VERSION);
 
 	rc = class_register(&nfc_class);
 	if (rc)

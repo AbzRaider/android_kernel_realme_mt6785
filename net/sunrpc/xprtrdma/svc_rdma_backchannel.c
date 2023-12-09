@@ -41,11 +41,11 @@ int svc_rdma_handle_bc_reply(struct rpc_xprt *xprt, __be32 *rdma_resp,
 	xid = *rdma_resp;
 
 #ifdef SVCRDMA_BACKCHANNEL_DEBUG
-	pr_info("%s: xid=%08x, length=%zu\n",
+	pr_debug("%s: xid=%08x, length=%zu\n",
 		__func__, be32_to_cpu(xid), len);
-	pr_info("%s: RPC/RDMA: %*ph\n",
+	pr_debug("%s: RPC/RDMA: %*ph\n",
 		__func__, (int)RPCRDMA_HDRLEN_MIN, rdma_resp);
-	pr_info("%s:      RPC: %*ph\n",
+	pr_debug("%s:      RPC: %*ph\n",
 		__func__, (int)len, p);
 #endif
 
@@ -212,7 +212,7 @@ rpcrdma_bc_send_request(struct svcxprt_rdma *rdma, struct rpc_rqst *rqst)
 	*p   = xdr_zero;
 
 #ifdef SVCRDMA_BACKCHANNEL_DEBUG
-	pr_info("%s: %*ph\n", __func__, 64, rqst->rq_buffer);
+	pr_debug("%s: %*ph\n", __func__, 64, rqst->rq_buffer);
 #endif
 
 	rc = svc_rdma_bc_sendto(rdma, rqst);

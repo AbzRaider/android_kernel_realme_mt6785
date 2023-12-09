@@ -125,7 +125,7 @@ static int mt6853_audio_extern_config_get(struct snd_kcontrol *kcontrol,
 
 	for (i = 0; i < AUDIO_EXTERN_CONFIG_MAX_NUM; i++) {
 		ucontrol->value.integer.value[i] = audio_extern[i];
-		pr_info("%s(), OPLUS_AUDIO_EXTERN_CONFIG get value(%d) = %d",
+		pr_debug("%s(), OPLUS_AUDIO_EXTERN_CONFIG get value(%d) = %d",
 				__func__, i, audio_extern[i]);
 	}
 

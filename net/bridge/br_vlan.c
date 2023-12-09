@@ -927,7 +927,7 @@ int br_vlan_set_default_pvid(struct net_bridge *br, unsigned long val)
 
 	/* Only allow default pvid change when filtering is disabled */
 	if (br->vlan_enabled) {
-		pr_info_once("Please disable vlan filtering to change default_pvid\n");
+		pr_debug_once("Please disable vlan filtering to change default_pvid\n");
 		err = -EPERM;
 		goto out;
 	}

@@ -276,7 +276,7 @@ static int tcpmss_tg4_check(const struct xt_tgchk_param *par)
 	    (par->hook_mask & ~((1 << NF_INET_FORWARD) |
 			   (1 << NF_INET_LOCAL_OUT) |
 			   (1 << NF_INET_POST_ROUTING))) != 0) {
-		pr_info("path-MTU clamping only supported in "
+		pr_debug("path-MTU clamping only supported in "
 			"FORWARD, OUTPUT and POSTROUTING hooks\n");
 		return -EINVAL;
 	}
@@ -286,7 +286,7 @@ static int tcpmss_tg4_check(const struct xt_tgchk_param *par)
 	xt_ematch_foreach(ematch, e)
 		if (find_syn_match(ematch))
 			return 0;
-	pr_info("Only works on TCP SYN packets\n");
+	pr_debug("Only works on TCP SYN packets\n");
 	return -EINVAL;
 }
 
@@ -301,7 +301,7 @@ static int tcpmss_tg6_check(const struct xt_tgchk_param *par)
 	    (par->hook_mask & ~((1 << NF_INET_FORWARD) |
 			   (1 << NF_INET_LOCAL_OUT) |
 			   (1 << NF_INET_POST_ROUTING))) != 0) {
-		pr_info("path-MTU clamping only supported in "
+		pr_debug("path-MTU clamping only supported in "
 			"FORWARD, OUTPUT and POSTROUTING hooks\n");
 		return -EINVAL;
 	}
@@ -311,7 +311,7 @@ static int tcpmss_tg6_check(const struct xt_tgchk_param *par)
 	xt_ematch_foreach(ematch, e)
 		if (find_syn_match(ematch))
 			return 0;
-	pr_info("Only works on TCP SYN packets\n");
+	pr_debug("Only works on TCP SYN packets\n");
 	return -EINVAL;
 }
 #endif

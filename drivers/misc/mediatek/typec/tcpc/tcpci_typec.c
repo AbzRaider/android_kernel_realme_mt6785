@@ -2860,7 +2860,7 @@ int tcpc_typec_handle_wd(struct tcpc_device *tcpc_dev, bool wd)
 {
 	int ret = 0;
 
-	pr_info("%s: wd = %d\n", __func__, wd);
+	pr_debug("%s: wd = %d\n", __func__, wd);
 	if (!(tcpc_dev->tcpc_flags & TCPC_FLAGS_WATER_DETECTION))
 		return 0;
 

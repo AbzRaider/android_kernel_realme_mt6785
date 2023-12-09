@@ -3592,7 +3592,7 @@ void __init tcp_init(void)
 	sysctl_tcp_rmem[1] = 87380;
 	sysctl_tcp_rmem[2] = max(87380, max_rshare);
 
-	pr_info("Hash tables configured (established %u bind %u)\n",
+	pr_debug("Hash tables configured (established %u bind %u)\n",
 		tcp_hashinfo.ehash_mask + 1, tcp_hashinfo.bhash_size);
 
 	tcp_v4_init();

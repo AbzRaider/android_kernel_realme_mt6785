@@ -39,7 +39,7 @@ bool
 fmr_is_supported(struct rpcrdma_ia *ia)
 {
 	if (!ia->ri_device->alloc_fmr) {
-		pr_info("rpcrdma: 'fmr' mode is not supported by device %s\n",
+		pr_debug("rpcrdma: 'fmr' mode is not supported by device %s\n",
 			ia->ri_device->name);
 		return false;
 	}

@@ -22,7 +22,7 @@ void __sdata_info(const char *fmt, ...)
 	va_start(args, fmt);
 	vaf.va = &args;
 
-	pr_info("%pV", &vaf);
+	pr_debug("%pV", &vaf);
 	trace_mac80211_info(&vaf);
 	va_end(args);
 }

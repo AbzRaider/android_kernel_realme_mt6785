@@ -2577,7 +2577,7 @@ void notify_suspend_to_tp(struct fb_info *info, enum mtkfb_aod_power_mode aod_pm
 
 		event.info  = info;
 		event.data = &blank_mode;
-		pr_info("%s for gesture\n", __func__);
+		pr_debug("%s for gesture\n", __func__);
 		fb_notifier_call_chain(FB_EVENT_BLANK, &event);
 	}
 }
@@ -2816,18 +2816,18 @@ static int mtkfb_probe(struct platform_device *pdev)
 	}
 	#else /* OPLUS_BUG_STABILITY */
 	register_ccci_sys_call_back(MD_SYS1, MD_DISPLAY_DYNAMIC_MIPI, mipi_clk_change);
-	pr_info("mtkfb_probe: mipi_clk_change is regist ok\n");
+	pr_debug("mtkfb_probe: mipi_clk_change is regist ok\n");
 	#endif /* OPLUS_BUG_STABILITY */
 
 
 	MSG_FUNC_LEAVE();
-	pr_info("disp driver(2) %s end\n", __func__);
+	pr_debug("disp driver(2) %s end\n", __func__);
 	return 0;
 
 cleanup:
 	mtkfb_free_resources(fbdev, init_state);
 
-	pr_info("disp driver(3) %s end\n", __func__);
+	pr_debug("disp driver(3) %s end\n", __func__);
 	return ret;
 }
 

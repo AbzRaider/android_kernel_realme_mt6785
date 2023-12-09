@@ -100,7 +100,7 @@ static in_cache_entry *in_cache_add_entry(__be32 dst_ip,
 	in_cache_entry *entry = kzalloc(sizeof(in_cache_entry), GFP_KERNEL);
 
 	if (entry == NULL) {
-		pr_info("mpoa: mpoa_caches.c: new_in_cache_entry: out of memory\n");
+		pr_debug("mpoa: mpoa_caches.c: new_in_cache_entry: out of memory\n");
 		return NULL;
 	}
 
@@ -462,7 +462,7 @@ static eg_cache_entry *eg_cache_add_entry(struct k_message *msg,
 	eg_cache_entry *entry = kzalloc(sizeof(eg_cache_entry), GFP_KERNEL);
 
 	if (entry == NULL) {
-		pr_info("out of memory\n");
+		pr_debug("out of memory\n");
 		return NULL;
 	}
 

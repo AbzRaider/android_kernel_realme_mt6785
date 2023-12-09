@@ -92,7 +92,7 @@ static int mtk_lp_pm_driver_probe(struct platform_device *pdev)
 				       &mtk_lpm_pwr,
 				       sizeof(mtk_lpm_pwr));
 	if (ret) {
-		pr_info("[%s:%d] - Device add data fail!\n",
+		pr_debug("[%s:%d] - Device add data fail!\n",
 					__FILE__, __LINE__);
 		goto put_device;
 	}

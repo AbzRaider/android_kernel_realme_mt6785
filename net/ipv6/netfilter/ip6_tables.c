@@ -1950,7 +1950,7 @@ static int __init ip6_tables_init(void)
 	if (ret < 0)
 		goto err5;
 
-	pr_info("(C) 2000-2006 Netfilter Core Team\n");
+	pr_debug("(C) 2000-2006 Netfilter Core Team\n");
 	return 0;
 
 err5:
