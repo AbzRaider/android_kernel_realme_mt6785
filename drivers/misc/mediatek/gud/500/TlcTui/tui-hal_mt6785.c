@@ -53,7 +53,7 @@ static bool __always_unused allocate_tui_memory_pool(
 	bool ret = false;
 	void *tui_mem_pool = NULL;
 
-	pr_info("%s %s:%d\n", __func__, __FILE__, __LINE__);
+	pr_debug("%s %s:%d\n", __func__, __FILE__, __LINE__);
 	if (!size) {
 		pr_debug("TUI frame buffer: nothing to allocate.");
 		return true;
@@ -63,7 +63,7 @@ static bool __always_unused allocate_tui_memory_pool(
 	if (!tui_mem_pool) {
 		return ret;
 	} else if (ksize(tui_mem_pool) < size) {
-		pr_notice("TUI mem pool size too small: req'd=%zu alloc'd=%zu",
+		pr_debug("TUI mem pool size too small: req'd=%zu alloc'd=%zu",
 		       size, ksize(tui_mem_pool));
 		kfree(tui_mem_pool);
 	} else {
@@ -96,7 +96,7 @@ static void __always_unused free_tui_memory_pool(struct tui_mempool *pool)
  */
 uint32_t hal_tui_init(void)
 {
-	pr_info("%s\n", __func__);
+	pr_debug("%s\n", __func__);
 
 	/* Allocate memory pool for the framebuffer
 	 */
@@ -149,7 +149,7 @@ uint32_t hal_tui_alloc(
 	unsigned long size = allocsize * number;
 
 	if (!allocbuffer) {
-		pr_notice("%s(%d): allocbuffer is null\n", __func__, __LINE__);
+		pr_debug("%s(%d): allocbuffer is null\n", __func__, __LINE__);
 		return TUI_DCI_ERR_INTERNAL_ERROR;
 	}
 
@@ -157,13 +157,13 @@ uint32_t hal_tui_alloc(
 		 __func__, __LINE__, allocsize, number);
 
 	if ((size_t)allocsize == 0) {
-		pr_notice("%s(%d): Nothing to allocate\n", __func__, __LINE__);
+		pr_debug("%s(%d): Nothing to allocate\n", __func__, __LINE__);
 		return TUI_DCI_OK;
 	}
 
 #if 0
 	if (number != 2) {
-		pr_notice("%s(%d): Unexpected number of buffers requested\n",
+		pr_debug("%s(%d): Unexpected number of buffers requested\n",
 			 __func__, __LINE__);
 		return TUI_DCI_ERR_INTERNAL_ERROR;
 	}
@@ -184,7 +184,7 @@ uint32_t hal_tui_alloc(
 			allocbuffer[1].pa, allocbuffer[2].pa,
 			TUI_EXTRA_MEM_SIZE);
 	} else {
-		pr_notice("%s(%d): tui_region_offline failed!\n",
+		pr_debug("%s(%d): tui_region_offline failed!\n",
 			 __func__, __LINE__);
 		return TUI_DCI_ERR_INTERNAL_ERROR;
 	}
@@ -243,7 +243,7 @@ uint32_t hal_tui_deactivate(void)
 #ifdef TUI_ENABLE_DISPLAY
 	tmp = display_enter_tui();
 	if (tmp) {
-		pr_notice("[TUI-HAL] %s() failed because display\n", __func__);
+		pr_debug("[TUI-HAL] %s() failed because display\n", __func__);
 		ret = TUI_DCI_ERR_OUT_OF_DISPLAY;
 	}
 #endif
@@ -267,7 +267,7 @@ uint32_t hal_tui_deactivate(void)
  */
 uint32_t hal_tui_activate(void)
 {
-	pr_info("[TUI-HAL] %s+\n", __func__);
+	pr_debug("[TUI-HAL] %s+\n", __func__);
 	/* Protect NWd */
 	trustedui_clear_mask(TRUSTEDUI_MODE_VIDEO_SECURED|
 			     TRUSTEDUI_MODE_INPUT_SECURED);
@@ -309,7 +309,7 @@ uint32_t hal_tui_notif(void)
 /* Do nothing it's only use for QC */
 void hal_tui_post_start(struct tlc_tui_response_t *rsp)
 {
-	pr_info("%s\n", __func__);
+	pr_debug("%s\n", __func__);
 }
 
 int __weak ssmr_offline(phys_addr_t *pa, unsigned long *size, bool is_64bit,
