@@ -28,10 +28,6 @@ enum {
 	IMSG_LV_TRACE
 };
 
-#if defined(CONFIG_MICROTRUST_DEBUG)
-#define IMSG_LOG_LEVEL          IMSG_LV_DEBUG
-#define IMSG_PROFILE_LEVEL      IMSG_LV_TRACE
-#else
 /* DO NOT change the log level, this is for production */
 #define IMSG_LOG_LEVEL          IMSG_LV_WARN
 #define IMSG_PROFILE_LEVEL      IMSG_LV_TRACE
@@ -51,12 +47,12 @@ static inline unsigned long now_ms(void)
 	return ((now_time.tv_sec * 1000000) + now_time.tv_usec)/1000;
 }
 
-#define IMSG_PRINTK(fmt, ...)           pr_info(fmt, ##__VA_ARGS__)
+#define IMSG_PRINTK(fmt, ...)           pr_debug(fmt, ##__VA_ARGS__)
 #define IMSG_PRINTK_DEBUG(fmt, ...)     pr_debug(fmt, ##__VA_ARGS__)
 
 #define IMSG_PRINT_ERROR(fmt, ...)      pr_notice(fmt, ##__VA_ARGS__)
 #define IMSG_PRINT_WARN(fmt, ...)       pr_notice(fmt, ##__VA_ARGS__)
-#define IMSG_PRINT_INFO(fmt, ...)       pr_info(fmt, ##__VA_ARGS__)
+#define IMSG_PRINT_INFO(fmt, ...)       pr_debug(fmt, ##__VA_ARGS__)
 #define IMSG_PRINT_DEBUG(fmt, ...)      pr_debug(fmt, ##__VA_ARGS__)
 #define IMSG_PRINT_TRACE(fmt, ...)      pr_debug(fmt, ##__VA_ARGS__)
 #define IMSG_PRINT_ENTER(fmt, ...)      pr_debug(fmt, ##__VA_ARGS__)
