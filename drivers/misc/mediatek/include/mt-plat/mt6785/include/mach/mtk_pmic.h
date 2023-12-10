@@ -19,6 +19,8 @@
 #define LOW_POWER_LIMIT_LEVEL_1 15
 
 #define PT_DLPT_BRINGUP 0
+/*Define for disable battery OC protect*/
+#define DISABLE_BATTERY_OC_PROTECT
 
 #if defined(CONFIG_FPGA_EARLY_PORTING) || PT_DLPT_BRINGUP
 /* Define for disable low battery protect feature,
@@ -26,8 +28,6 @@
  */
 #define DISABLE_LOW_BATTERY_PROTECT
 
-/*Define for disable battery OC protect*/
-#define DISABLE_BATTERY_OC_PROTECT
 
 /*Define for disable battery 15% protect*/
 #define DISABLE_BATTERY_PERCENT_PROTECT
