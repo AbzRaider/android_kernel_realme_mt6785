@@ -1207,7 +1207,7 @@ thermal_sconfig_store(struct device *dev,
        return len;
 }
 
-static DEVICE_ATTR(sconfig, 0664,
+static DEVICE_ATTR(sconfig, 0777,
 		thermal_sconfig_show, thermal_sconfig_store);
 static ssize_t
 thermal_boost_show(struct device *dev,
@@ -1225,7 +1225,7 @@ thermal_boost_store(struct device *dev,
        return len;
 }
 
-static DEVICE_ATTR(boost, 0644,
+static DEVICE_ATTR(boost, 0777,
 		thermal_boost_show, thermal_boost_store);
 
 static ssize_t
@@ -1248,7 +1248,7 @@ thermal_balance_mode_store(struct device *dev,
 	return len;
 }
 
-static DEVICE_ATTR(balance_mode, 0664,
+static DEVICE_ATTR(balance_mode, 0777,
 		thermal_balance_mode_show, thermal_balance_mode_store);
 
 static ssize_t
@@ -1325,7 +1325,7 @@ cpu_limits_store(struct device *dev,
 	return len;
 }
 
-static DEVICE_ATTR(cpu_limits, 0664,
+static DEVICE_ATTR(cpu_limits, 0777,
 		cpu_limits_show, cpu_limits_store);
 #ifdef CONFIG_FB
 static ssize_t
