@@ -92,10 +92,10 @@
 #define ADP5589_PWM_ONT_HIGH		0x41
 #define ADP5589_PWM_CFG			0x42
 #define ADP5589_CLOCK_DIV_CFG		0x43
-#define ADP5589_LOGIC_1_CFG		0x44
-#define ADP5589_LOGIC_2_CFG		0x45
-#define ADP5589_LOGIC_FF_CFG		0x46
-#define ADP5589_LOGIC_INT_EVENT_EN	0x47
+#define ADP5589_LOGDC_1_CFG		0x44
+#define ADP5589_LOGDC_2_CFG		0x45
+#define ADP5589_LOGDC_FF_CFG		0x46
+#define ADP5589_LOGDC_INT_EVENT_EN	0x47
 #define ADP5589_POLL_PTIME_CFG		0x48
 #define ADP5589_PIN_CONFIG_A		0x49
 #define ADP5589_PIN_CONFIG_B		0x4A
@@ -136,9 +136,9 @@
 #define ADP5585_PWM_ONT_LOW		0x31
 #define ADP5585_PWM_ONT_HIGH		0x32
 #define ADP5585_PWM_CFG			0x33
-#define ADP5585_LOGIC_CFG		0x34
-#define ADP5585_LOGIC_FF_CFG		0x35
-#define ADP5585_LOGIC_INT_EVENT_EN	0x36
+#define ADP5585_LOGDC_CFG		0x34
+#define ADP5585_LOGDC_FF_CFG		0x35
+#define ADP5585_LOGDC_INT_EVENT_EN	0x36
 #define ADP5585_POLL_PTIME_CFG		0x37
 #define ADP5585_PIN_CONFIG_A		0x38
 #define ADP5585_PIN_CONFIG_B		0x39
@@ -155,30 +155,30 @@
 /* GENERAL_CFG Register */
 #define OSC_EN		(1 << 7)
 #define CORE_CLK(x)	(((x) & 0x3) << 5)
-#define LCK_TRK_LOGIC	(1 << 4)	/* ADP5589 only */
+#define LCK_TRK_LOGDC	(1 << 4)	/* ADP5589 only */
 #define LCK_TRK_GPI	(1 << 3)	/* ADP5589 only */
 #define INT_CFG		(1 << 1)
 #define RST_CFG		(1 << 0)
 
 /* INT_EN Register */
-#define LOGIC2_IEN	(1 << 5)	/* ADP5589 only */
-#define LOGIC1_IEN	(1 << 4)
+#define LOGDC2_IEN	(1 << 5)	/* ADP5589 only */
+#define LOGDC1_IEN	(1 << 4)
 #define LOCK_IEN	(1 << 3)	/* ADP5589 only */
 #define OVRFLOW_IEN	(1 << 2)
 #define GPI_IEN		(1 << 1)
 #define EVENT_IEN	(1 << 0)
 
 /* Interrupt Status Register */
-#define LOGIC2_INT	(1 << 5)	/* ADP5589 only */
-#define LOGIC1_INT	(1 << 4)
+#define LOGDC2_INT	(1 << 5)	/* ADP5589 only */
+#define LOGDC1_INT	(1 << 4)
 #define LOCK_INT	(1 << 3)	/* ADP5589 only */
 #define OVRFLOW_INT	(1 << 2)
 #define GPI_INT		(1 << 1)
 #define EVENT_INT	(1 << 0)
 
 /* STATUS Register */
-#define LOGIC2_STAT	(1 << 7)	/* ADP5589 only */
-#define LOGIC1_STAT	(1 << 6)
+#define LOGDC2_STAT	(1 << 7)	/* ADP5589 only */
+#define LOGDC1_STAT	(1 << 6)
 #define LOCK_STAT	(1 << 5)	/* ADP5589 only */
 #define KEC		0x1F
 
@@ -333,9 +333,9 @@ static const unsigned char adp5585_reg_lut[] = {
 	[ADP5589_PWM_ONT_LOW]		= ADP5585_PWM_ONT_LOW,
 	[ADP5589_PWM_ONT_HIGH]		= ADP5585_PWM_ONT_HIGH,
 	[ADP5589_PWM_CFG]		= ADP5585_PWM_CFG,
-	[ADP5589_LOGIC_1_CFG]		= ADP5585_LOGIC_CFG,
-	[ADP5589_LOGIC_FF_CFG]		= ADP5585_LOGIC_FF_CFG,
-	[ADP5589_LOGIC_INT_EVENT_EN]	= ADP5585_LOGIC_INT_EVENT_EN,
+	[ADP5589_LOGDC_1_CFG]		= ADP5585_LOGDC_CFG,
+	[ADP5589_LOGDC_FF_CFG]		= ADP5585_LOGDC_FF_CFG,
+	[ADP5589_LOGDC_INT_EVENT_EN]	= ADP5585_LOGDC_INT_EVENT_EN,
 	[ADP5589_POLL_PTIME_CFG]	= ADP5585_POLL_PTIME_CFG,
 	[ADP5589_PIN_CONFIG_A]		= ADP5585_PIN_CONFIG_A,
 	[ADP5589_PIN_CONFIG_B]		= ADP5585_PIN_CONFIG_B,
@@ -798,8 +798,8 @@ static int adp5589_setup(struct adp5589_kpad *kpad)
 	ret |= adp5589_write(client, reg(ADP5589_POLL_PTIME_CFG),
 			     pdata->scan_cycle_time & PTIME_MASK);
 	ret |= adp5589_write(client, ADP5589_5_INT_STATUS,
-			     (kpad->is_adp5585 ? 0 : LOGIC2_INT) |
-			     LOGIC1_INT | OVRFLOW_INT |
+			     (kpad->is_adp5585 ? 0 : LOGDC2_INT) |
+			     LOGDC1_INT | OVRFLOW_INT |
 			     (kpad->is_adp5585 ? 0 : LOCK_INT) |
 			     GPI_INT | EVENT_INT);	/* Status is W1C */
 

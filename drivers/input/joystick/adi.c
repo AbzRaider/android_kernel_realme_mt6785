@@ -420,7 +420,7 @@ static int adi_init_input(struct adi *adi, struct adi_port *port, int half)
 	input_dev->name = adi->name;
 	input_dev->phys = adi->phys;
 	input_dev->id.bustype = BUS_GAMEPORT;
-	input_dev->id.vendor = GAMEPORT_ID_VENDOR_LOGITECH;
+	input_dev->id.vendor = GAMEPORT_ID_VENDOR_LOGDTECH;
 	input_dev->id.product = adi->id;
 	input_dev->id.version = 0x0100;
 	input_dev->dev.parent = &port->gameport->dev;

@@ -720,7 +720,7 @@ static const struct psmouse_protocol psmouse_protocols[] = {
 		.detect		= ps2bare_detect,
 		.try_passthru	= true,
 	},
-#ifdef CONFIG_MOUSE_PS2_LOGIPS2PP
+#ifdef CONFIG_MOUSE_PS2_LOGDPS2PP
 	{
 		.type		= PSMOUSE_PS2PP,
 		.name		= "PS2++",

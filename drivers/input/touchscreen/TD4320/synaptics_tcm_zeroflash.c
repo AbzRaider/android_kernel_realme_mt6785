@@ -250,7 +250,7 @@ static ssize_t zeroflash_sysfs_hdl_store(struct device *dev,
 
 			retval = zeroflash_wait_hdl(tcm_hcd);
 			if (retval < 0) {
-				LOGI(tcm_hcd->pdev->dev.parent,
+				LOGD(tcm_hcd->pdev->dev.parent,
 					"Failed to wait for completion\n"
 					"of host download\n");
 				fcounts++;
@@ -258,15 +258,15 @@ static ssize_t zeroflash_sysfs_hdl_store(struct device *dev,
 			input--;
 		}
 		if (fcounts != 0) {
-			LOGI(tcm_hcd->pdev->dev.parent,
+			LOGD(tcm_hcd->pdev->dev.parent,
 				"Failed %u times for host download in %u\n"
 				"test cycles\n", fcounts, times);
 		} else {
-			LOGI(tcm_hcd->pdev->dev.parent,
+			LOGD(tcm_hcd->pdev->dev.parent,
 				"SUCCESS %u times HDL cycles\n", times);
 		}
 	} else {
-		LOGI(tcm_hcd->pdev->dev.parent,
+		LOGD(tcm_hcd->pdev->dev.parent,
 			"Sensor is not in HDL, this test will not perform\n");
 	}
 	return count;

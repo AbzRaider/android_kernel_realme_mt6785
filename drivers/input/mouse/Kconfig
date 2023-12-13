@@ -58,7 +58,7 @@ config MOUSE_PS2_BYD
 
 	  If unsure, say Y.
 
-config MOUSE_PS2_LOGIPS2PP
+config MOUSE_PS2_LOGDPS2PP
 	bool "Logitech PS/2++ mouse protocol extension" if EXPERT
 	default y
 	depends on MOUSE_PS2
@@ -303,7 +303,7 @@ config MOUSE_ATIXL
 	help
 	  Say Y here if your mouse is of the ATI XL variety.
 
-config MOUSE_LOGIBM
+config MOUSE_LOGDBM
 	tristate "Logitech busmouse"
 	depends on ISA
 	help

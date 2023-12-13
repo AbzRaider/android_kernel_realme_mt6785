@@ -72,7 +72,7 @@
 	func(dev, "%s (line %d): " log, __func__, __LINE__, ##__VA_ARGS__)
 
 #define LOGD(dev, log, ...) LOGx(dev_dbg, dev, log, ##__VA_ARGS__)
-#define LOGI(dev, log, ...) LOGx(dev_info, dev, log, ##__VA_ARGS__)
+#define LOGD(dev, log, ...) LOGx(dev_info, dev, log, ##__VA_ARGS__)
 #define LOGN(dev, log, ...) LOGx(dev_notice, dev, log, ##__VA_ARGS__)
 #define LOG_WARN(dev, log, ...) LOGy(dev_info, dev, log, ##__VA_ARGS__)
 #define LOG_ERR(dev, log, ...) LOGy(dev_info, dev, log, ##__VA_ARGS__)

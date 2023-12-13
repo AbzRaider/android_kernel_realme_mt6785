@@ -2984,7 +2984,7 @@ static int syna_tcm_resume(struct device *dev)
 		tcm_hcd->enable_irq(tcm_hcd, true, NULL);
 		retval = syna_tcm_wait_hdl(tcm_hcd);
 		if (retval < 0) {
-			LOGI(tcm_hcd->pdev->dev.parent,
+			LOGD(tcm_hcd->pdev->dev.parent,
 					"Failed to wait for completion of host download\n");
 			goto exit;
 		}

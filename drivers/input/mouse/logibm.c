@@ -47,28 +47,28 @@ MODULE_AUTHOR("Vojtech Pavlik <vojtech@ucw.cz>");
 MODULE_DESCRIPTION("Logitech busmouse driver");
 MODULE_LICENSE("GPL");
 
-#define	LOGIBM_BASE		0x23c
-#define	LOGIBM_EXTENT		4
+#define	LOGDBM_BASE		0x23c
+#define	LOGDBM_EXTENT		4
 
-#define	LOGIBM_DATA_PORT	LOGIBM_BASE + 0
-#define	LOGIBM_SIGNATURE_PORT	LOGIBM_BASE + 1
-#define	LOGIBM_CONTROL_PORT	LOGIBM_BASE + 2
-#define	LOGIBM_CONFIG_PORT	LOGIBM_BASE + 3
+#define	LOGDBM_DATA_PORT	LOGDBM_BASE + 0
+#define	LOGDBM_SIGNATURE_PORT	LOGDBM_BASE + 1
+#define	LOGDBM_CONTROL_PORT	LOGDBM_BASE + 2
+#define	LOGDBM_CONFIG_PORT	LOGDBM_BASE + 3
 
-#define	LOGIBM_ENABLE_IRQ	0x00
-#define	LOGIBM_DISABLE_IRQ	0x10
-#define	LOGIBM_READ_X_LOW	0x80
-#define	LOGIBM_READ_X_HIGH	0xa0
-#define	LOGIBM_READ_Y_LOW	0xc0
-#define	LOGIBM_READ_Y_HIGH	0xe0
+#define	LOGDBM_ENABLE_IRQ	0x00
+#define	LOGDBM_DISABLE_IRQ	0x10
+#define	LOGDBM_READ_X_LOW	0x80
+#define	LOGDBM_READ_X_HIGH	0xa0
+#define	LOGDBM_READ_Y_LOW	0xc0
+#define	LOGDBM_READ_Y_HIGH	0xe0
 
-#define LOGIBM_DEFAULT_MODE	0x90
-#define LOGIBM_CONFIG_BYTE	0x91
-#define LOGIBM_SIGNATURE_BYTE	0xa5
+#define LOGDBM_DEFAULT_MODE	0x90
+#define LOGDBM_CONFIG_BYTE	0x91
+#define LOGDBM_SIGNATURE_BYTE	0xa5
 
-#define LOGIBM_IRQ		5
+#define LOGDBM_IRQ		5
 
-static int logibm_irq = LOGIBM_IRQ;
+static int logibm_irq = LOGDBM_IRQ;
 module_param_hw_named(irq, logibm_irq, uint, irq, 0);
 MODULE_PARM_DESC(irq, "IRQ number (5=default)");
 
@@ -79,14 +79,14 @@ static irqreturn_t logibm_interrupt(int irq, void *dev_id)
 	char dx, dy;
 	unsigned char buttons;
 
-	outb(LOGIBM_READ_X_LOW, LOGIBM_CONTROL_PORT);
-	dx = (inb(LOGIBM_DATA_PORT) & 0xf);
-	outb(LOGIBM_READ_X_HIGH, LOGIBM_CONTROL_PORT);
-	dx |= (inb(LOGIBM_DATA_PORT) & 0xf) << 4;
-	outb(LOGIBM_READ_Y_LOW, LOGIBM_CONTROL_PORT);
-	dy = (inb(LOGIBM_DATA_PORT) & 0xf);
-	outb(LOGIBM_READ_Y_HIGH, LOGIBM_CONTROL_PORT);
-	buttons = inb(LOGIBM_DATA_PORT);
+	outb(LOGDBM_READ_X_LOW, LOGDBM_CONTROL_PORT);
+	dx = (inb(LOGDBM_DATA_PORT) & 0xf);
+	outb(LOGDBM_READ_X_HIGH, LOGDBM_CONTROL_PORT);
+	dx |= (inb(LOGDBM_DATA_PORT) & 0xf) << 4;
+	outb(LOGDBM_READ_Y_LOW, LOGDBM_CONTROL_PORT);
+	dy = (inb(LOGDBM_DATA_PORT) & 0xf);
+	outb(LOGDBM_READ_Y_HIGH, LOGDBM_CONTROL_PORT);
+	buttons = inb(LOGDBM_DATA_PORT);
 	dy |= (buttons & 0xf) << 4;
 	buttons = ~buttons >> 5;
 
@@ -97,7 +97,7 @@ static irqreturn_t logibm_interrupt(int irq, void *dev_id)
 	input_report_key(logibm_dev, BTN_LEFT,   buttons & 4);
 	input_sync(logibm_dev);
 
-	outb(LOGIBM_ENABLE_IRQ, LOGIBM_CONTROL_PORT);
+	outb(LOGDBM_ENABLE_IRQ, LOGDBM_CONTROL_PORT);
 	return IRQ_HANDLED;
 }
 
@@ -107,13 +107,13 @@ static int logibm_open(struct input_dev *dev)
 		printk(KERN_ERR "logibm.c: Can't allocate irq %d\n", logibm_irq);
 		return -EBUSY;
 	}
-	outb(LOGIBM_ENABLE_IRQ, LOGIBM_CONTROL_PORT);
+	outb(LOGDBM_ENABLE_IRQ, LOGDBM_CONTROL_PORT);
 	return 0;
 }
 
 static void logibm_close(struct input_dev *dev)
 {
-	outb(LOGIBM_DISABLE_IRQ, LOGIBM_CONTROL_PORT);
+	outb(LOGDBM_DISABLE_IRQ, LOGDBM_CONTROL_PORT);
 	free_irq(logibm_irq, NULL);
 }
 
@@ -121,23 +121,23 @@ static int __init logibm_init(void)
 {
 	int err;
 
-	if (!request_region(LOGIBM_BASE, LOGIBM_EXTENT, "logibm")) {
-		printk(KERN_ERR "logibm.c: Can't allocate ports at %#x\n", LOGIBM_BASE);
+	if (!request_region(LOGDBM_BASE, LOGDBM_EXTENT, "logibm")) {
+		printk(KERN_ERR "logibm.c: Can't allocate ports at %#x\n", LOGDBM_BASE);
 		return -EBUSY;
 	}
 
-	outb(LOGIBM_CONFIG_BYTE, LOGIBM_CONFIG_PORT);
-	outb(LOGIBM_SIGNATURE_BYTE, LOGIBM_SIGNATURE_PORT);
+	outb(LOGDBM_CONFIG_BYTE, LOGDBM_CONFIG_PORT);
+	outb(LOGDBM_SIGNATURE_BYTE, LOGDBM_SIGNATURE_PORT);
 	udelay(100);
 
-	if (inb(LOGIBM_SIGNATURE_PORT) != LOGIBM_SIGNATURE_BYTE) {
-		printk(KERN_INFO "logibm.c: Didn't find Logitech busmouse at %#x\n", LOGIBM_BASE);
+	if (inb(LOGDBM_SIGNATURE_PORT) != LOGDBM_SIGNATURE_BYTE) {
+		printk(KERN_INFO "logibm.c: Didn't find Logitech busmouse at %#x\n", LOGDBM_BASE);
 		err = -ENODEV;
 		goto err_release_region;
 	}
 
-	outb(LOGIBM_DEFAULT_MODE, LOGIBM_CONFIG_PORT);
-	outb(LOGIBM_DISABLE_IRQ, LOGIBM_CONTROL_PORT);
+	outb(LOGDBM_DEFAULT_MODE, LOGDBM_CONFIG_PORT);
+	outb(LOGDBM_DISABLE_IRQ, LOGDBM_CONTROL_PORT);
 
 	logibm_dev = input_allocate_device();
 	if (!logibm_dev) {
@@ -170,7 +170,7 @@ static int __init logibm_init(void)
  err_free_dev:
 	input_free_device(logibm_dev);
  err_release_region:
-	release_region(LOGIBM_BASE, LOGIBM_EXTENT);
+	release_region(LOGDBM_BASE, LOGDBM_EXTENT);
 
 	return err;
 }
@@ -178,7 +178,7 @@ static int __init logibm_init(void)
 static void __exit logibm_exit(void)
 {
 	input_unregister_device(logibm_dev);
-	release_region(LOGIBM_BASE, LOGIBM_EXTENT);
+	release_region(LOGDBM_BASE, LOGDBM_EXTENT);
 }
 
 module_init(logibm_init);
