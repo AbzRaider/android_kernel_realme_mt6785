@@ -130,17 +130,17 @@ struct cmdq_operand {
 	};
 };
 
-enum CMDQ_LOGIC_ENUM {
-	CMDQ_LOGIC_ASSIGN = 0,
-	CMDQ_LOGIC_ADD = 1,
-	CMDQ_LOGIC_SUBTRACT = 2,
-	CMDQ_LOGIC_MULTIPLY = 3,
-	CMDQ_LOGIC_XOR = 8,
-	CMDQ_LOGIC_NOT = 9,
-	CMDQ_LOGIC_OR = 10,
-	CMDQ_LOGIC_AND = 11,
-	CMDQ_LOGIC_LEFT_SHIFT = 12,
-	CMDQ_LOGIC_RIGHT_SHIFT = 13
+enum CMDQ_LOGDC_ENUM {
+	CMDQ_LOGDC_ASSIGN = 0,
+	CMDQ_LOGDC_ADD = 1,
+	CMDQ_LOGDC_SUBTRACT = 2,
+	CMDQ_LOGDC_MULTIPLY = 3,
+	CMDQ_LOGDC_XOR = 8,
+	CMDQ_LOGDC_NOT = 9,
+	CMDQ_LOGDC_OR = 10,
+	CMDQ_LOGDC_AND = 11,
+	CMDQ_LOGDC_LEFT_SHIFT = 12,
+	CMDQ_LOGDC_RIGHT_SHIFT = 13
 };
 
 enum CMDQ_CONDITION_ENUM {
@@ -290,7 +290,7 @@ s32 cmdq_pkt_mem_move(struct cmdq_pkt *pkt, struct cmdq_base *clt_base,
 
 s32 cmdq_pkt_assign_command(struct cmdq_pkt *pkt, u16 reg_idx, u32 value);
 
-s32 cmdq_pkt_logic_command(struct cmdq_pkt *pkt, enum CMDQ_LOGIC_ENUM s_op,
+s32 cmdq_pkt_logic_command(struct cmdq_pkt *pkt, enum CMDQ_LOGDC_ENUM s_op,
 	u16 result_reg_idx,
 	struct cmdq_operand *left_operand,
 	struct cmdq_operand *right_operand);

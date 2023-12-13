@@ -83,7 +83,7 @@ enum cmdq_code {
 	CMDQ_CODE_WRITE_S = 0x90,	/* write operation (v3 only) */
 	/* write with mask operation (v3 only) */
 	CMDQ_CODE_WRITE_S_W_MASK = 0x91,
-	CMDQ_CODE_LOGIC = 0xa0,	/* logic operation */
+	CMDQ_CODE_LOGDC = 0xa0,	/* logic operation */
 	CMDQ_CODE_JUMP_C_ABSOLUTE = 0xb0, /* conditional jump (absolute) */
 	CMDQ_CODE_JUMP_C_RELATIVE = 0xb1, /* conditional jump (related) */
 };

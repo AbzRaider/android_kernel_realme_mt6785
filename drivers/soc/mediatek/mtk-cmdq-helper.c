@@ -899,13 +899,13 @@ s32 cmdq_pkt_assign_command(struct cmdq_pkt *pkt, u16 reg_idx, u32 value)
 {
 	return cmdq_pkt_append_command(pkt, CMDQ_GET_ARG_C(value),
 		CMDQ_GET_ARG_B(value), reg_idx,
-		CMDQ_LOGIC_ASSIGN, CMDQ_IMMEDIATE_VALUE,
+		CMDQ_LOGDC_ASSIGN, CMDQ_IMMEDIATE_VALUE,
 		CMDQ_IMMEDIATE_VALUE, CMDQ_REG_TYPE,
-		CMDQ_CODE_LOGIC);
+		CMDQ_CODE_LOGDC);
 }
 EXPORT_SYMBOL(cmdq_pkt_assign_command);
 
-s32 cmdq_pkt_logic_command(struct cmdq_pkt *pkt, enum CMDQ_LOGIC_ENUM s_op,
+s32 cmdq_pkt_logic_command(struct cmdq_pkt *pkt, enum CMDQ_LOGDC_ENUM s_op,
 	u16 result_reg_idx,
 	struct cmdq_operand *left_operand,
 	struct cmdq_operand *right_operand)
@@ -922,7 +922,7 @@ s32 cmdq_pkt_logic_command(struct cmdq_pkt *pkt, enum CMDQ_LOGIC_ENUM s_op,
 	return cmdq_pkt_append_command(pkt, right_idx_value, left_idx_value,
 		result_reg_idx, s_op, CMDQ_OPERAND_TYPE(right_operand),
 		CMDQ_OPERAND_TYPE(left_operand), CMDQ_REG_TYPE,
-		CMDQ_CODE_LOGIC);
+		CMDQ_CODE_LOGDC);
 }
 EXPORT_SYMBOL(cmdq_pkt_logic_command);
 
@@ -1090,14 +1090,14 @@ s32 cmdq_pkt_sleep(struct cmdq_pkt *pkt, u32 tick, u16 reg_gpr)
 	lop.idx = CMDQ_TPR_ID;
 	rop.reg = false;
 	rop.value = 1;
-	cmdq_pkt_logic_command(pkt, CMDQ_LOGIC_SUBTRACT,
+	cmdq_pkt_logic_command(pkt, CMDQ_LOGDC_SUBTRACT,
 		CMDQ_GPR_CNT_ID + reg_gpr, &lop, &rop);
 
 	lop.reg = true;
 	lop.idx = CMDQ_CPR_TPR_MASK;
 	rop.reg = false;
 	rop.value = tpr_en;
-	cmdq_pkt_logic_command(pkt, CMDQ_LOGIC_OR, CMDQ_CPR_TPR_MASK,
+	cmdq_pkt_logic_command(pkt, CMDQ_LOGDC_OR, CMDQ_CPR_TPR_MASK,
 		&lop, &rop);
 	cmdq_pkt_write_indriect(pkt, NULL, timeout_en, CMDQ_CPR_TPR_MASK, ~0);
 	cmdq_pkt_read(pkt, NULL, timeout_en, CMDQ_SPR_FOR_TEMP);
@@ -1109,7 +1109,7 @@ s32 cmdq_pkt_sleep(struct cmdq_pkt *pkt, u32 tick, u16 reg_gpr)
 		lop.idx = CMDQ_TPR_ID;
 		rop.reg = false;
 		rop.value = tick;
-		cmdq_pkt_logic_command(pkt, CMDQ_LOGIC_ADD,
+		cmdq_pkt_logic_command(pkt, CMDQ_LOGDC_ADD,
 			CMDQ_GPR_CNT_ID + reg_gpr, &lop, &rop);
 	} else {
 		cmdq_pkt_assign_command(pkt, CMDQ_SPR_FOR_TEMP, tick);
@@ -1117,7 +1117,7 @@ s32 cmdq_pkt_sleep(struct cmdq_pkt *pkt, u32 tick, u16 reg_gpr)
 		lop.idx = CMDQ_TPR_ID;
 		rop.reg = true;
 		rop.value = CMDQ_SPR_FOR_TEMP;
-		cmdq_pkt_logic_command(pkt, CMDQ_LOGIC_ADD,
+		cmdq_pkt_logic_command(pkt, CMDQ_LOGDC_ADD,
 			CMDQ_GPR_CNT_ID + reg_gpr, &lop, &rop);
 	}
 	cmdq_pkt_poll_gpr_check(pkt, reg_gpr, tick);
@@ -1150,7 +1150,7 @@ s32 cmdq_pkt_sleep(struct cmdq_pkt *pkt, u32 tick, u16 reg_gpr)
 	lop.idx = CMDQ_CPR_TPR_MASK;
 	rop.reg = false;
 	rop.value = ~tpr_en;
-	cmdq_pkt_logic_command(pkt, CMDQ_LOGIC_AND, CMDQ_CPR_TPR_MASK,
+	cmdq_pkt_logic_command(pkt, CMDQ_LOGDC_AND, CMDQ_CPR_TPR_MASK,
 		&lop, &rop);
 
 	return 0;
@@ -1206,7 +1206,7 @@ s32 cmdq_pkt_poll_timeout(struct cmdq_pkt *pkt, u32 value, u8 subsys,
 		rop.idx = reg_tmp;
 
 		cmdq_pkt_assign_command(pkt, reg_tmp, mask);
-		cmdq_pkt_logic_command(pkt, CMDQ_LOGIC_AND, reg_poll,
+		cmdq_pkt_logic_command(pkt, CMDQ_LOGDC_AND, reg_poll,
 			&lop, &rop);
 	}
 
@@ -1252,7 +1252,7 @@ s32 cmdq_pkt_poll_timeout(struct cmdq_pkt *pkt, u32 value, u8 subsys,
 	lop.idx = reg_counter;
 	rop.reg = false;
 	rop.value = 1;
-	cmdq_pkt_logic_command(pkt, CMDQ_LOGIC_ADD, reg_counter, &lop,
+	cmdq_pkt_logic_command(pkt, CMDQ_LOGDC_ADD, reg_counter, &lop,
 		&rop);
 
 #ifdef MTK_DRM_ADVANCE
@@ -2126,28 +2126,28 @@ void cmdq_buf_print_wfe(char *text, u32 txt_sz,
 		cmdq_log("len:%d over txt_sz:%d", len, txt_sz);
 }
 
-static const char *cmdq_parse_logic_sop(enum CMDQ_LOGIC_ENUM s_op)
+static const char *cmdq_parse_logic_sop(enum CMDQ_LOGDC_ENUM s_op)
 {
 	switch (s_op) {
-	case CMDQ_LOGIC_ASSIGN:
+	case CMDQ_LOGDC_ASSIGN:
 		return "= ";
-	case CMDQ_LOGIC_ADD:
+	case CMDQ_LOGDC_ADD:
 		return "+ ";
-	case CMDQ_LOGIC_SUBTRACT:
+	case CMDQ_LOGDC_SUBTRACT:
 		return "- ";
-	case CMDQ_LOGIC_MULTIPLY:
+	case CMDQ_LOGDC_MULTIPLY:
 		return "* ";
-	case CMDQ_LOGIC_XOR:
+	case CMDQ_LOGDC_XOR:
 		return "^";
-	case CMDQ_LOGIC_NOT:
+	case CMDQ_LOGDC_NOT:
 		return "= ~";
-	case CMDQ_LOGIC_OR:
+	case CMDQ_LOGDC_OR:
 		return "| ";
-	case CMDQ_LOGIC_AND:
+	case CMDQ_LOGDC_AND:
 		return "& ";
-	case CMDQ_LOGIC_LEFT_SHIFT:
+	case CMDQ_LOGDC_LEFT_SHIFT:
 		return "<< ";
-	case CMDQ_LOGIC_RIGHT_SHIFT:
+	case CMDQ_LOGDC_RIGHT_SHIFT:
 		return ">> ";
 	default:
 		return "<error: unsupported logic sop>";
@@ -2199,7 +2199,7 @@ static void cmdq_buf_print_logic(char *text, u32 txt_sz,
 	u32 len;
 
 	switch (cmdq_inst->s_op) {
-	case CMDQ_LOGIC_ASSIGN:
+	case CMDQ_LOGDC_ASSIGN:
 		len = snprintf(text, txt_sz,
 			"%#06x %#018llx [Logic] Reg Index %#06x %s%s%#010x",
 			offset, *((u64 *)cmdq_inst), cmdq_inst->arg_a,
@@ -2207,7 +2207,7 @@ static void cmdq_buf_print_logic(char *text, u32 txt_sz,
 			CMDQ_REG_IDX_PREFIX(cmdq_inst->arg_b_type),
 			CMDQ_GET_32B_VALUE(cmdq_inst->arg_b, cmdq_inst->arg_c));
 		break;
-	case CMDQ_LOGIC_NOT:
+	case CMDQ_LOGDC_NOT:
 		len = snprintf(text, txt_sz,
 			"%#06x %#018llx [Logic] Reg Index %#06x %s%s%#010x",
 			offset, *((u64 *)cmdq_inst), cmdq_inst->arg_a,
@@ -2329,7 +2329,7 @@ void cmdq_buf_cmd_parse(u64 *buf, u32 cmd_nr, dma_addr_t buf_pa,
 			cmdq_buf_print_read(text, txt_sz, (u32)buf_pa,
 				&cmdq_inst[i]);
 			break;
-		case CMDQ_CODE_LOGIC:
+		case CMDQ_CODE_LOGDC:
 			cmdq_buf_print_logic(text, txt_sz, (u32)buf_pa,
 				&cmdq_inst[i]);
 			break;
