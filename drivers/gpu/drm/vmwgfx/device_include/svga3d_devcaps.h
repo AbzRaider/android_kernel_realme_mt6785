@@ -216,7 +216,7 @@ typedef enum {
    /*
     * Does the host support the SVGA logic ops commands?
     */
-   SVGA3D_DEVCAP_LOGICOPS                          = 92,
+   SVGA3D_DEVCAP_LOGDCOPS                          = 92,
 
    /*
     * Are TS_CONSTANT, TS_COLOR_KEY, and TS_COLOR_KEY_ENABLE supported?

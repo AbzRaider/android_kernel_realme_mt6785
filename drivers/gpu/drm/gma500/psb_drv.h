@@ -389,8 +389,8 @@ struct psb_state {
 
 	/* DPST register save */
 	uint32_t saveHISTOGRAM_INT_CONTROL_REG;
-	uint32_t saveHISTOGRAM_LOGIC_CONTROL_REG;
-	uint32_t savePWM_CONTROL_LOGIC;
+	uint32_t saveHISTOGRAM_LOGDC_CONTROL_REG;
+	uint32_t savePWM_CONTROL_LOGDC;
 };
 
 struct medfield_state {

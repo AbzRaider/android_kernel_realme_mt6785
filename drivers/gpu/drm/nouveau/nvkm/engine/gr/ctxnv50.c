@@ -2550,9 +2550,9 @@ nv50_gr_construct_gene_ropc(struct nvkm_grctx *ctx)
 	xf_emit(ctx, 1, 0xf);		/* 0000000f COLOR_MASK */
 	xf_emit(ctx, 7, 0);		/* 0000000f COLOR_MASK */
 	xf_emit(ctx, 1, 0x11);		/* 3f/7f */
-	xf_emit(ctx, 1, 0);		/* 00000001 LOGIC_OP_ENABLE */
+	xf_emit(ctx, 1, 0);		/* 00000001 LOGDC_OP_ENABLE */
 	if (device->chipset != 0x50) {
-		xf_emit(ctx, 1, 0);	/* 0000000f LOGIC_OP */
+		xf_emit(ctx, 1, 0);	/* 0000000f LOGDC_OP */
 		xf_emit(ctx, 1, 0);	/* 000000ff */
 	}
 	xf_emit(ctx, 1, 0);		/* 00000007 OPERATION */
@@ -2613,8 +2613,8 @@ nv50_gr_construct_gene_ropc(struct nvkm_grctx *ctx)
 	xf_emit(ctx, 1, 1);		/* 0000001f BLEND_FUNC_DST_ALPHA */
 	xf_emit(ctx, 1, 1);		/* 00000007 BLEND_EQUATION_ALPHA */
 	xf_emit(ctx, 1, 0);		/* 00000001 UNK19C0 */
-	xf_emit(ctx, 1, 0);		/* 00000001 LOGIC_OP_ENABLE */
-	xf_emit(ctx, 1, 0);		/* 0000000f LOGIC_OP */
+	xf_emit(ctx, 1, 0);		/* 00000001 LOGDC_OP_ENABLE */
+	xf_emit(ctx, 1, 0);		/* 0000000f LOGDC_OP */
 	if (device->chipset >= 0xa0)
 		xf_emit(ctx, 1, 0);	/* 00000001 UNK12E4? NVA3+ only? */
 	if (IS_NVA3F(device->chipset)) {
@@ -2766,7 +2766,7 @@ nv50_gr_construct_xfer_tprop(struct nvkm_grctx *ctx)
 	xf_emit(ctx, 7, 0);		/* 0000000f COLOR_MASK */
 	xf_emit(ctx, 1, 0);		/* 00000001 DEPTH_TEST_ENABLE */
 	xf_emit(ctx, 1, 0);		/* 00000001 DEPTH_WRITE_ENABLE */
-	xf_emit(ctx, 1, 0);		/* 00000001 LOGIC_OP_ENABLE */
+	xf_emit(ctx, 1, 0);		/* 00000001 LOGDC_OP_ENABLE */
 	xf_emit(ctx, 1, 0);		/* ff[NV50]/3ff[NV84+] */
 	xf_emit(ctx, 1, 4);		/* 00000007 FP_CONTROL */
 	xf_emit(ctx, 4, 0xffff);	/* 0000ffff MSAA_MASK */
@@ -2821,7 +2821,7 @@ nv50_gr_construct_xfer_tprop(struct nvkm_grctx *ctx)
 	xf_emit(ctx, 1, 0x11);		/* 3f/7f RT_FORMAT */
 	xf_emit(ctx, 7, 0);		/* 3f/7f RT_FORMAT */
 	xf_emit(ctx, 1, 0x0fac6881);	/* 0fffffff RT_CONTROL */
-	xf_emit(ctx, 1, 0);		/* 00000001 LOGIC_OP_ENABLE */
+	xf_emit(ctx, 1, 0);		/* 00000001 LOGDC_OP_ENABLE */
 	xf_emit(ctx, 1, 0);		/* ff/3ff */
 	xf_emit(ctx, 1, 4);		/* 00000007 FP_CONTROL */
 	xf_emit(ctx, 1, 0);		/* 00000003 UNK0F90 */
@@ -2974,7 +2974,7 @@ nv50_gr_construct_xfer_tprop(struct nvkm_grctx *ctx)
 	xf_emit(ctx, 1, 0);		/* 00000003 UNK0F90 */
 	xf_emit(ctx, 1, 0);		/* 00000001 FRAMEBUFFER_SRGB */
 	xf_emit(ctx, 1, 0);		/* 7 */
-	xf_emit(ctx, 1, 0);		/* 00000001 LOGIC_OP_ENABLE */
+	xf_emit(ctx, 1, 0);		/* 00000001 LOGDC_OP_ENABLE */
 	if (IS_NVA3F(device->chipset)) {
 		xf_emit(ctx, 1, 0);	/* 00000001 UNK1140 */
 		xf_emit(ctx, 1, 1);	/* 0000001f tesla UNK169C */
@@ -3232,7 +3232,7 @@ nv50_gr_construct_xfer_mpc(struct nvkm_grctx *ctx)
 	xf_emit(ctx, 1, 0);			/* 00000001 FRAMEBUFFER_SRGB */
 	xf_emit(ctx, 1, 4);			/* ffffffff tesla UNK1400 */
 	xf_emit(ctx, 8, 0);			/* 00000001 BLEND_ENABLE */
-	xf_emit(ctx, 1, 0);			/* 00000001 LOGIC_OP_ENABLE */
+	xf_emit(ctx, 1, 0);			/* 00000001 LOGDC_OP_ENABLE */
 	xf_emit(ctx, 1, 2);			/* 0000001f BLEND_FUNC_SRC_RGB */
 	xf_emit(ctx, 1, 1);			/* 0000001f BLEND_FUNC_DST_RGB */
 	xf_emit(ctx, 1, 1);			/* 00000007 BLEND_EQUATION_RGB */

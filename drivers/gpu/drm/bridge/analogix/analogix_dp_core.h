@@ -10,8 +10,8 @@
  * option) any later version.
  */
 
-#ifndef _ANALOGIX_DP_CORE_H
-#define _ANALOGIX_DP_CORE_H
+#ifndef _ANALOGDX_DP_CORE_H
+#define _ANALOGDX_DP_CORE_H
 
 #include <drm/drm_crtc.h>
 #include <drm/drm_dp_helper.h>
@@ -252,4 +252,4 @@ void analogix_dp_send_psr_spd(struct analogix_dp_device *dp,
 ssize_t analogix_dp_transfer(struct analogix_dp_device *dp,
 			     struct drm_dp_aux_msg *msg);
 
-#endif /* _ANALOGIX_DP_CORE_H */
+#endif /* _ANALOGDX_DP_CORE_H */

@@ -103,12 +103,12 @@ typedef enum {
    SVGA_3D_CMD_SET_UNITY_SURFACE_COOKIE                   = 1083,
    SVGA_3D_CMD_OPEN_CONTEXT_SURFACE                       = 1084,
 
-   SVGA_3D_CMD_LOGICOPS_BITBLT                            = 1085,
-   SVGA_3D_CMD_LOGICOPS_TRANSBLT                          = 1086,
-   SVGA_3D_CMD_LOGICOPS_STRETCHBLT                        = 1087,
-   SVGA_3D_CMD_LOGICOPS_COLORFILL                         = 1088,
-   SVGA_3D_CMD_LOGICOPS_ALPHABLEND                        = 1089,
-   SVGA_3D_CMD_LOGICOPS_CLEARTYPEBLEND                    = 1090,
+   SVGA_3D_CMD_LOGDCOPS_BITBLT                            = 1085,
+   SVGA_3D_CMD_LOGDCOPS_TRANSBLT                          = 1086,
+   SVGA_3D_CMD_LOGDCOPS_STRETCHBLT                        = 1087,
+   SVGA_3D_CMD_LOGDCOPS_COLORFILL                         = 1088,
+   SVGA_3D_CMD_LOGDCOPS_ALPHABLEND                        = 1089,
+   SVGA_3D_CMD_LOGDCOPS_CLEARTYPEBLEND                    = 1090,
 
    SVGA_3D_CMD_SET_OTABLE_BASE                            = 1091,
    SVGA_3D_CMD_READBACK_OTABLE                            = 1092,
@@ -1201,7 +1201,7 @@ struct SVGA3dCmdLogicOpsBitBlt {
    /* Followed by variable number of SVGA3dCopyBox structures */
 }
 #include "vmware_pack_end.h"
-SVGA3dCmdLogicOpsBitBlt;   /* SVGA_3D_CMD_LOGICOPS_BITBLT */
+SVGA3dCmdLogicOpsBitBlt;   /* SVGA_3D_CMD_LOGDCOPS_BITBLT */
 
 
 typedef
@@ -1220,7 +1220,7 @@ struct SVGA3dCmdLogicOpsTransBlt {
    SVGA3dBox dstBox;
 }
 #include "vmware_pack_end.h"
-SVGA3dCmdLogicOpsTransBlt;   /* SVGA_3D_CMD_LOGICOPS_TRANSBLT */
+SVGA3dCmdLogicOpsTransBlt;   /* SVGA_3D_CMD_LOGDCOPS_TRANSBLT */
 
 
 typedef
@@ -1239,7 +1239,7 @@ struct SVGA3dCmdLogicOpsStretchBlt {
    SVGA3dBox dstBox;
 }
 #include "vmware_pack_end.h"
-SVGA3dCmdLogicOpsStretchBlt;   /* SVGA_3D_CMD_LOGICOPS_STRETCHBLT */
+SVGA3dCmdLogicOpsStretchBlt;   /* SVGA_3D_CMD_LOGDCOPS_STRETCHBLT */
 
 
 typedef
@@ -1256,7 +1256,7 @@ struct SVGA3dCmdLogicOpsColorFill {
    /* Followed by variable number of SVGA3dRect structures. */
 }
 #include "vmware_pack_end.h"
-SVGA3dCmdLogicOpsColorFill;   /* SVGA_3D_CMD_LOGICOPS_COLORFILL */
+SVGA3dCmdLogicOpsColorFill;   /* SVGA_3D_CMD_LOGDCOPS_COLORFILL */
 
 
 typedef
@@ -1275,7 +1275,7 @@ struct SVGA3dCmdLogicOpsAlphaBlend {
    SVGA3dBox dstBox;
 }
 #include "vmware_pack_end.h"
-SVGA3dCmdLogicOpsAlphaBlend;   /* SVGA_3D_CMD_LOGICOPS_ALPHABLEND */
+SVGA3dCmdLogicOpsAlphaBlend;   /* SVGA_3D_CMD_LOGDCOPS_ALPHABLEND */
 
 #define SVGA3D_CLEARTYPE_INVALID_GAMMA_INDEX 0xFFFFFFFF
 
@@ -1302,7 +1302,7 @@ struct SVGA3dCmdLogicOpsClearTypeBlend {
    /* Followed by variable number of SVGA3dBox structures */
 }
 #include "vmware_pack_end.h"
-SVGA3dCmdLogicOpsClearTypeBlend;   /* SVGA_3D_CMD_LOGICOPS_CLEARTYPEBLEND */
+SVGA3dCmdLogicOpsClearTypeBlend;   /* SVGA_3D_CMD_LOGDCOPS_CLEARTYPEBLEND */
 
 
 /*

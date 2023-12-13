@@ -1071,8 +1071,8 @@
 #define mmRMI_SUBBLOCK_STATUS3_BASE_IDX                                                                0
 #define mmRMI_XBAR_CONFIG                                                                              0x0787
 #define mmRMI_XBAR_CONFIG_BASE_IDX                                                                     0
-#define mmRMI_PROBE_POP_LOGIC_CNTL                                                                     0x0788
-#define mmRMI_PROBE_POP_LOGIC_CNTL_BASE_IDX                                                            0
+#define mmRMI_PROBE_POP_LOGDC_CNTL                                                                     0x0788
+#define mmRMI_PROBE_POP_LOGDC_CNTL_BASE_IDX                                                            0
 #define mmRMI_UTC_XNACK_N_MISC_CNTL                                                                    0x0789
 #define mmRMI_UTC_XNACK_N_MISC_CNTL_BASE_IDX                                                           0
 #define mmRMI_DEMUX_CNTL                                                                               0x078a

@@ -821,7 +821,7 @@ static int gen9_init_workarounds(struct intel_engine_cs *engine)
 	/* Syncing dependencies between camera and graphics:skl,bxt,kbl */
 	if (!IS_COFFEELAKE(dev_priv))
 		WA_SET_BIT_MASKED(HALF_SLICE_CHICKEN3,
-				  GEN9_DISABLE_OCL_OOB_SUPPRESS_LOGIC);
+				  GEN9_DISABLE_OCL_OOB_SUPPRESS_LOGDC);
 
 	/* WaDisableDgMirrorFixInHalfSliceChicken5:bxt */
 	if (IS_BXT_REVID(dev_priv, 0, BXT_REVID_A1))

@@ -233,7 +233,7 @@ int intel_sanitize_enable_execlists(struct drm_i915_private *dev_priv, int enabl
 	/* On platforms with execlist available, vGPU will only
 	 * support execlist mode, no ring buffer mode.
 	 */
-	if (HAS_LOGICAL_RING_CONTEXTS(dev_priv) && intel_vgpu_active(dev_priv))
+	if (HAS_LOGDCAL_RING_CONTEXTS(dev_priv) && intel_vgpu_active(dev_priv))
 		return 1;
 
 	if (INTEL_GEN(dev_priv) >= 9)
@@ -242,7 +242,7 @@ int intel_sanitize_enable_execlists(struct drm_i915_private *dev_priv, int enabl
 	if (enable_execlists == 0)
 		return 0;
 
-	if (HAS_LOGICAL_RING_CONTEXTS(dev_priv) &&
+	if (HAS_LOGDCAL_RING_CONTEXTS(dev_priv) &&
 	    USES_PPGTT(dev_priv) &&
 	    i915.use_mmio_flip >= 0)
 		return 1;

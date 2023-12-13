@@ -19,7 +19,7 @@
 #include <drm/drm_crtc_helper.h>
 #include <drm/drm_flip_work.h>
 #include <drm/drm_plane_helper.h>
-#ifdef CONFIG_DRM_ANALOGIX_DP
+#ifdef CONFIG_DRM_ANALOGDX_DP
 #include <drm/bridge/analogix_dp.h>
 #endif
 
@@ -1089,7 +1089,7 @@ static void vop_crtc_destroy_state(struct drm_crtc *crtc,
 	kfree(s);
 }
 
-#ifdef CONFIG_DRM_ANALOGIX_DP
+#ifdef CONFIG_DRM_ANALOGDX_DP
 static struct drm_connector *vop_get_edp_connector(struct vop *vop)
 {
 	struct drm_connector *connector;

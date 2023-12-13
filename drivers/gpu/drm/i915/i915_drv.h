@@ -3017,7 +3017,7 @@ intel_info(const struct drm_i915_private *dev_priv)
 
 #define HWS_NEEDS_PHYSICAL(dev_priv)	((dev_priv)->info.hws_needs_physical)
 
-#define HAS_LOGICAL_RING_CONTEXTS(dev_priv) \
+#define HAS_LOGDCAL_RING_CONTEXTS(dev_priv) \
 		((dev_priv)->info.has_logical_ring_contexts)
 #define USES_PPGTT(dev_priv)		(i915.enable_ppgtt)
 #define USES_FULL_PPGTT(dev_priv)	(i915.enable_ppgtt >= 2)

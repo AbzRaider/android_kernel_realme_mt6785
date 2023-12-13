@@ -263,9 +263,9 @@ static int oaktrail_save_display_registers(struct drm_device *dev)
 	/* DPST registers */
 	regs->psb.saveHISTOGRAM_INT_CONTROL_REG =
 					PSB_RVDC32(HISTOGRAM_INT_CONTROL);
-	regs->psb.saveHISTOGRAM_LOGIC_CONTROL_REG =
-					PSB_RVDC32(HISTOGRAM_LOGIC_CONTROL);
-	regs->psb.savePWM_CONTROL_LOGIC = PSB_RVDC32(PWM_CONTROL_LOGIC);
+	regs->psb.saveHISTOGRAM_LOGDC_CONTROL_REG =
+					PSB_RVDC32(HISTOGRAM_LOGDC_CONTROL);
+	regs->psb.savePWM_CONTROL_LOGDC = PSB_RVDC32(PWM_CONTROL_LOGDC);
 
 	if (dev_priv->iLVDS_enable) {
 		/* Shut down the panel */
@@ -402,9 +402,9 @@ static int oaktrail_restore_display_registers(struct drm_device *dev)
 	/* DPST registers */
 	PSB_WVDC32(regs->psb.saveHISTOGRAM_INT_CONTROL_REG,
 						HISTOGRAM_INT_CONTROL);
-	PSB_WVDC32(regs->psb.saveHISTOGRAM_LOGIC_CONTROL_REG,
-						HISTOGRAM_LOGIC_CONTROL);
-	PSB_WVDC32(regs->psb.savePWM_CONTROL_LOGIC, PWM_CONTROL_LOGIC);
+	PSB_WVDC32(regs->psb.saveHISTOGRAM_LOGDC_CONTROL_REG,
+						HISTOGRAM_LOGDC_CONTROL);
+	PSB_WVDC32(regs->psb.savePWM_CONTROL_LOGDC, PWM_CONTROL_LOGDC);
 
 	return 0;
 }

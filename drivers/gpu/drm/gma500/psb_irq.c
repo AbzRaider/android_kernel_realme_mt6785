@@ -418,26 +418,26 @@ void psb_irq_turn_on_dpst(struct drm_device *dev)
 	u32 pwm_reg;
 
 	if (gma_power_begin(dev, false)) {
-		PSB_WVDC32(1 << 31, HISTOGRAM_LOGIC_CONTROL);
-		hist_reg = PSB_RVDC32(HISTOGRAM_LOGIC_CONTROL);
+		PSB_WVDC32(1 << 31, HISTOGRAM_LOGDC_CONTROL);
+		hist_reg = PSB_RVDC32(HISTOGRAM_LOGDC_CONTROL);
 		PSB_WVDC32(1 << 31, HISTOGRAM_INT_CONTROL);
 		hist_reg = PSB_RVDC32(HISTOGRAM_INT_CONTROL);
 
-		PSB_WVDC32(0x80010100, PWM_CONTROL_LOGIC);
-		pwm_reg = PSB_RVDC32(PWM_CONTROL_LOGIC);
+		PSB_WVDC32(0x80010100, PWM_CONTROL_LOGDC);
+		pwm_reg = PSB_RVDC32(PWM_CONTROL_LOGDC);
 		PSB_WVDC32(pwm_reg | PWM_PHASEIN_ENABLE
 						| PWM_PHASEIN_INT_ENABLE,
-							   PWM_CONTROL_LOGIC);
-		pwm_reg = PSB_RVDC32(PWM_CONTROL_LOGIC);
+							   PWM_CONTROL_LOGDC);
+		pwm_reg = PSB_RVDC32(PWM_CONTROL_LOGDC);
 
 		psb_enable_pipestat(dev_priv, 0, PIPE_DPST_EVENT_ENABLE);
 
 		hist_reg = PSB_RVDC32(HISTOGRAM_INT_CONTROL);
 		PSB_WVDC32(hist_reg | HISTOGRAM_INT_CTRL_CLEAR,
 							HISTOGRAM_INT_CONTROL);
-		pwm_reg = PSB_RVDC32(PWM_CONTROL_LOGIC);
+		pwm_reg = PSB_RVDC32(PWM_CONTROL_LOGDC);
 		PSB_WVDC32(pwm_reg | 0x80010100 | PWM_PHASEIN_ENABLE,
-							PWM_CONTROL_LOGIC);
+							PWM_CONTROL_LOGDC);
 
 		gma_power_end(dev);
 	}
@@ -472,10 +472,10 @@ void psb_irq_turn_off_dpst(struct drm_device *dev)
 
 		psb_disable_pipestat(dev_priv, 0, PIPE_DPST_EVENT_ENABLE);
 
-		pwm_reg = PSB_RVDC32(PWM_CONTROL_LOGIC);
+		pwm_reg = PSB_RVDC32(PWM_CONTROL_LOGDC);
 		PSB_WVDC32(pwm_reg & ~PWM_PHASEIN_INT_ENABLE,
-							PWM_CONTROL_LOGIC);
-		pwm_reg = PSB_RVDC32(PWM_CONTROL_LOGIC);
+							PWM_CONTROL_LOGDC);
+		pwm_reg = PSB_RVDC32(PWM_CONTROL_LOGDC);
 
 		gma_power_end(dev);
 	}

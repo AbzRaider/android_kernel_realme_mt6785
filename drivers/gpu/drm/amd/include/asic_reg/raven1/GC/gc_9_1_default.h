@@ -564,7 +564,7 @@
 #define mmRMI_SUBBLOCK_STATUS2_DEFAULT                                           0x00000000
 #define mmRMI_SUBBLOCK_STATUS3_DEFAULT                                           0x00000000
 #define mmRMI_XBAR_CONFIG_DEFAULT                                                0x00000f00
-#define mmRMI_PROBE_POP_LOGIC_CNTL_DEFAULT                                       0x000300c0
+#define mmRMI_PROBE_POP_LOGDC_CNTL_DEFAULT                                       0x000300c0
 #define mmRMI_UTC_XNACK_N_MISC_CNTL_DEFAULT                                      0x00000564
 #define mmRMI_DEMUX_CNTL_DEFAULT                                                 0x02000200
 #define mmRMI_UTCL1_CNTL1_DEFAULT                                                0x00020000

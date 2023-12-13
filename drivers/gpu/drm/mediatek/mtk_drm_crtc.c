@@ -3351,7 +3351,7 @@ static void mtk_crtc_rec_trig_cnt(struct mtk_drm_crtc *mtk_crtc,
 	rop.reg = false;
 	rop.value = 1;
 
-	cmdq_pkt_logic_command(cmdq_handle, CMDQ_LOGIC_ADD, CMDQ_CPR_DISP_CNT,
+	cmdq_pkt_logic_command(cmdq_handle, CMDQ_LOGDC_ADD, CMDQ_CPR_DISP_CNT,
 			       &lop, &rop);
 	cmdq_pkt_write_reg_addr(cmdq_handle,
 				cmdq_buf->pa_base + DISP_SLOT_TRIG_CNT,

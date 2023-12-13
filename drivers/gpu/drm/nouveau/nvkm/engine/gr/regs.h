@@ -90,10 +90,10 @@
 #define NV04_PGRAPH_VALID1                                 0x00400508
 #define NV04_PGRAPH_SOURCE_COLOR                           0x0040050C
 #define NV04_PGRAPH_MISC24_0                               0x00400510
-#define NV03_PGRAPH_XY_LOGIC_MISC0                         0x00400514
-#define NV03_PGRAPH_XY_LOGIC_MISC1                         0x00400518
-#define NV03_PGRAPH_XY_LOGIC_MISC2                         0x0040051C
-#define NV03_PGRAPH_XY_LOGIC_MISC3                         0x00400520
+#define NV03_PGRAPH_XY_LOGDC_MISC0                         0x00400514
+#define NV03_PGRAPH_XY_LOGDC_MISC1                         0x00400518
+#define NV03_PGRAPH_XY_LOGDC_MISC2                         0x0040051C
+#define NV03_PGRAPH_XY_LOGDC_MISC3                         0x00400520
 #define NV03_PGRAPH_CLIPX_0                                0x00400524
 #define NV03_PGRAPH_CLIPX_1                                0x00400528
 #define NV03_PGRAPH_CLIPY_0                                0x0040052C

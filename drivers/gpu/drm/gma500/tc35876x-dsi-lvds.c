@@ -202,7 +202,7 @@ enum {
 	INPUT_HSYNC,	/* 24 */
 	INPUT_VSYNC,
 	INPUT_DE,
-	LOGIC_0,
+	LOGDC_0,
 	/* 28...31 undefined */
 };
 
@@ -413,7 +413,7 @@ void tc35876x_configure_lvds_bridge(struct drm_device *dev)
 	tc35876x_regw(i2c, LVMX1619,
 		INPUT_MUX(INPUT_B4, INPUT_B3, INPUT_B1, INPUT_B0));
 	tc35876x_regw(i2c, LVMX2023,
-		INPUT_MUX(LOGIC_0,  INPUT_B7, INPUT_B6, INPUT_B5));
+		INPUT_MUX(LOGDC_0,  INPUT_B7, INPUT_B6, INPUT_B5));
 	tc35876x_regw(i2c, LVMX2427,
 		INPUT_MUX(INPUT_R0, INPUT_DE, INPUT_VSYNC, INPUT_HSYNC));
 

@@ -5262,14 +5262,14 @@ typedef struct  _ATOM_ASIC_PROFILING_INFO_V2_1
 
 //Here is parameter to convert Efuse value to Measure value
 //Measured = LN((2^Bitsize-1)/EFUSE-1)*(Range)/(-alpha)+(Max+Min)/2
-typedef struct _EFUSE_LOGISTIC_FUNC_PARAM
+typedef struct _EFUSE_LOGDSTIC_FUNC_PARAM
 {
   USHORT usEfuseIndex;                  // Efuse Index in DWORD address, for example Index 911, usEuseIndex=112
   UCHAR  ucEfuseBitLSB;                 // Efuse bit LSB in DWORD address, for example Index 911, usEfuseBitLSB= 911-112*8=15
   UCHAR  ucEfuseLength;                 // Efuse bits length,
   ULONG  ulEfuseEncodeRange;            // Range = Max - Min, bit31 indicate the efuse is negative number
   ULONG  ulEfuseEncodeAverage;          // Average = ( Max + Min )/2
-}EFUSE_LOGISTIC_FUNC_PARAM;
+}EFUSE_LOGDSTIC_FUNC_PARAM;
 
 //Linear Function: Measured = Round ( Efuse * ( Max-Min )/(2^BitSize -1 ) + Min )
 typedef struct _EFUSE_LINEAR_FUNC_PARAM
@@ -5295,9 +5295,9 @@ typedef struct  _ATOM_ASIC_PROFILING_INFO_V3_1
   ULONG  ulLeakageVoltage;
   EFUSE_LINEAR_FUNC_PARAM sCACm;
   EFUSE_LINEAR_FUNC_PARAM sCACb;
-  EFUSE_LOGISTIC_FUNC_PARAM sKt_b;
-  EFUSE_LOGISTIC_FUNC_PARAM sKv_m;
-  EFUSE_LOGISTIC_FUNC_PARAM sKv_b;
+  EFUSE_LOGDSTIC_FUNC_PARAM sKt_b;
+  EFUSE_LOGDSTIC_FUNC_PARAM sKv_m;
+  EFUSE_LOGDSTIC_FUNC_PARAM sKv_b;
   USHORT usLkgEuseIndex;
   UCHAR  ucLkgEfuseBitLSB;
   UCHAR  ucLkgEfuseLength;
@@ -5336,9 +5336,9 @@ typedef struct  _ATOM_ASIC_PROFILING_INFO_V3_2
   ULONG  ulLeakageVoltage;
   EFUSE_LINEAR_FUNC_PARAM sCACm;
   EFUSE_LINEAR_FUNC_PARAM sCACb;
-  EFUSE_LOGISTIC_FUNC_PARAM sKt_b;
-  EFUSE_LOGISTIC_FUNC_PARAM sKv_m;
-  EFUSE_LOGISTIC_FUNC_PARAM sKv_b;
+  EFUSE_LOGDSTIC_FUNC_PARAM sKt_b;
+  EFUSE_LOGDSTIC_FUNC_PARAM sKv_m;
+  EFUSE_LOGDSTIC_FUNC_PARAM sKv_b;
   USHORT usLkgEuseIndex;
   UCHAR  ucLkgEfuseBitLSB;
   UCHAR  ucLkgEfuseLength;
@@ -5378,9 +5378,9 @@ typedef struct  _ATOM_ASIC_PROFILING_INFO_V3_3
   ULONG  ulLeakageVoltage;
   EFUSE_LINEAR_FUNC_PARAM sCACm;
   EFUSE_LINEAR_FUNC_PARAM sCACb;
-  EFUSE_LOGISTIC_FUNC_PARAM sKt_b;
-  EFUSE_LOGISTIC_FUNC_PARAM sKv_m;
-  EFUSE_LOGISTIC_FUNC_PARAM sKv_b;
+  EFUSE_LOGDSTIC_FUNC_PARAM sKt_b;
+  EFUSE_LOGDSTIC_FUNC_PARAM sKv_m;
+  EFUSE_LOGDSTIC_FUNC_PARAM sKv_b;
   USHORT usLkgEuseIndex;
   UCHAR  ucLkgEfuseBitLSB;
   UCHAR  ucLkgEfuseLength;
@@ -5437,9 +5437,9 @@ typedef struct  _ATOM_ASIC_PROFILING_INFO_V3_4
   ULONG  ulLeakageVoltage;
   EFUSE_LINEAR_FUNC_PARAM sCACm;
   EFUSE_LINEAR_FUNC_PARAM sCACb;
-  EFUSE_LOGISTIC_FUNC_PARAM sKt_b;
-  EFUSE_LOGISTIC_FUNC_PARAM sKv_m;
-  EFUSE_LOGISTIC_FUNC_PARAM sKv_b;
+  EFUSE_LOGDSTIC_FUNC_PARAM sKt_b;
+  EFUSE_LOGDSTIC_FUNC_PARAM sKv_m;
+  EFUSE_LOGDSTIC_FUNC_PARAM sKv_b;
   USHORT usLkgEuseIndex;
   UCHAR  ucLkgEfuseBitLSB;
   UCHAR  ucLkgEfuseLength;

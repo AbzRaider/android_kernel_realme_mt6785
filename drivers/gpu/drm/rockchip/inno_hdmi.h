@@ -357,6 +357,6 @@ enum {
 #define HDMI_CEC_RX_INT			0xdb
 #define HDMI_CEC_BUSFREETIME_L		0xdc
 #define HDMI_CEC_BUSFREETIME_H		0xdd
-#define HDMI_CEC_LOGICADDR		0xde
+#define HDMI_CEC_LOGDCADDR		0xde
 
 #endif /* __INNO_HDMI_H__ */

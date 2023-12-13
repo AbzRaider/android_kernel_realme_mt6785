@@ -437,7 +437,7 @@ int i915_gem_contexts_init(struct drm_i915_private *dev_priv)
 	init_llist_head(&dev_priv->contexts.free_list);
 
 	if (intel_vgpu_active(dev_priv) &&
-	    HAS_LOGICAL_RING_CONTEXTS(dev_priv)) {
+	    HAS_LOGDCAL_RING_CONTEXTS(dev_priv)) {
 		if (!i915.enable_execlists) {
 			DRM_INFO("Only EXECLIST mode is supported in vgpu.\n");
 			return -EINVAL;

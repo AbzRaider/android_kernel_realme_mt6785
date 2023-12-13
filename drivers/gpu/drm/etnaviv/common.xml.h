@@ -189,7 +189,7 @@ DEALINGS IN THE SOFTWARE.
 #define chipMinorFeatures1_BUG_FIXES6				0x40000000
 #define chipMinorFeatures1_FC_FLUSH_STALL			0x80000000
 #define chipMinorFeatures2_LINE_LOOP				0x00000001
-#define chipMinorFeatures2_LOGIC_OP				0x00000002
+#define chipMinorFeatures2_LOGDC_OP				0x00000002
 #define chipMinorFeatures2_SEAMLESS_CUBE_MAP			0x00000004
 #define chipMinorFeatures2_SUPERTILED_TEXTURE			0x00000008
 #define chipMinorFeatures2_LINEAR_PE				0x00000010

@@ -73,7 +73,7 @@ int tee_addDevice(uint32_t version)
 		return ret;
 	}
 
-	ret = TEEC_OpenSession(&sContext, &sSession, &uuid, TEEC_LOGIN_PUBLIC,
+	ret = TEEC_OpenSession(&sContext, &sSession, &uuid, TEEC_LOGDN_PUBLIC,
 			NULL, NULL, NULL);
 	if (ret != TEEC_SUCCESS) {
 		TLCERR("TEEC_OpenSession ret = 0x%x", ret);
@@ -663,7 +663,7 @@ int tee_loadHdcpKeyById(uint32_t version)
 	ret = TEEC_OpenSession(&context,
 		&session,               /* OUT session */
 		&KI_TA_UUID,            /* destination UUID */
-		TEEC_LOGIN_PUBLIC,      /* connectionMethod */
+		TEEC_LOGDN_PUBLIC,      /* connectionMethod */
 		NULL,                   /* connectionData */
 		&sOperation,            /* IN OUT operation */
 		NULL                    /* OUT returnOrigin, optional */
