@@ -183,15 +183,15 @@ struct tee_ioctl_buf_data {
 	(TEE_IOCTL_PARAM_ATTR_TYPE_MASK | TEE_IOCTL_PARAM_ATTR_META)
 
 /*
- * Matches TEEC_LOGIN_* in GP TEE Client API
+ * Matches TEEC_LOGDN_* in GP TEE Client API
  * Are only defined for GP compliant TEEs
  */
-#define TEE_IOCTL_LOGIN_PUBLIC			0
-#define TEE_IOCTL_LOGIN_USER			1
-#define TEE_IOCTL_LOGIN_GROUP			2
-#define TEE_IOCTL_LOGIN_APPLICATION		4
-#define TEE_IOCTL_LOGIN_USER_APPLICATION	5
-#define TEE_IOCTL_LOGIN_GROUP_APPLICATION	6
+#define TEE_IOCTL_LOGDN_PUBLIC			0
+#define TEE_IOCTL_LOGDN_USER			1
+#define TEE_IOCTL_LOGDN_GROUP			2
+#define TEE_IOCTL_LOGDN_APPLICATION		4
+#define TEE_IOCTL_LOGDN_USER_APPLICATION	5
+#define TEE_IOCTL_LOGDN_GROUP_APPLICATION	6
 
 /**
  * struct tee_ioctl_param - parameter
@@ -233,7 +233,7 @@ struct tee_ioctl_param {
  * struct tee_ioctl_open_session_arg - Open session argument
  * @uuid:	[in] UUID of the Trusted Application
  * @clnt_uuid:	[in] UUID of client
- * @clnt_login:	[in] Login class of client, TEE_IOCTL_LOGIN_* above
+ * @clnt_login:	[in] Login class of client, TEE_IOCTL_LOGDN_* above
  * @cancel_id:	[in] Cancellation id, a unique value to identify this request
  * @session:	[out] Session id
  * @ret:	[out] return value

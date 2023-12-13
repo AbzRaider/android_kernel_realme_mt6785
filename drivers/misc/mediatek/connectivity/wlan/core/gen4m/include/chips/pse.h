@@ -35,7 +35,7 @@
 /* PSE Reset Control Register */
 #define PSE_RESET (PSE_BASE + 0x00)
 #define PSE_ALL_RST (1 << 0)
-#define PSE_LOGICAL_RST (1 << 1)
+#define PSE_LOGDCAL_RST (1 << 1)
 #define PSE_INIT_DONE (1 << 2)
 #define GET_PSE_INIT_DONE(p) (((p) & PSE_INIT_DONE) >> 2)
 

@@ -176,11 +176,11 @@ static struct LCM_UTIL_FUNCS lcm_util = {0};
 		lcm_util.dsi_dcs_read_lcm_reg_v2(cmd, buffer, buffer_size)
 
 #ifdef BUILD_LK
-#define LCM_LOGI(string, args...) \
+#define LCM_LOGD(string, args...) \
 		dprintf(CRITICAL, "[LK/"LOG_TAG"]"string, ##args)
 #define LCM_LOGD(string, args...)  dprintf(INFO, "[LK/"LOG_TAG"]"string, ##args)
 #else
-#define LCM_LOGI(fmt, args...)  pr_notice("[KERNEL/"LOG_TAG"]"fmt, ##args)
+#define LCM_LOGD(fmt, args...)  pr_notice("[KERNEL/"LOG_TAG"]"fmt, ##args)
 #define LCM_LOGD(fmt, args...)  pr_debug("[KERNEL/"LOG_TAG"]"fmt, ##args)
 #endif
 

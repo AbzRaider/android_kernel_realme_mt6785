@@ -106,13 +106,13 @@ int fpsgo_is_enable(void)
 	enable = fpsgo_enable;
 	mutex_unlock(&notify_lock);
 
-	FPSGO_LOGI("[FPSGO_CTRL] isenable %d\n", enable);
+	FPSGO_LOGD("[FPSGO_CTRL] isenable %d\n", enable);
 	return enable;
 }
 
 static void fpsgo_notifier_wq_cb_vsync(unsigned long long ts)
 {
-	FPSGO_LOGI("[FPSGO_CB] vsync: %llu\n", ts);
+	FPSGO_LOGD("[FPSGO_CB] vsync: %llu\n", ts);
 
 	if (!fpsgo_is_enable())
 		return;
@@ -122,7 +122,7 @@ static void fpsgo_notifier_wq_cb_vsync(unsigned long long ts)
 
 static void fpsgo_notifier_wq_cb_dfrc_fps(int dfrc_fps)
 {
-	FPSGO_LOGI("[FPSGO_CB] dfrc_fps %d\n", dfrc_fps);
+	FPSGO_LOGD("[FPSGO_CB] dfrc_fps %d\n", dfrc_fps);
 
 	fpsgo_ctrl2fstb_dfrc_fps(dfrc_fps);
 	fpsgo_ctrl2fbt_dfrc_fps(dfrc_fps);
@@ -131,7 +131,7 @@ static void fpsgo_notifier_wq_cb_dfrc_fps(int dfrc_fps)
 static void fpsgo_notifier_wq_cb_connect(int pid,
 		int connectedAPI, unsigned long long id)
 {
-	FPSGO_LOGI(
+	FPSGO_LOGD(
 		"[FPSGO_CB] connect: pid %d, API %d, id %llu\n",
 		pid, connectedAPI, id);
 
@@ -144,7 +144,7 @@ static void fpsgo_notifier_wq_cb_connect(int pid,
 static void fpsgo_notifier_wq_cb_nn_job_begin(unsigned int tid,
 	unsigned long long mid)
 {
-	FPSGO_LOGI(
+	FPSGO_LOGD(
 		"[FPSGO_CB] nn_job_begin: tid %d, mid %llu\n",
 		tid, mid);
 
@@ -160,7 +160,7 @@ static void fpsgo_notifier_wq_cb_nn_job_end(int pid, int tid,
 {
 	int hw_type = BACKGROUND;
 
-	FPSGO_LOGI(
+	FPSGO_LOGD(
 		"[FPSGO_CB] nn_job_begin: tid %d, mid %llu\n",
 		tid, mid);
 
@@ -177,7 +177,7 @@ static void fpsgo_notifier_wq_cb_nn_job_end(int pid, int tid,
 static void fpsgo_notifier_wq_cb_bqid(int pid, unsigned long long bufID,
 	int queue_SF, unsigned long long id, int create)
 {
-	FPSGO_LOGI(
+	FPSGO_LOGD(
 		"[FPSGO_CB] bqid: pid %d, bufID %llu, queue_SF %d, id %llu, create %d\n",
 		pid, bufID, queue_SF, id, create);
 
@@ -186,7 +186,7 @@ static void fpsgo_notifier_wq_cb_bqid(int pid, unsigned long long bufID,
 
 static void fpsgo_notifier_wq_cb_gblock(int tid, int start)
 {
-	FPSGO_LOGI(
+	FPSGO_LOGD(
 		"[FPSGO_CB] gblock: tid %d, start %d\n",
 		tid, start);
 
@@ -200,7 +200,7 @@ static void fpsgo_notifier_wq_cb_qudeq(int qudeq,
 		unsigned int startend, int cur_pid,
 		unsigned long long curr_ts, unsigned long long id)
 {
-	FPSGO_LOGI("[FPSGO_CB] qudeq: %d-%d, pid %d, ts %llu, id %llu\n",
+	FPSGO_LOGD("[FPSGO_CB] qudeq: %d-%d, pid %d, ts %llu, id %llu\n",
 		qudeq, startend, cur_pid, curr_ts, id);
 
 	if (!fpsgo_is_enable())
@@ -209,12 +209,12 @@ static void fpsgo_notifier_wq_cb_qudeq(int qudeq,
 	switch (qudeq) {
 	case 1:
 		if (startend) {
-			FPSGO_LOGI("[FPSGO_CB] QUEUE Start: pid %d\n",
+			FPSGO_LOGD("[FPSGO_CB] QUEUE Start: pid %d\n",
 					cur_pid);
 			fpsgo_ctrl2comp_enqueue_start(cur_pid,
 					curr_ts, id);
 		} else {
-			FPSGO_LOGI("[FPSGO_CB] QUEUE End: pid %d\n",
+			FPSGO_LOGD("[FPSGO_CB] QUEUE End: pid %d\n",
 					cur_pid);
 			fpsgo_ctrl2comp_enqueue_end(cur_pid, curr_ts,
 					id);
@@ -222,12 +222,12 @@ static void fpsgo_notifier_wq_cb_qudeq(int qudeq,
 		break;
 	case 0:
 		if (startend) {
-			FPSGO_LOGI("[FPSGO_CB] DEQUEUE Start: pid %d\n",
+			FPSGO_LOGD("[FPSGO_CB] DEQUEUE Start: pid %d\n",
 					cur_pid);
 			fpsgo_ctrl2comp_dequeue_start(cur_pid,
 					curr_ts, id);
 		} else {
-			FPSGO_LOGI("[FPSGO_CB] DEQUEUE End: pid %d\n",
+			FPSGO_LOGD("[FPSGO_CB] DEQUEUE End: pid %d\n",
 					cur_pid);
 			fpsgo_ctrl2comp_dequeue_end(cur_pid,
 					curr_ts, id);
@@ -240,7 +240,7 @@ static void fpsgo_notifier_wq_cb_qudeq(int qudeq,
 
 static void fpsgo_notifier_wq_cb_enable(int enable)
 {
-	FPSGO_LOGI(
+	FPSGO_LOGD(
 	"[FPSGO_CB] enable %d, fpsgo_enable %d, force_onoff %d\n",
 	enable, fpsgo_enable, fpsgo_force_onoff);
 
@@ -265,7 +265,7 @@ static void fpsgo_notifier_wq_cb_enable(int enable)
 	if (!fpsgo_enable)
 		fpsgo_clear();
 
-	FPSGO_LOGI("[FPSGO_CB] fpsgo_enable %d\n",
+	FPSGO_LOGD("[FPSGO_CB] fpsgo_enable %d\n",
 			fpsgo_enable);
 	mutex_unlock(&notify_lock);
 
@@ -283,7 +283,7 @@ static void fpsgo_notifier_wq_cb(struct work_struct *psWork)
 		return;
 	}
 
-	FPSGO_LOGI("[FPSGO_CTRL] push type = %d\n",
+	FPSGO_LOGD("[FPSGO_CTRL] push type = %d\n",
 			vpPush->ePushType);
 
 	switch (vpPush->ePushType) {
@@ -337,7 +337,7 @@ void fpsgo_notify_qudeq(int qudeq,
 	unsigned long long cur_ts;
 	struct FPSGO_NOTIFIER_PUSH_TAG *vpPush;
 
-	FPSGO_LOGI("[FPSGO_CTRL] qudeq %d-%d, id %llu pid %d\n",
+	FPSGO_LOGD("[FPSGO_CTRL] qudeq %d-%d, id %llu pid %d\n",
 		qudeq, startend, id, pid);
 
 	if (!fpsgo_is_enable())
@@ -373,7 +373,7 @@ void fpsgo_notify_nn_job_begin(unsigned int tid, unsigned long long mid)
 {
 	struct FPSGO_NOTIFIER_PUSH_TAG *vpPush;
 
-	FPSGO_LOGI(
+	FPSGO_LOGD(
 		"[FPSGO_CTRL] nn_job_begin: tid %d, mid %llu\n",
 		tid, mid);
 
@@ -460,7 +460,7 @@ void fpsgo_notify_connect(int pid,
 {
 	struct FPSGO_NOTIFIER_PUSH_TAG *vpPush;
 
-	FPSGO_LOGI(
+	FPSGO_LOGD(
 		"[FPSGO_CTRL] connect pid %d, id %llu, API %d\n",
 		pid, id, connectedAPI);
 
@@ -493,7 +493,7 @@ void fpsgo_notify_bqid(int pid, unsigned long long bufID,
 {
 	struct FPSGO_NOTIFIER_PUSH_TAG *vpPush;
 
-	FPSGO_LOGI("[FPSGO_CTRL] bqid pid %d, buf %llu, queue_SF %d, id %llu\n",
+	FPSGO_LOGD("[FPSGO_CTRL] bqid pid %d, buf %llu, queue_SF %d, id %llu\n",
 		pid, bufID, queue_SF, id);
 
 	vpPush = (struct FPSGO_NOTIFIER_PUSH_TAG *)
@@ -575,7 +575,7 @@ int fpsgo_notify_gpu_block(int tid, unsigned long long mid, int start)
 	struct FPSGO_NOTIFIER_PUSH_TAG *vpPush;
 	int g_enable;
 
-	FPSGO_LOGI("[FPSGO_CTRL] gblock pid %d, start %d\n",
+	FPSGO_LOGD("[FPSGO_CTRL] gblock pid %d, start %d\n",
 		tid, start);
 
 	g_enable = fpsgo_is_gpu_block_boost_enable();
@@ -609,7 +609,7 @@ void fpsgo_notify_vsync(void)
 {
 	struct FPSGO_NOTIFIER_PUSH_TAG *vpPush;
 
-	FPSGO_LOGI("[FPSGO_CTRL] vsync\n");
+	FPSGO_LOGD("[FPSGO_CTRL] vsync\n");
 
 	if (!fpsgo_is_enable())
 		return;
@@ -638,7 +638,7 @@ void fpsgo_notify_vsync(void)
 
 void fpsgo_notify_cpufreq(int cid, unsigned long freq)
 {
-	FPSGO_LOGI("[FPSGO_CTRL] cid %d, cpufreq %lu\n", cid, freq);
+	FPSGO_LOGD("[FPSGO_CTRL] cid %d, cpufreq %lu\n", cid, freq);
 
 	if (rsu_cpufreq_notifier_fp)
 		rsu_cpufreq_notifier_fp(cid, freq);
@@ -657,7 +657,7 @@ void dfrc_fps_limit_cb(unsigned int fps_limit)
 	if (fps_limit > 0 && fps_limit <= TARGET_UNLIMITED_FPS)
 		vTmp = fps_limit;
 
-	FPSGO_LOGI("[FPSGO_CTRL] dfrc_fps %d\n", vTmp);
+	FPSGO_LOGD("[FPSGO_CTRL] dfrc_fps %d\n", vTmp);
 
 	vpPush =
 		(struct FPSGO_NOTIFIER_PUSH_TAG *)
@@ -691,7 +691,7 @@ void fpsgo_switch_enable(int enable)
 		return;
 	}
 
-	FPSGO_LOGI("[FPSGO_CTRL] switch enable %d\n", enable);
+	FPSGO_LOGD("[FPSGO_CTRL] switch enable %d\n", enable);
 
 	if (fpsgo_is_force_enable() !=
 			FPSGO_FREE && enable !=
@@ -800,7 +800,7 @@ static void __exit fpsgo_exit(void)
 
 static int __init fpsgo_init(void)
 {
-	FPSGO_LOGI("[FPSGO_CTRL] init\n");
+	FPSGO_LOGD("[FPSGO_CTRL] init\n");
 	fpsgo_sysfs_init();
 
 	g_psNotifyWorkQueue =

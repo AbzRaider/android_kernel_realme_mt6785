@@ -117,12 +117,12 @@ struct teec_operation {
 #define TEEC_MEMREF_PARTIAL_OUTPUT          0xE
 #define TEEC_MEMREF_PARTIAL_INOUT           0xF
 
-#define TEEC_LOGIN_PUBLIC                   0x00000000
-#define TEEC_LOGIN_USER                     0x00000001
-#define TEEC_LOGIN_GROUP                    0x00000002
-#define TEEC_LOGIN_APPLICATION              0x00000004
-#define TEEC_LOGIN_USER_APPLICATION         0x00000005
-#define TEEC_LOGIN_GROUP_APPLICATION        0x00000006
+#define TEEC_LOGDN_PUBLIC                   0x00000000
+#define TEEC_LOGDN_USER                     0x00000001
+#define TEEC_LOGDN_GROUP                    0x00000002
+#define TEEC_LOGDN_APPLICATION              0x00000004
+#define TEEC_LOGDN_USER_APPLICATION         0x00000005
+#define TEEC_LOGDN_GROUP_APPLICATION        0x00000006
 
 #define TEEC_TIMEOUT_INFINITE               0xFFFFFFFF
 

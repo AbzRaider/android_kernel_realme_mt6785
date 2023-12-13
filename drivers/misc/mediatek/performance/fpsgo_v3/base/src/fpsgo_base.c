@@ -264,7 +264,7 @@ void fpsgo_add_linger(struct render_info *thr)
 	rb_link_node(&thr->linger_node, parent, p);
 	rb_insert_color(&thr->linger_node, &linger_tree);
 	thr->linger_ts = fpsgo_get_time();
-	FPSGO_LOGI("add to linger %d(%p)(%llu)\n",
+	FPSGO_LOGD("add to linger %d(%p)(%llu)\n",
 			thr->pid, thr, thr->linger_ts);
 }
 
@@ -276,7 +276,7 @@ void fpsgo_del_linger(struct render_info *thr)
 		return;
 
 	rb_erase(&thr->linger_node, &linger_tree);
-	FPSGO_LOGI("del from linger %d(%p)\n", thr->pid, thr);
+	FPSGO_LOGD("del from linger %d(%p)\n", thr->pid, thr);
 }
 
 void fpsgo_traverse_linger(unsigned long long cur_ts)
@@ -297,12 +297,12 @@ void fpsgo_traverse_linger(unsigned long long cur_ts)
 		int tofree = 0;
 
 		pos = rb_entry(n, struct render_info, linger_node);
-		FPSGO_LOGI("-%d(%p)(%llu),", pos->pid, pos, pos->linger_ts);
+		FPSGO_LOGD("-%d(%p)(%llu),", pos->pid, pos, pos->linger_ts);
 
 		fpsgo_thread_lock(&pos->thr_mlock);
 
 		if (pos->linger_ts && pos->linger_ts < expire_ts) {
-			FPSGO_LOGI("timeout %d(%p)(%llu),",
+			FPSGO_LOGD("timeout %d(%p)(%llu),",
 				pos->pid, pos, pos->linger_ts);
 			fpsgo_base2fbt_cancel_jerk(pos);
 			fpsgo_del_linger(pos);
@@ -659,14 +659,14 @@ static struct BQ_id *fpsgo_get_BQid_by_key(unsigned long long key,
 	rb_link_node(&pos->entry, parent, p);
 	rb_insert_color(&pos->entry, &BQ_id_list);
 
-	FPSGO_LOGI("add BQid key 0x%llx, pid %d, id 0x%llx\n",
+	FPSGO_LOGD("add BQid key 0x%llx, pid %d, id 0x%llx\n",
 		   key, pid, identifier);
 	return pos;
 }
 
 static inline void fpsgo_del_BQid_by_pid(int pid)
 {
-	FPSGO_LOGI("%s should not be used, deleting pid %d\n", __func__, pid);
+	FPSGO_LOGD("%s should not be used, deleting pid %d\n", __func__, pid);
 }
 
 static unsigned long long fpsgo_gen_unique_key(int pid,
@@ -701,7 +701,7 @@ struct BQ_id *fpsgo_find_BQ_id(int pid, int tgid,
 		key = fpsgo_gen_unique_key(pid, tgid, identifier);
 		if (key == 0ULL)
 			return NULL;
-		FPSGO_LOGI("find %s pid %d, id %llu, key %llu\n",
+		FPSGO_LOGD("find %s pid %d, id %llu, key %llu\n",
 			(action == ACTION_FIND_ADD)?"add":"",
 			pid, identifier, key);
 
@@ -718,7 +718,7 @@ struct BQ_id *fpsgo_find_BQ_id(int pid, int tgid,
 
 			pos = rb_entry(n, struct BQ_id, entry);
 			if (pos->key == key) {
-				FPSGO_LOGI(
+				FPSGO_LOGD(
 					"find del pid %d, id %llu, key %llu\n",
 					pid, identifier, key);
 				rb_erase(n, &BQ_id_list);
@@ -731,7 +731,7 @@ struct BQ_id *fpsgo_find_BQ_id(int pid, int tgid,
 			FPSGO_LOGE("del fail key %llu\n", key);
 		return NULL;
 	case ACTION_DEL_PID:
-		FPSGO_LOGI("del BQid pid %d\n", pid);
+		FPSGO_LOGD("del BQid pid %d\n", pid);
 		fpsgo_del_BQid_by_pid(pid);
 		return NULL;
 	default:

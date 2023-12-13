@@ -983,7 +983,7 @@ enum GDL_RET_STATUS gps_dl_link_wait_on(struct gps_each_link_waitable *p, long *
 	p->waiting = false;
 
 	if (val) {
-		GDL_LOGI("signaled by %ld", val);
+		GDL_LOGD("signaled by %ld", val);
 		if (p_sigval)
 			*p_sigval = val;
 		p->waiting = false;

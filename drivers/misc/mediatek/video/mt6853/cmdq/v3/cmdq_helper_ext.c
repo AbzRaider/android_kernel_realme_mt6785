@@ -192,7 +192,7 @@ static bool cmdq_core_check_instr_valid(const u64 instr)
 		if (option == 0x2 && (!argB_i || argB_i == 1) && !argC_i)
 			return true;
 		break;
-	case CMDQ_CODE_LOGIC:
+	case CMDQ_CODE_LOGDC:
 		if (option == 0x4 && !sOP && !argA_i && !argB_i)
 			return true;
 		break;
@@ -200,7 +200,7 @@ static bool cmdq_core_check_instr_valid(const u64 instr)
 	case CMDQ_CODE_READ_S:
 	case CMDQ_CODE_WRITE_S:
 	case CMDQ_CODE_WRITE_S_W_MASK:
-	case CMDQ_CODE_LOGIC:
+	case CMDQ_CODE_LOGDC:
 		break;
 #endif
 	case CMDQ_CODE_JUMP_C_ABSOLUTE:
@@ -475,8 +475,8 @@ const char *cmdq_core_parse_op(u32 op_code)
 		return "WRITE_S";
 	case CMDQ_CODE_WRITE_S_W_MASK:
 		return "WRITE_S with mask";
-	case CMDQ_CODE_LOGIC:
-		return "LOGIC";
+	case CMDQ_CODE_LOGDC:
+		return "LOGDC";
 	case CMDQ_CODE_JUMP_C_RELATIVE:
 		return "JUMP_C related";
 	case CMDQ_CODE_JUMP_C_ABSOLUTE:
@@ -488,25 +488,25 @@ const char *cmdq_core_parse_op(u32 op_code)
 static const char *cmdq_core_parse_logic_sop(u32 s_op)
 {
 	switch (s_op) {
-	case CMDQ_LOGIC_ASSIGN:
+	case CMDQ_LOGDC_ASSIGN:
 		return "=";
-	case CMDQ_LOGIC_ADD:
+	case CMDQ_LOGDC_ADD:
 		return "+";
-	case CMDQ_LOGIC_SUBTRACT:
+	case CMDQ_LOGDC_SUBTRACT:
 		return "-";
-	case CMDQ_LOGIC_MULTIPLY:
+	case CMDQ_LOGDC_MULTIPLY:
 		return "*";
-	case CMDQ_LOGIC_XOR:
+	case CMDQ_LOGDC_XOR:
 		return "^";
-	case CMDQ_LOGIC_NOT:
+	case CMDQ_LOGDC_NOT:
 		return "~";
-	case CMDQ_LOGIC_OR:
+	case CMDQ_LOGDC_OR:
 		return "|";
-	case CMDQ_LOGIC_AND:
+	case CMDQ_LOGDC_AND:
 		return "&";
-	case CMDQ_LOGIC_LEFT_SHIFT:
+	case CMDQ_LOGDC_LEFT_SHIFT:
 		return "<<";
-	case CMDQ_LOGIC_RIGHT_SHIFT:
+	case CMDQ_LOGDC_RIGHT_SHIFT:
 		return ">>";
 	}
 	return NULL;
@@ -716,7 +716,7 @@ s32 cmdq_core_interpret_instruction(char *textBuf, s32 bufLen,
 			}
 		}
 		break;
-	case CMDQ_CODE_LOGIC:
+	case CMDQ_CODE_LOGDC:
 		{
 			const u32 subsys_bit =
 				cmdq_get_func()->getSubsysLSBArgA();
@@ -733,12 +733,12 @@ s32 cmdq_core_interpret_instruction(char *textBuf, s32 bufLen,
 			bufLen -= reqLen;
 			textBuf += reqLen;
 
-			if (s_op == CMDQ_LOGIC_ASSIGN) {
+			if (s_op == CMDQ_LOGDC_ASSIGN) {
 				reqLen = snprintf(textBuf, bufLen, "0x%08x\n",
 					arg_b);
 				bufLen -= reqLen;
 				textBuf += reqLen;
-			} else if (s_op == CMDQ_LOGIC_NOT) {
+			} else if (s_op == CMDQ_LOGDC_NOT) {
 				const u32 arg_b_type = arg_a & (1 << 22);
 				const u32 arg_b_i = (arg_b >> 16) & 0xFFFF;
 
@@ -3907,10 +3907,10 @@ static void cmdq_core_replace_overwrite_instr(struct cmdqRecStruct *handle,
 	u32 *p_cmd_assign = (u32 *)cmdq_pkt_get_va_by_offset(handle->pkt,
 		(index - 1) * CMDQ_INST_SIZE);
 
-	if ((p_cmd_assign[1] >> 24) == CMDQ_CODE_LOGIC &&
+	if ((p_cmd_assign[1] >> 24) == CMDQ_CODE_LOGDC &&
 		((p_cmd_assign[1] >> 23) & 1) == 1 &&
 		cmdq_core_get_subsys_id(p_cmd_assign[1]) ==
-		CMDQ_LOGIC_ASSIGN &&
+		CMDQ_LOGDC_ASSIGN &&
 		(p_cmd_assign[1] & 0xFFFF) == CMDQ_SPR_FOR_TEMP) {
 		u32 overwrite_index = p_cmd_assign[0];
 		dma_addr_t overwrite_pa = cmdq_pkt_get_pa_by_offset(
@@ -3978,8 +3978,8 @@ static void cmdq_core_v3_replace_jumpc(struct cmdqRecStruct *handle,
 		revise_offset = true;
 	}
 
-	if ((p_cmd_logic[1] >> 24) == CMDQ_CODE_LOGIC &&
-		((p_cmd_logic[1] >> 16) & 0x1F) == CMDQ_LOGIC_ASSIGN) {
+	if ((p_cmd_logic[1] >> 24) == CMDQ_CODE_LOGDC &&
+		((p_cmd_logic[1] >> 16) & 0x1F) == CMDQ_LOGDC_ASSIGN) {
 		u32 jump_op = CMDQ_CODE_JUMP_C_ABSOLUTE << 24;
 		u32 jump_op_header = va[1] & 0xFFFFFF;
 		u32 jump_offset = CMDQ_REG_REVERT_ADDR(p_cmd_logic[0]);

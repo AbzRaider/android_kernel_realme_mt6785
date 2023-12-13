@@ -126,7 +126,7 @@ static int tee_session_open_single_session_unlocked(void)
 	}
 
 	ret = TEEC_OpenSession(&g_sess_data->context, &g_sess_data->session,
-			       &destination, TEEC_LOGIN_PUBLIC, NULL, NULL,
+			       &destination, TEEC_LOGDN_PUBLIC, NULL, NULL,
 			       NULL);
 	if (ret != TEEC_SUCCESS) {
 		pr_err("TEEC_OpenSession failed: %x\n", ret);

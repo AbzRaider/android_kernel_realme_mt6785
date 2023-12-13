@@ -49,7 +49,7 @@ static void lcm_get_params(struct LCM_PARAMS *params)
 	params->dsi.mode = SYNC_PULSE_VDO_MODE;
 	params->dsi.switch_mode = CMD_MODE;
 	//lcm_dsi_mode = SYNC_PULSE_VDO_MODE;
-	//LCM_LOGI("lcm_get_params lcm_dsi_mode %d\n", lcm_dsi_mode);
+	//LCM_LOGD("lcm_get_params lcm_dsi_mode %d\n", lcm_dsi_mode);
 	params->dsi.switch_mode_enable = 0;
 
 	/* DSI */

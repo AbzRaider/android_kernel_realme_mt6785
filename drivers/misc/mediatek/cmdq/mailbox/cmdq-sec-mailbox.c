@@ -319,7 +319,7 @@ s32 cmdq_sec_insert_backup_cookie(struct cmdq_pkt *pkt)
 	right.reg = false;
 	right.value = 1;
 	cmdq_pkt_logic_command(
-		pkt, CMDQ_LOGIC_ADD, CMDQ_THR_SPR_IDX1, &left, &right);
+		pkt, CMDQ_LOGDC_ADD, CMDQ_THR_SPR_IDX1, &left, &right);
 
 	err = cmdq_pkt_write_indriect(pkt, NULL,
 		cmdq->shared_mem->pa + CMDQ_SEC_SHARED_THR_CNT_OFFSET +

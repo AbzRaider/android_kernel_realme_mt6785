@@ -835,7 +835,7 @@ TZ_RESULT _Gz_KreeServiceCall_body(KREE_SESSION_HANDLE handle, uint32_t command,
 			(struct TEEC_Context *)param[0].mem.buffer,
 			(struct TEEC_Session *)param[1].mem.buffer,
 			(struct TEEC_UUID *)param[2].mem.buffer,
-			TEEC_LOGIN_PUBLIC, NULL, NULL, NULL);
+			TEEC_LOGDN_PUBLIC, NULL, NULL, NULL);
 		if (ret != TEEC_SUCCESS)
 			KREE_ERR("[ERROR] TEEC_OpenSession failed: %x\n", ret);
 		param[3].value.a = ret;

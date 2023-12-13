@@ -320,7 +320,7 @@ static void kbase_pm_invoke(struct kbase_device *kbdev,
 	    action == ACTION_PWRON &&
 	    core_type == KBASE_PM_CORE_SHADER &&
 	    !(kbdev->dummy_job_wa.flags &
-		    KBASE_DUMMY_JOB_WA_FLAG_LOGICAL_SHADER_POWER)) {
+		    KBASE_DUMMY_JOB_WA_FLAG_LOGDCAL_SHADER_POWER)) {
 		kbase_dummy_job_wa_execute(kbdev, cores);
 	} else {
 		if (lo != 0)
@@ -1602,7 +1602,7 @@ void kbase_pm_clock_on(struct kbase_device *kbdev, bool is_resume)
 	mutex_unlock(&kbdev->mmu_hw_mutex);
 
 	if (kbdev->dummy_job_wa.flags &
-			KBASE_DUMMY_JOB_WA_FLAG_LOGICAL_SHADER_POWER) {
+			KBASE_DUMMY_JOB_WA_FLAG_LOGDCAL_SHADER_POWER) {
 		spin_lock_irqsave(&kbdev->hwaccess_lock, flags);
 		kbase_dummy_job_wa_execute(kbdev,
 			kbase_pm_get_present_cores(kbdev,

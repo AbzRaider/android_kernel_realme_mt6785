@@ -40,10 +40,10 @@
 #endif
 
 #ifdef BUILD_LK
-#define LCM_LOGI(string, args...)  dprintf(0, "[LK/"LOG_TAG"]"string, ##args)
+#define LCM_LOGD(string, args...)  dprintf(0, "[LK/"LOG_TAG"]"string, ##args)
 #define LCM_LOGD(string, args...)  dprintf(1, "[LK/"LOG_TAG"]"string, ##args)
 #else
-#define LCM_LOGI(fmt, args...)  pr_debug("[KERNEL/"LOG_TAG"]"fmt, ##args)
+#define LCM_LOGD(fmt, args...)  pr_debug("[KERNEL/"LOG_TAG"]"fmt, ##args)
 #define LCM_LOGD(fmt, args...)  pr_debug("[KERNEL/"LOG_TAG"]"fmt, ##args)
 #endif
 
@@ -504,7 +504,7 @@ static void lcm_get_params(LCM_PARAMS *params)
     params->dsi.switch_mode = CMD_MODE;
     //lcm_dsi_mode = SYNC_PULSE_VDO_MODE;
 #endif
-    //LCM_LOGI("lcm_get_params lcm_dsi_mode %d\n", lcm_dsi_mode);
+    //LCM_LOGD("lcm_get_params lcm_dsi_mode %d\n", lcm_dsi_mode);
     params->dsi.switch_mode_enable = 0;
 
     /* DSI */
@@ -553,22 +553,22 @@ static void lcm_get_params(LCM_PARAMS *params)
     params->dsi.clk_lp_per_line_enable = 0;
     if (get_boot_mode() == META_BOOT) {
         boot_mode++;
-        LCM_LOGI("META_BOOT\n");
+        LCM_LOGD("META_BOOT\n");
     }
     if (get_boot_mode() == ADVMETA_BOOT) {
         boot_mode++;
-        LCM_LOGI("ADVMETA_BOOT\n");
+        LCM_LOGD("ADVMETA_BOOT\n");
     }
     if (get_boot_mode() == ATE_FACTORY_BOOT) {
         boot_mode++;
-        LCM_LOGI("ATE_FACTORY_BOOT\n");
+        LCM_LOGD("ATE_FACTORY_BOOT\n");
     }
     if (get_boot_mode() == FACTORY_BOOT)     {
         boot_mode++;
-        LCM_LOGI("FACTORY_BOOT\n");
+        LCM_LOGD("FACTORY_BOOT\n");
     }
     if (boot_mode == 0) {
-        LCM_LOGI("neither META_BOOT or FACTORY_BOOT\n");
+        LCM_LOGD("neither META_BOOT or FACTORY_BOOT\n");
         params->dsi.esd_check_enable = 0;
         params->dsi.customization_esd_check_enable = 0;
         params->dsi.lcm_esd_check_table[0].cmd = 0x0A;
@@ -609,16 +609,16 @@ static void lcm_get_params(LCM_PARAMS *params)
 
 static void lcm_init_power(void)
 {
-	LCM_LOGI("%s: enter\n", __func__);
+	LCM_LOGD("%s: enter\n", __func__);
 	if ((!gpio_get_value(GPIO_LCD_VSP_EN)) && (!gpio_get_value(GPIO_LCD_VSN_EN))) { //when vsp and vsn is not enable
-		LCM_LOGI("%s: set lcd bias on\n", __func__);
+		LCM_LOGD("%s: set lcd bias on\n", __func__);
 		MDELAY(1);
 		SET_LCM_VSP_PIN(1);
 		MDELAY(3);
 		SET_LCM_VSN_PIN(1);
 		MDELAY(10);
 	}
-	LCM_LOGI("%s: exit\n", __func__);
+	LCM_LOGD("%s: exit\n", __func__);
 }
 /*#ifdef OPLUS_FEATURE_TP_BASIC*/
 /*Xiaofei.Gong@BSP.TP.Function, 2020/09/23, Enable black gestures for pascal*/
@@ -626,31 +626,31 @@ extern void lcd_queue_load_tp_fw(void);
 extern int tp_gesture_enable_flag(void);
 static void lcm_suspend_power(void)
 {
-    LCM_LOGI("%s: enter\n", __func__);
+    LCM_LOGD("%s: enter\n", __func__);
 /*Xiaofei.Gong@BSP.TP.Function, 2020/09/23, Enable black gestures for sala*/
     pr_debug("%s: tp_gesture_enable_flag = %d \n", __func__, tp_gesture_enable_flag());
     if (0 == tp_gesture_enable_flag()) {
-        LCM_LOGI("%s: set lcd bias off\n", __func__);
+        LCM_LOGD("%s: set lcd bias off\n", __func__);
         MDELAY(8);
         SET_LCM_VSN_PIN(0);
         MDELAY(1);
         SET_LCM_VSP_PIN(0);
         MDELAY(10);
     }
-    LCM_LOGI("%s: exit\n", __func__);
+    LCM_LOGD("%s: exit\n", __func__);
 }
 
 static void lcm_resume_power(void)
 {
-	LCM_LOGI("%s: enter\n", __func__);
+	LCM_LOGD("%s: enter\n", __func__);
 	lcm_init_power();
-	LCM_LOGI("%s: exit\n", __func__);
+	LCM_LOGD("%s: exit\n", __func__);
 }
 
 static void lcm_init(void)
 {
     int size;
-	LCM_LOGI("%s: enter\n", __func__);
+	LCM_LOGD("%s: enter\n", __func__);
 
 	SET_RESET_PIN(1);
 	MDELAY(10);
@@ -681,25 +681,25 @@ static void lcm_init(void)
         sizeof(struct LCM_setting_table);
     push_table(NULL, init_setting_vdo, size, 1);
 
-	LCM_LOGI("%s: exit\n", __func__);
+	LCM_LOGD("%s: exit\n", __func__);
 }
 
 static void lcm_suspend(void)
 {
-    LCM_LOGI("%s: enter\n", __func__);
+    LCM_LOGD("%s: enter\n", __func__);
     push_table(NULL, lcm_suspend_setting,
         sizeof(lcm_suspend_setting) / sizeof(struct LCM_setting_table),
         1);
     MDELAY(10);
 
-    LCM_LOGI("%s: exit\n", __func__);
+    LCM_LOGD("%s: exit\n", __func__);
 }
 
 static void lcm_resume(void)
 {
-    LCM_LOGI("%s: enter\n", __func__);
+    LCM_LOGD("%s: enter\n", __func__);
     lcm_init();
-    LCM_LOGI("%s: exit\n", __func__);
+    LCM_LOGD("%s: exit\n", __func__);
 }
 
 #ifdef BUILD_LK
@@ -711,7 +711,7 @@ static unsigned int lcm_compare_id(void)
 static void lcm_setbacklight_cmdq(void *handle, unsigned int level)
 {
 
-    LCM_LOGI("%s,nt36672c backlight: level = %d\n", __func__, level);
+    LCM_LOGD("%s,nt36672c backlight: level = %d\n", __func__, level);
 	if (level == 0){
 		bl_level_dimming_exit[1].para_list[0] = (level >> 8) & 0x07;
 		bl_level_dimming_exit[1].para_list[1] = level & 0xFF;
@@ -738,7 +738,7 @@ static void lcm_setbacklight_cmdq(void *handle, unsigned int level)
 
 static void lcm_set_cabc_mode_cmdq(void *handle, unsigned int level)
 {
-    LCM_LOGI("%s [lcd] cabc_mode is %d \n", __func__, level);
+    LCM_LOGD("%s [lcd] cabc_mode is %d \n", __func__, level);
 
 	if (level == 1) {
         push_table(handle,lcm_cabc_enter_setting_ui, sizeof(lcm_cabc_enter_setting_ui) / sizeof(struct LCM_setting_table), 1);

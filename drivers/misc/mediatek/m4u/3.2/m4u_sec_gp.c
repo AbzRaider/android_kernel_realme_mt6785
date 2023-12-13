@@ -116,7 +116,7 @@ static int m4u_sec_gp_init(struct m4u_sec_context *ctx)
 	if (!M4U_SEC_SESSION) {
 		ret = TEEC_OpenSession(&gp_ctx->ctx,
 			&gp_ctx->session, &gp_ctx->uuid,
-				       TEEC_LOGIN_PUBLIC, NULL, NULL, NULL);
+				       TEEC_LOGDN_PUBLIC, NULL, NULL, NULL);
 		if (ret != TEEC_SUCCESS) {
 			M4UMSG("teec_open_session failed: %x\n", ret);
 			goto exit_release;

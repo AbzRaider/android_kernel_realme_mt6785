@@ -31,10 +31,10 @@
 #endif
 
 #ifdef BUILD_LK
-#  define LCM_LOGI(string, args...)  dprintf(0, "[LK/"LOG_TAG"]"string, ##args)
+#  define LCM_LOGD(string, args...)  dprintf(0, "[LK/"LOG_TAG"]"string, ##args)
 #  define LCM_LOGD(string, args...)  dprintf(1, "[LK/"LOG_TAG"]"string, ##args)
 #else
-#  define LCM_LOGI(fmt, args...)  pr_debug("[KERNEL/"LOG_TAG"]"fmt, ##args)
+#  define LCM_LOGD(fmt, args...)  pr_debug("[KERNEL/"LOG_TAG"]"fmt, ##args)
 #  define LCM_LOGD(fmt, args...)  pr_debug("[KERNEL/"LOG_TAG"]"fmt, ##args)
 #endif
 
@@ -372,7 +372,7 @@ static void lcm_get_params(struct LCM_PARAMS *params)
 	params->dsi.mode = SYNC_PULSE_VDO_MODE;
 	params->dsi.switch_mode = CMD_MODE;
 	lcm_dsi_mode = SYNC_PULSE_VDO_MODE;
-	LCM_LOGI("%s: lcm_dsi_mode %d\n", __func__, lcm_dsi_mode);
+	LCM_LOGD("%s: lcm_dsi_mode %d\n", __func__, lcm_dsi_mode);
 	params->dsi.switch_mode_enable = 0;
 
 	/* DSI */
@@ -570,7 +570,7 @@ static void lcm_init(void)
 	MDELAY(5);
 
 	push_table(NULL, init_setting_vdo, ARRAY_SIZE(init_setting_vdo), 1);
-	LCM_LOGI("td4320_fhdp----tps6132----lcm mode = vdo mode :%d----\n",
+	LCM_LOGD("td4320_fhdp----tps6132----lcm mode = vdo mode :%d----\n",
 		 lcm_dsi_mode);
 }
 
@@ -598,7 +598,7 @@ static unsigned int lcm_ata_check(unsigned char *buffer)
 
 	read_reg_v2(0xbf, read_buf, 4); /* read lcm id */
 
-	LCM_LOGI("ATA read = 0x%x, 0x%x, 0x%x, 0x%x\n",
+	LCM_LOGD("ATA read = 0x%x, 0x%x, 0x%x, 0x%x\n",
 		 read_buf[0], read_buf[1], read_buf[2], read_buf[3]);
 
 	if ((read_buf[0] == id[0]) &&
@@ -617,7 +617,7 @@ static unsigned int lcm_ata_check(unsigned char *buffer)
 
 static void lcm_setbacklight_cmdq(void *handle, unsigned int level)
 {
-	LCM_LOGI("%s,td4320 backlight: level = %d\n", __func__, level);
+	LCM_LOGD("%s,td4320 backlight: level = %d\n", __func__, level);
 
 	bl_level[0].para_list[0] = level;
 

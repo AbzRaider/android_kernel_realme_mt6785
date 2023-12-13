@@ -32,10 +32,10 @@
 #endif
 
 #ifdef BUILD_LK
-#define LCM_LOGI(string, args...)  dprintf(0, "[LK/"LOG_TAG"]"string, ##args)
+#define LCM_LOGD(string, args...)  dprintf(0, "[LK/"LOG_TAG"]"string, ##args)
 #define LCM_LOGD(string, args...)  dprintf(1, "[LK/"LOG_TAG"]"string, ##args)
 #else
-#define LCM_LOGI(fmt, args...)  pr_debug("[KERNEL/"LOG_TAG"]"fmt, ##args)
+#define LCM_LOGD(fmt, args...)  pr_debug("[KERNEL/"LOG_TAG"]"fmt, ##args)
 #define LCM_LOGD(fmt, args...)  pr_debug("[KERNEL/"LOG_TAG"]"fmt, ##args)
 #endif
 
@@ -1383,7 +1383,7 @@ static void lcm_get_params(struct LCM_PARAMS *params)
 	params->dsi.switch_mode = CMD_MODE;
 	lcm_dsi_mode = SYNC_PULSE_VDO_MODE;
 #endif
-	LCM_LOGI("%s:lcm_dsi_mode %d\n", __func__, lcm_dsi_mode);
+	LCM_LOGD("%s:lcm_dsi_mode %d\n", __func__, lcm_dsi_mode);
 	params->dsi.switch_mode_enable = 0;
 
 	/* DSI */
@@ -1481,11 +1481,11 @@ static void lcm_init(void)
 	MDELAY(10);
 	if (lcm_dsi_mode == CMD_MODE) {
 		push_table(NULL, init_setting, ARRAY_SIZE(init_setting), 1);
-		LCM_LOGI("nt35695----tps6132----lcm mode = cmd mode :%d----\n",
+		LCM_LOGD("nt35695----tps6132----lcm mode = cmd mode :%d----\n",
 			 lcm_dsi_mode);
 	} else {
 		push_table(NULL, init_setting2, ARRAY_SIZE(init_setting2), 1);
-		LCM_LOGI("nt35695----tps6132----lcm mode = vdo mode :%d----\n",
+		LCM_LOGD("nt35695----tps6132----lcm mode = vdo mode :%d----\n",
 			 lcm_dsi_mode);
 	}
 }
@@ -1558,7 +1558,7 @@ static unsigned int lcm_compare_id(void)
 	read_reg_v2(0xDB, buffer, 1);
 	version_id = buffer[0];
 
-	LCM_LOGI("%s,nt35695_id=0x%08x,version_id=0x%x\n",
+	LCM_LOGD("%s,nt35695_id=0x%08x,version_id=0x%x\n",
 		 __func__, id, version_id);
 
 	if (id == LCM_ID_NT35695 && version_id == 0x81)
@@ -1581,10 +1581,10 @@ static unsigned int lcm_esd_check(void)
 	read_reg_v2(0x53, buffer, 1);
 
 	if (buffer[0] != 0x24) {
-		LCM_LOGI("[LCM ERROR] [0x53]=0x%02x\n", buffer[0]);
+		LCM_LOGD("[LCM ERROR] [0x53]=0x%02x\n", buffer[0]);
 		return TRUE;
 	}
-	LCM_LOGI("[LCM NORMAL] [0x53]=0x%02x\n", buffer[0]);
+	LCM_LOGD("[LCM NORMAL] [0x53]=0x%02x\n", buffer[0]);
 	return FALSE;
 #else
 	return FALSE;
@@ -1606,7 +1606,7 @@ static unsigned int lcm_ata_check(unsigned char *buffer)
 	unsigned int data_array[3];
 	unsigned char read_buf[4];
 
-	LCM_LOGI("ATA check size = 0x%x,0x%x,0x%x,0x%x\n",
+	LCM_LOGD("ATA check size = 0x%x,0x%x,0x%x,0x%x\n",
 		 x0_MSB, x0_LSB, x1_MSB, x1_LSB);
 	data_array[0] = 0x0005390A; /* HS packet */
 	data_array[1] = (x1_MSB << 24) | (x0_LSB << 16) | (x0_MSB << 8) | 0x2a;
@@ -1644,7 +1644,7 @@ static unsigned int lcm_ata_check(unsigned char *buffer)
 
 static void lcm_setbacklight_cmdq(void *handle, unsigned int level)
 {
-	LCM_LOGI("%s,nt35695 backlight: level = %d\n", __func__, level);
+	LCM_LOGD("%s,nt35695 backlight: level = %d\n", __func__, level);
 
 	bl_level[0].para_list[0] = level;
 

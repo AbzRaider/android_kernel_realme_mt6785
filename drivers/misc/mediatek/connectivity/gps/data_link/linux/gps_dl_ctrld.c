@@ -259,7 +259,7 @@ static int gps_dl_ctrl_thread(void *pData)
 		return -1;
 	}
 
-	GDL_LOGI("gps control thread starts");
+	GDL_LOGD("gps control thread starts");
 
 	pEvent = &(pgps_dl_ctrld->rgpsdlWq);
 
@@ -295,7 +295,7 @@ static int gps_dl_ctrl_thread(void *pData)
 
 	}
 
-	GDL_LOGI("gps control thread exits succeed");
+	GDL_LOGD("gps control thread exits succeed");
 
 	return 0;
 }
@@ -356,7 +356,7 @@ int gps_dl_ctrld_deinit(void)
 	if (iRet)
 		GDL_LOGE("gps data link ontrol thread stop fail:%d", iRet);
 	else
-		GDL_LOGI("gps data link ontrol thread stop okay:%d", iRet);
+		GDL_LOGD("gps data link ontrol thread stop okay:%d", iRet);
 
 	gps_dl_osal_event_deinit(&gps_dl_ctrld.rgpsdlWq);
 
@@ -365,7 +365,7 @@ int gps_dl_ctrld_deinit(void)
 		GDL_LOGE("gps data link ontrol thread destroy fail:%d", iRet);
 		return -1;
 	}
-	GDL_LOGI("gps data link ontrol thread destroy okay:%d\n", iRet);
+	GDL_LOGD("gps data link ontrol thread destroy okay:%d\n", iRet);
 
 	return 0;
 }

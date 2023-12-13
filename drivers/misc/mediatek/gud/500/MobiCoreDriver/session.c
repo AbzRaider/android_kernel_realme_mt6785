@@ -237,21 +237,21 @@ static int check_prepare_identity(const struct mc_identity *identity,
 	/* Copy login type */
 	mcp_identity->login_type = identity->login_type;
 
-	if (identity->login_type == LOGIN_PUBLIC ||
-	    identity->login_type == TEEC_TT_LOGIN_KERNEL)
+	if (identity->login_type == LOGDN_PUBLIC ||
+	    identity->login_type == TEEC_TT_LOGDN_KERNEL)
 		return 0;
 
 	/* Fill in uid field */
-	if (identity->login_type == LOGIN_USER ||
-	    identity->login_type == LOGIN_USER_APPLICATION) {
+	if (identity->login_type == LOGDN_USER ||
+	    identity->login_type == LOGDN_USER_APPLICATION) {
 		/* Set euid and ruid of the process. */
 		mcp_id->uid.euid = __kuid_val(task_euid(task));
 		mcp_id->uid.ruid = __kuid_val(task_uid(task));
 	}
 
 	/* Check gid field */
-	if (identity->login_type == LOGIN_GROUP ||
-	    identity->login_type == LOGIN_GROUP_APPLICATION) {
+	if (identity->login_type == LOGDN_GROUP ||
+	    identity->login_type == LOGDN_GROUP_APPLICATION) {
 		const struct cred *cred = __task_cred(task);
 
 		/*
@@ -269,26 +269,26 @@ static int check_prepare_identity(const struct mc_identity *identity,
 	}
 
 	switch (identity->login_type) {
-	case LOGIN_PUBLIC:
-	case LOGIN_GROUP:
+	case LOGDN_PUBLIC:
+	case LOGDN_GROUP:
 		break;
-	case LOGIN_USER:
+	case LOGDN_USER:
 		data = NULL;
 		data_len = 0;
 		break;
-	case LOGIN_APPLICATION:
+	case LOGDN_APPLICATION:
 		application = true;
 		supplied_ca_identity = true;
 		data = NULL;
 		data_len = 0;
 		break;
-	case LOGIN_USER_APPLICATION:
+	case LOGDN_USER_APPLICATION:
 		application = true;
 		supplied_ca_identity = true;
 		data = &mcp_id->uid;
 		data_len = sizeof(mcp_id->uid);
 		break;
-	case LOGIN_GROUP_APPLICATION:
+	case LOGDN_GROUP_APPLICATION:
 		application = true;
 		data = &identity->gid;
 		data_len = sizeof(identity->gid);
@@ -300,8 +300,8 @@ static int check_prepare_identity(const struct mc_identity *identity,
 		return -EINVAL;
 	}
 
-	/* let the supplied login_data pass through if it is LOGIN_APPLICATION
-	 * or LOGIN_USER_APPLICATION and not a zero-filled buffer
+	/* let the supplied login_data pass through if it is LOGDN_APPLICATION
+	 * or LOGDN_USER_APPLICATION and not a zero-filled buffer
 	 * That buffer is expected to contain a NWd computed hash containing the
 	 * CA identity
 	 */

@@ -35,10 +35,10 @@
 #endif
 
 #ifdef BUILD_LK
-#define LCM_LOGI(string, args...)  dprintf(0, "[LK/"LOG_TAG"]"string, ##args)
+#define LCM_LOGD(string, args...)  dprintf(0, "[LK/"LOG_TAG"]"string, ##args)
 #define LCM_LOGD(string, args...)  dprintf(1, "[LK/"LOG_TAG"]"string, ##args)
 #else
-#define LCM_LOGI(fmt, args...)  pr_debug("[KERNEL/"LOG_TAG"]"fmt, ##args)
+#define LCM_LOGD(fmt, args...)  pr_debug("[KERNEL/"LOG_TAG"]"fmt, ##args)
 #define LCM_LOGD(fmt, args...)  pr_debug("[KERNEL/"LOG_TAG"]"fmt, ##args)
 #endif
 
@@ -539,7 +539,7 @@ static void lcm_get_params(struct LCM_PARAMS *params)
 	params->dsi.mode = SYNC_PULSE_VDO_MODE;
 	params->dsi.switch_mode = CMD_MODE;
 	lcm_dsi_mode = SYNC_PULSE_VDO_MODE;
-	LCM_LOGI("%s: lcm_dsi_mode %d\n", __func__, lcm_dsi_mode);
+	LCM_LOGD("%s: lcm_dsi_mode %d\n", __func__, lcm_dsi_mode);
 	params->dsi.switch_mode_enable = 0;
 
 	/* DSI */
@@ -607,7 +607,7 @@ static void lcm_init_power(void)
 		_lcm_i2c_write_bytes(0x0, 0xf);
 		_lcm_i2c_write_bytes(0x1, 0xf);
 	} else
-		LCM_LOGI("set_gpio_lcd_enp_bias not defined...\n");
+		LCM_LOGD("set_gpio_lcd_enp_bias not defined...\n");
 }
 
 static void lcm_suspend_power(void)
@@ -616,7 +616,7 @@ static void lcm_suspend_power(void)
 	if (lcm_util.set_gpio_lcd_enp_bias)
 		lcm_util.set_gpio_lcd_enp_bias(0);
 	else
-		LCM_LOGI("set_gpio_lcd_enp_bias not defined...\n");
+		LCM_LOGD("set_gpio_lcd_enp_bias not defined...\n");
 }
 
 /* turn on gate ic & control voltage to 5.5V */
@@ -640,7 +640,7 @@ static void lcm_init(void)
 
 	push_table(NULL,
 		init_setting_vdo, ARRAY_SIZE(init_setting_vdo), 1);
-	LCM_LOGI(
+	LCM_LOGD(
 		"otm1911a_fhdp-tps6132-lcm mode=vdo mode:%d\n", lcm_dsi_mode);
 }
 
@@ -668,7 +668,7 @@ static unsigned int lcm_ata_check(unsigned char *buffer)
 
 	read_reg_v2(0x04, read_buf, 3); /* read lcm id */
 
-	LCM_LOGI("ATA read = 0x%x, 0x%x, 0x%x\n",
+	LCM_LOGD("ATA read = 0x%x, 0x%x, 0x%x\n",
 		 read_buf[0], read_buf[1], read_buf[2]);
 
 	if ((read_buf[0] == id[0]) &&
@@ -686,7 +686,7 @@ static unsigned int lcm_ata_check(unsigned char *buffer)
 
 static void lcm_setbacklight_cmdq(void *handle, unsigned int level)
 {
-	LCM_LOGI("%s,otm1911a backlight: level = %d\n", __func__, level);
+	LCM_LOGD("%s,otm1911a backlight: level = %d\n", __func__, level);
 
 	bl_level[0].para_list[0] = level;
 
@@ -748,7 +748,7 @@ static unsigned int lcm_compare_id(void)
 	read_reg_v2(0xDA, buffer, 1);
 	id = buffer[0];
 
-	LCM_LOGI("%s,otm1911a id = 0x%08x\n", __func__, id);
+	LCM_LOGD("%s,otm1911a id = 0x%08x\n", __func__, id);
 
 	if (id == LCM_ID_OTM1911A)
 		return 1;

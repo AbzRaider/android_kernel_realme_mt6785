@@ -25377,8 +25377,8 @@ unsigned int mt6358_upmu_set_bif_logic_0_set(
 	ret = pmic_config_interface(
 		(MT6358_BIF_CON16),
 		(val),
-		(PMIC_BIF_LOGIC_0_SET_MASK),
-		(PMIC_BIF_LOGIC_0_SET_SHIFT)
+		(PMIC_BIF_LOGDC_0_SET_MASK),
+		(PMIC_BIF_LOGDC_0_SET_SHIFT)
 			);
 
 	return ret;
@@ -25392,8 +25392,8 @@ unsigned int mt6358_upmu_set_bif_logic_1_set(
 	ret = pmic_config_interface(
 		(MT6358_BIF_CON16),
 		(val),
-		(PMIC_BIF_LOGIC_1_SET_MASK),
-		(PMIC_BIF_LOGIC_1_SET_SHIFT)
+		(PMIC_BIF_LOGDC_1_SET_MASK),
+		(PMIC_BIF_LOGDC_1_SET_SHIFT)
 			);
 
 	return ret;

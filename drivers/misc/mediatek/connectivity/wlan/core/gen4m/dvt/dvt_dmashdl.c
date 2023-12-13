@@ -49,7 +49,7 @@ void dmashdl_dvt_item_6(
 			return;
 
 		/* reset all setting and count */
-		HIF_RESET_SW_LOGIC(prGlueInfo);
+		HIF_RESET_SW_LOGDC(prGlueInfo);
 
 		/* mapping all queue to Group 0~4 */
 		kalDevRegWrite(prGlueInfo,
@@ -147,7 +147,7 @@ void dmashdl_dvt_item_5(
 		return;
 
 	/* reset all setting and count */
-	HIF_RESET_SW_LOGIC(prGlueInfo);
+	HIF_RESET_SW_LOGDC(prGlueInfo);
 
 	/* mapping all queue to Group 0~4 */
 	kalDevRegWrite(prGlueInfo,
@@ -262,7 +262,7 @@ void dmashdl_dvt_item_4(
 			return;
 
 		/* reset all setting and count */
-		HIF_RESET_SW_LOGIC(prGlueInfo);
+		HIF_RESET_SW_LOGDC(prGlueInfo);
 
 		/* mapping all queue to Group 0~4 */
 		kalDevRegWrite(prGlueInfo,
@@ -380,7 +380,7 @@ void dmashdl_dvt_item_3(
 			return;
 
 		/* reset all setting and count */
-		HIF_RESET_SW_LOGIC(prGlueInfo);
+		HIF_RESET_SW_LOGDC(prGlueInfo);
 
 		/* mapping all queue to Group 0~4 */
 		kalDevRegWrite(prGlueInfo,
@@ -503,7 +503,7 @@ void dmashdl_dvt_item_2(
 		return;
 
 	/* reset all setting and count */
-	HIF_RESET_SW_LOGIC(prGlueInfo);
+	HIF_RESET_SW_LOGDC(prGlueInfo);
 
 	/* mapping all queue to Group 0~4 */
 	kalDevRegWrite(prGlueInfo,
@@ -597,7 +597,7 @@ void dmashdl_dvt_item_1(
 		return;
 
 	/* reset all setting and count */
-	HIF_RESET_SW_LOGIC(prGlueInfo);
+	HIF_RESET_SW_LOGDC(prGlueInfo);
 
 	/* mapping all queue to Group 0~4 */
 	kalDevRegWrite(prGlueInfo,
@@ -692,7 +692,7 @@ void dmashdl_dvt_reset_default(
 	uint32_t value;
 
 	/* reset all setting and count */
-	HIF_RESET_SW_LOGIC(prGlueInfo);
+	HIF_RESET_SW_LOGDC(prGlueInfo);
 
 	/* mapping all queue to Group 0~4 */
 	kalDevRegWrite(prGlueInfo,

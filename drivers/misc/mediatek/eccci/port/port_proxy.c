@@ -1370,7 +1370,7 @@ static inline int proxy_send_msg_to_md(struct port_proxy *proxy_p,
 			return -CCCI_ERR_ALLOCATE_MEMORY_FAIL;
 		}
 	}
-	return -CCCI_ERR_INVALID_LOGIC_CHANNEL_ID;
+	return -CCCI_ERR_INVALID_LOGDC_CHANNEL_ID;
 }
 
 /*

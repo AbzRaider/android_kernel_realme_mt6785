@@ -181,7 +181,7 @@ static int fpsgo_com_refetch_buffer(struct render_info *f_render, int pid,
 	ret = fpsgo_get_BQid_pair(pid, f_render->tgid,
 		identifier, &buffer_id, &queue_SF, enqueue);
 	if (!ret || !buffer_id) {
-		FPSGO_LOGI("refetch %d: %llu, %d, %llu\n",
+		FPSGO_LOGD("refetch %d: %llu, %d, %llu\n",
 			pid, buffer_id, queue_SF, identifier);
 		fpsgo_main_trace("COMP: refetch %d: %llu, %d, %llu\n",
 			pid, buffer_id, queue_SF, identifier);
@@ -566,7 +566,7 @@ void fpsgo_ctrl2comp_connect_api(int pid, int api,
 
 	ret = fpsgo_get_BQid_pair(pid, 0, identifier, &buffer_id, &queue_SF, 0);
 	if (!ret || !buffer_id) {
-		FPSGO_LOGI("connect %d: %llu, %llu\n",
+		FPSGO_LOGD("connect %d: %llu, %llu\n",
 				pid, buffer_id, identifier);
 		fpsgo_main_trace("COMP: connect %d: %llu, %llu\n",
 				pid, buffer_id, identifier);
@@ -601,7 +601,7 @@ void fpsgo_ctrl2comp_bqid(int pid, unsigned long long buffer_id,
 
 	fpsgo_render_tree_lock(__func__);
 
-	FPSGO_LOGI("pid %d: bufid %llu, id %llu, queue_SF %d, create %d\n",
+	FPSGO_LOGD("pid %d: bufid %llu, id %llu, queue_SF %d, create %d\n",
 		pid, buffer_id, identifier, queue_SF, create);
 
 	if (create) {
@@ -616,7 +616,7 @@ void fpsgo_ctrl2comp_bqid(int pid, unsigned long long buffer_id,
 		}
 
 		if (pair->pid != pid)
-			FPSGO_LOGI("%d: diff render same key %d\n",
+			FPSGO_LOGD("%d: diff render same key %d\n",
 				pid, pair->pid);
 
 		pair->buffer_id = buffer_id;
@@ -665,7 +665,7 @@ void fpsgo_ctrl2comp_disconnect_api(
 
 	ret = fpsgo_get_BQid_pair(pid, 0, identifier, &buffer_id, &queue_SF, 0);
 	if (!ret || !buffer_id) {
-		FPSGO_LOGI("disconnect %d: %llu, %llu\n",
+		FPSGO_LOGD("disconnect %d: %llu, %llu\n",
 				pid, buffer_id, identifier);
 		fpsgo_main_trace("COMP: disconnect %d: %llu, %llu\n",
 				pid, buffer_id, identifier);

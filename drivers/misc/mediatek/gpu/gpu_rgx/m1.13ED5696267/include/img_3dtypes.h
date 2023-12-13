@@ -140,25 +140,25 @@ typedef enum _IMG_BLENDOP_
 /**
  * Logical operation to perform when logic ops are enabled
  */
-typedef enum _IMG_LOGICOP_
+typedef enum _IMG_LOGDCOP_
 {
-	IMG_LOGICOP_CLEAR = 0,     /**< Result = 0 */
-	IMG_LOGICOP_SET,           /**< Result = -1 */
-	IMG_LOGICOP_COPY,          /**< Result = Source */
-	IMG_LOGICOP_COPY_INVERTED, /**< Result = ~Source */
-	IMG_LOGICOP_NOOP,          /**< Result = Destination */
-	IMG_LOGICOP_INVERT,        /**< Result = ~Destination */
-	IMG_LOGICOP_AND,           /**< Result = Source & Destination */
-	IMG_LOGICOP_NAND,          /**< Result = ~(Source & Destination) */
-	IMG_LOGICOP_OR,            /**< Result = Source | Destination */
-	IMG_LOGICOP_NOR,           /**< Result = ~(Source | Destination) */
-	IMG_LOGICOP_XOR,           /**< Result = Source ^ Destination */
-	IMG_LOGICOP_EQUIV,         /**< Result = ~(Source ^ Destination) */
-	IMG_LOGICOP_AND_REVERSE,   /**< Result = Source & ~Destination */
-	IMG_LOGICOP_AND_INVERTED,  /**< Result = ~Source & Destination */
-	IMG_LOGICOP_OR_REVERSE,    /**< Result = Source | ~Destination */
-	IMG_LOGICOP_OR_INVERTED    /**< Result = ~Source | Destination */
-} IMG_LOGICOP;
+	IMG_LOGDCOP_CLEAR = 0,     /**< Result = 0 */
+	IMG_LOGDCOP_SET,           /**< Result = -1 */
+	IMG_LOGDCOP_COPY,          /**< Result = Source */
+	IMG_LOGDCOP_COPY_INVERTED, /**< Result = ~Source */
+	IMG_LOGDCOP_NOOP,          /**< Result = Destination */
+	IMG_LOGDCOP_INVERT,        /**< Result = ~Destination */
+	IMG_LOGDCOP_AND,           /**< Result = Source & Destination */
+	IMG_LOGDCOP_NAND,          /**< Result = ~(Source & Destination) */
+	IMG_LOGDCOP_OR,            /**< Result = Source | Destination */
+	IMG_LOGDCOP_NOR,           /**< Result = ~(Source | Destination) */
+	IMG_LOGDCOP_XOR,           /**< Result = Source ^ Destination */
+	IMG_LOGDCOP_EQUIV,         /**< Result = ~(Source ^ Destination) */
+	IMG_LOGDCOP_AND_REVERSE,   /**< Result = Source & ~Destination */
+	IMG_LOGDCOP_AND_INVERTED,  /**< Result = ~Source & Destination */
+	IMG_LOGDCOP_OR_REVERSE,    /**< Result = Source | ~Destination */
+	IMG_LOGDCOP_OR_INVERTED    /**< Result = ~Source | Destination */
+} IMG_LOGDCOP;
 
 /**
  * Type of fog blending supported

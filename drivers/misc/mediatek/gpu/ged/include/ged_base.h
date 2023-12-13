@@ -18,9 +18,9 @@
 #include "ged_type.h"
 
 #ifdef GED_DEBUG
-#define GED_LOGI(...) pr_debug("GED:" __VA_ARGS__)
+#define GED_LOGD(...) pr_debug("GED:" __VA_ARGS__)
 #else
-#define GED_LOGI(...)
+#define GED_LOGD(...)
 #endif
 #define GED_LOGE(...) pr_debug("GED:" __VA_ARGS__)
 #define GED_CONTAINER_OF(ptr, type, member) \

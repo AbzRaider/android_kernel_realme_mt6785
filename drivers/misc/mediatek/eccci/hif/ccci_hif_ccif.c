@@ -1185,7 +1185,7 @@ static int md_ccif_op_send_skb(unsigned char hif_id, int qno,
 				&& ccci_to_c2k_ch < C2K_OVER_MAX_CH)
 				ccci_h->channel = (u16) ccci_to_c2k_ch;
 			else {
-				ret = -CCCI_ERR_INVALID_LOGIC_CHANNEL_ID;
+				ret = -CCCI_ERR_INVALID_LOGDC_CHANNEL_ID;
 				CCCI_ERROR_LOG(md_ctrl->md_id, TAG,
 					"channel num error (%d)\n",
 					ccci_to_c2k_ch);

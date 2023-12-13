@@ -3258,13 +3258,13 @@ static void mdp_readback_aal_virtual(struct cmdqRecStruct *handle,
 	lop.idx = idx_addr;
 	rop.reg = false;
 	rop.value = 4;
-	cmdq_pkt_logic_command(pkt, CMDQ_LOGIC_ADD, idx_addr, &lop, &rop);
+	cmdq_pkt_logic_command(pkt, CMDQ_LOGDC_ADD, idx_addr, &lop, &rop);
 	/* inc outut pa */
 	lop.reg = true;
 	lop.idx = idx_out_low;
 	rop.reg = false;
 	rop.value = 4;
-	cmdq_pkt_logic_command(pkt, CMDQ_LOGIC_ADD, idx_out_low, &lop, &rop);
+	cmdq_pkt_logic_command(pkt, CMDQ_LOGDC_ADD, idx_out_low, &lop, &rop);
 
 	cmdq_pkt_jump_addr(pkt, begin_pa);
 
@@ -3373,13 +3373,13 @@ static void mdp_readback_hdr_virtual(struct cmdqRecStruct *handle,
 	lop.idx = idx_counter;
 	rop.reg = false;
 	rop.value = 1;
-	cmdq_pkt_logic_command(pkt, CMDQ_LOGIC_ADD, idx_counter, &lop, &rop);
+	cmdq_pkt_logic_command(pkt, CMDQ_LOGDC_ADD, idx_counter, &lop, &rop);
 	/* inc outut pa */
 	lop.reg = true;
 	lop.idx = idx_out_low;
 	rop.reg = false;
 	rop.value = 4;
-	cmdq_pkt_logic_command(pkt, CMDQ_LOGIC_ADD, idx_out_low, &lop, &rop);
+	cmdq_pkt_logic_command(pkt, CMDQ_LOGDC_ADD, idx_out_low, &lop, &rop);
 
 	cmdq_pkt_jump_addr(pkt, begin_pa);
 	condi_inst = (u32 *)cmdq_pkt_get_va_by_offset(pkt, condi_offset);

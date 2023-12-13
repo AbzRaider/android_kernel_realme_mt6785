@@ -72,7 +72,7 @@ int gps_dl_dma_buf_alloc(struct gps_dl_dma_buf *p_dma_buf, enum gps_dl_link_id_e
 	p_dma_buf->dir = dir;
 	p_dma_buf->len = len;
 
-	GDL_LOGI_INI("p_linux_plat_dev = 0x%p", p_linux_plat_dev);
+	GDL_LOGD_INI("p_linux_plat_dev = 0x%p", p_linux_plat_dev);
 	if (p_linux_plat_dev == NULL) {
 		p_dma_buf->vir_addr = dma_zalloc_coherent(
 			p_dev->dev, len, &p_dma_buf->phy_addr, GFP_DMA | GFP_DMA32);
@@ -81,7 +81,7 @@ int gps_dl_dma_buf_alloc(struct gps_dl_dma_buf *p_dma_buf, enum gps_dl_link_id_e
 			p_linux_plat_dev, len, &p_dma_buf->phy_addr, GFP_DMA);/* | GFP_DMA32); */
 	}
 
-	GDL_LOGI_INI(
+	GDL_LOGD_INI(
 #if GPS_DL_ON_LINUX
 		"alloc gps dl dma buf(%d,%d), addr: vir=0x%p, phy=0x%pad, len=%u",
 #else
@@ -329,13 +329,13 @@ void gps_dl_device_context_init(void)
 
 void mtk_gps_data_link_devices_exit(void)
 {
-	GDL_LOGI_INI("mtk_gps_data_link_devices_exit");
+	GDL_LOGD_INI("mtk_gps_data_link_devices_exit");
 	gps_dl_devices_exit();
 }
 
 int mtk_gps_data_link_devices_init(void)
 {
-	GDL_LOGI_INI("mtk_gps_data_link_devices_init");
+	GDL_LOGD_INI("mtk_gps_data_link_devices_init");
 	gps_dl_devices_init();
 	/* GDL_ASSERT(false, 0, "test assert"); */
 	return 0;

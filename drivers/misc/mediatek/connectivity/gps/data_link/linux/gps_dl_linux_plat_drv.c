@@ -87,7 +87,7 @@ void gps_dl_update_status_for_md_blanking(bool gps_is_on)
 		val_old = __raw_readl(p);
 		gps_dl_linux_sync_writel(val, p);
 		val_new = __raw_readl(p);
-		GDL_LOGI_INI("dummy cr updated: %d -> %d, due to on = %d",
+		GDL_LOGD_INI("dummy cr updated: %d -> %d, due to on = %d",
 			val_old, val_new, gps_is_on);
 	} else
 		GDL_LOGW_INI("dummy cr addr is invalid, can not update (on = %d)", gps_is_on);
@@ -127,7 +127,7 @@ void gps_dl_tia1_gps_ctrl(bool gps_is_on)
 	tia_gps_ctrl1 = __raw_readl(p + 4);
 	tia_temp1 = __raw_readl(p + 8);
 
-	GDL_LOGI_INI(
+	GDL_LOGD_INI(
 		"on = %d, tia_gps_on = 0x%08x/0x%08x, ctrl = 0x%08x/0x%08x, temp = 0x%08x/0x%08x",
 		gps_is_on, tia_gps_on, tia_gps_on1,
 		tia_gps_ctrl, tia_gps_ctrl1,
@@ -171,7 +171,7 @@ void gps_dl_tia2_gps_ctrl(bool gps_is_on)
 		gps_dl_linux_sync_writel(tia2_gps_on_old & ~(1UL << 5), p_gps_on);
 	}
 	tia2_gps_on_new = __raw_readl(p_gps_on);
-	GDL_LOGI_INI(
+	GDL_LOGD_INI(
 		"on = %d, tia2_gps_on = 0x%08x/0x%08x, rc_sel = 0x%08x/0x%08x",
 		gps_is_on,
 		tia2_gps_on_old, tia2_gps_on_new,

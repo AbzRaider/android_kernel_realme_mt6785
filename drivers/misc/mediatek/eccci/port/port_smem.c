@@ -772,7 +772,7 @@ int port_smem_init(struct port_t *port)
 	if (!smem_region) {
 		CCCI_ERROR_LOG(md_id, CHAR,
 			"smem port %d not available\n", port->minor);
-		return -CCCI_ERR_INVALID_LOGIC_CHANNEL_ID;
+		return -CCCI_ERR_INVALID_LOGDC_CHANNEL_ID;
 	}
 #endif
 	/*Set SMEM MINOR base*/

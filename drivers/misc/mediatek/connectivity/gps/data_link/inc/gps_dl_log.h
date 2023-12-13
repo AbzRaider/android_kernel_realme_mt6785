@@ -84,7 +84,7 @@ void gps_dl_log_info_show(void);
 	mod, __func__, __LINE__, ##__VA_ARGS__)
 #define __GDL_LOGW(mod, fmt, ...) pr_notice("GDL[W:%d] [%s:%d]: "fmt, \
 	mod, __func__, __LINE__, ##__VA_ARGS__)
-#define __GDL_LOGI(mod, fmt, ...) pr_debug("GDL[I:%d] [%s:%d]: "fmt, \
+#define __GDL_LOGD(mod, fmt, ...) pr_debug("GDL[I:%d] [%s:%d]: "fmt, \
 	mod, __func__, __LINE__, ##__VA_ARGS__)
 #define __GDL_LOGD(mod, fmt, ...) pr_debug("GDL[D:%d] [%s:%d]: "fmt, \
 	mod, __func__, __LINE__, ##__VA_ARGS__)
@@ -107,8 +107,8 @@ void gps_dl_log_info_show(void);
 	do { if (gps_dl_log_level_get() <= GPS_DL_LOG_LEVEL_ERR) __GDL_LOGE(__VA_ARGS__); } while (0)
 #define _GDL_LOGW(...) \
 	do { if (gps_dl_log_level_get() <= GPS_DL_LOG_LEVEL_WARN) __GDL_LOGW(__VA_ARGS__); } while (0)
-#define _GDL_LOGI(...) \
-	do { if (gps_dl_log_level_get() <= GPS_DL_LOG_LEVEL_INFO) __GDL_LOGI(__VA_ARGS__); } while (0)
+#define _GDL_LOGD(...) \
+	do { if (gps_dl_log_level_get() <= GPS_DL_LOG_LEVEL_INFO) __GDL_LOGD(__VA_ARGS__); } while (0)
 #define _GDL_LOGD(...) \
 	do { if (gps_dl_log_level_get() <= GPS_DL_LOG_LEVEL_DBG) __GDL_LOGD(__VA_ARGS__); } while (0)
 #define _GDL_LOGXE(...) \
@@ -127,9 +127,9 @@ void gps_dl_log_info_show(void);
 #define GDL_LOGW2(mod, ...) \
 	do { if (1) \
 		_GDL_LOGW(mod, __VA_ARGS__); } while (0)
-#define GDL_LOGI2(mod, ...) \
+#define GDL_LOGD2(mod, ...) \
 	do { if (gps_dl_log_mod_is_on(mod)) \
-		_GDL_LOGI(mod, __VA_ARGS__); } while (0)
+		_GDL_LOGD(mod, __VA_ARGS__); } while (0)
 #define GDL_LOGD2(mod, ...) \
 	do { if (gps_dl_log_mod_is_on(mod)) \
 		_GDL_LOGD(mod, __VA_ARGS__); } while (0)
@@ -138,7 +138,7 @@ void gps_dl_log_info_show(void);
  * 1. Bellow macro can be used to output log:
  *       err  level: GDL_LOGE, GDL_LOGE_YYY, GDL_LOGXE, GDL_LOGXE_YYY
  *       warn level: GDL_LOGW, GDL_LOGW_YYY, GDL_LOGXW, GDL_LOGXW_YYY
- *       info level: GDL_LOGI, GDL_LOGI_YYY, GDL_LOGXI, GDL_LOGXI_YYY
+ *       info level: GDL_LOGD, GDL_LOGD_YYY, GDL_LOGXI, GDL_LOGXI_YYY
  *       dbg  level: GDL_LOGD, GDL_LOGE_YYY, GDL_LOGXD, GDL_LOGXD_YYY
  *
  * 2. _YYY stands for log module(group), the list are:
@@ -164,15 +164,15 @@ void gps_dl_log_info_show(void);
  */
 #define GDL_LOGE(...) GDL_LOGE2(GPS_DL_LOG_MOD_DEFAULT, __VA_ARGS__)
 #define GDL_LOGW(...) GDL_LOGW2(GPS_DL_LOG_MOD_DEFAULT, __VA_ARGS__)
-#define GDL_LOGI(...) GDL_LOGI2(GPS_DL_LOG_MOD_DEFAULT, __VA_ARGS__)
+#define GDL_LOGD(...) GDL_LOGD2(GPS_DL_LOG_MOD_DEFAULT, __VA_ARGS__)
 #define GDL_LOGD(...) GDL_LOGD2(GPS_DL_LOG_MOD_DEFAULT, __VA_ARGS__)
 
 #define GDL_LOGD_ONF(...) GDL_LOGD2(GPS_DL_LOG_MOD_OPEN_CLOSE, __VA_ARGS__)
 
-#define GDL_LOGI_DRW(...) GDL_LOGI2(GPS_DL_LOG_MOD_READ_WRITE, __VA_ARGS__)
+#define GDL_LOGD_DRW(...) GDL_LOGD2(GPS_DL_LOG_MOD_READ_WRITE, __VA_ARGS__)
 
-#define GDL_LOGW_RRW(...) GDL_LOGI2(GPS_DL_LOG_MOD_REG_RW, __VA_ARGS__)
-#define GDL_LOGI_RRW(...) GDL_LOGI2(GPS_DL_LOG_MOD_REG_RW, __VA_ARGS__)
+#define GDL_LOGW_RRW(...) GDL_LOGD2(GPS_DL_LOG_MOD_REG_RW, __VA_ARGS__)
+#define GDL_LOGD_RRW(...) GDL_LOGD2(GPS_DL_LOG_MOD_REG_RW, __VA_ARGS__)
 
 #define GDL_LOGE_EVT(...) GDL_LOGE2(GPS_DL_LOG_MOD_EVENT, __VA_ARGS__)
 #define GDL_LOGW_EVT(...) GDL_LOGW2(GPS_DL_LOG_MOD_EVENT, __VA_ARGS__)
@@ -180,7 +180,7 @@ void gps_dl_log_info_show(void);
 
 #define GDL_LOGE_INI(...) GDL_LOGE2(GPS_DL_LOG_MOD_INIT, __VA_ARGS__)
 #define GDL_LOGW_INI(...) GDL_LOGW2(GPS_DL_LOG_MOD_INIT, __VA_ARGS__)
-#define GDL_LOGI_INI(...) GDL_LOGI2(GPS_DL_LOG_MOD_INIT, __VA_ARGS__)
+#define GDL_LOGD_INI(...) GDL_LOGD2(GPS_DL_LOG_MOD_INIT, __VA_ARGS__)
 #define GDL_LOGD_INI(...) GDL_LOGD2(GPS_DL_LOG_MOD_INIT, __VA_ARGS__)
 
 #define GDL_LOGXE2(mod, ...) \

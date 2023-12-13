@@ -37,10 +37,10 @@
 #endif
 
 #ifdef BUILD_LK
-#define LCM_LOGI(string, args...)  dprintf(0, "[LK/"LOG_TAG"]"string, ##args)
+#define LCM_LOGD(string, args...)  dprintf(0, "[LK/"LOG_TAG"]"string, ##args)
 #define LCM_LOGD(string, args...)  dprintf(1, "[LK/"LOG_TAG"]"string, ##args)
 #else
-#define LCM_LOGI(fmt, args...)  pr_debug("[KERNEL/"LOG_TAG"]"fmt, ##args)
+#define LCM_LOGD(fmt, args...)  pr_debug("[KERNEL/"LOG_TAG"]"fmt, ##args)
 #define LCM_LOGD(fmt, args...)  pr_debug("[KERNEL/"LOG_TAG"]"fmt, ##args)
 #endif
 
@@ -342,7 +342,7 @@ static void lcm_get_params(struct LCM_PARAMS *params)
 	/* params->dsi.switch_mode = CMD_MODE; */
 	/* lcm_dsi_mode = SYNC_PULSE_VDO_MODE; */
 #endif
-	/* LCM_LOGI("lcm_get_params lcm_dsi_mode %d\n", lcm_dsi_mode); */
+	/* LCM_LOGD("lcm_get_params lcm_dsi_mode %d\n", lcm_dsi_mode); */
 	params->dsi.switch_mode_enable = 0;
 
 	/* DSI */
@@ -457,7 +457,7 @@ static void lcm_init(void)
 		init_setting_vdo,
 		sizeof(init_setting_vdo) / sizeof(struct LCM_setting_table),
 		1);
-	LCM_LOGI("nt51021h---lcm mode = vdo mode ----\n");
+	LCM_LOGD("nt51021h---lcm mode = vdo mode ----\n");
 }
 
 static void lcm_suspend(void)
@@ -513,7 +513,7 @@ static unsigned int lcm_ata_check(unsigned char *buffer)
 	unsigned int data_array[3];
 	unsigned char read_buf[4];
 
-	LCM_LOGI("ATA check size = 0x%x,0x%x,0x%x,0x%x\n",
+	LCM_LOGD("ATA check size = 0x%x,0x%x,0x%x,0x%x\n",
 		x0_MSB, x0_LSB, x1_MSB, x1_LSB);
 	data_array[0] = 0x0005390A;	/* HS packet */
 	data_array[1] = (x1_MSB << 24) | (x0_LSB << 16) | (x0_MSB << 8) | 0x2a;

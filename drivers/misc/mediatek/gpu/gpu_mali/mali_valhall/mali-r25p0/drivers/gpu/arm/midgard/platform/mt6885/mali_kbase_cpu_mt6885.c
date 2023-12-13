@@ -48,7 +48,7 @@
  */
 #define VE_MOTHERBOARD_PERIPHERALS_SMB_CS7 (0x10000000)
 #define VE_SYS_PROC_ID1_OFFSET (0x00000088)
-#define VE_LOGIC_TILE_HBI_MASK (0x00000FFF)
+#define VE_LOGDC_TILE_HBI_MASK (0x00000FFF)
 
 #define IS_SINGLE_BIT_SET(val, pos) (val&(1<<pos))
 
@@ -238,7 +238,7 @@ static u32 kbase_get_platform_logic_tile_type(void)
 		iounmap(syscfg_reg);
 	}
 
-	return sys_procid1 & VE_LOGIC_TILE_HBI_MASK;
+	return sys_procid1 & VE_LOGDC_TILE_HBI_MASK;
 }
 
 u32 kbase_get_platform_min_freq(void)

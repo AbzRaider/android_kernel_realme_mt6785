@@ -58,7 +58,7 @@ void gps_dl_reserved_mem_init(void)
 
 	/* Set EMI MPU permission */
 #if (GPS_DL_SET_EMI_MPU_CFG)
-	GDL_LOGI_INI("emi mpu cfg: region = %d, no protection domain = %d, %d",
+	GDL_LOGD_INI("emi mpu cfg: region = %d, no protection domain = %d, %d",
 		GPS_DL_EMI_MPU_REGION_NUM, GPS_DL_EMI_MPU_DOMAIN_AP, GPS_DL_EMI_MPU_DOMAIN_CONN);
 	emimpu_ret1 = mtk_emimpu_init_region(&region, GPS_DL_EMI_MPU_REGION_NUM);
 	emimpu_ret2 = mtk_emimpu_set_addr(&region, gGpsRsvMemPhyBase, gGpsRsvMemPhyBase + gGpsRsvMemSize - 1);
@@ -66,7 +66,7 @@ void gps_dl_reserved_mem_init(void)
 	emimpu_ret4 = mtk_emimpu_set_apc(&region, GPS_DL_EMI_MPU_DOMAIN_CONN, MTK_EMIMPU_NO_PROTECTION);
 	emimpu_ret5 = mtk_emimpu_set_protection(&region);
 	emimpu_ret6 = mtk_emimpu_free_region(&region);
-	GDL_LOGI_INI("emi mpu cfg: ret = %d, %d, %d, %d, %d, %d",
+	GDL_LOGD_INI("emi mpu cfg: ret = %d, %d, %d, %d, %d, %d",
 		emimpu_ret1, emimpu_ret2, emimpu_ret3, emimpu_ret4, emimpu_ret5, emimpu_ret6);
 #endif
 
@@ -74,7 +74,7 @@ void gps_dl_reserved_mem_init(void)
 	g_gps_dl_res_emi.host_virt_addr = host_virt_addr;
 	g_gps_dl_res_emi.length = gGpsRsvMemSize;
 
-	GDL_LOGI_INI("phy_addr = 0x%08x, vir_addr = 0x%p, size = 0x%x, min_size = 0x%x",
+	GDL_LOGD_INI("phy_addr = 0x%08x, vir_addr = 0x%p, size = 0x%x, min_size = 0x%x",
 		g_gps_dl_res_emi.host_phys_addr,
 		g_gps_dl_res_emi.host_virt_addr,
 		g_gps_dl_res_emi.length, min_size);
@@ -84,7 +84,7 @@ void gps_dl_reserved_mem_init(void)
 
 void gps_dl_reserved_mem_deinit(void)
 {
-	GDL_LOGI_INI("phy_addr = 0x%08x, vir_addr = 0x%p, size = 0x%x",
+	GDL_LOGD_INI("phy_addr = 0x%08x, vir_addr = 0x%p, size = 0x%x",
 		g_gps_dl_res_emi.host_phys_addr,
 		g_gps_dl_res_emi.host_virt_addr,
 		g_gps_dl_res_emi.length);
@@ -121,7 +121,7 @@ void gps_dl_reserved_mem_show_info(void)
 	p_mem_phy = g_gps_dl_res_emi.host_phys_addr;
 	p_mem_vir = (struct gps_dl_reserved_mem_layout *)g_gps_dl_res_emi.host_virt_addr;
 
-	GDL_LOGI_INI("phy_addr = 0x%08x, vir_addr = 0x%p, size = 0x%x, min_size = 0x%x",
+	GDL_LOGD_INI("phy_addr = 0x%08x, vir_addr = 0x%p, size = 0x%x, min_size = 0x%x",
 		g_gps_dl_res_emi.host_phys_addr,
 		g_gps_dl_res_emi.host_virt_addr,
 		g_gps_dl_res_emi.length, min_size);
@@ -169,7 +169,7 @@ void gps_dl_reserved_mem_dma_buf_init(struct gps_dl_dma_buf *p_dma_buf,
 	offset = (unsigned int)((void *)p_dma_buf->vir_addr - (void *)p_mem_vir);
 	p_dma_buf->phy_addr = p_mem_phy + offset;
 
-	GDL_LOGI_INI("init gps dl dma buf(%d,%d) in arch64, addr: vir=0x%p, phy=0x%llx, len=%u\n",
+	GDL_LOGD_INI("init gps dl dma buf(%d,%d) in arch64, addr: vir=0x%p, phy=0x%llx, len=%u\n",
 		p_dma_buf->dev_index, p_dma_buf->dir,
 		p_dma_buf->vir_addr,
 		p_dma_buf->phy_addr, p_dma_buf->len);
@@ -194,7 +194,7 @@ void *gps_dl_reserved_mem_icap_buf_get_vir_addr(void)
 	}
 
 	offset = (unsigned int)((void *)&p_mem_vir->icap_buf[0] - (void *)p_mem_vir);
-	GDL_LOGI("gps_icap_buf: phy_addr = 0x%08x, vir_addr = 0x%p, size = 0x%x",
+	GDL_LOGD("gps_icap_buf: phy_addr = 0x%08x, vir_addr = 0x%p, size = 0x%x",
 		p_mem_phy + offset, &p_mem_vir->icap_buf[0], GPS_ICAP_MEM_SIZE);
 
 	return (void *)&p_mem_vir->icap_buf[0];

@@ -54,7 +54,7 @@ int ut_pf_gp_transfer_data(struct TEEC_Context *context, struct TEEC_UUID *uuid,
 		return -1;
 
 	memset(&session, 0, sizeof(session));
-	result = TEEC_OpenSession(context, &session, uuid, TEEC_LOGIN_PUBLIC,
+	result = TEEC_OpenSession(context, &session, uuid, TEEC_LOGDN_PUBLIC,
 			NULL, NULL, &returnOrigin);
 	if (result != TEEC_SUCCESS) {
 		IMSG_ERROR("Failed to open session:%x size = %lu\n",
@@ -107,7 +107,7 @@ int ut_pf_gp_transfer_user_data(struct TEEC_Context *context,
 		return -1;
 
 	memset(&session, 0, sizeof(session));
-	result = TEEC_OpenSession(context, &session, uuid, TEEC_LOGIN_PUBLIC,
+	result = TEEC_OpenSession(context, &session, uuid, TEEC_LOGDN_PUBLIC,
 			NULL, NULL, &returnOrigin);
 	if (result != TEEC_SUCCESS) {
 		IMSG_ERROR("Failed to open session,err: %x", result);

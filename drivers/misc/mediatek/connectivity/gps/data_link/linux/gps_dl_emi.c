@@ -62,7 +62,7 @@ long gps_icap_unlocked_ioctl(struct file *file, unsigned int cmd, unsigned long 
 	unsigned int *tmp;
 #endif
 
-	GDL_LOGI("cmd (%d),arg(%ld)\n", cmd, arg);
+	GDL_LOGD("cmd (%d),arg(%ld)\n", cmd, arg);
 
 	switch (cmd) {
 	case IOCTL_EMI_MEMORY_INIT:
@@ -123,7 +123,7 @@ static ssize_t gps_icap_read(struct file *file, char __user *buf, size_t count, 
 {
 	void *p_src;
 
-	GDL_LOGI("begin");
+	GDL_LOGD("begin");
 
 	if (count > GPS_ICAP_BUF_SIZE)
 		count = GPS_ICAP_BUF_SIZE;
@@ -142,7 +142,7 @@ static ssize_t gps_icap_read(struct file *file, char __user *buf, size_t count, 
 		return 0;
 	}
 
-	GDL_LOGI("finish, count = %ld", count);
+	GDL_LOGD("finish, count = %ld", count);
 	return count;
 }
 
@@ -174,7 +174,7 @@ void gps_icap_probe(void)
 {
 	int ret = 0, err = 0;
 
-	GDL_LOGI("start");
+	GDL_LOGD("start");
 
 	gps_icap_dev_ptr = kzalloc(sizeof(*gps_icap_dev_ptr), GFP_KERNEL);
 	if (gps_icap_dev_ptr == NULL) {
@@ -190,7 +190,7 @@ void gps_icap_probe(void)
 		err = -ENOMEM;
 		goto err_out;
 	} else
-		GDL_LOGI("major: %d, minor: %d",
+		GDL_LOGD("major: %d, minor: %d",
 			MAJOR(gps_icap_dev_ptr->devno), MINOR(gps_icap_dev_ptr->devno));
 
 	cdev_init(&gps_icap_dev_ptr->chdev, &gps_icap_fops);
@@ -209,7 +209,7 @@ void gps_icap_probe(void)
 	gps_icap_dev_ptr->dev = device_create(gps_icap_dev_ptr->cls,
 		NULL, gps_icap_dev_ptr->devno, gps_icap_dev_ptr, "gps_emi");
 
-	GDL_LOGI("done");
+	GDL_LOGD("done");
 	return;
 
 err_out:

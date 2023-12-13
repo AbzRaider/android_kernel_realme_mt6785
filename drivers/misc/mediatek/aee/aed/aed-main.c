@@ -648,7 +648,7 @@ static int ke_log_avail(void)
 		 * process debuggerd work flow, meanwhile aed keep calling poll
 		 * which produce more log into buffer and cpux stucked whith
 		 * these log.
-		 * LOGI("AEE api log available\n");
+		 * LOGD("AEE api log available\n");
 		 */
 		return 1;
 	}

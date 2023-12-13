@@ -1428,9 +1428,9 @@ void asicPdmaHifReset(IN struct ADAPTER *prAdapter,
 
 	HAL_MCR_RD(prAdapter, PDMA_HIF_RESET, &u4Value);
 	if (bRelease)
-		u4Value |= DPMA_HIF_LOGIC_RESET_MASK;
+		u4Value |= DPMA_HIF_LOGDC_RESET_MASK;
 	else
-		u4Value &= ~DPMA_HIF_LOGIC_RESET_MASK;
+		u4Value &= ~DPMA_HIF_LOGDC_RESET_MASK;
 	HAL_MCR_WR(prAdapter, PDMA_HIF_RESET, u4Value);
 }
 

@@ -54,7 +54,7 @@ int tee_spi_cfg_padsel(uint32_t padsel)
 
 	r = TEEC_OpenSession(
 		&context, &session, &SENSOR_DETECTOR_TA_UUID,
-		TEEC_LOGIN_PUBLIC,
+		TEEC_LOGDN_PUBLIC,
 		NULL, NULL, &returnOrigin);
 
 	if (r != TEEC_SUCCESS) {
@@ -127,7 +127,7 @@ int tee_spi_transfer(void *conf, uint32_t conf_size,
 
 	r = TEEC_OpenSession(
 		&context, &session, &SENSOR_DETECTOR_TA_UUID,
-		TEEC_LOGIN_PUBLIC,
+		TEEC_LOGDN_PUBLIC,
 		NULL, NULL, &returnOrigin);
 	if (r != TEEC_SUCCESS) {
 		pr_err(
@@ -188,7 +188,7 @@ int tee_spi_transfer_disable(void)
 
 	r = TEEC_OpenSession(
 		&context, &session, &SENSOR_DETECTOR_TA_UUID,
-		TEEC_LOGIN_PUBLIC,
+		TEEC_LOGDN_PUBLIC,
 		NULL, NULL, &returnOrigin);
 	if (r != TEEC_SUCCESS) {
 		pr_err(

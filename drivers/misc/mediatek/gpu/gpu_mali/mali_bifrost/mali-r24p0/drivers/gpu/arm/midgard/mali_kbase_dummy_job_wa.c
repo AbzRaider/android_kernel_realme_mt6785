@@ -214,7 +214,7 @@ int kbase_dummy_job_wa_execute(struct kbase_device *kbdev, u64 cores)
 	}
 
 	if (kbdev->dummy_job_wa.flags &
-			KBASE_DUMMY_JOB_WA_FLAG_LOGICAL_SHADER_POWER) {
+			KBASE_DUMMY_JOB_WA_FLAG_LOGDCAL_SHADER_POWER) {
 		/* power off shader cores (to reduce any dynamic leakage) */
 		kbase_reg_write(kbdev, SHADER_PWROFF_LO, (cores & U32_MAX));
 		kbase_reg_write(kbdev, SHADER_PWROFF_HI, (cores >> 32));

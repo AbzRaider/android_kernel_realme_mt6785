@@ -204,7 +204,7 @@ static int open_driver_session(struct ut_drv_entry *ut_drv)
 	unsigned int res;
 
 	res = TEEC_OpenSession(&ut_drv_context, session,
-				driver_uuid, TEEC_LOGIN_PUBLIC,
+				driver_uuid, TEEC_LOGDN_PUBLIC,
 				NULL, NULL, NULL);
 
 	if (res != TEEC_SUCCESS) {

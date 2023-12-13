@@ -122,7 +122,7 @@ void gps_each_device_data_submit(unsigned char *buf, unsigned int len, int index
 
 	dev = gps_dl_device_get(index);
 
-	GDL_LOGI("gps_each_device_data_submit len = %d, index = %d, dev = %p",
+	GDL_LOGD("gps_each_device_data_submit len = %d, index = %d, dev = %p",
 		len, index, dev);
 
 	if (!dev)
@@ -141,7 +141,7 @@ void gps_each_device_data_submit(unsigned char *buf, unsigned int len, int index
 	/* wake_up(&dev->r_wq); */
 #endif
 
-	GDL_LOGI("gps_each_device_data_submit copy and wakeup done");
+	GDL_LOGD("gps_each_device_data_submit copy and wakeup done");
 }
 #endif
 

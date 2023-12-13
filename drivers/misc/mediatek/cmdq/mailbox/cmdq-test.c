@@ -198,7 +198,7 @@ static void cmdq_test_mbox_gpr_sleep(struct cmdq_test *test, const bool sleep)
 
 	if (!sleep) {
 		cmdq_pkt_write_indriect(pkt, NULL, out_pa, CMDQ_TPR_ID, ~0);
-		cmdq_pkt_logic_command(pkt, CMDQ_LOGIC_ADD,
+		cmdq_pkt_logic_command(pkt, CMDQ_LOGDC_ADD,
 			CMDQ_GPR_CNT_ID + CMDQ_GPR_DEBUG_TIMER, &l_op, &r_op);
 		cmdq_pkt_wfe(pkt, event);
 		cmdq_pkt_write_indriect(pkt, NULL, out_pa + 4, CMDQ_TPR_ID, ~0);

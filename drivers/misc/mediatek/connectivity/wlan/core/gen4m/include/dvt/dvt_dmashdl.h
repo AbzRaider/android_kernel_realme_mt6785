@@ -121,8 +121,8 @@
  *			M A C R O S
  *******************************************************************************
  */
-/* HIF_RESET_SW_LOGIC */
-#define HIF_RESET_SW_LOGIC(prGlueInfo)                             \
+/* HIF_RESET_SW_LOGDC */
+#define HIF_RESET_SW_LOGDC(prGlueInfo)                             \
 	{                                                              \
 		kalDevRegWrite(prGlueInfo,                                 \
 			WF_HIF_DMASHDL_TOP_SW_CONTROL_ADDR, 1);                \

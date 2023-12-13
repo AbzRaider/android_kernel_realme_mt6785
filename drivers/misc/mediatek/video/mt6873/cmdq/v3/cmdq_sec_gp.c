@@ -118,7 +118,7 @@ s32 cmdq_sec_open_session(struct cmdq_sec_tee_context *tee,
 
 	status = TEEC_OpenSession(&tee->gp_context,
 		&tee->session, &tee->uuid,
-		TEEC_LOGIN_PUBLIC, NULL, NULL, &ret_origin);
+		TEEC_LOGDN_PUBLIC, NULL, NULL, &ret_origin);
 
 	if (status != TEEC_SUCCESS) {
 		/* print error message */

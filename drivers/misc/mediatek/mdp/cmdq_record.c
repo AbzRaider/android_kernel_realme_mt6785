@@ -870,8 +870,8 @@ static s32 cmdq_append_rw_s_command(struct cmdqRecStruct *handle,
 			"REC: Special handle memory base address 0x%08x\n",
 			arg_a);
 		/* Assign extra handle APB address to SPR */
-		cmdq_append_command_pkt(handle->pkt, CMDQ_CODE_LOGIC,
-			(4 << 21) | (CMDQ_LOGIC_ASSIGN << 16) |
+		cmdq_append_command_pkt(handle->pkt, CMDQ_CODE_LOGDC,
+			(4 << 21) | (CMDQ_LOGDC_ASSIGN << 16) |
 			CMDQ_SPR_FOR_TEMP, arg_addr);
 		/* change final arg_addr to GPR */
 		subsys = 0;
@@ -1684,9 +1684,9 @@ s32 cmdq_op_read_reg_to_mem_ex(struct cmdqRecStruct *handle,
 
 		err = cmdq_instr_encoder(handle, cmd_buf,
 			CMDQ_GET_ARG_C(value), CMDQ_GET_ARG_B(value),
-			CMDQ_SPR_FOR_TEMP, CMDQ_LOGIC_ASSIGN,
+			CMDQ_SPR_FOR_TEMP, CMDQ_LOGDC_ASSIGN,
 			CMDQ_IMMEDIATE_VALUE, CMDQ_IMMEDIATE_VALUE,
-			CMDQ_REG_TYPE, CMDQ_CODE_LOGIC);
+			CMDQ_REG_TYPE, CMDQ_CODE_LOGDC);
 		CMDQ_CHECK_ERR(err);
 		arg_b = CMDQ_GET_ADDR_LOW(addr);
 		s_op = CMDQ_SPR_FOR_TEMP;
@@ -1702,9 +1702,9 @@ s32 cmdq_op_read_reg_to_mem_ex(struct cmdqRecStruct *handle,
 	value = CMDQ_GET_ADDR_HIGH(dram_addr);
 	err = cmdq_instr_encoder(handle, cmd_buf,
 		CMDQ_GET_ARG_C(value), CMDQ_GET_ARG_B(value),
-		CMDQ_SPR_FOR_TEMP, CMDQ_LOGIC_ASSIGN,
+		CMDQ_SPR_FOR_TEMP, CMDQ_LOGDC_ASSIGN,
 		CMDQ_IMMEDIATE_VALUE, CMDQ_IMMEDIATE_VALUE, CMDQ_REG_TYPE,
-		CMDQ_CODE_LOGIC);
+		CMDQ_CODE_LOGDC);
 	CMDQ_CHECK_ERR(err);
 
 	err = cmdq_instr_encoder(handle, cmd_buf, 0, CMDQ_THR_SPR_IDX1,
@@ -1732,9 +1732,9 @@ s32 cmdq_op_write_reg_ex(struct cmdqRecStruct *handle,
 		/* assign bit 47:16 to spr temp */
 		err = cmdq_instr_encoder(handle, cmd_buf,
 			CMDQ_GET_ARG_C(high_addr), CMDQ_GET_ARG_B(high_addr),
-			CMDQ_SPR_FOR_TEMP, CMDQ_LOGIC_ASSIGN,
+			CMDQ_SPR_FOR_TEMP, CMDQ_LOGDC_ASSIGN,
 			CMDQ_IMMEDIATE_VALUE, CMDQ_IMMEDIATE_VALUE,
-			CMDQ_REG_TYPE, CMDQ_CODE_LOGIC);
+			CMDQ_REG_TYPE, CMDQ_CODE_LOGDC);
 		CMDQ_CHECK_ERR(err);
 		arg_a = CMDQ_GET_ADDR_LOW(addr);
 		s_op = CMDQ_SPR_FOR_TEMP;
@@ -2692,7 +2692,7 @@ s32 cmdq_resource_release_and_write(struct cmdqRecStruct *handle,
 }
 
 static s32 cmdq_append_logic_command(struct cmdqRecStruct *handle,
-	CMDQ_VARIABLE *arg_a, CMDQ_VARIABLE arg_b, enum CMDQ_LOGIC_ENUM s_op,
+	CMDQ_VARIABLE *arg_a, CMDQ_VARIABLE arg_b, enum CMDQ_LOGDC_ENUM s_op,
 	CMDQ_VARIABLE arg_c)
 {
 	s32 status = 0;
@@ -2737,7 +2737,7 @@ static s32 cmdq_append_logic_command(struct cmdqRecStruct *handle,
 		/* arg_a always be SW register */
 		arg_abc_type = (1 << 2) | (arg_b_type << 1) | (arg_c_type);
 
-		cmdq_append_command_pkt(handle->pkt, CMDQ_CODE_LOGIC,
+		cmdq_append_command_pkt(handle->pkt, CMDQ_CODE_LOGDC,
 			(arg_abc_type << 21) | (s_op << 16) | arg_a_i,
 			(arg_b_i << 16) | (arg_c_i & 0xFFFF));
 	} while (0);
@@ -2770,70 +2770,70 @@ s32 cmdq_op_assign(struct cmdqRecStruct *handle,
 	}
 
 	return cmdq_append_logic_command(handle, arg_out, arg_b,
-		CMDQ_LOGIC_ASSIGN, arg_c);
+		CMDQ_LOGDC_ASSIGN, arg_c);
 }
 
 s32 cmdq_op_add(struct cmdqRecStruct *handle, CMDQ_VARIABLE *arg_out,
 	CMDQ_VARIABLE arg_b, CMDQ_VARIABLE arg_c)
 {
 	return cmdq_append_logic_command(handle, arg_out, arg_b,
-		CMDQ_LOGIC_ADD, arg_c);
+		CMDQ_LOGDC_ADD, arg_c);
 }
 
 s32 cmdq_op_subtract(struct cmdqRecStruct *handle, CMDQ_VARIABLE *arg_out,
 	CMDQ_VARIABLE arg_b, CMDQ_VARIABLE arg_c)
 {
 	return cmdq_append_logic_command(handle, arg_out, arg_b,
-		CMDQ_LOGIC_SUBTRACT, arg_c);
+		CMDQ_LOGDC_SUBTRACT, arg_c);
 }
 
 s32 cmdq_op_multiply(struct cmdqRecStruct *handle, CMDQ_VARIABLE *arg_out,
 	CMDQ_VARIABLE arg_b, CMDQ_VARIABLE arg_c)
 {
 	return cmdq_append_logic_command(handle, arg_out, arg_b,
-		CMDQ_LOGIC_MULTIPLY, arg_c);
+		CMDQ_LOGDC_MULTIPLY, arg_c);
 }
 
 s32 cmdq_op_xor(struct cmdqRecStruct *handle, CMDQ_VARIABLE *arg_out,
 	CMDQ_VARIABLE arg_b, CMDQ_VARIABLE arg_c)
 {
 	return cmdq_append_logic_command(handle, arg_out, arg_b,
-		CMDQ_LOGIC_XOR, arg_c);
+		CMDQ_LOGDC_XOR, arg_c);
 }
 
 s32 cmdq_op_not(struct cmdqRecStruct *handle, CMDQ_VARIABLE *arg_out,
 	CMDQ_VARIABLE arg_b)
 {
 	return cmdq_append_logic_command(handle, arg_out, arg_b,
-		CMDQ_LOGIC_NOT, 0);
+		CMDQ_LOGDC_NOT, 0);
 }
 
 s32 cmdq_op_or(struct cmdqRecStruct *handle, CMDQ_VARIABLE *arg_out,
 	CMDQ_VARIABLE arg_b, CMDQ_VARIABLE arg_c)
 {
 	return cmdq_append_logic_command(handle, arg_out, arg_b,
-		CMDQ_LOGIC_OR, arg_c);
+		CMDQ_LOGDC_OR, arg_c);
 }
 
 s32 cmdq_op_and(struct cmdqRecStruct *handle, CMDQ_VARIABLE *arg_out,
 	CMDQ_VARIABLE arg_b, CMDQ_VARIABLE arg_c)
 {
 	return cmdq_append_logic_command(handle, arg_out, arg_b,
-		CMDQ_LOGIC_AND, arg_c);
+		CMDQ_LOGDC_AND, arg_c);
 }
 
 s32 cmdq_op_left_shift(struct cmdqRecStruct *handle, CMDQ_VARIABLE *arg_out,
 	CMDQ_VARIABLE arg_b, CMDQ_VARIABLE arg_c)
 {
 	return cmdq_append_logic_command(handle, arg_out, arg_b,
-		CMDQ_LOGIC_LEFT_SHIFT, arg_c);
+		CMDQ_LOGDC_LEFT_SHIFT, arg_c);
 }
 
 s32 cmdq_op_right_shift(struct cmdqRecStruct *handle, CMDQ_VARIABLE *arg_out,
 	CMDQ_VARIABLE arg_b, CMDQ_VARIABLE arg_c)
 {
 	return cmdq_append_logic_command(handle, arg_out, arg_b,
-		CMDQ_LOGIC_RIGHT_SHIFT, arg_c);
+		CMDQ_LOGDC_RIGHT_SHIFT, arg_c);
 }
 
 s32 cmdq_op_backup_CPR(struct cmdqRecStruct *handle, CMDQ_VARIABLE cpr,
@@ -3027,7 +3027,7 @@ s32 cmdq_op_rewrite_jump_c(struct cmdqRecStruct *handle,
 		/* reserve condition statement */
 		op = (va_logic[1] & 0xFF000000) >> 24;
 		op_jump = (va_jump[1] & 0xFF000000) >> 24;
-		if (op != CMDQ_CODE_LOGIC || op_jump !=
+		if (op != CMDQ_CODE_LOGDC || op_jump !=
 			CMDQ_CODE_JUMP_C_RELATIVE) {
 			CMDQ_ERR("rewrite wrong op:0x%08x jump:0x%08x\n",
 				op, op_jump);

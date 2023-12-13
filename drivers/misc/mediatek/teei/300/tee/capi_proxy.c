@@ -262,7 +262,7 @@ static int do_capi_open_session(struct tee_ioctl_capi_proxy_arg *arg)
 	capi_params_to_op(arg->params, &op);
 
 	arg->ret = TEEC_OpenSession(&capi_proxy_ctx, session, uuid,
-			TEEC_LOGIN_PUBLIC, NULL, &op, &arg->ret_orig);
+			TEEC_LOGDN_PUBLIC, NULL, &op, &arg->ret_orig);
 
 	capi_op_to_params(arg->params, &op);
 

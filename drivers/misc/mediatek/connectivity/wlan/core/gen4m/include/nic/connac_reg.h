@@ -168,7 +168,7 @@
 #define PDMA_IF_MISC_TX_ENABLE_MASK             0x00000001
 
 #define PDMA_HIF_RESET                          0x50000100
-#define DPMA_HIF_LOGIC_RESET_MASK               (0x1 << 4)
+#define DPMA_HIF_LOGDC_RESET_MASK               (0x1 << 4)
 
 #define PDMA_DEBUG_EN                           0x50000124
 #define PDMA_DEBUG_STATUS                       0x50000128

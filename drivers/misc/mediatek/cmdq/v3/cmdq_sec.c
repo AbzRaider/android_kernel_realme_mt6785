@@ -1350,7 +1350,7 @@ s32 cmdq_sec_insert_backup_cookie_instr(struct cmdqRecStruct *task, s32 thread)
 	right.reg = false;
 	right.value = 1;
 
-	cmdq_pkt_logic_command(task->pkt, CMDQ_LOGIC_ADD, CMDQ_THR_SPR_IDX1,
+	cmdq_pkt_logic_command(task->pkt, CMDQ_LOGDC_ADD, CMDQ_THR_SPR_IDX1,
 		&left, &right);
 
 	WSMCookieAddr = context->hSecSharedMem->MVABase + addrCookieOffset;

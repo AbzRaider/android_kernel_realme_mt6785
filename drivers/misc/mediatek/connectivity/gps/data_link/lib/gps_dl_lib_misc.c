@@ -83,28 +83,28 @@ void gps_dl_hal_show_buf(unsigned char *tag,
 #define SHOW_BUF_FMT7 SHOW_BUF_FMT6" %02x"
 #define SHOW_BUF_FMT8 SHOW_BUF_FMT7" %02x"
 
-#define SHOW_BUF_ARG0 do {GDL_LOGI_DRW(SHOW_BUF_FMT0, tag, len); } while (0)
+#define SHOW_BUF_ARG0 do {GDL_LOGD_DRW(SHOW_BUF_FMT0, tag, len); } while (0)
 
-#define SHOW_BUF_ARG1 do {GDL_LOGI_DRW(SHOW_BUF_FMT1, tag, len, buf[base+0]); } while (0)
+#define SHOW_BUF_ARG1 do {GDL_LOGD_DRW(SHOW_BUF_FMT1, tag, len, buf[base+0]); } while (0)
 
-#define SHOW_BUF_ARG2 do {GDL_LOGI_DRW(SHOW_BUF_FMT2, tag, len, buf[base+0], buf[base+1]); } while (0)
+#define SHOW_BUF_ARG2 do {GDL_LOGD_DRW(SHOW_BUF_FMT2, tag, len, buf[base+0], buf[base+1]); } while (0)
 
-#define SHOW_BUF_ARG3 do {GDL_LOGI_DRW(SHOW_BUF_FMT3, tag, len, buf[base+0], buf[base+1], buf[base+2]) \
+#define SHOW_BUF_ARG3 do {GDL_LOGD_DRW(SHOW_BUF_FMT3, tag, len, buf[base+0], buf[base+1], buf[base+2]) \
 	; } while (0)
 
-#define SHOW_BUF_ARG4 do {GDL_LOGI_DRW(SHOW_BUF_FMT4, tag, len, buf[base+0], buf[base+1], buf[base+2], \
+#define SHOW_BUF_ARG4 do {GDL_LOGD_DRW(SHOW_BUF_FMT4, tag, len, buf[base+0], buf[base+1], buf[base+2], \
 	buf[base+3]); } while (0)
 
-#define SHOW_BUF_ARG5 do {GDL_LOGI_DRW(SHOW_BUF_FMT5, tag, len, buf[base+0], buf[base+1], buf[base+2], \
+#define SHOW_BUF_ARG5 do {GDL_LOGD_DRW(SHOW_BUF_FMT5, tag, len, buf[base+0], buf[base+1], buf[base+2], \
 	buf[base+3], buf[base+4]); } while (0)
 
-#define SHOW_BUF_ARG6 do {GDL_LOGI_DRW(SHOW_BUF_FMT6, tag, len, buf[base+0], buf[base+1], buf[base+2], \
+#define SHOW_BUF_ARG6 do {GDL_LOGD_DRW(SHOW_BUF_FMT6, tag, len, buf[base+0], buf[base+1], buf[base+2], \
 	buf[base+3], buf[base+4], buf[base+5]); } while (0)
 
-#define SHOW_BUF_ARG7 do {GDL_LOGI_DRW(SHOW_BUF_FMT7, tag, len, buf[base+0], buf[base+1], buf[base+2], \
+#define SHOW_BUF_ARG7 do {GDL_LOGD_DRW(SHOW_BUF_FMT7, tag, len, buf[base+0], buf[base+1], buf[base+2], \
 	buf[base+3], buf[base+4], buf[base+5], buf[base+6]); } while (0)
 
-#define SHOW_BUF_ARG8 do {GDL_LOGI_DRW(SHOW_BUF_FMT8, tag, len, buf[base+0], buf[base+1], buf[base+2], \
+#define SHOW_BUF_ARG8 do {GDL_LOGD_DRW(SHOW_BUF_FMT8, tag, len, buf[base+0], buf[base+1], buf[base+2], \
 	buf[base+3], buf[base+4], buf[base+5], buf[base+6], buf[base+7]); } while (0)
 
 	for (left_len = len, base = 0, line_idx = 0;

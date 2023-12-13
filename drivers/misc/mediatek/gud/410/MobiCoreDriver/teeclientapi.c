@@ -274,7 +274,7 @@ u32 teec_open_session(struct teec_context *context,
 		return TEEC_ERROR_BAD_PARAMETERS;
 	}
 
-	connection_method = TEEC_TT_LOGIN_KERNEL;
+	connection_method = TEEC_TT_LOGDN_KERNEL;
 	session->imp.active = false;
 
 	_lib_uuid_to_array(destination, uuid.value);

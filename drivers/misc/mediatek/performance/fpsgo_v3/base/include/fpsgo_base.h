@@ -155,9 +155,9 @@ struct gbe_runtime {
 };
 
 #ifdef FPSGO_DEBUG
-#define FPSGO_LOGI(...)	pr_debug("FPSGO:" __VA_ARGS__)
+#define FPSGO_LOGD(...)	pr_debug("FPSGO:" __VA_ARGS__)
 #else
-#define FPSGO_LOGI(...)
+#define FPSGO_LOGD(...)
 #endif
 #define FPSGO_LOGE(...)	pr_debug("FPSGO:" __VA_ARGS__)
 #define FPSGO_CONTAINER_OF(ptr, type, member) \

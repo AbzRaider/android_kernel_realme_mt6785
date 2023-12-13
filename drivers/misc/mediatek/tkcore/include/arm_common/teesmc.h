@@ -296,7 +296,7 @@ struct teesmc64_arg {
  *				TEESMC64_CMD_OPEN_SESSION
  * @uuid: UUID of the Trusted Application
  * @clnt_uuid: UUID of client
- * @clnt_login: Login class of client, TEE_LOGIN_* if being Global Platform
+ * @clnt_login: Login class of client, TEE_LOGDN_* if being Global Platform
  *		compliant
  *
  * This struct is passed in the first parameter as an input memref tagged

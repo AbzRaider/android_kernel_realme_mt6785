@@ -42,7 +42,7 @@
 #define mc_dev_devel(...)		do {} while (0)
 #endif /* !DEBUG */
 
-#define TEEC_TT_LOGIN_KERNEL	0x80000000
+#define TEEC_TT_LOGDN_KERNEL	0x80000000
 
 #define TEE_START_NOT_TRIGGERED 1
 

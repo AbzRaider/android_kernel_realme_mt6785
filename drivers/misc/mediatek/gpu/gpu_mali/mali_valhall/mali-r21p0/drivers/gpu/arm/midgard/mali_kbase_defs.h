@@ -1759,9 +1759,9 @@ struct kbase_device {
 
 #define KBASE_WA_FLAG_SERIALIZE (1ull << 0)
 #define KBASE_WA_FLAG_WAIT_POWERUP (1ull << 1)
-#define KBASE_WA_FLAG_LOGICAL_SHADER_POWER (1ull << 2)
+#define KBASE_WA_FLAG_LOGDCAL_SHADER_POWER (1ull << 2)
 #define KBASE_WA_FLAGS (KBASE_WA_FLAG_SERIALIZE | KBASE_WA_FLAG_WAIT_POWERUP | \
-                       KBASE_WA_FLAG_LOGICAL_SHADER_POWER)
+                       KBASE_WA_FLAG_LOGDCAL_SHADER_POWER)
 
 int kbase_wa_execute(struct kbase_device *kbdev, u64 cores);
 

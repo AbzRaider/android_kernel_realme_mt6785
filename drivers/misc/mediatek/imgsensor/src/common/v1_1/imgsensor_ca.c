@@ -66,7 +66,7 @@ unsigned int imgsensor_ca_open(void)
 		} else {
 			ret = TEEC_OpenSession(
 				&imgsensor_tci_context, &imgsensor_tci_session,
-				&TEEC_IMGSENSOR_UUID, TEEC_LOGIN_PUBLIC, NULL,
+				&TEEC_IMGSENSOR_UUID, TEEC_LOGDN_PUBLIC, NULL,
 				&teeOperation, NULL);
 			if (ret != TEEC_SUCCESS) {
 				TEEC_FinalizeContext(&imgsensor_tci_context);

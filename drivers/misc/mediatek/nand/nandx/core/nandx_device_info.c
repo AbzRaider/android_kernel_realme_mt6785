@@ -162,8 +162,8 @@ static u8 nandx_interface_value_table[VENDOR_NUM][8] = {
 /* how to choose */
 static u8 nandx_addressing_table[ADDRESSING_TABLE_NUM][ADDR_INDEX_NUM] = {
 	/*
-	 * ADDR_ROW_START, ADDR_ROW_LEN, ADDR_LOGICAL_PLANE_START,
-	 * ADDR_LOGICAL_PLANE_LEN, ADDR_PLANE_START, ADDR_PLANE_LEN,
+	 * ADDR_ROW_START, ADDR_ROW_LEN, ADDR_LOGDCAL_PLANE_START,
+	 * ADDR_LOGDCAL_PLANE_LEN, ADDR_PLANE_START, ADDR_PLANE_LEN,
 	 * ADDR_BLOCK_START, ADDR_BLOCK_LEN, ADDR_LUN_START, ADDR_LUN_LEN
 	 */
 	{16, 7, NONE, 0, 24, 1, 25, 11, 36, 1},	/* ADDRESSING_A */
@@ -275,10 +275,10 @@ u32 get_physical_row_address(u8 *addr, u32 lun, u32 plane, u32 block, u32 wl)
 {
 	u32 shift;
 
-	if (addr[ADDR_LOGICAL_PLANE_START] == NONE)
+	if (addr[ADDR_LOGDCAL_PLANE_START] == NONE)
 		shift = addr[ADDR_PLANE_START] - addr[ADDR_ROW_START];
 	else
-		shift = addr[ADDR_LOGICAL_PLANE_START] - addr[ADDR_ROW_START];
+		shift = addr[ADDR_LOGDCAL_PLANE_START] - addr[ADDR_ROW_START];
 
 	plane = plane << shift;
 	if (addr[ADDR_BLOCK_START] != addr[ADDR_PLANE_START])

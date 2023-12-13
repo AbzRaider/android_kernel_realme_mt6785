@@ -9212,14 +9212,14 @@
 	MT6359_BIF_CON15
 #define PMIC_BIF_COMMAND_TYPE_MASK                          0x3
 #define PMIC_BIF_COMMAND_TYPE_SHIFT                         8
-#define PMIC_BIF_LOGIC_0_SET_ADDR                           \
+#define PMIC_BIF_LOGDC_0_SET_ADDR                           \
 	MT6359_BIF_CON16
-#define PMIC_BIF_LOGIC_0_SET_MASK                           0xF
-#define PMIC_BIF_LOGIC_0_SET_SHIFT                          0
-#define PMIC_BIF_LOGIC_1_SET_ADDR                           \
+#define PMIC_BIF_LOGDC_0_SET_MASK                           0xF
+#define PMIC_BIF_LOGDC_0_SET_SHIFT                          0
+#define PMIC_BIF_LOGDC_1_SET_ADDR                           \
 	MT6359_BIF_CON16
-#define PMIC_BIF_LOGIC_1_SET_MASK                           0x1F
-#define PMIC_BIF_LOGIC_1_SET_SHIFT                          4
+#define PMIC_BIF_LOGDC_1_SET_MASK                           0x1F
+#define PMIC_BIF_LOGDC_1_SET_SHIFT                          4
 #define PMIC_BIF_STOP_SET_ADDR                              \
 	MT6359_BIF_CON16
 #define PMIC_BIF_STOP_SET_MASK                              0x3F
@@ -33678,8 +33678,8 @@ enum PMU_FLAGS_LIST {
 	PMIC_BIF_COMMAND_14,
 	PMIC_BIF_RSV,
 	PMIC_BIF_COMMAND_TYPE,
-	PMIC_BIF_LOGIC_0_SET,
-	PMIC_BIF_LOGIC_1_SET,
+	PMIC_BIF_LOGDC_0_SET,
+	PMIC_BIF_LOGDC_1_SET,
 	PMIC_BIF_STOP_SET,
 	PMIC_BIF_DEBOUNCE_EN,
 	PMIC_BIF_READ_EXPECT_NUM,

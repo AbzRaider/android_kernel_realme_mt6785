@@ -142,7 +142,7 @@ void gps_dl_hw_dump_host_csr_gps_info(bool force_show_log)
 void gps_dl_bus_check_and_print(unsigned int host_addr)
 {
 	/* not do rw check because here is the checking */
-	GDL_LOGI("for addr = 0x%08x", host_addr);
+	GDL_LOGD("for addr = 0x%08x", host_addr);
 	gps_dl_bus_wr_opt(GPS_DL_CONN_INFRA_BUS,
 		CONN_HOST_CSR_TOP_CONN_INFRA_DEBUG_AO_DEBUGSYS_ADDR, 0x000D0001,
 		BMASK_RW_FORCE_PRINT);
@@ -389,7 +389,7 @@ void gps_dl_hw_init_pta(void)
 		/* should not happen, do nothing but just show log */
 		GDL_LOGE("pta_en = %d, pta_arb_en = %d, fail", pta_en, pta_arb_en);
 	} else
-		GDL_LOGI("pta_en = %d, pta_arb_en = %d, okay", pta_en, pta_arb_en);
+		GDL_LOGD("pta_en = %d, pta_arb_en = %d, okay", pta_en, pta_arb_en);
 }
 
 void gps_dl_hw_deinit_pta(void)
@@ -529,7 +529,7 @@ bool gps_dl_hw_take_conn_rfspi_hw_sema(unsigned int try_timeout_ms)
 	}
 	gps_dl_set_show_reg_rw_log(show_log);
 
-	GDL_LOGI("okay = %d", okay);
+	GDL_LOGD("okay = %d", okay);
 
 	return okay;
 }
@@ -542,7 +542,7 @@ void gps_dl_hw_give_conn_rfspi_hw_sema(void)
 	GDL_HW_SET_CONN_INFRA_ENTRY(COS_SEMA_RFSPI_REL_ENTRY_FOR_GPS, 1);
 	gps_dl_set_show_reg_rw_log(show_log);
 
-	GDL_LOGI("");
+	GDL_LOGD("");
 }
 
 

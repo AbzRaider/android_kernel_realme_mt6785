@@ -61,7 +61,7 @@
 
 #define LOGV(fmt, msg...)
 #define LOGD LOG_DEBUG
-#define LOGI LOG_DEBUG
+#define LOGD LOG_DEBUG
 #define LOGW LOG_NOTICE
 #define LOGE LOG_NOTICE
 

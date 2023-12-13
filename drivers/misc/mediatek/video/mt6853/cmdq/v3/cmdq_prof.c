@@ -97,7 +97,7 @@ u32 cmdq_prof_get_statistic_id(const u32 *pCmd)
 		return CMDQ_STA_JUMP;
 
 	case CMDQ_CODE_EOC:
-	case CMDQ_CODE_LOGIC:
+	case CMDQ_CODE_LOGDC:
 	case CMDQ_CODE_JUMP_C_RELATIVE:
 		return CMDQ_STA_EOC;
 	default:

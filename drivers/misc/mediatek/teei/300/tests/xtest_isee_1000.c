@@ -35,7 +35,7 @@ unsigned int xtest_teec_open_session(struct TEEC_Context *context,
 					struct TEEC_Operation *op,
 					uint32_t *ret_orig)
 {
-	return TEEC_OpenSession(context, session, uuid, TEEC_LOGIN_PUBLIC,
+	return TEEC_OpenSession(context, session, uuid, TEEC_LOGDN_PUBLIC,
 					NULL, op, ret_orig);
 }
 const char *ADBG_GetFileBase(const char *const FileName_p)

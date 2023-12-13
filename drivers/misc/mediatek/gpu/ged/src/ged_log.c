@@ -591,7 +591,7 @@ GED_LOG_BUF_HANDLE ged_log_buf_alloc(
 		return (GED_LOG_BUF_HANDLE)0;
 	}
 
-	GED_LOGI("%s OK\n", __func__);
+	GED_LOGD("%s OK\n", __func__);
 
 	while (__ged_log_buf_check_get_early_list(
 		psGEDLogBuf->ulHashNodeID, pszName)) {
@@ -825,7 +825,7 @@ void ged_log_buf_free(GED_LOG_BUF_HANDLE hLogBuf)
 		ged_free(psGEDLogBuf->pMemory, psGEDLogBuf->i32MemorySize);
 		ged_free(psGEDLogBuf, sizeof(struct GED_LOG_BUF));
 
-		GED_LOGI("%s OK\n", __func__);
+		GED_LOGD("%s OK\n", __func__);
 	}
 }
 EXPORT_SYMBOL(ged_log_buf_free);
