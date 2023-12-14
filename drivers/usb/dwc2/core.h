@@ -47,7 +47,7 @@
 /*
  * Suggested defines for tracers:
  * - no_printk:    Disable tracing
- * - pr_info:      Print this info to the console
+ * - pr_debug:      Print this info to the console
  * - trace_printk: Print this info to trace buffer (good for verbose logging)
  */
 
@@ -98,7 +98,7 @@ static inline void dwc2_writel(u32 value, void __iomem *addr)
 	 */
 	mb();
 #ifdef DWC2_LOG_WRITES
-	pr_info("INFO:: wrote %08x to %p\n", value, addr);
+	pr_debug("INFO:: wrote %08x to %p\n", value, addr);
 #endif
 }
 #else
@@ -113,7 +113,7 @@ static inline void dwc2_writel(u32 value, void __iomem *addr)
 	writel(value, addr);
 
 #ifdef DWC2_LOG_WRITES
-	pr_info("info:: wrote %08x to %p\n", value, addr);
+	pr_debug("info:: wrote %08x to %p\n", value, addr);
 #endif
 }
 #endif

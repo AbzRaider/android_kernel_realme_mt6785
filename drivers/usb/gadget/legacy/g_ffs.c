@@ -362,9 +362,9 @@ static int gfs_bind(struct usb_composite_dev *cdev)
 #if defined CONFIG_USB_FUNCTIONFS_ETH || defined CONFIG_USB_FUNCTIONFS_RNDIS
 	gether_set_qmult(net, qmult);
 	if (!gether_set_host_addr(net, host_addr))
-		pr_info("using host ethernet address: %s", host_addr);
+		pr_debug("using host ethernet address: %s", host_addr);
 	if (!gether_set_dev_addr(net, dev_addr))
-		pr_info("using self ethernet address: %s", dev_addr);
+		pr_debug("using self ethernet address: %s", dev_addr);
 #endif
 
 #if defined CONFIG_USB_FUNCTIONFS_RNDIS && defined CONFIG_USB_FUNCTIONFS_ETH

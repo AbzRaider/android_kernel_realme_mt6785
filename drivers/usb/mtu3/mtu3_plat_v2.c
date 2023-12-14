@@ -76,7 +76,7 @@ ssize_t musb_cmode_show(struct device *dev,
 	struct device_attribute *attr, char *buf)
 {
 	if (!dev) {
-		pr_info("dev is null!!\n");
+		pr_debug("dev is null!!\n");
 		return 0;
 	}
 	return sprintf(buf, "%d\n", mtu3_cable_mode);
@@ -90,14 +90,14 @@ ssize_t musb_cmode_store(struct device *dev, struct device_attribute *attr,
 	struct extcon_dev *edev;
 
 	if (!dev) {
-		pr_info("dev is null!!\n");
+		pr_debug("dev is null!!\n");
 		return count;
 	}
 
 	ssusb = dev_to_ssusb(dev);
 
 	if (!ssusb) {
-		pr_info("ssusb is null!!\n");
+		pr_debug("ssusb is null!!\n");
 		return count;
 	}
 
@@ -108,7 +108,7 @@ ssize_t musb_cmode_store(struct device *dev, struct device_attribute *attr,
 			cmode = CABLE_MODE_NORMAL;
 
 		if (mtu3_cable_mode != cmode) {
-			pr_info("%s %s --> %s\n", __func__,
+			pr_debug("%s %s --> %s\n", __func__,
 				mtu3_mode_str[mtu3_cable_mode],
 				mtu3_mode_str[cmode]);
 			mtu3_cable_mode = cmode;
@@ -142,7 +142,7 @@ ssize_t musb_saving_mode_show(struct device *dev,
 	struct device_attribute *attr, char *buf)
 {
 	if (!dev) {
-		pr_info("dev is null!!\n");
+		pr_debug("dev is null!!\n");
 		return 0;
 	}
 	return scnprintf(buf, PAGE_SIZE, "%d\n", saving_mode);
@@ -155,12 +155,12 @@ ssize_t musb_saving_mode_store(struct device *dev,
 	long tmp_val;
 
 	if (!dev) {
-		pr_info("dev is null!!\n");
+		pr_debug("dev is null!!\n");
 		return count;
 	/* } else if (1 == sscanf(buf, "%d", &saving)) { */
 	} else if (kstrtol(buf, 10, (long *)&tmp_val) == 0) {
 		saving = tmp_val;
-		pr_info("old=%d new=%d\n", saving, saving_mode);
+		pr_debug("old=%d new=%d\n", saving, saving_mode);
 		if (saving_mode == (!saving))
 			saving_mode = !saving_mode;
 	}
@@ -169,7 +169,7 @@ ssize_t musb_saving_mode_store(struct device *dev,
 
 bool is_saving_mode(void)
 {
-	pr_info("saving_mode : %d\n", saving_mode);
+	pr_debug("saving_mode : %d\n", saving_mode);
 	return saving_mode;
 }
 

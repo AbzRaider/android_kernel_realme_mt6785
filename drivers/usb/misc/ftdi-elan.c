@@ -2796,7 +2796,7 @@ static struct usb_driver ftdi_elan_driver = {
 static int __init ftdi_elan_init(void)
 {
 	int result;
-	pr_info("driver %s\n", ftdi_elan_driver.name);
+	pr_debug("driver %s\n", ftdi_elan_driver.name);
 	mutex_init(&ftdi_module_lock);
 	INIT_LIST_HEAD(&ftdi_static_list);
 	result = usb_register(&ftdi_elan_driver);
@@ -2812,7 +2812,7 @@ static void __exit ftdi_elan_exit(void)
 	struct usb_ftdi *ftdi;
 	struct usb_ftdi *temp;
 	usb_deregister(&ftdi_elan_driver);
-	pr_info("ftdi_u132 driver deregistered\n");
+	pr_debug("ftdi_u132 driver deregistered\n");
 	list_for_each_entry_safe(ftdi, temp, &ftdi_static_list, ftdi_list) {
 		ftdi_status_cancel_work(ftdi);
 		ftdi_command_cancel_work(ftdi);

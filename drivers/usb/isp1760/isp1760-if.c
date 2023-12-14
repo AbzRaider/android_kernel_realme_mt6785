@@ -249,7 +249,7 @@ static int isp1760_plat_probe(struct platform_device *pdev)
 	if (ret < 0)
 		return ret;
 
-	pr_info("ISP1760 USB device initialised\n");
+	pr_debug("ISP1760 USB device initialised\n");
 	return 0;
 }
 

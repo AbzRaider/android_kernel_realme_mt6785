@@ -1279,7 +1279,7 @@ static int __init usb_init(void)
 {
 	int retval;
 	if (usb_disabled()) {
-		pr_info("%s: USB support disabled\n", usbcore_name);
+		pr_debug("%s: USB support disabled\n", usbcore_name);
 		return 0;
 	}
 	usb_init_pool_max();

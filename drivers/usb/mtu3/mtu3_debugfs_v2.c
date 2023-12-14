@@ -51,7 +51,7 @@ static void mac_write32(struct ssusb_mtk *ssusb, int offset,
 
 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "mac");
 	if (!res || offset >= resource_size(res)) {
-		pr_info("%s error range\n", __func__);
+		pr_debug("%s error range\n", __func__);
 		return;
 	}
 	cur_value = mtu3_readl(mtu->mac_base, offset);
@@ -70,7 +70,7 @@ static void ippc_write32(struct ssusb_mtk *ssusb, int offset,
 
 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ippc");
 	if (!res || offset >= resource_size(res)) {
-		pr_info("%s error range\n", __func__);
+		pr_debug("%s error range\n", __func__);
 		return;
 	}
 

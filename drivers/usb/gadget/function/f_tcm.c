@@ -406,7 +406,7 @@ static void bot_set_alt(struct f_uas *fu)
 	if (ret)
 		goto err_wq;
 	fu->flags |= USBG_ENABLED;
-	pr_info("Using the BOT protocol\n");
+	pr_debug("Using the BOT protocol\n");
 	return;
 err_wq:
 	usb_ep_disable(fu->ep_out);
@@ -447,7 +447,7 @@ static int usbg_bot_setup(struct usb_function *f,
 		 */
 		luns--;
 		if (luns > 0xf) {
-			pr_info_once("Limiting the number of luns to 16\n");
+			pr_debug_once("Limiting the number of luns to 16\n");
 			luns = 0xf;
 		}
 		ret_lun = cdev->req->buf;
@@ -874,7 +874,7 @@ static void uasp_set_alt(struct f_uas *fu)
 		goto err_wq;
 	fu->flags |= USBG_ENABLED;
 
-	pr_info("Using the UAS protocol\n");
+	pr_debug("Using the UAS protocol\n");
 	return;
 err_wq:
 	usb_ep_disable(fu->ep_status);

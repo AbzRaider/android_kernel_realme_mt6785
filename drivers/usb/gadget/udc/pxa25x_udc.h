@@ -249,7 +249,7 @@ dump_state(struct pxa25x_udc *dev)
 
 #define ERR(stuff...)		pr_err("udc: " stuff)
 #define WARNING(stuff...)	pr_warn("udc: " stuff)
-#define INFO(stuff...)		pr_info("udc: " stuff)
+#define INFO(stuff...)		pr_debug("udc: " stuff)
 
 
 #endif /* __LINUX_USB_GADGET_PXA25X_H */

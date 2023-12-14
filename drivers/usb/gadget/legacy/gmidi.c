@@ -168,7 +168,7 @@ static int midi_bind(struct usb_composite_dev *cdev)
 	if (status < 0)
 		goto put;
 	usb_composite_overwrite_options(cdev, &coverwrite);
-	pr_info("%s\n", longname);
+	pr_debug("%s\n", longname);
 	return 0;
 put:
 	usb_put_function_instance(fi_midi);

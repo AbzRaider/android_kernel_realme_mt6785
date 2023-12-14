@@ -1785,7 +1785,7 @@ void wa_process_errored_transfers_run(struct work_struct *ws)
 	struct wa_xfer *xfer, *next;
 	LIST_HEAD(tmp_list);
 
-	pr_info("%s: Run delayed STALL processing.\n", __func__);
+	pr_debug("%s: Run delayed STALL processing.\n", __func__);
 
 	/* Create a copy of the wa->xfer_errored_list while holding the lock */
 	spin_lock_irq(&wa->xfer_list_lock);

@@ -806,7 +806,7 @@ static int fsl_otg_conf(struct platform_device *pdev)
 	INIT_LIST_HEAD(&active_timers);
 	status = fsl_otg_init_timers(&fsl_otg_tc->fsm);
 	if (status) {
-		pr_info("Couldn't init OTG timers\n");
+		pr_debug("Couldn't init OTG timers\n");
 		goto err;
 	}
 	mutex_init(&fsl_otg_tc->fsm.lock);

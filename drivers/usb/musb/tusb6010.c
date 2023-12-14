@@ -68,7 +68,7 @@ static void tusb_print_revision(struct musb *musb)
 
 	rev = musb->tusb_revision;
 
-	pr_info("tusb: %s%i.%i %s%i.%i %s%i.%i %s%i.%i %s%i %s%i.%i\n",
+	pr_debug("tusb: %s%i.%i %s%i.%i %s%i.%i %s%i.%i %s%i %s%i.%i\n",
 		"prcm",
 		TUSB_REV_MAJOR(musb_readl(tbase, TUSB_PRCM_REV)),
 		TUSB_REV_MINOR(musb_readl(tbase, TUSB_PRCM_REV)),

@@ -727,7 +727,7 @@ static irqreturn_t omap_otg_irq(int irq, void *_isp)
 	 */
 	} else if (otg_irq & A_REQ_TMROUT) {
 		otg_ctrl = omap_readl(OTG_CTRL);
-		pr_info("otg: BCON_TMOUT from %s, %06x\n",
+		pr_debug("otg: BCON_TMOUT from %s, %06x\n",
 				state_name(isp), otg_ctrl);
 		notresponding(isp);
 

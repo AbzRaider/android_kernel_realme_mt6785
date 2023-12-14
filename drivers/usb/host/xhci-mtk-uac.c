@@ -111,7 +111,7 @@ void xhci_mtk_allow_sleep(unsigned int idle_ms, int speed)
 		static DEFINE_RATELIMIT_STATE(ratelimit, 2 * HZ, 1);
 
 		if (__ratelimit(&ratelimit))
-			pr_info("mtk_xhci_allow_sleep (%d) ms\n", sleep_ms);
+			pr_debug("mtk_xhci_allow_sleep (%d) ms\n", sleep_ms);
 		mod_timer(&xhci_wakeup_timer,
 				  jiffies + msecs_to_jiffies(sleep_ms));
 		xhci_mtk_set_power_mode(USB_DPIDLE_SRAM);
@@ -142,7 +142,7 @@ int xhci_mtk_init_sram(struct xhci_hcd *xhci)
 	for (i = 0; i < XHCI_SRAM_BLOCK_NUM; i++)
 		xhci_sram_size += xhci_sram[i].mlength;
 
-	pr_info("%s size=%d\n", __func__, xhci_sram_size);
+	pr_debug("%s size=%d\n", __func__, xhci_sram_size);
 
 	if (mtk_audio_request_sram(&xhci->msram_phys_addr,
 			(unsigned char **) &xhci->msram_virt_addr,
@@ -153,7 +153,7 @@ int xhci_mtk_init_sram(struct xhci_hcd *xhci)
 		for (i = 0; i < XHCI_SRAM_BLOCK_NUM; i++)
 			xhci_sram[i].state = STATE_NOMEM;
 
-		pr_info("mtk_audio_request_sram fail\n");
+		pr_debug("mtk_audio_request_sram fail\n");
 		return -ENOMEM;
 	}
 
@@ -190,7 +190,7 @@ int xhci_mtk_deinit_sram(struct xhci_hcd *xhci)
 	}
 	xhci->msram_virt_addr = NULL;
 
-	pr_info("%s\n", __func__);
+	pr_debug("%s\n", __func__);
 	return 0;
 }
 EXPORT_SYMBOL_GPL(xhci_mtk_deinit_sram);
@@ -216,7 +216,7 @@ int xhci_mtk_allocate_sram(unsigned int id, dma_addr_t *sram_phys_addr,
 
 	xhci_sram[id].state = STATE_USE;
 
-	pr_info("%s get [%d] p :%llx, v=%p, len=%d\n",
+	pr_debug("%s get [%d] p :%llx, v=%p, len=%d\n",
 			__func__, id, xhci_sram[id].msram_phys_addr,
 			xhci_sram[id].msram_virt_addr,
 			xhci_sram[id].mlength);
@@ -227,7 +227,7 @@ EXPORT_SYMBOL_GPL(xhci_mtk_allocate_sram);
 int xhci_mtk_free_sram(unsigned int id)
 {
 	xhci_sram[id].state = STATE_INIT;
-	pr_info("%s, id=%d\n", __func__, id);
+	pr_debug("%s, id=%d\n", __func__, id);
 	return 0;
 }
 EXPORT_SYMBOL_GPL(xhci_mtk_free_sram);
@@ -251,7 +251,7 @@ void *mtk_usb_alloc_sram(unsigned int id, size_t size, dma_addr_t *dma)
 		pr_debug("%s, id=%d\n", __func__, id);
 	} else {
 		usb_audio_sram[id].state = STATE_NOMEM;
-		pr_info("%s fail id=%d\n", __func__, id);
+		pr_debug("%s fail id=%d\n", __func__, id);
 	}
 
 	return sram_virt_addr;
@@ -267,7 +267,7 @@ void mtk_usb_free_sram(unsigned int id)
 		usb_audio_sram[id].msram_virt_addr =  NULL;
 		pr_debug("%s, id=%d\n", __func__, id);
 	} else {
-		pr_info("%s, fail id=%d\n", __func__, id);
+		pr_debug("%s, fail id=%d\n", __func__, id);
 	}
 	usb_audio_sram[id].state = STATE_UNINIT;
 }

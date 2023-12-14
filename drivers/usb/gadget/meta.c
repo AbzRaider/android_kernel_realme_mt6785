@@ -286,11 +286,11 @@ acm_function_init(struct android_usb_function *f,
 	}
 	return 0;
 err_usb_get_function_instance:
-	pr_info("Could not usb_get_function_instance() %d\n", i);
+	pr_debug("Could not usb_get_function_instance() %d\n", i);
 	while (i-- > 0) {
 		usb_put_function(config->f_acm[i]);
 err_usb_get_function:
-		pr_info("Could not usb_get_function() %d\n", i);
+		pr_debug("Could not usb_get_function() %d\n", i);
 		usb_put_function_instance(config->f_acm_inst[i]);
 	}
 	return ret;
@@ -322,7 +322,7 @@ acm_function_bind_config(struct android_usb_function *f,
 				|| (quick_vcom_num & (0x1 << i))) {
 			ret = usb_add_function(c, config->f_acm[i]);
 			if (ret) {
-				pr_info("Could not bind acm%u config\n", i);
+				pr_debug("Could not bind acm%u config\n", i);
 				goto err_usb_add_function;
 			}
 			pr_notice("%s Open /dev/ttyGS%d\n", __func__, i);
@@ -338,7 +338,7 @@ acm_function_bind_config(struct android_usb_function *f,
 	for (i = 0; i < config->instances_on; i++) {
 		ret = usb_add_function(c, config->f_acm[i]);
 		if (ret) {
-			pr_info("Could not bind acm%u config\n", i);
+			pr_debug("Could not bind acm%u config\n", i);
 			goto err_usb_add_function;
 		}
 	}
@@ -416,7 +416,7 @@ static int mass_storage_function_init(struct android_usb_function *f,
 	ret = fsg_common_set_cdev(fsg_opts->common, cdev,
 						m_config.can_stall);
 	if (ret) {
-		pr_info("%s(): error(%d) for fsg_common_set_cdev\n",
+		pr_debug("%s(): error(%d) for fsg_common_set_cdev\n",
 						__func__, ret);
 	}
 
@@ -424,7 +424,7 @@ static int mass_storage_function_init(struct android_usb_function *f,
 	fsg_common_set_sysfs(fsg_opts->common, true);
 	ret = fsg_common_create_luns(fsg_opts->common, &m_config);
 	if (ret) {
-		pr_info("%s(): error(%d) for fsg_common_create_luns\n",
+		pr_debug("%s(): error(%d) for fsg_common_create_luns\n",
 						__func__, ret);
 	}
 
@@ -481,7 +481,7 @@ static int mass_storage_function_bind_config(struct android_usb_function *f,
 	/* no_configfs :true, make fsg_bind skip for creating fsg thread */
 	ret = usb_add_function(c, config->f_ms);
 	if (ret)
-		pr_info("Could not bind config\n");
+		pr_debug("Could not bind config\n");
 
 	return 0;
 }
@@ -552,7 +552,7 @@ static int android_init_functions(struct android_usb_function **functions,
 		f->dev = device_create(android_class, dev->dev,
 				MKDEV(0, index), f, f->dev_name);
 		if (IS_ERR(f->dev)) {
-			pr_info("%s: Failed to create dev %s", __func__,
+			pr_debug("%s: Failed to create dev %s", __func__,
 							f->dev_name);
 			err = PTR_ERR(f->dev);
 			goto err_create;
@@ -561,7 +561,7 @@ static int android_init_functions(struct android_usb_function **functions,
 		if (f->init) {
 			err = f->init(f, cdev);
 			if (err) {
-				pr_info("%s: Failed to init %s", __func__,
+				pr_debug("%s: Failed to init %s", __func__,
 								f->name);
 				goto err_out;
 			} else
@@ -575,7 +575,7 @@ static int android_init_functions(struct android_usb_function **functions,
 				err = device_create_file(f->dev, attr);
 		}
 		if (err) {
-			pr_info("%s: Failed to create function %s attributes",
+			pr_debug("%s: Failed to create function %s attributes",
 					__func__, f->name);
 			goto err_out;
 		}
@@ -619,7 +619,7 @@ android_bind_enabled_functions(struct android_dev *dev,
 		pr_notice("[USB]bind_config function '%s'/%p\n", f->name, f);
 		ret = f->bind_config(f, c);
 		if (ret) {
-			pr_info("%s: %s failed", __func__, f->name);
+			pr_debug("%s: %s failed", __func__, f->name);
 			return ret;
 		}
 	}
@@ -726,7 +726,7 @@ functions_store(struct device *pdev, struct device_attribute *attr,
 				continue;
 			err = android_enable_function(dev, "ffs");
 			if (err)
-				pr_info("android_usb: Cannot enable ffs (%d)",
+				pr_debug("android_usb: Cannot enable ffs (%d)",
 									err);
 			else
 				ffs_enabled = 1;
@@ -735,7 +735,7 @@ functions_store(struct device *pdev, struct device_attribute *attr,
 
 		err = android_enable_function(dev, name);
 		if (err)
-			pr_info("android_usb: Cannot enable '%s' (%d)",
+			pr_debug("android_usb: Cannot enable '%s' (%d)",
 							   name, err);
 	}
 
@@ -833,7 +833,7 @@ static ssize_t enable_store(struct device *pdev, struct device_attribute *attr,
 		}
 		dev->enabled = false;
 	} else {
-		pr_info("android_usb: already %s\n",
+		pr_debug("android_usb: already %s\n",
 				dev->enabled ? "enabled" : "disabled");
 	}
 
@@ -857,7 +857,7 @@ static ssize_t state_show(struct device *pdev, struct device_attribute *attr,
 		state = "CONFIGURED";
 	else if (dev->connected)
 		state = "CONNECTED";
-	pr_info("[USB]%s, state:%s\n", __func__, state);
+	pr_debug("[USB]%s, state:%s\n", __func__, state);
 	spin_unlock_irqrestore(&cdev->lock, flags);
 out:
 	return sprintf(buf, "%s\n", state);
@@ -896,7 +896,7 @@ log_store(struct device *pdev, struct device_attribute *attr,
 	memcpy(log_buf + log_buf_idx, buf, n);
 	log_buf_idx += n;
 	log_buf[log_buf_idx++] = ' ';
-	pr_info("[USB]%s, <%s>, n:%d, log_buf_idx:%d\n",
+	pr_debug("[USB]%s, <%s>, n:%d, log_buf_idx:%d\n",
 			__func__, buf, n, log_buf_idx);
 
 	mutex_unlock(&dev->mutex);
@@ -1222,7 +1222,7 @@ void trigger_android_usb_state_monitor_work(void)
 	static int inited;
 
 #ifdef CONFIG_FPGA_EARLY_PORTING
-	pr_info("SKIP %s\n", __func__);
+	pr_debug("SKIP %s\n", __func__);
 	return;
 #endif
 	if (!inited) {
@@ -1337,7 +1337,7 @@ static int __init meta_usb_init(void)
 	if (!config)
 		return 0;
 
-	pr_info("%s: config %d", __func__, config);
+	pr_debug("%s: config %d", __func__, config);
 
 	android_class = class_create(THIS_MODULE, "android_usb");
 	if (IS_ERR(android_class))
@@ -1357,7 +1357,7 @@ static int __init meta_usb_init(void)
 
 	err = android_create_device(dev);
 	if (err) {
-		pr_info("%s: failed to create android device %d\n",
+		pr_debug("%s: failed to create android device %d\n",
 				__func__, err);
 		goto err_create;
 	}
@@ -1366,7 +1366,7 @@ static int __init meta_usb_init(void)
 
 	err = usb_composite_probe(&android_usb_driver);
 	if (err) {
-		pr_info("%s: failed to probe driver %d\n",
+		pr_debug("%s: failed to probe driver %d\n",
 				__func__, err);
 		_android_dev = NULL;
 		goto err_probe;

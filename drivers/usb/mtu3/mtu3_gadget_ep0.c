@@ -71,7 +71,7 @@ __acquires(mtu->lock)
 	int ret;
 
 	if (!mtu->gadget_driver || !mtu->softconnect) {
-		pr_info("%s !softconnect\n", __func__);
+		pr_debug("%s !softconnect\n", __func__);
 		return -EOPNOTSUPP;
 	}
 

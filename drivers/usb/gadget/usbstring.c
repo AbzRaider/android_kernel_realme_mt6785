@@ -67,7 +67,7 @@ usb_gadget_get_string (struct usb_gadget_strings *table, int id, u8 *buf)
 		len = min_t(size_t, 126, strlen(serial_string));
 		len = utf8s_to_utf16s(serial_string, len, UTF16_LITTLE_ENDIAN,
 				(wchar_t *) &buf[2], 126);
-		pr_info("%s overwrite len=%d id=%d\n", __func__, len, id);
+		pr_debug("%s overwrite len=%d id=%d\n", __func__, len, id);
 	} else {
 		len = min_t(size_t, 126, strlen(s->s));
 		len = utf8s_to_utf16s(s->s, len, UTF16_LITTLE_ENDIAN,

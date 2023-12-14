@@ -323,9 +323,9 @@ static int __ref multi_bind(struct usb_composite_dev *cdev)
 
 	gether_set_qmult(ecm_opts->net, qmult);
 	if (!gether_set_host_addr(ecm_opts->net, host_addr))
-		pr_info("using host ethernet address: %s", host_addr);
+		pr_debug("using host ethernet address: %s", host_addr);
 	if (!gether_set_dev_addr(ecm_opts->net, dev_addr))
-		pr_info("using self ethernet address: %s", dev_addr);
+		pr_debug("using self ethernet address: %s", dev_addr);
 #endif
 
 #ifdef USB_ETH_RNDIS
@@ -339,9 +339,9 @@ static int __ref multi_bind(struct usb_composite_dev *cdev)
 
 	gether_set_qmult(rndis_opts->net, qmult);
 	if (!gether_set_host_addr(rndis_opts->net, host_addr))
-		pr_info("using host ethernet address: %s", host_addr);
+		pr_debug("using host ethernet address: %s", host_addr);
 	if (!gether_set_dev_addr(rndis_opts->net, dev_addr))
-		pr_info("using self ethernet address: %s", dev_addr);
+		pr_debug("using self ethernet address: %s", dev_addr);
 #endif
 
 #if (defined CONFIG_USB_G_MULTI_CDC && defined USB_ETH_RNDIS)

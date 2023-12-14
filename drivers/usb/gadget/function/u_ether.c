@@ -1037,7 +1037,7 @@ static int eth_stop(struct net_device *net)
 	unsigned long	flags;
 
 	U_ETHER_DBG("\n");
-	pr_info("%s, START !!!!\n", __func__);
+	pr_debug("%s, START !!!!\n", __func__);
 	netif_stop_queue(net);
 
 	DBG(dev, "stop stats: rx/tx %ld/%ld, errs %ld/%ld\n",
@@ -1077,7 +1077,7 @@ static int eth_stop(struct net_device *net)
 		}
 	}
 	spin_unlock_irqrestore(&dev->lock, flags);
-	pr_info("%s, END !!!!\n", __func__);
+	pr_debug("%s, END !!!!\n", __func__);
 
 	return 0;
 }
@@ -1650,13 +1650,13 @@ static int __init gether_init(void)
 {
 	uether_wq  = create_singlethread_workqueue("uether");
 	if (!uether_wq) {
-		pr_info("%s: Unable to create workqueue: uether\n", __func__);
+		pr_debug("%s: Unable to create workqueue: uether\n", __func__);
 		return -ENOMEM;
 	}
 	uether_wq1  = create_singlethread_workqueue("uether_rx1");
 	if (!uether_wq1) {
 		destroy_workqueue(uether_wq);
-		pr_info("%s: Unable to create workqueue: uether\n", __func__);
+		pr_debug("%s: Unable to create workqueue: uether\n", __func__);
 		return -ENOMEM;
 	}
 	return 0;

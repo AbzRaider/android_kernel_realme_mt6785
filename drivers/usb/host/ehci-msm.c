@@ -248,7 +248,7 @@ static int __init ehci_msm_init(void)
 	if (usb_disabled())
 		return -ENODEV;
 
-	pr_info("%s: " DRIVER_DESC "\n", hcd_name);
+	pr_debug("%s: " DRIVER_DESC "\n", hcd_name);
 	ehci_init_driver(&msm_hc_driver, &msm_overrides);
 	return platform_driver_register(&ehci_msm_driver);
 }

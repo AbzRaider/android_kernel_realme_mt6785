@@ -27,7 +27,7 @@ static int ipsleep_init;
 static irqreturn_t ipsleep_eint_isr(int irqnum, void *data)
 {
 	disable_irq_nosync(irqnum);
-	pr_info("ipsleep_eint\n");
+	pr_debug("ipsleep_eint\n");
 	return IRQ_HANDLED;
 }
 

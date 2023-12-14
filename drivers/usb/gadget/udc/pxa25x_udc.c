@@ -2341,7 +2341,7 @@ static int pxa25x_udc_probe(struct platform_device *pdev)
 	u32 chiprev;
 	struct resource *res;
 
-	pr_info("%s: version %s\n", driver_name, DRIVER_VERSION);
+	pr_debug("%s: version %s\n", driver_name, DRIVER_VERSION);
 
 	/* insist on Intel/ARM/XScale */
 	asm("mrc%? p15, 0, %0, c0, c0" : "=r" (chiprev));

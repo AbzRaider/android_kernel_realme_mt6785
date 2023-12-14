@@ -127,7 +127,7 @@ static bool mtu3_mode_check(enum mtu3_vbus_id_state status)
 			return true;
 		break;
 	default:
-		pr_info("invalid status\n");
+		pr_debug("invalid status\n");
 	}
 
 	return false;

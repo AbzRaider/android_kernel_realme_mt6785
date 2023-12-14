@@ -633,7 +633,7 @@ static irqreturn_t mtu3_link_isr(struct mtu3 *mtu)
 	if (udev_speed == USB_SPEED_SUPER) {
 		mep = mtu->ep0;
 		if (!list_empty(&mep->req_list)) {
-			pr_info("%s reinit EP[0] req_list\n", __func__);
+			pr_debug("%s reinit EP[0] req_list\n", __func__);
 			INIT_LIST_HEAD(&mep->req_list);
 		}
 	}
@@ -789,7 +789,7 @@ static irqreturn_t mtu3_irq(int irq, void *data)
 	if (unlikely(!mtu->softconnect) && (level1 & MAC2_INTR)) {
 		u32 u2comm;
 
-		pr_info("%s !softconnect MAC2_INTR\n", __func__);
+		pr_debug("%s !softconnect MAC2_INTR\n", __func__);
 		u2comm = mtu3_readl(mtu->mac_base, U3D_COMMON_USB_INTR);
 		u2comm &= mtu3_readl(mtu->mac_base, U3D_COMMON_USB_INTR_ENABLE);
 		mtu3_writel(mtu->mac_base, U3D_COMMON_USB_INTR, u2comm);
@@ -800,7 +800,7 @@ static irqreturn_t mtu3_irq(int irq, void *data)
 	if (unlikely(!mtu->softconnect) && (level1 & BMU_INTR)) {
 		u32 int_status;
 
-		pr_info("%s !softconnect BMU_INTR\n", __func__);
+		pr_debug("%s !softconnect BMU_INTR\n", __func__);
 		int_status = mtu3_readl(mtu->mac_base, U3D_EPISR);
 		int_status &= mtu3_readl(mtu->mac_base, U3D_EPIER);
 		mtu3_writel(mtu->mac_base, U3D_EPISR, int_status);
@@ -811,7 +811,7 @@ static irqreturn_t mtu3_irq(int irq, void *data)
 	if (unlikely(!mtu->softconnect) && (level1 & QMU_INTR)) {
 		u32 qmu_done_status;
 
-		pr_info("%s !softconnect QMU_INTR\n", __func__);
+		pr_debug("%s !softconnect QMU_INTR\n", __func__);
 		qmu_done_status = mtu3_readl(mtu->mac_base, U3D_QISAR0);
 		qmu_done_status &= mtu3_readl(mtu->mac_base, U3D_QIER0);
 		mtu3_writel(mtu->mac_base, U3D_QISAR0, qmu_done_status);
@@ -822,7 +822,7 @@ static irqreturn_t mtu3_irq(int irq, void *data)
 	if (unlikely(!mtu->softconnect) && (level1 & MAC3_INTR)) {
 		u32 ltssm;
 
-		pr_info("%s !softconnect MAC3_INTR\n", __func__);
+		pr_debug("%s !softconnect MAC3_INTR\n", __func__);
 		ltssm = mtu3_readl(mtu->mac_base, U3D_LTSSM_INTR);
 		ltssm &= mtu3_readl(mtu->mac_base, U3D_LTSSM_INTR_ENABLE);
 		mtu3_writel(mtu->mac_base, U3D_LTSSM_INTR, ltssm); /* W1C */
@@ -1076,11 +1076,11 @@ void disconnect_check(struct mtu3 *mtu)
 
 	vbus_exist = mtu3_hal_is_vbus_exist();
 
-	pr_info("vbus_exist:<%d>\n", vbus_exist);
+	pr_debug("vbus_exist:<%d>\n", vbus_exist);
 	if (vbus_exist)
 		return;
 
-	pr_info("speed <%d>\n", mtu->g.speed);
+	pr_debug("speed <%d>\n", mtu->g.speed);
 	/* notify gadget driver, g.speed judge is very important */
 	if (!mtu->ssusb->is_host && mtu->g.speed != USB_SPEED_UNKNOWN) {
 		if (mtu->gadget_driver && mtu->gadget_driver->disconnect) {
@@ -1090,6 +1090,6 @@ void disconnect_check(struct mtu3 *mtu)
 			mtu->g.speed = USB_SPEED_UNKNOWN;
 		}
 	}
-	pr_info("speed <%d>\n", mtu->g.speed);
+	pr_debug("speed <%d>\n", mtu->g.speed);
 }
 #endif

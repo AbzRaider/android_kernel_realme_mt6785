@@ -604,7 +604,7 @@ static int __init ehci_tegra_init(void)
 	if (usb_disabled())
 		return -ENODEV;
 
-	pr_info(DRV_NAME ": " DRIVER_DESC "\n");
+	pr_debug(DRV_NAME ": " DRIVER_DESC "\n");
 
 	ehci_init_driver(&tegra_ehci_hc_driver, &tegra_overrides);
 
