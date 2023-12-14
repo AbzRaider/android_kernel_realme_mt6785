@@ -227,7 +227,7 @@ static int pmagaafb_probe(struct device *dev)
 
 	get_device(dev);
 
-	pr_info("fb%d: %s frame buffer device at %s\n",
+	pr_debug("fb%d: %s frame buffer device at %s\n",
 		info->node, info->fix.id, dev_name(dev));
 
 	return 0;
