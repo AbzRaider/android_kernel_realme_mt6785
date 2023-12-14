@@ -76,14 +76,14 @@ static void __init earlycon_init(struct earlycon_device *device,
 
 	if (port->iotype == UPIO_MEM || port->iotype == UPIO_MEM16 ||
 	    port->iotype == UPIO_MEM32 || port->iotype == UPIO_MEM32BE)
-		pr_info("%s%d at MMIO%s %pa (options '%s')\n",
+		pr_debug("%s%d at MMIO%s %pa (options '%s')\n",
 			earlycon->name, earlycon->index,
 			(port->iotype == UPIO_MEM) ? "" :
 			(port->iotype == UPIO_MEM16) ? "16" :
 			(port->iotype == UPIO_MEM32) ? "32" : "32be",
 			&port->mapbase, device->options);
 	else
-		pr_info("%s%d at I/O port 0x%lx (options '%s')\n",
+		pr_debug("%s%d at I/O port 0x%lx (options '%s')\n",
 			earlycon->name, earlycon->index,
 			port->iobase, device->options);
 }

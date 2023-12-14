@@ -1151,7 +1151,7 @@ static int __init usart_init(void)
 	static char banner[] __initdata = "STM32 USART driver initialized";
 	int ret;
 
-	pr_info("%s\n", banner);
+	pr_debug("%s\n", banner);
 
 	ret = uart_register_driver(&stm32_usart_driver);
 	if (ret)

@@ -103,7 +103,7 @@ MODULE_LICENSE("GPL");
 
 #define pmz_debug(fmt, arg...)	pr_debug("ttyPZ%d: " fmt, uap->port.line, ## arg)
 #define pmz_error(fmt, arg...)	pr_err("ttyPZ%d: " fmt, uap->port.line, ## arg)
-#define pmz_info(fmt, arg...)	pr_info("ttyPZ%d: " fmt, uap->port.line, ## arg)
+#define pmz_info(fmt, arg...)	pr_debug("ttyPZ%d: " fmt, uap->port.line, ## arg)
 
 /*
  * For the sake of early serial console, we can do a pre-probe

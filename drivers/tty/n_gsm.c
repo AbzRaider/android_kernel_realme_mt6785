@@ -487,7 +487,7 @@ static void gsm_print_packet(const char *hdr, int addr, int cr,
 	if (!(debug & 1))
 		return;
 
-	pr_info("%s %d) %c: ", hdr, addr, "RC"[cr]);
+	pr_debug("%s %d) %c: ", hdr, addr, "RC"[cr]);
 
 	switch (control & ~PF) {
 	case SABM:
@@ -1552,7 +1552,7 @@ static void gsm_dlci_t1(unsigned long data)
 			mod_timer(&dlci->t1, jiffies + gsm->t1 * HZ / 100);
 		} else if (!dlci->addr && gsm->control == (DM | PF)) {
 			if (debug & 8)
-				pr_info("DLCI %d opening in ADM mode.\n",
+				pr_debug("DLCI %d opening in ADM mode.\n",
 					dlci->addr);
 			dlci->mode = DLCI_MODE_ADM;
 			gsm_dlci_open(dlci);

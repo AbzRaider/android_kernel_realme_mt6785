@@ -80,7 +80,7 @@ module_param(vcc_dbg_vio, uint, 0664);
 #define vccdbg(f, a...)						\
 	do {							\
 		if (vcc_dbg & VCC_DBG_DRV)			\
-			pr_info(f, ## a);			\
+			pr_debug(f, ## a);			\
 	} while (0)						\
 
 #define vccdbgl(l)						\
@@ -94,7 +94,7 @@ module_param(vcc_dbg_vio, uint, 0664);
 		if (vcc_dbg & VCC_DBG_PKT) {			\
 			int i;					\
 			for (i = 0; i < pkt.tag.stype; i++)	\
-				pr_info("[%c]", pkt.data[i]);	\
+				pr_debug("[%c]", pkt.data[i]);	\
 		}						\
 	} while (0)						\
 
@@ -1094,7 +1094,7 @@ static int vcc_tty_init(void)
 {
 	int rv;
 
-	pr_info("VCC: %s\n", version);
+	pr_debug("VCC: %s\n", version);
 
 	vcc_tty_driver = tty_alloc_driver(VCC_MAX_PORTS, VCC_TTY_FLAGS);
 	if (IS_ERR(vcc_tty_driver)) {

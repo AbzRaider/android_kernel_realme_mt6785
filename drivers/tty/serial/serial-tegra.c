@@ -1398,7 +1398,7 @@ static int __init tegra_uart_init(void)
 
 static void __exit tegra_uart_exit(void)
 {
-	pr_info("Unloading tegra uart driver\n");
+	pr_debug("Unloading tegra uart driver\n");
 	platform_driver_unregister(&tegra_uart_platform_driver);
 	uart_unregister_driver(&tegra_uart_driver);
 }

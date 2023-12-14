@@ -835,7 +835,7 @@ static int __init efm32_uart_init(void)
 	if (ret)
 		uart_unregister_driver(&efm32_uart_reg);
 
-	pr_info("EFM32 UART/USART driver\n");
+	pr_debug("EFM32 UART/USART driver\n");
 
 	return ret;
 }

@@ -704,12 +704,12 @@ static int bfin_serial_startup(struct uart_port *port)
 			IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING |
 			0, "BFIN_UART_CTS", uart)) {
 			uart->cts_pin = -1;
-			pr_info("Unable to attach BlackFin UART CTS interrupt. So, disable it.\n");
+			pr_debug("Unable to attach BlackFin UART CTS interrupt. So, disable it.\n");
 		}
 	}
 	if (uart->rts_pin >= 0) {
 		if (gpio_request(uart->rts_pin, DRIVER_NAME)) {
-			pr_info("fail to request RTS PIN at GPIO_%d\n", uart->rts_pin);
+			pr_debug("fail to request RTS PIN at GPIO_%d\n", uart->rts_pin);
 			uart->rts_pin = -1;
 		} else
 			gpio_direction_output(uart->rts_pin, 0);
@@ -1519,7 +1519,7 @@ static int __init bfin_serial_init(void)
 {
 	int ret;
 
-	pr_info("Blackfin serial driver\n");
+	pr_debug("Blackfin serial driver\n");
 
 	ret = uart_register_driver(&bfin_serial_reg);
 	if (ret) {

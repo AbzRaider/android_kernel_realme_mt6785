@@ -110,7 +110,7 @@ int __init hp300_setup_serial_console(void)
 	/* Check for APCI console */
 	if (scode == 256) {
 #ifdef CONFIG_HPAPCI
-		pr_info("Serial console is HP APCI 1\n");
+		pr_debug("Serial console is HP APCI 1\n");
 
 		port.uartclk = HPAPCI_BAUD_BASE * 16;
 		port.mapbase = (FRODO_BASE + FRODO_APCI_OFFSET(1));
@@ -127,7 +127,7 @@ int __init hp300_setup_serial_console(void)
 		if (!pa)
 			return 0;
 
-		pr_info("Serial console is HP DCA at select code %d\n", scode);
+		pr_debug("Serial console is HP DCA at select code %d\n", scode);
 
 		port.uartclk = HPDCA_BAUD_BASE * 16;
 		port.mapbase = (pa + UART_OFFSET);

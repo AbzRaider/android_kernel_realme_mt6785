@@ -907,7 +907,7 @@ static int __init sport_uart_init(void)
 {
 	int ret;
 
-	pr_info("Blackfin uart over sport driver\n");
+	pr_debug("Blackfin uart over sport driver\n");
 
 	ret = uart_register_driver(&sport_uart_reg);
 	if (ret) {

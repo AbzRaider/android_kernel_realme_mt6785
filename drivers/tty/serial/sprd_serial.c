@@ -574,7 +574,7 @@ static int __init sprd_console_setup(struct console *co, char *options)
 
 	port = &sprd_port[co->index]->port;
 	if (port == NULL) {
-		pr_info("serial port %d not yet initialized\n", co->index);
+		pr_debug("serial port %d not yet initialized\n", co->index);
 		return -ENODEV;
 	}
 	if (options)

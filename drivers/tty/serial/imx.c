@@ -1974,7 +1974,7 @@ imx_console_get_options(struct imx_port *sport, int *baud,
 		}
 
 		if (*baud != baud_raw)
-			pr_info("Console IMX rounded baud rate from %d to %d\n",
+			pr_debug("Console IMX rounded baud rate from %d to %d\n",
 				baud_raw, *baud);
 	}
 }

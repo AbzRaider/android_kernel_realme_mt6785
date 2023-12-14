@@ -1691,7 +1691,7 @@ static int __init msm_console_setup(struct console *co, char *options)
 	if (options)
 		uart_parse_options(options, &baud, &parity, &bits, &flow);
 
-	pr_info("msm_serial: console setup on port #%d\n", port->line);
+	pr_debug("msm_serial: console setup on port #%d\n", port->line);
 
 	return uart_set_options(port, co, baud, parity, bits, flow);
 }
@@ -1869,7 +1869,7 @@ static int __init msm_serial_init(void)
 	if (unlikely(ret))
 		uart_unregister_driver(&msm_uart_driver);
 
-	pr_info("msm_serial: driver initialized\n");
+	pr_debug("msm_serial: driver initialized\n");
 
 	return ret;
 }

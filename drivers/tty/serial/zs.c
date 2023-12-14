@@ -1266,7 +1266,7 @@ static int __init zs_init(void)
 {
 	int i, ret;
 
-	pr_info("%s%s\n", zs_name, zs_version);
+	pr_debug("%s%s\n", zs_name, zs_version);
 
 	/* Find out how many Z85C30 SCCs we have.  */
 	ret = zs_probe_sccs();

@@ -209,14 +209,14 @@ static int hvc_opal_probe(struct platform_device *dev)
 		return -ENXIO;
 	}
 
-	pr_info("hvc%d: %s protocol on %pOF%s\n", termno,
+	pr_debug("hvc%d: %s protocol on %pOF%s\n", termno,
 		proto == HV_PROTOCOL_RAW ? "raw" : "hvsi",
 		dev->dev.of_node,
 		boot ? " (boot console)" : "");
 
 	irq = irq_of_parse_and_map(dev->dev.of_node, 0);
 	if (!irq) {
-		pr_info("hvc%d: No interrupts property, using OPAL event\n",
+		pr_debug("hvc%d: No interrupts property, using OPAL event\n",
 				termno);
 		irq = opal_event_request(ilog2(OPAL_EVENT_CONSOLE_INPUT));
 	}

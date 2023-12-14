@@ -1566,7 +1566,7 @@ static int __init hvcs_module_init(void)
 		return rc;
 	}
 
-	pr_info("HVCS: Driver registered.\n");
+	pr_debug("HVCS: Driver registered.\n");
 
 	/* This needs to be done AFTER the vio_register_driver() call or else
 	 * the kobjects won't be initialized properly.

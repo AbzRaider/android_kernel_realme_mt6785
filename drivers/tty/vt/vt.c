@@ -3067,7 +3067,7 @@ static int __init con_init(void)
 	gotoxy(vc, vc->vc_x, vc->vc_y);
 	csi_J(vc, 0);
 	update_screen(vc);
-	pr_info("Console: %s %s %dx%d\n",
+	pr_debug("Console: %s %s %dx%d\n",
 		vc->vc_can_do_color ? "colour" : "mono",
 		display_desc, vc->vc_cols, vc->vc_rows);
 	printable = 1;
@@ -3238,7 +3238,7 @@ static int do_bind_con_driver(const struct consw *csw, int first, int last,
 			clear_buffer_attributes(vc);
 	}
 
-	pr_info("Console: switching ");
+	pr_debug("Console: switching ");
 	if (!deflt)
 		printk(KERN_CONT "consoles %d-%d ", first+1, last+1);
 	if (j >= 0) {
