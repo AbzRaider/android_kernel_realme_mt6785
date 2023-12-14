@@ -180,7 +180,7 @@ static inline int mtk_iommu_larb_port_idx(int id)
 		(iommu_port[index].larb_port == port))
 		return index;
 
-	pr_info("[MTK_IOMMU] do not find index for id %d\n", id);
+	pr_debug("[MTK_IOMMU] do not find index for id %d\n", id);
 	return ERROR_LARB_PORT_ID;
 }
 
@@ -191,7 +191,7 @@ char *iommu_get_port_name(int port)
 	idx = mtk_iommu_larb_port_idx(port);
 	if (idx >= M4U_PORT_NR ||
 	    idx < 0) {
-		pr_info("[MTK_IOMMU] %s fail, port=%d\n", __func__, port);
+		pr_debug("[MTK_IOMMU] %s fail, port=%d\n", __func__, port);
 		return "m4u_port_unknown";
 	}
 	return iommu_port[idx].name;
@@ -215,7 +215,7 @@ bool report_custom_iommu_fault(
 		idx = mtk_iommu_larb_port_idx(port);
 		if (idx >= M4U_PORT_NR ||
 		    idx < 0) {
-			pr_info("[MTK_IOMMU] fail,iova 0x%lx, port %d\n",
+			pr_debug("[MTK_IOMMU] fail,iova 0x%lx, port %d\n",
 				fault_iova, port);
 			return -1;
 		}
@@ -223,7 +223,7 @@ bool report_custom_iommu_fault(
 	} else {
 		idx = mtk_iommu_get_tf_larb_port_idx(m4uid, fault_id);
 		if (idx == ERROR_LARB_PORT_ID) {
-			pr_info("[MTK_IOMMU] fail,iova 0x%lx, port %d\n",
+			pr_debug("[MTK_IOMMU] fail,iova 0x%lx, port %d\n",
 				fault_iova, fault_id);
 			return false;
 		}
@@ -284,7 +284,7 @@ int mtk_iommu_register_fault_callback(int port,
 
 	if (idx >= M4U_PORT_NR ||
 	    idx < 0) {
-		pr_info("[MTK_IOMMU] %s fail, port=%d\n", __func__, port);
+		pr_debug("[MTK_IOMMU] %s fail, port=%d\n", __func__, port);
 		return -1;
 	}
 	iommu_port[idx].fault_fn = fn;
@@ -298,7 +298,7 @@ int mtk_iommu_unregister_fault_callback(int port)
 
 	if (idx >= M4U_PORT_NR ||
 	    idx < 0) {
-		pr_info("[MTK_IOMMU] %s fail, port=%d\n", __func__, port);
+		pr_debug("[MTK_IOMMU] %s fail, port=%d\n", __func__, port);
 		return -1;
 	}
 	iommu_port[idx].fault_fn = NULL;
@@ -312,7 +312,7 @@ int mtk_iommu_enable_tf(int port, bool fgenable)
 
 	if (idx >= M4U_PORT_NR ||
 	    idx < 0) {
-		pr_info("[MTK_IOMMU] %s fail, port=%d\n", __func__, port);
+		pr_debug("[MTK_IOMMU] %s fail, port=%d\n", __func__, port);
 		return -1;
 	}
 
@@ -587,7 +587,7 @@ void mtk_iommu_trace_rec_write(int event,
 		return;
 
 	if (event_mgr[event].dump_log)
-		pr_info("[MTK_IOMMU] _trace %10s |0x%-8lx |%9lu |0x%-8lx |0x%-8lx\n",
+		pr_debug("[MTK_IOMMU] _trace %10s |0x%-8lx |%9lu |0x%-8lx |0x%-8lx\n",
 			event_mgr[event].name,
 			data1, data2, data3, data1 + data3);
 
@@ -632,13 +632,13 @@ int mtk_iommu_trace_register(int event, const char *name)
 	if ((event >= IOMMU_EVENT_MAX) ||
 	    (event < 0) ||
 	    (name == NULL)) {
-		pr_info("[MTK_IOMMU] parameter error, event-%d, name %p, EVENT_MAX: %d\n",
+		pr_debug("[MTK_IOMMU] parameter error, event-%d, name %p, EVENT_MAX: %d\n",
 			event, name, IOMMU_EVENT_MAX);
 		return -1;
 	}
 	n = snprintf(event_mgr[event].name, 10, "%s", name);
 	if (n <= 0)
-		pr_info("[MTK_IOMMU] failed to record event name\n");
+		pr_debug("[MTK_IOMMU] failed to record event name\n");
 
 	return n;
 }

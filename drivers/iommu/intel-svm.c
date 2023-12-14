@@ -60,7 +60,7 @@ int intel_svm_alloc_pasid_tables(struct intel_iommu *iommu)
 		return -ENOMEM;
 	}
 	iommu->pasid_table = page_address(pages);
-	pr_info("%s: Allocated order %d PASID table.\n", iommu->name, order);
+	pr_debug("%s: Allocated order %d PASID table.\n", iommu->name, order);
 
 	if (ecap_dis(iommu->ecap)) {
 		/* Just making it explicit... */

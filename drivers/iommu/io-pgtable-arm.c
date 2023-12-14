@@ -1140,7 +1140,7 @@ static int __init arm_lpae_do_selftests(void)
 		for (j = 0; j < ARRAY_SIZE(ias); ++j) {
 			cfg.pgsize_bitmap = pgsize[i];
 			cfg.ias = ias[j];
-			pr_info("selftest: pgsize_bitmap 0x%08lx, IAS %u\n",
+			pr_debug("selftest: pgsize_bitmap 0x%08lx, IAS %u\n",
 				pgsize[i], ias[j]);
 			if (arm_lpae_run_tests(&cfg))
 				fail++;
@@ -1149,7 +1149,7 @@ static int __init arm_lpae_do_selftests(void)
 		}
 	}
 
-	pr_info("selftest: completed with %d PASS %d FAIL\n", pass, fail);
+	pr_debug("selftest: completed with %d PASS %d FAIL\n", pass, fail);
 	return fail ? -EFAULT : 0;
 }
 subsys_initcall(arm_lpae_do_selftests);

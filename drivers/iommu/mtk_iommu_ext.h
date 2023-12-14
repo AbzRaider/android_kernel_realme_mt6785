@@ -30,11 +30,11 @@
 	aee_kernel_warning_api(__FILE__, __LINE__, \
 		DB_OPT_MMPROFILE_BUFFER | DB_OPT_DUMP_DISPLAY, \
 		"[MTK_IOMMU]", "error"string, ##args); \
-	pr_info("[MTK_IOMMU] error:"string, ##args);  \
+	pr_debug("[MTK_IOMMU] error:"string, ##args);  \
 	} while (0)
 #else
 #define mmu_aee_print(string, args...) do {\
-		pr_info("[MTK_IOMMU] error:"string, ##args);  \
+		pr_debug("[MTK_IOMMU] error:"string, ##args);  \
 	} while (0)
 
 #endif

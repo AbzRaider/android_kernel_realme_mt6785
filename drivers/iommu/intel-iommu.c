@@ -558,21 +558,21 @@ static int __init intel_iommu_setup(char *str)
 	while (*str) {
 		if (!strncmp(str, "on", 2)) {
 			dmar_disabled = 0;
-			pr_info("IOMMU enabled\n");
+			pr_debug("IOMMU enabled\n");
 		} else if (!strncmp(str, "off", 3)) {
 			dmar_disabled = 1;
-			pr_info("IOMMU disabled\n");
+			pr_debug("IOMMU disabled\n");
 		} else if (!strncmp(str, "igfx_off", 8)) {
 			dmar_map_gfx = 0;
-			pr_info("Disable GFX device mapping\n");
+			pr_debug("Disable GFX device mapping\n");
 		} else if (!strncmp(str, "forcedac", 8)) {
-			pr_info("Forcing DAC for PCI devices\n");
+			pr_debug("Forcing DAC for PCI devices\n");
 			dmar_forcedac = 1;
 		} else if (!strncmp(str, "strict", 6)) {
-			pr_info("Disable batched IOTLB flush\n");
+			pr_debug("Disable batched IOTLB flush\n");
 			intel_iommu_strict = 1;
 		} else if (!strncmp(str, "sp_off", 6)) {
-			pr_info("Disable supported super page\n");
+			pr_debug("Disable supported super page\n");
 			intel_iommu_superpage = 0;
 		} else if (!strncmp(str, "ecs_off", 7)) {
 			printk(KERN_INFO
@@ -2696,7 +2696,7 @@ static int domain_prepare_identity_map(struct device *dev,
 		return 0;
 	}
 
-	pr_info("Setting identity map for device %s [0x%Lx - 0x%Lx]\n",
+	pr_debug("Setting identity map for device %s [0x%Lx - 0x%Lx]\n",
 		dev_name(dev), start, end);
 
 	if (end < start) {
@@ -2758,7 +2758,7 @@ static inline void iommu_prepare_isa(void)
 	if (!pdev)
 		return;
 
-	pr_info("Prepare 0-16MiB unity mapping for LPC\n");
+	pr_debug("Prepare 0-16MiB unity mapping for LPC\n");
 	ret = iommu_prepare_identity_map(&pdev->dev, 0, 16*1024*1024 - 1);
 
 	if (ret)
@@ -2978,7 +2978,7 @@ static int __init dev_prepare_static_identity_mapping(struct device *dev, int hw
 
 	ret = domain_add_dev_info(si_domain, dev);
 	if (!ret)
-		pr_info("%s identity mapping for device %s\n",
+		pr_debug("%s identity mapping for device %s\n",
 			hw ? "Hardware" : "Software", dev_name(dev));
 	else if (ret == -ENODEV)
 		/* device not associated with an iommu */
@@ -3052,12 +3052,12 @@ static void intel_iommu_init_qi(struct intel_iommu *iommu)
 		 */
 		iommu->flush.flush_context = __iommu_flush_context;
 		iommu->flush.flush_iotlb = __iommu_flush_iotlb;
-		pr_info("%s: Using Register based invalidation\n",
+		pr_debug("%s: Using Register based invalidation\n",
 			iommu->name);
 	} else {
 		iommu->flush.flush_context = qi_flush_context;
 		iommu->flush.flush_iotlb = qi_flush_iotlb;
-		pr_info("%s: Using Queued invalidation\n", iommu->name);
+		pr_debug("%s: Using Queued invalidation\n", iommu->name);
 	}
 }
 
@@ -3313,7 +3313,7 @@ static int __init init_dmars(void)
 			goto free_iommu;
 
 		if (translation_pre_enabled(iommu)) {
-			pr_info("Translation already enabled - trying to copy translation structures\n");
+			pr_debug("Translation already enabled - trying to copy translation structures\n");
 
 			ret = copy_translation_tables(iommu);
 			if (ret) {
@@ -3331,7 +3331,7 @@ static int __init init_dmars(void)
 				iommu_disable_translation(iommu);
 				clear_translation_pre_enabled(iommu);
 			} else {
-				pr_info("Copied translation tables from previous kernel for %s\n",
+				pr_debug("Copied translation tables from previous kernel for %s\n",
 					iommu->name);
 				copied_tables = true;
 			}
@@ -3341,7 +3341,7 @@ static int __init init_dmars(void)
 			hw_pass_through = 0;
 
 		if (!intel_iommu_strict && cap_caching_mode(iommu->cap)) {
-			pr_info("Disable batched IOTLB flush due to virtualization");
+			pr_debug("Disable batched IOTLB flush due to virtualization");
 			intel_iommu_strict = 1;
 		}
 
@@ -3417,7 +3417,7 @@ static int __init init_dmars(void)
 	 *    endfor
 	 * endfor
 	 */
-	pr_info("Setting RMRR:\n");
+	pr_debug("Setting RMRR:\n");
 	for_each_rmrr_units(rmrr) {
 		/* some BIOS lists non-exist devices in DMAR table. */
 		for_each_active_dev_scope(rmrr->devices, rmrr->devices_cnt,
@@ -3588,7 +3588,7 @@ static int iommu_no_mapping(struct device *dev)
 			 * to non-identity mapping.
 			 */
 			dmar_remove_one_dev_info(si_domain, dev);
-			pr_info("32bit %s uses non-identity mapping\n",
+			pr_debug("32bit %s uses non-identity mapping\n",
 				dev_name(dev));
 			return 0;
 		}
@@ -3601,7 +3601,7 @@ static int iommu_no_mapping(struct device *dev)
 			int ret;
 			ret = domain_add_dev_info(si_domain, dev);
 			if (!ret) {
-				pr_info("64bit %s uses identity mapping\n",
+				pr_debug("64bit %s uses identity mapping\n",
 					dev_name(dev));
 				return 1;
 			}
@@ -4800,10 +4800,10 @@ int __init intel_iommu_init(void)
 	}
 
 	if (list_empty(&dmar_rmrr_units))
-		pr_info("No RMRR found\n");
+		pr_debug("No RMRR found\n");
 
 	if (list_empty(&dmar_atsr_units))
-		pr_info("No ATSR found\n");
+		pr_debug("No ATSR found\n");
 
 	if (dmar_init_reserved_ranges()) {
 		if (force_on)
@@ -4824,7 +4824,7 @@ int __init intel_iommu_init(void)
 		goto out_free_reserved_range;
 	}
 	up_write(&dmar_global_lock);
-	pr_info("Intel(R) Virtualization Technology for Directed I/O\n");
+	pr_debug("Intel(R) Virtualization Technology for Directed I/O\n");
 
 #ifdef CONFIG_SWIOTLB
 	swiotlb = 0;
@@ -5387,7 +5387,7 @@ const struct iommu_ops intel_iommu_ops = {
 static void quirk_iommu_g4x_gfx(struct pci_dev *dev)
 {
 	/* G4x/GM45 integrated gfx dmar support is totally busted. */
-	pr_info("Disabling IOMMU for graphics on this chipset\n");
+	pr_debug("Disabling IOMMU for graphics on this chipset\n");
 	dmar_map_gfx = 0;
 }
 
@@ -5405,7 +5405,7 @@ static void quirk_iommu_rwbf(struct pci_dev *dev)
 	 * Mobile 4 Series Chipset neglects to set RWBF capability,
 	 * but needs it. Same seems to hold for the desktop versions.
 	 */
-	pr_info("Forcing write-buffer flush capability\n");
+	pr_debug("Forcing write-buffer flush capability\n");
 	rwbf_quirk = 1;
 }
 
@@ -5435,11 +5435,11 @@ static void quirk_calpella_no_shadow_gtt(struct pci_dev *dev)
 		return;
 
 	if (!(ggc & GGC_MEMORY_VT_ENABLED)) {
-		pr_info("BIOS has allocated no shadow GTT; disabling IOMMU for graphics\n");
+		pr_debug("BIOS has allocated no shadow GTT; disabling IOMMU for graphics\n");
 		dmar_map_gfx = 0;
 	} else if (dmar_map_gfx) {
 		/* we have to ensure the gfx device is idle before we flush */
-		pr_info("Disabling batched IOTLB flush on Ironlake\n");
+		pr_debug("Disabling batched IOTLB flush on Ironlake\n");
 		intel_iommu_strict = 1;
        }
 }

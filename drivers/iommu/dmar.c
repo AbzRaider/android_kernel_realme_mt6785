@@ -217,7 +217,7 @@ fallback:
 	if (bus              == info->path[i].bus &&
 	    path[0].device   == info->path[i].device &&
 	    path[0].function == info->path[i].function) {
-		pr_info(FW_BUG "RMRR entry for device %02x:%02x.%x is broken - applying workaround\n",
+		pr_debug(FW_BUG "RMRR entry for device %02x:%02x.%x is broken - applying workaround\n",
 			bus, path[0].device, path[0].function);
 		return true;
 	}
@@ -468,7 +468,7 @@ static int __init dmar_parse_one_andd(struct acpi_dmar_header *header,
 		add_taint(TAINT_FIRMWARE_WORKAROUND, LOCKDEP_STILL_OK);
 		return -EINVAL;
 	}
-	pr_info("ANDD device: %x name: %s\n", andd->device_number,
+	pr_debug("ANDD device: %x name: %s\n", andd->device_number,
 		andd->device_name);
 
 	return 0;
@@ -518,23 +518,23 @@ dmar_table_print_dmar_entry(struct acpi_dmar_header *header)
 	case ACPI_DMAR_TYPE_HARDWARE_UNIT:
 		drhd = container_of(header, struct acpi_dmar_hardware_unit,
 				    header);
-		pr_info("DRHD base: %#016Lx flags: %#x\n",
+		pr_debug("DRHD base: %#016Lx flags: %#x\n",
 			(unsigned long long)drhd->address, drhd->flags);
 		break;
 	case ACPI_DMAR_TYPE_RESERVED_MEMORY:
 		rmrr = container_of(header, struct acpi_dmar_reserved_memory,
 				    header);
-		pr_info("RMRR base: %#016Lx end: %#016Lx\n",
+		pr_debug("RMRR base: %#016Lx end: %#016Lx\n",
 			(unsigned long long)rmrr->base_address,
 			(unsigned long long)rmrr->end_address);
 		break;
 	case ACPI_DMAR_TYPE_ROOT_ATS:
 		atsr = container_of(header, struct acpi_dmar_atsr, header);
-		pr_info("ATSR flags: %#x\n", atsr->flags);
+		pr_debug("ATSR flags: %#x\n", atsr->flags);
 		break;
 	case ACPI_DMAR_TYPE_HARDWARE_AFFINITY:
 		rhsa = container_of(header, struct acpi_dmar_rhsa, header);
-		pr_info("RHSA base: %#016Lx proximity domain: %#x\n",
+		pr_debug("RHSA base: %#016Lx proximity domain: %#x\n",
 		       (unsigned long long)rhsa->base_address,
 		       rhsa->proximity_domain);
 		break;
@@ -652,7 +652,7 @@ parse_dmar_table(void)
 		return -EINVAL;
 	}
 
-	pr_info("Host address width %d\n", dmar->width + 1);
+	pr_debug("Host address width %d\n", dmar->width + 1);
 	ret = dmar_walk_dmar_table(dmar, &cb);
 	if (ret == 0 && drhd_count == 0)
 		pr_warn(FW_BUG "No DRHD structure found in DMAR table\n");
@@ -731,7 +731,7 @@ static void __init dmar_acpi_insert_dev_scope(u8 device_number,
 				continue;
 
 			path = (void *)(scope + 1);
-			pr_info("ACPI device \"%s\" under DMAR at %llx as %02x:%02x.%d\n",
+			pr_debug("ACPI device \"%s\" under DMAR at %llx as %02x:%02x.%d\n",
 				dev_name(&adev->dev), dmaru->reg_base_addr,
 				scope->bus, path->device, path->function);
 			for_each_dev_scope(dmaru->devices, dmaru->devices_cnt, i, tmp)
@@ -828,9 +828,9 @@ int __init dmar_table_init(void)
 		ret = parse_dmar_table();
 		if (ret < 0) {
 			if (ret != -ENODEV)
-				pr_info("Parse DMAR table failure.\n");
+				pr_debug("Parse DMAR table failure.\n");
 		} else  if (list_empty(&dmar_drhd_units)) {
-			pr_info("No DMAR devices found\n");
+			pr_debug("No DMAR devices found\n");
 			ret = -ENODEV;
 		}
 
@@ -1054,7 +1054,7 @@ static int alloc_iommu(struct dmar_drhd_unit *drhd)
 
 	err = -EINVAL;
 	if (cap_sagaw(iommu->cap) == 0) {
-		pr_info("%s: No supported address widths. Not attempting DMA translation.\n",
+		pr_debug("%s: No supported address widths. Not attempting DMA translation.\n",
 			iommu->name);
 		drhd->ignored = 1;
 	}
@@ -1083,7 +1083,7 @@ static int alloc_iommu(struct dmar_drhd_unit *drhd)
 	iommu->node = -1;
 
 	ver = readl(iommu->reg + DMAR_VER_REG);
-	pr_info("%s: reg_base_addr %llx ver %d:%d cap %llx ecap %llx\n",
+	pr_debug("%s: reg_base_addr %llx ver %d:%d cap %llx ecap %llx\n",
 		iommu->name,
 		(unsigned long long)drhd->reg_base_addr,
 		DMAR_VER_MAJOR(ver), DMAR_VER_MINOR(ver),

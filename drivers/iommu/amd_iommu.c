@@ -290,7 +290,7 @@ static u16 get_alias(struct device *dev)
 		return pci_alias;
 	}
 
-	pr_info("AMD-Vi: Using IVRS reported alias %02x:%02x.%d "
+	pr_debug("AMD-Vi: Using IVRS reported alias %02x:%02x.%d "
 		"for device %s[%04x:%04x], kernel reported alias "
 		"%02x:%02x.%d\n", PCI_BUS_NUM(ivrs_alias), PCI_SLOT(ivrs_alias),
 		PCI_FUNC(ivrs_alias), dev_name(dev), pdev->vendor, pdev->device,
@@ -304,7 +304,7 @@ static u16 get_alias(struct device *dev)
 	if (pci_alias == devid &&
 	    PCI_BUS_NUM(ivrs_alias) == pdev->bus->number) {
 		pci_add_dma_alias(pdev, ivrs_alias & 0xff);
-		pr_info("AMD-Vi: Added PCI DMA alias %02x.%d for %s\n",
+		pr_debug("AMD-Vi: Added PCI DMA alias %02x.%d for %s\n",
 			PCI_SLOT(ivrs_alias), PCI_FUNC(ivrs_alias),
 			dev_name(dev));
 	}
@@ -2855,9 +2855,9 @@ int __init amd_iommu_init_dma_ops(void)
 		dma_ops = &nommu_dma_ops;
 
 	if (amd_iommu_unmap_flush)
-		pr_info("AMD-Vi: IO/TLB flush on unmap enabled\n");
+		pr_debug("AMD-Vi: IO/TLB flush on unmap enabled\n");
 	else
-		pr_info("AMD-Vi: Lazy IO/TLB flushing enabled\n");
+		pr_debug("AMD-Vi: Lazy IO/TLB flushing enabled\n");
 
 	return 0;
 

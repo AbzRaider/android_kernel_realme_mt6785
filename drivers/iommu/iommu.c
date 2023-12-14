@@ -650,7 +650,7 @@ void iommu_group_remove_device(struct device *dev)
 	struct iommu_group *group = dev->iommu_group;
 	struct group_device *tmp_device, *device = NULL;
 
-	pr_info("Removing device %s from group %d\n", dev_name(dev), group->id);
+	pr_debug("Removing device %s from group %d\n", dev_name(dev), group->id);
 
 	/* Pre-notify listeners that a device is being removed. */
 	blocking_notifier_call_chain(&group->notifier,
@@ -1992,7 +1992,7 @@ int iommu_request_dm_for_dev(struct device *dev)
 		iommu_domain_free(group->default_domain);
 	group->default_domain = dm_domain;
 
-	pr_info("Using direct mapping for device %s\n", dev_name(dev));
+	pr_debug("Using direct mapping for device %s\n", dev_name(dev));
 
 	ret = 0;
 out:

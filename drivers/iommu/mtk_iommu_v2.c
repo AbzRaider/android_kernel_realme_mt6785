@@ -1457,7 +1457,7 @@ static irqreturn_t mtk_iommu_isr(int irq, void *dev_id)
 		}
 	}
 	if (i == MTK_IOMMU_MMU_COUNT) {
-		pr_info("m4u interrupt error: status = 0x%x\n", int_state);
+		pr_debug("m4u interrupt error: status = 0x%x\n", int_state);
 		iommu_set_field_by_mask(base, REG_MMU_INT_CONTROL0,
 					F_INT_CTL0_INT_CLR,
 					F_INT_CTL0_INT_CLR);
@@ -2825,7 +2825,7 @@ int mtk_dump_valid_main0_tlb(
 	for (i = 0; i < g_tag_count[data->m4uid]; i++) {
 		mtk_get_main_tlb(data, m4u_slave_id, i, &tlb);
 		if ((tlb.tag & F_MAIN_TLB_VALID_BIT) == F_MAIN_TLB_VALID_BIT)
-			pr_info("%d:0x%x:0x%x\n", i, tlb.tag, tlb.desc);
+			pr_debug("%d:0x%x:0x%x\n", i, tlb.tag, tlb.desc);
 
 	}
 	pr_notice("dump inv main tlb end\n");
@@ -3664,18 +3664,18 @@ void iommu_perf_print_counter(int m4u_id, int slave, const char *msg)
 	struct IOMMU_PERF_COUNT cnt;
 	int ret = 0;
 
-	pr_info(
+	pr_debug(
 		"==== performance count for %s iommu:%d, slave:%d======\n",
 		msg, m4u_id, slave);
 	ret = iommu_perf_get_counter(m4u_id, slave, &cnt);
 	if (!ret)
-		pr_info(
+		pr_debug(
 			">>> total trans=%u, main_miss=%u, pfh_miss=%u, pfh_cnt=%u, rs_perf_cnt=%u\n",
 			cnt.transaction_cnt, cnt.main_tlb_miss_cnt,
 			cnt.pfh_tlb_miss_cnt, cnt.pfh_cnt,
 			cnt.rs_perf_cnt);
 	else
-		pr_info("failed to get performance data, ret:%d\n", ret);
+		pr_debug("failed to get performance data, ret:%d\n", ret);
 }
 
 int iommu_perf_monitor_start(int m4u_id)
@@ -3701,7 +3701,7 @@ int iommu_perf_monitor_start(int m4u_id)
 #endif
 	base = data->base;
 
-	pr_info("====%s: %d======\n", __func__, m4u_id);
+	pr_debug("====%s: %d======\n", __func__, m4u_id);
 	/* clear GMC performance counter */
 	iommu_set_field_by_mask(base, REG_MMU_CTRL_REG,
 				F_MMU_CTRL_MONITOR_CLR(1),
@@ -3743,7 +3743,7 @@ int iommu_perf_monitor_stop(int m4u_id)
 #endif
 	base = data->base;
 
-	pr_info("====%s: %d======\n", __func__, m4u_id);
+	pr_debug("====%s: %d======\n", __func__, m4u_id);
 	/* disable GMC performance monitor */
 	iommu_set_field_by_mask(base, REG_MMU_CTRL_REG,
 				F_MMU_CTRL_MONITOR_EN(1),
@@ -4259,7 +4259,7 @@ static s32 mtk_iommu_clks_get(struct mtk_iommu_data *data)
 	int i, ret = 0;
 
 	if (!data || !data->dev) {
-		pr_info("iommu No such device or address\n");
+		pr_debug("iommu No such device or address\n");
 		return -ENXIO;
 	} else if (data->m4u_clks) {
 		pr_notice("%s, %d, clk reinit\n", __func__, __LINE__);
@@ -4274,7 +4274,7 @@ static s32 mtk_iommu_clks_get(struct mtk_iommu_data *data)
 
 	nr = of_property_count_strings(dev->of_node, clk_names);
 	if (nr > IOMMU_CLK_ID_COUNT * 2) {
-		pr_info("iommu clk count %d exceed the max number of %d\n",
+		pr_debug("iommu clk count %d exceed the max number of %d\n",
 			nr, IOMMU_CLK_ID_COUNT);
 		ret = -ENXIO;
 		goto free_clks;
@@ -4358,7 +4358,7 @@ static s32 mtk_iommu_larbs_get(struct mtk_iommu_data *data)
 	struct component_match  *match = NULL;
 
 	if (!data || !data->dev) {
-		pr_info("iommu No such device or address\n");
+		pr_debug("iommu No such device or address\n");
 		return -ENXIO;
 	}
 

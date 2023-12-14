@@ -584,7 +584,7 @@ static int intel_setup_irq_remapping(struct intel_iommu *iommu)
 			pr_err("Failed to copy IR table for %s from previous kernel\n",
 			       iommu->name);
 		else
-			pr_info("Copied IR table for %s from previous kernel\n",
+			pr_debug("Copied IR table for %s from previous kernel\n",
 				iommu->name);
 	}
 
@@ -720,7 +720,7 @@ static int __init intel_prepare_irq_remapping(void)
 		return -ENODEV;
 
 	if (parse_ioapics_under_ir()) {
-		pr_info("Not enabling interrupt remapping\n");
+		pr_debug("Not enabling interrupt remapping\n");
 		goto error;
 	}
 
@@ -733,21 +733,21 @@ static int __init intel_prepare_irq_remapping(void)
 	if (x2apic_supported()) {
 		eim = !dmar_x2apic_optout();
 		if (!eim) {
-			pr_info("x2apic is disabled because BIOS sets x2apic opt out bit.");
-			pr_info("Use 'intremap=no_x2apic_optout' to override the BIOS setting.\n");
+			pr_debug("x2apic is disabled because BIOS sets x2apic opt out bit.");
+			pr_debug("Use 'intremap=no_x2apic_optout' to override the BIOS setting.\n");
 		}
 	}
 
 	for_each_iommu(iommu, drhd) {
 		if (eim && !ecap_eim_support(iommu->ecap)) {
-			pr_info("%s does not support EIM\n", iommu->name);
+			pr_debug("%s does not support EIM\n", iommu->name);
 			eim = 0;
 		}
 	}
 
 	eim_mode = eim;
 	if (eim)
-		pr_info("Queued invalidation will be enabled to support x2apic and Intr-remapping.\n");
+		pr_debug("Queued invalidation will be enabled to support x2apic and Intr-remapping.\n");
 
 	/* Do the initializations early */
 	for_each_iommu(iommu, drhd) {
@@ -816,7 +816,7 @@ static int __init intel_enable_irq_remapping(void)
 
 	set_irq_posting_cap();
 
-	pr_info("Enabled IRQ remapping in %s mode\n", eim_mode ? "x2apic" : "xapic");
+	pr_debug("Enabled IRQ remapping in %s mode\n", eim_mode ? "x2apic" : "xapic");
 
 	return eim_mode ? IRQ_REMAP_X2APIC_MODE : IRQ_REMAP_XAPIC_MODE;
 
@@ -864,7 +864,7 @@ static int ir_parse_one_hpet_scope(struct acpi_dmar_device_scope *scope,
 	ir_hpet[free].id    = scope->enumeration_id;
 	ir_hpet[free].bus   = bus;
 	ir_hpet[free].devfn = PCI_DEVFN(path->device, path->function);
-	pr_info("HPET id %d under DRHD base 0x%Lx\n",
+	pr_debug("HPET id %d under DRHD base 0x%Lx\n",
 		scope->enumeration_id, drhd->address);
 
 	return 0;
@@ -909,7 +909,7 @@ static int ir_parse_one_ioapic_scope(struct acpi_dmar_device_scope *scope,
 	ir_ioapic[free].devfn = PCI_DEVFN(path->device, path->function);
 	ir_ioapic[free].iommu = iommu;
 	ir_ioapic[free].id    = scope->enumeration_id;
-	pr_info("IOAPIC id %d under DRHD base  0x%Lx IOMMU %d\n",
+	pr_debug("IOAPIC id %d under DRHD base  0x%Lx IOMMU %d\n",
 		scope->enumeration_id, drhd->address, iommu->seq_id);
 
 	return 0;
@@ -1447,7 +1447,7 @@ static int dmar_ir_add(struct dmar_drhd_unit *dmaru, struct intel_iommu *iommu)
 	int eim = x2apic_enabled();
 
 	if (eim && !ecap_eim_support(iommu->ecap)) {
-		pr_info("DRHD %Lx: EIM not supported by DRHD, ecap %Lx\n",
+		pr_debug("DRHD %Lx: EIM not supported by DRHD, ecap %Lx\n",
 			iommu->reg_phys, iommu->ecap);
 		return -ENODEV;
 	}

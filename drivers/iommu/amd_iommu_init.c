@@ -1009,7 +1009,7 @@ static int __init add_special_device(u8 type, u8 id, u16 *devid, bool cmd_line)
 		if (!(entry->id == id && entry->cmd_line))
 			continue;
 
-		pr_info("AMD-Vi: Command-line override present for %s id %d - ignoring\n",
+		pr_debug("AMD-Vi: Command-line override present for %s id %d - ignoring\n",
 			type == IVHD_SPECIAL_IOAPIC ? "IOAPIC" : "HPET", id);
 
 		*devid = entry->devid;
@@ -1042,7 +1042,7 @@ static int __init add_acpi_hid_device(u8 *hid, u8 *uid, u16 *devid,
 		    !entry->cmd_line)
 			continue;
 
-		pr_info("AMD-Vi: Command-line override for hid:%s uid:%s\n",
+		pr_debug("AMD-Vi: Command-line override for hid:%s uid:%s\n",
 			hid, uid);
 		*devid = entry->devid;
 		return 0;
@@ -1058,7 +1058,7 @@ static int __init add_acpi_hid_device(u8 *hid, u8 *uid, u16 *devid,
 	entry->cmd_line	= cmd_line;
 	entry->root_devid = (entry->devid & (~0x7));
 
-	pr_info("AMD-Vi:%s, add hid:%s, uid:%s, rdevid:%d\n",
+	pr_debug("AMD-Vi:%s, add hid:%s, uid:%s, rdevid:%d\n",
 		entry->cmd_line ? "cmd" : "ivrs",
 		entry->hid, entry->uid, entry->root_devid);
 
@@ -1437,7 +1437,7 @@ static void amd_iommu_erratum_746_workaround(struct amd_iommu *iommu)
 	pci_write_config_dword(iommu->dev, 0xf0, 0x90 | (1 << 8));
 
 	pci_write_config_dword(iommu->dev, 0xf4, value | 0x4);
-	pr_info("AMD-Vi: Applying erratum 746 workaround for IOMMU at %s\n",
+	pr_debug("AMD-Vi: Applying erratum 746 workaround for IOMMU at %s\n",
 		dev_name(&iommu->dev->dev));
 
 	/* Clear the enable writing bit */
@@ -1468,7 +1468,7 @@ static void amd_iommu_ats_write_check_workaround(struct amd_iommu *iommu)
 	/* Set L2_DEBUG_3[AtsIgnoreIWDis] = 1 */
 	iommu_write_l2(iommu, 0x47, value | BIT(0));
 
-	pr_info("AMD-Vi: Applying ATS write check workaround for IOMMU at %s\n",
+	pr_debug("AMD-Vi: Applying ATS write check workaround for IOMMU at %s\n",
 		dev_name(&iommu->dev->dev));
 }
 
@@ -1657,7 +1657,7 @@ static void init_iommu_perf_ctr(struct amd_iommu *iommu)
 		return;
 	}
 
-	pr_info("AMD-Vi: IOMMU performance counters supported\n");
+	pr_debug("AMD-Vi: IOMMU performance counters supported\n");
 
 	val = readl(iommu->mmio_base + MMIO_CNTR_CONF_OFFSET);
 	iommu->max_banks = (u8) ((val >> 12) & 0x3f);
@@ -1817,11 +1817,11 @@ static void print_iommu_info(void)
 	for_each_iommu(iommu) {
 		int i;
 
-		pr_info("AMD-Vi: Found IOMMU at %s cap 0x%hx\n",
+		pr_debug("AMD-Vi: Found IOMMU at %s cap 0x%hx\n",
 			dev_name(&iommu->dev->dev), iommu->cap_ptr);
 
 		if (iommu->cap & (1 << IOMMU_CAP_EFR)) {
-			pr_info("AMD-Vi: Extended features (%#llx):\n",
+			pr_debug("AMD-Vi: Extended features (%#llx):\n",
 				iommu->features);
 			for (i = 0; i < ARRAY_SIZE(feat_str); ++i) {
 				if (iommu_feature(iommu, (1ULL << i)))
@@ -1835,9 +1835,9 @@ static void print_iommu_info(void)
 		}
 	}
 	if (irq_remapping_enabled) {
-		pr_info("AMD-Vi: Interrupt remapping enabled\n");
+		pr_debug("AMD-Vi: Interrupt remapping enabled\n");
 		if (AMD_IOMMU_GUEST_IR_VAPIC(amd_iommu_guest_ir))
-			pr_info("AMD-Vi: virtual APIC enabled\n");
+			pr_debug("AMD-Vi: virtual APIC enabled\n");
 	}
 }
 
@@ -2209,7 +2209,7 @@ static void early_enable_iommus(void)
 			early_enable_iommu(iommu);
 		}
 	} else {
-		pr_info("Copied DEV table from previous kernel.\n");
+		pr_debug("Copied DEV table from previous kernel.\n");
 		free_pages((unsigned long)amd_iommu_dev_table,
 				get_order(dev_table_size));
 		amd_iommu_dev_table = old_dev_tbl_cpy;
@@ -2615,7 +2615,7 @@ static int __init state_next(void)
 		ret = early_amd_iommu_init();
 		init_state = ret ? IOMMU_INIT_ERROR : IOMMU_ACPI_FINISHED;
 		if (init_state == IOMMU_ACPI_FINISHED && amd_iommu_disabled) {
-			pr_info("AMD-Vi: AMD IOMMU disabled on kernel command-line\n");
+			pr_debug("AMD-Vi: AMD IOMMU disabled on kernel command-line\n");
 			free_dma_resources();
 			free_iommu_resources();
 			init_state = IOMMU_CMDLINE_DISABLED;
