@@ -920,7 +920,7 @@ int emmc_autok(void)
 		return -1;
 	}
 
-	pr_info("emmc autok\n");
+	pr_debug("emmc autok\n");
 	base = host->base;
 	mmc_claim_host(host->mmc);
 
@@ -940,7 +940,7 @@ int emmc_autok(void)
 			vcore_step2);
 
 		if (vcore_step2 == vcore_step1) {
-			pr_info("skip duplicated vcore autok\n");
+			pr_debug("skip duplicated vcore autok\n");
 			memcpy(host->autok_res[i], host->autok_res[i-1],
 				TUNING_PARA_SCAN_COUNT);
 		} else {
@@ -965,19 +965,19 @@ int emmc_autok(void)
 		if (merge_window < AUTOK_MERGE_MIN_WIN)
 			merge_result = -1;
 		if (merge_window != 0xFF)
-			pr_info("[AUTOK]merge_value = %d\n", merge_window);
+			pr_debug("[AUTOK]merge_value = %d\n", merge_window);
 	}
 
 	if (merge_result == 0) {
 		autok_tuning_parameter_init(host,
 			host->autok_res[AUTOK_VCORE_MERGE]);
-		pr_info("[AUTOK]No need change para when dvfs\n");
+		pr_debug("[AUTOK]No need change para when dvfs\n");
 	} else if (host->use_hw_dvfs == 1) {
-		pr_info("[AUTOK]Need change para when dvfs\n");
+		pr_debug("[AUTOK]Need change para when dvfs\n");
 	} else if (host->use_hw_dvfs == 0) {
 		autok_tuning_parameter_init(host,
 			host->autok_res[AUTOK_VCORE_LEVEL0]);
-		pr_info("[AUTOK]Need lock vcore\n");
+		pr_debug("[AUTOK]Need lock vcore\n");
 		host->lock_vcore = 1;
 	}
 

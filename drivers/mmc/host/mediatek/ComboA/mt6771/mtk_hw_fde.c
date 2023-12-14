@@ -98,7 +98,7 @@ static void msdc_crypto_switch_config(struct msdc_host *host,
 	case MSDC_CRYPTO_AES_CBC_MAC:
 		break;
 	default:
-		pr_info("msdc unknown aes mode\n");
+		pr_debug("msdc unknown aes mode\n");
 		WARN_ON(1);
 		return;
 	}
@@ -125,7 +125,7 @@ static void msdc_crypto_switch_config(struct msdc_host *host,
 		while (MSDC_READ32(EMMC52_AES_SWST) &
 			EMMC52_AES_SWITCH_START_ENC) {
 			if (time_after(jiffies, polling_tmo)) {
-				pr_info("msdc%d, error: triger AES ENC timeout!\n",
+				pr_debug("msdc%d, error: triger AES ENC timeout!\n",
 					host->id);
 				WARN_ON(1);
 			}
@@ -136,7 +136,7 @@ static void msdc_crypto_switch_config(struct msdc_host *host,
 		while (MSDC_READ32(EMMC52_AES_SWST) &
 			EMMC52_AES_SWITCH_START_DEC) {
 			if (time_after(jiffies, polling_tmo)) {
-				pr_info("msdc%d, error: triger DEC AES DEC timeout!\n",
+				pr_debug("msdc%d, error: triger DEC AES DEC timeout!\n",
 					host->id);
 				WARN_ON(1);
 			}

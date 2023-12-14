@@ -1011,7 +1011,7 @@ static int mxcmci_probe(struct platform_device *pdev)
 	const struct of_device_id *of_id;
 	struct imxmmc_platform_data *pdata = pdev->dev.platform_data;
 
-	pr_info("i.MX/MPC512x SDHC driver\n");
+	pr_debug("i.MX/MPC512x SDHC driver\n");
 
 	of_id = of_match_device(mxcmci_of_match, &pdev->dev);
 

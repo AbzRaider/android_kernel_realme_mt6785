@@ -185,7 +185,7 @@ int msdc_rsp[] = {
 	} \
 	MSG_ACCU_SZ += MSG_SZ; \
 	if (MSG_ACCU_SZ >= BUF_SZ) { \
-		pr_info("%s", BUF); \
+		pr_debug("%s", BUF); \
 		memset(BUF, 0, BUF_SZ); \
 		MSG_ACCU_SZ = MSG_SZ; \
 		BUF_CUR = BUF; \
@@ -474,7 +474,7 @@ int msdc_clk_stable(struct msdc_host *host, u32 mode, u32 div,
 			cnt, host->id);
 
 		if (retry == 0) {
-			pr_info("msdc%d on clock failed ===> retry twice\n",
+			pr_debug("msdc%d on clock failed ===> retry twice\n",
 				host->id);
 
 			msdc_clk_disable(host);
@@ -859,7 +859,7 @@ void msdc_set_mclk(struct msdc_host *host, unsigned char timing, u32 hz)
 	/* need because clk changed.*/
 	host->max_busy_timeout_ms = msdc_max_busy_timeout_ms(host);
 	msdc_set_timeout(host, host->timeout_ns, host->timeout_clks);
-	pr_info("msdc%d -> !!! Set<%dKHz> Source<%dKHz> -> sclk<%dKHz> timing<%d> mode<%d> div<%d> hs400_div_dis<%d>\n",
+	pr_debug("msdc%d -> !!! Set<%dKHz> Source<%dKHz> -> sclk<%dKHz> timing<%d> mode<%d> div<%d> hs400_div_dis<%d>\n",
 		host->id, hz/1000, hclk/1000, sclk/1000, (int)timing, mode, div,
 		hs400_div_dis);
 
@@ -1861,7 +1861,7 @@ skip_cmd_resp_polling:
 			/* Set clock to 50MHz */
 			if (host->hw->flags & MSDC_SDIO_DDR208) {
 				msdc_clk_stable(host, 3, 1, 0);
-				pr_info(
+				pr_debug(
 				"%s: SDIO set freq to 50MHz MSDC_CFG:0x%x\n",
 					__func__, MSDC_READ32(MSDC_CFG));
 			}
@@ -1897,7 +1897,7 @@ skip_cmd_resp_polling:
 			/* Set clock to 50MHz */
 			if (host->hw->flags & MSDC_SDIO_DDR208) {
 				msdc_clk_stable(host, 3, 1, 0);
-				pr_info(
+				pr_debug(
 				"%s: SDIO set freq to 50MHz MSDC_CFG:0x%x\n",
 					__func__, MSDC_READ32(MSDC_CFG));
 			}
@@ -2285,7 +2285,7 @@ int msdc_pio_read(struct msdc_host *host, struct mmc_data *data)
 		/* High memory and more than 1 va address va
 		 * and not continuous
 		 */
-		/* pr_info("msdc0: kmap not continuous %x %x %x\n",
+		/* pr_debug("msdc0: kmap not continuous %x %x %x\n",
 		 * left,kaddr[i],kaddr[i-1]);
 		 */
 		for (i = 0; i < totalpages; i++) {
@@ -2355,7 +2355,7 @@ check_fifo1:
 
 check_fifo_end:
 		if (hmpage != NULL) {
-			/* pr_info("read msdc0:unmap %x\n", hmpage); */
+			/* pr_debug("read msdc0:unmap %x\n", hmpage); */
 			for (i = 0; i < totalpages; i++)
 				kunmap(hmpage + i);
 
@@ -2369,7 +2369,7 @@ check_fifo_end:
 	if (hmpage != NULL) {
 		for (i = 0; i < totalpages; i++)
 			kunmap(hmpage + i);
-		/* pr_info("msdc0 read unmap:\n"); */
+		/* pr_debug("msdc0 read unmap:\n"); */
 	}
 	data->bytes_xfered += size;
 	N_MSG(FIO, "        PIO Read<%d>bytes", size);
@@ -2486,7 +2486,7 @@ int msdc_pio_write(struct msdc_host *host, struct mmc_data *data)
 		/* High memory and more than 1 va address va
 		 * may be not continuous
 		 */
-		/* pr_info(ERR "msdc0:w kmap not continuous %x %x %x\n",
+		/* pr_debug(ERR "msdc0:w kmap not continuous %x %x %x\n",
 		 * left, kaddr[i], kaddr[i-1]);
 		 */
 		for (i = 0; i < totalpages; i++) {
@@ -2559,7 +2559,7 @@ check_fifo_end:
 	if (hmpage != NULL) {
 		for (i = 0; i < totalpages; i++)
 			kunmap(hmpage + i);
-		pr_info("msdc0 write unmap 0x%x:\n", left);
+		pr_debug("msdc0 write unmap 0x%x:\n", left);
 	}
 	data->bytes_xfered += size;
 	N_MSG(FIO, "        PIO Write<%d>bytes", size);
@@ -3439,7 +3439,7 @@ static int msdc_do_discard_task_cq(struct mmc_host *mmc,
 
 	msdc_do_command(host, &mmc->deq_cmd, CMD_TIMEOUT);
 
-	pr_info("[%s]: msdc%d, discard task id %d, CMD<%d> arg<0x%08x> rsp<0x%08x>",
+	pr_debug("[%s]: msdc%d, discard task id %d, CMD<%d> arg<0x%08x> rsp<0x%08x>",
 		__func__, host->id, task_id, mmc->deq_cmd.opcode,
 		mmc->deq_cmd.arg, mmc->deq_cmd.resp[0]);
 
@@ -3673,13 +3673,13 @@ int msdc_error_tuning(struct mmc_host *mmc,  struct mmc_request *mrq)
 	}
 
 	if (mrq)
-		pr_info("%s: host->need_tune : 0x%x CMD<%d>\n", __func__,
+		pr_debug("%s: host->need_tune : 0x%x CMD<%d>\n", __func__,
 			host->need_tune, mrq->cmd->opcode);
 
 	status = host->device_status;
 	/* clear device status */
 	host->device_status = 0x0;
-	pr_info("msdc%d saved device status: %x", host->id, status);
+	pr_debug("msdc%d saved device status: %x", host->id, status);
 
 	if (host->hw->host_function == MSDC_SDIO) {
 		host->need_tune = TUNE_NONE;
@@ -3750,7 +3750,7 @@ start_tune:
 		/* FIX ME, consider to use msdc_dump_info() to replace all */
 		msdc_dump_clock_sts(NULL, 0, NULL, host);
 		msdc_dump_ldo_sts(NULL, 0, NULL, host);
-		pr_info("msdc%d latest_INT_status<0x%.8x>\n", host->id,
+		pr_debug("msdc%d latest_INT_status<0x%.8x>\n", host->id,
 			latest_int_status[host->id]);
 		msdc_dump_register(NULL, 0, NULL, host);
 		msdc_dump_dbg_register(NULL, 0, NULL, host);
@@ -3773,7 +3773,7 @@ recovery:
 		if (host->hw->host_function == MSDC_SD)
 			ret = sdcard_reset_tuning(mmc);
 	} else if (!tune_smpl) {
-		pr_info("msdc%d autok pass\n", host->id);
+		pr_debug("msdc%d autok pass\n", host->id);
 		host->need_tune |= TUNE_AUTOK_PASS;
 	}
 
@@ -4197,7 +4197,7 @@ int msdc_execute_tuning(struct mmc_host *mmc, u32 opcode)
 	 * and autok error when mode incorrect.
 	 */
 	if ((host->hw->host_function == MSDC_SDIO) && (mmc->doing_retune)) {
-		pr_info("msdc%d: mmc retune do nothing\n", host->id);
+		pr_debug("msdc%d: mmc retune do nothing\n", host->id);
 		return 0;
 	}
 
@@ -4608,7 +4608,7 @@ static int msdc_card_busy(struct mmc_host *mmc)
 	status = MSDC_READ32(MSDC_PS);
 	if (((status >> 16) & 0x1) != 0x1) {
 		if (host->hw->host_function == MSDC_SDIO)
-			pr_info("msdc%d: card is busy!\n", host->id);
+			pr_debug("msdc%d: card is busy!\n", host->id);
 		return 1;
 	}
 
@@ -4637,7 +4637,7 @@ static void msdc_check_data_timeout(struct work_struct *work)
 	if (!data || !mrq || !mmc)
 		return;
 
-	pr_info("[%s]: XXX DMA Data Busy Timeout: %u ms, CMD<%d>",
+	pr_debug("[%s]: XXX DMA Data Busy Timeout: %u ms, CMD<%d>",
 		__func__, host->data_timeout_ms, mrq->cmd->opcode);
 
 	intsts = MSDC_READ32(MSDC_INT);
@@ -4647,7 +4647,7 @@ static void msdc_check_data_timeout(struct work_struct *work)
 
 	/* MSDC have received int, but delay by system. Just print warning */
 	if (intsts & wints) {
-		pr_info(
+		pr_debug(
 		"[%s]: Warning msdc%d ints are delayed by system, ints: %x\n",
 			__func__, host->id, intsts);
 		return;
@@ -4659,7 +4659,7 @@ static void msdc_check_data_timeout(struct work_struct *work)
 		msdc_dma_clear(host);
 		msdc_reset_hw(host->id);
 		if (host->id == 1) {
-			pr_info("msdc1 err, reset sdcard\n");
+			pr_debug("msdc1 err, reset sdcard\n");
 			(void)sdcard_hw_reset(host->mmc);
 		}
 		tmo = jiffies + POLLING_BUSY;
@@ -4714,7 +4714,7 @@ static void msdc_check_data_timeout(struct work_struct *work)
 #endif
 		host->error |= REQ_DAT_ERR;
 	} else {
-		pr_info("[%s]: Warn! should not go here %d\n",
+		pr_debug("[%s]: Warn! should not go here %d\n",
 			__func__, __LINE__);
 		/* do nothing, since legacy mode or async tuning
 		 * have it own timeout.
@@ -5472,7 +5472,7 @@ static int msdc_drv_probe(struct platform_device *pdev)
 	pm_runtime_use_autosuspend(&pdev->dev);
 
 #ifdef MTK_MSDC_BRINGUP_DEBUG
-	pr_info("[%s]: msdc%d, mmc->caps=0x%x, mmc->caps2=0x%x\n",
+	pr_debug("[%s]: msdc%d, mmc->caps=0x%x, mmc->caps2=0x%x\n",
 		__func__, host->id, mmc->caps, mmc->caps2);
 	msdc_dump_clock_sts(NULL, 0, NULL, host);
 #endif

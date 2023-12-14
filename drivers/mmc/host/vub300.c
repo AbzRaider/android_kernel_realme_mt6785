@@ -2386,7 +2386,7 @@ static void vub300_disconnect(struct usb_interface *interface)
 			vub300->interface = NULL;
 			kref_put(&vub300->kref, vub300_delete);
 			mmc_remove_host(mmc);
-			pr_info("USB vub300 remote SDIO host controller[%d]"
+			pr_debug("USB vub300 remote SDIO host controller[%d]"
 				" now disconnected", ifnum);
 			return;
 		}
@@ -2439,7 +2439,7 @@ static int __init vub300_init(void)
 {				/* NOT irq */
 	int result;
 
-	pr_info("VUB300 Driver rom wait states = %02X irqpoll timeout = %04X",
+	pr_debug("VUB300 Driver rom wait states = %02X irqpoll timeout = %04X",
 		firmware_rom_wait_states, 0x0FFFF & firmware_irqpoll_timeout);
 	cmndworkqueue = create_singlethread_workqueue("kvub300c");
 	if (!cmndworkqueue) {

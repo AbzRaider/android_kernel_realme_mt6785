@@ -283,7 +283,7 @@ static int mmc_test_wait_busy(struct mmc_test_card *test)
 		if (!busy && mmc_test_busy(&cmd)) {
 			busy = 1;
 			if (test->card->host->caps & MMC_CAP_WAIT_WHILE_BUSY)
-				pr_info("%s: Warning: Host did not wait for busy state to end.\n",
+				pr_debug("%s: Warning: Host did not wait for busy state to end.\n",
 					mmc_hostname(test->card->host));
 		}
 	} while (mmc_test_busy(&cmd));
@@ -577,7 +577,7 @@ static void mmc_test_print_rate(struct mmc_test_card *test, uint64_t bytes,
 	rate = mmc_test_rate(bytes, &ts);
 	iops = mmc_test_rate(100, &ts); /* I/O ops per sec x 100 */
 
-	pr_info("%s: Transfer of %u sectors (%u%s KiB) took %lu.%09lu "
+	pr_debug("%s: Transfer of %u sectors (%u%s KiB) took %lu.%09lu "
 			 "seconds (%u kB/s, %u KiB/s, %u.%02u IOPS)\n",
 			 mmc_hostname(test->card->host), sectors, sectors >> 1,
 			 (sectors & 1 ? ".5" : ""), (unsigned long)ts.tv_sec,
@@ -603,7 +603,7 @@ static void mmc_test_print_avg_rate(struct mmc_test_card *test, uint64_t bytes,
 	rate = mmc_test_rate(tot, &ts);
 	iops = mmc_test_rate(count * 100, &ts); /* I/O ops per sec x 100 */
 
-	pr_info("%s: Transfer of %u x %u sectors (%u x %u%s KiB) took "
+	pr_debug("%s: Transfer of %u x %u sectors (%u x %u%s KiB) took "
 			 "%lu.%09lu seconds (%u kB/s, %u KiB/s, "
 			 "%u.%02u IOPS, sg_len %d)\n",
 			 mmc_hostname(test->card->host), count, sectors, count,
@@ -1397,7 +1397,7 @@ static int mmc_test_multi_read_high(struct mmc_test_card *test)
 
 static int mmc_test_no_highmem(struct mmc_test_card *test)
 {
-	pr_info("%s: Highmem not configured - test skipped\n",
+	pr_debug("%s: Highmem not configured - test skipped\n",
 	       mmc_hostname(test->card->host));
 	return 0;
 }
@@ -1424,7 +1424,7 @@ static int mmc_test_area_map(struct mmc_test_card *test, unsigned long sz,
 				      t->max_seg_sz, &t->sg_len, min_sg_len);
 	}
 	if (err)
-		pr_info("%s: Failed to map sg list\n",
+		pr_debug("%s: Failed to map sg list\n",
 		       mmc_hostname(test->card->host));
 	return err;
 }
@@ -2125,7 +2125,7 @@ static int mmc_test_rw_multiple(struct mmc_test_card *test,
 
 	return ret;
  err:
-	pr_info("[%s] error\n", __func__);
+	pr_debug("[%s] error\n", __func__);
 	return ret;
 }
 
@@ -2139,7 +2139,7 @@ static int mmc_test_rw_multiple_size(struct mmc_test_card *test,
 
 	if (rw->do_nonblock_req &&
 	    ((!pre_req && post_req) || (pre_req && !post_req))) {
-		pr_info("error: only one of pre/post is defined\n");
+		pr_debug("error: only one of pre/post is defined\n");
 		return -EINVAL;
 	}
 
@@ -2424,7 +2424,7 @@ static int mmc_test_ongoing_transfer(struct mmc_test_card *test,
 
 		expired = time_after(jiffies, timeout);
 		if (expired) {
-			pr_info("%s: timeout waiting for Tran state status %#x\n",
+			pr_debug("%s: timeout waiting for Tran state status %#x\n",
 				mmc_hostname(host), status);
 			cmd_ret = -ETIMEDOUT;
 			break;
@@ -2455,7 +2455,7 @@ static int mmc_test_ongoing_transfer(struct mmc_test_card *test,
 		goto out_free;
 
 	if (cmd_ret) {
-		pr_info("%s: Send Status failed: status %#x, error %d\n",
+		pr_debug("%s: Send Status failed: status %#x, error %d\n",
 			mmc_hostname(test->card->host), status, cmd_ret);
 	}
 
@@ -2468,7 +2468,7 @@ static int mmc_test_ongoing_transfer(struct mmc_test_card *test,
 		goto out_free;
 
 	if (repeat_cmd && (t->blocks + 1) << 9 > t->max_tfr)
-		pr_info("%s: %d commands completed during transfer of %u blocks\n",
+		pr_debug("%s: %d commands completed during transfer of %u blocks\n",
 			mmc_hostname(test->card->host), count, t->blocks);
 
 	if (cmd_ret)
@@ -2945,7 +2945,7 @@ static void mmc_test_run(struct mmc_test_card *test, int testcase)
 {
 	int i, ret;
 
-	pr_info("%s: Starting tests of card %s...\n",
+	pr_debug("%s: Starting tests of card %s...\n",
 		mmc_hostname(test->card->host), mmc_card_id(test->card));
 
 	mmc_claim_host(test->card->host);
@@ -2956,14 +2956,14 @@ static void mmc_test_run(struct mmc_test_card *test, int testcase)
 		if (testcase && ((i + 1) != testcase))
 			continue;
 
-		pr_info("%s: Test case %d. %s...\n",
+		pr_debug("%s: Test case %d. %s...\n",
 			mmc_hostname(test->card->host), i + 1,
 			mmc_test_cases[i].name);
 
 		if (mmc_test_cases[i].prepare) {
 			ret = mmc_test_cases[i].prepare(test);
 			if (ret) {
-				pr_info("%s: Result: Prepare stage failed! (%d)\n",
+				pr_debug("%s: Result: Prepare stage failed! (%d)\n",
 					mmc_hostname(test->card->host),
 					ret);
 				continue;
@@ -2991,23 +2991,23 @@ static void mmc_test_run(struct mmc_test_card *test, int testcase)
 		ret = mmc_test_cases[i].run(test);
 		switch (ret) {
 		case RESULT_OK:
-			pr_info("%s: Result: OK\n",
+			pr_debug("%s: Result: OK\n",
 				mmc_hostname(test->card->host));
 			break;
 		case RESULT_FAIL:
-			pr_info("%s: Result: FAILED\n",
+			pr_debug("%s: Result: FAILED\n",
 				mmc_hostname(test->card->host));
 			break;
 		case RESULT_UNSUP_HOST:
-			pr_info("%s: Result: UNSUPPORTED (by host)\n",
+			pr_debug("%s: Result: UNSUPPORTED (by host)\n",
 				mmc_hostname(test->card->host));
 			break;
 		case RESULT_UNSUP_CARD:
-			pr_info("%s: Result: UNSUPPORTED (by card)\n",
+			pr_debug("%s: Result: UNSUPPORTED (by card)\n",
 				mmc_hostname(test->card->host));
 			break;
 		default:
-			pr_info("%s: Result: ERROR (%d)\n",
+			pr_debug("%s: Result: ERROR (%d)\n",
 				mmc_hostname(test->card->host), ret);
 		}
 
@@ -3018,7 +3018,7 @@ static void mmc_test_run(struct mmc_test_card *test, int testcase)
 		if (mmc_test_cases[i].cleanup) {
 			ret = mmc_test_cases[i].cleanup(test);
 			if (ret) {
-				pr_info("%s: Warning: Cleanup stage failed! (%d)\n",
+				pr_debug("%s: Warning: Cleanup stage failed! (%d)\n",
 					mmc_hostname(test->card->host),
 					ret);
 			}
@@ -3027,7 +3027,7 @@ static void mmc_test_run(struct mmc_test_card *test, int testcase)
 
 	mmc_release_host(test->card->host);
 
-	pr_info("%s: Tests completed.\n",
+	pr_debug("%s: Tests completed.\n",
 		mmc_hostname(test->card->host));
 }
 

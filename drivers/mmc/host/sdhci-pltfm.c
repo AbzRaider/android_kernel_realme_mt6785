@@ -254,7 +254,7 @@ EXPORT_SYMBOL_GPL(sdhci_pltfm_pmops);
 
 static int __init sdhci_pltfm_drv_init(void)
 {
-	pr_info("sdhci-pltfm: SDHCI platform and OF driver helper\n");
+	pr_debug("sdhci-pltfm: SDHCI platform and OF driver helper\n");
 
 	return 0;
 }

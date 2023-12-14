@@ -559,7 +559,7 @@ int mmc_run_queue_thread(void *data)
 				err = mmc_swcq_prepare_mqr_crypto(host,
 					dat_mrq);
 				if (err) {
-					pr_info("eMMC crypto fail %d\n", err);
+					pr_debug("eMMC crypto fail %d\n", err);
 					WARN_ON(1);
 				}
 				host->ops->request(host, dat_mrq);
@@ -637,12 +637,12 @@ int mmc_run_queue_thread(void *data)
 				(atomic_read(&host->areq_cnt) > areq_cnt_chk),
 				10 * HZ);
 			if (!tmo) {
-				pr_info("%s:tmo,mrq(%p),chk(%d),cnt(%d)\n",
+				pr_debug("%s:tmo,mrq(%p),chk(%d),cnt(%d)\n",
 					__func__,
 					host->done_mrq,
 					areq_cnt_chk,
 					atomic_read(&host->areq_cnt));
-				pr_info("%s:tmo,rw(%d),wait(%d),rdy(%d)\n",
+				pr_debug("%s:tmo,rw(%d),wait(%d),rdy(%d)\n",
 					__func__,
 					atomic_read(&host->cq_rw),
 					atomic_read(&host->cq_wait_rdy),
@@ -1611,7 +1611,7 @@ static enum mmc_blk_status mmc_finalize_areq(struct mmc_host *host)
 				break; /* return status */
 			} else {
 				mmc_retune_recheck(host);
-				pr_info("%s: req failed (CMD%u): %d, retrying...\n",
+				pr_debug("%s: req failed (CMD%u): %d, retrying...\n",
 					mmc_hostname(host),
 					cmd->opcode, cmd->error);
 				cmd->retries--;

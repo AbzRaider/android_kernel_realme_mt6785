@@ -407,7 +407,7 @@ void msdc_HQA_set_voltage(struct msdc_host *host)
 	if (vio18_cal_orig < 0)
 		pmic_read_interface(REG_VIO_VOCAL_SW, &vio18_cal,
 			VIO_VOCAL_SW_MASK, VIO_VOCAL_SW_SHIFT);
-	pr_info("[MSDC%d HQA] orig Vcore 0x%x, Vio18_cal 0x%x\n",
+	pr_debug("[MSDC%d HQA] orig Vcore 0x%x, Vio18_cal 0x%x\n",
 		host->id, vcore_orig, vio18_cal_orig);
 
 #if defined(MSDC_HQA_HV) || defined(MSDC_HQA_LV)
@@ -430,7 +430,7 @@ void msdc_HQA_set_voltage(struct msdc_host *host)
 		pmic_config_interface(REG_VIO_VOCAL_SW, vio18_cal,
 			VIO_VOCAL_SW_MASK, VIO_VOCAL_SW_SHIFT);
 
-	pr_info("[MSDC%d HQA] adj Vcore 0x%x, Vio18_cal 0x%x\n",
+	pr_debug("[MSDC%d HQA] adj Vcore 0x%x, Vio18_cal 0x%x\n",
 		host->id, vcore, vio18_cal);
 #endif
 }

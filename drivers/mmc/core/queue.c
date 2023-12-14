@@ -281,7 +281,7 @@ fetch_done:
 				/* wait when queue full */
 				tmo = schedule_timeout(HZ);
 				if (!tmo)
-					pr_info("%s:sched_tmo,areq_cnt=%d\n",
+					pr_debug("%s:sched_tmo,areq_cnt=%d\n",
 						__func__,
 					atomic_read(&mq->card->host->areq_cnt));
 			}

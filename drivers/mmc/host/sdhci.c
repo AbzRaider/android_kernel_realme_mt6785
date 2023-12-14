@@ -2235,7 +2235,7 @@ static void __sdhci_execute_tuning(struct sdhci_host *host, u32 opcode)
 			mdelay(host->tuning_delay);
 	}
 
-	pr_info("%s: Tuning failed, falling back to fixed sampling clock\n",
+	pr_debug("%s: Tuning failed, falling back to fixed sampling clock\n",
 		mmc_hostname(host->mmc));
 	sdhci_reset_tuning(host);
 }
@@ -3454,7 +3454,7 @@ static int sdhci_allocate_bounce_buffer(struct sdhci_host *host)
 	mmc->max_seg_size = bounce_size;
 	mmc->max_req_size = bounce_size;
 
-	pr_info("%s bounce up to %u segments into one, max segment size %u bytes\n",
+	pr_debug("%s bounce up to %u segments into one, max segment size %u bytes\n",
 		mmc_hostname(mmc), max_blocks, bounce_size);
 
 	return 0;
@@ -4045,7 +4045,7 @@ int __sdhci_add_host(struct sdhci_host *host)
 	if (ret)
 		goto unled;
 
-	pr_info("%s: SDHCI controller on %s [%s] using %s\n",
+	pr_debug("%s: SDHCI controller on %s [%s] using %s\n",
 		mmc_hostname(mmc), host->hw_name, dev_name(mmc_dev(mmc)),
 		(host->flags & SDHCI_USE_ADMA) ?
 		(host->flags & SDHCI_USE_64_BIT_DMA) ? "ADMA 64-bit" : "ADMA" :
@@ -4156,9 +4156,9 @@ EXPORT_SYMBOL_GPL(sdhci_free_host);
 
 static int __init sdhci_drv_init(void)
 {
-	pr_info(DRIVER_NAME
+	pr_debug(DRIVER_NAME
 		": Secure Digital Host Controller Interface driver\n");
-	pr_info(DRIVER_NAME ": Copyright(c) Pierre Ossman\n");
+	pr_debug(DRIVER_NAME ": Copyright(c) Pierre Ossman\n");
 
 	return 0;
 }

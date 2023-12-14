@@ -109,7 +109,7 @@ static int tmio_mmc_probe(struct platform_device *pdev)
 	if (ret)
 		goto host_remove;
 
-	pr_info("%s at 0x%08lx irq %d\n", mmc_hostname(host->mmc),
+	pr_debug("%s at 0x%08lx irq %d\n", mmc_hostname(host->mmc),
 		(unsigned long)host->ctl, irq);
 
 	return 0;

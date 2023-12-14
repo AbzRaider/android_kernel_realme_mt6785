@@ -203,7 +203,7 @@ static int sdio_read_cccr(struct mmc_card *card, u32 ocr)
 						 SDIO_CCCR_INTERRUPT_EXT,
 						 data, NULL);
 					if (ret) {
-						pr_info("%s: failed to enable EAI!\n",
+						pr_debug("%s: failed to enable EAI!\n",
 						 mmc_hostname(card->host));
 						goto out;
 					}

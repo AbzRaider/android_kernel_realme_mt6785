@@ -164,7 +164,7 @@ static struct dma_addr *msdc_get_dma_address(int host_id)
 	/* spin_lock(&host->lock); */
 	MSDC_GET_FIELD(MSDC_DMA_CTRL, MSDC_DMA_CTRL_MODE, mode);
 	if (mode == 1) {
-		pr_info("Desc.DMA\n");
+		pr_debug("Desc.DMA\n");
 		bd = host->dma.bd;
 		i = 0;
 		while (i < MAX_BD_PER_GPD) {
@@ -181,7 +181,7 @@ static struct dma_addr *msdc_get_dma_address(int host_id)
 			i++;
 		}
 	} else if (mode == 0) {
-		pr_info("Basic DMA\n");
+		pr_debug("Basic DMA\n");
 		msdc_latest_dma_address[0].start_address =
 			MSDC_READ32(MSDC_DMA_SA);
 		msdc_latest_dma_address[0].size = MSDC_READ32(MSDC_DMA_LEN);
@@ -769,7 +769,7 @@ static void msdc_proc_dump(struct seq_file *m, u32 id)
 	struct msdc_host *host = mtk_msdc_host[id];
 
 	if (host == NULL) {
-		pr_info("====== Null msdc%d, dump skipped ======\n", id);
+		pr_debug("====== Null msdc%d, dump skipped ======\n", id);
 		return;
 	}
 
@@ -788,11 +788,11 @@ void get_msdc_aee_buffer(unsigned long *vaddr, unsigned long *size)
 	char *buff = msdc_aee_buffer;
 
 	if (host == NULL) {
-		pr_info("====== Null msdc0, dump skipped ======\n");
+		pr_debug("====== Null msdc0, dump skipped ======\n");
 		goto msdc1_dump;
 	}
 
-	pr_info("====== msdc0 dump ======\n");
+	pr_debug("====== msdc0 dump ======\n");
 	msdc_dump_host_state(&buff, &free_size, NULL, host);
 	mmc_cmd_dump(&buff, &free_size, NULL, host->mmc, dbg_max_cnt);
 	mmc_low_io_dump(&buff, &free_size, NULL, host->mmc);
@@ -800,11 +800,11 @@ void get_msdc_aee_buffer(unsigned long *vaddr, unsigned long *size)
 msdc1_dump:
 	host = mtk_msdc_host[1];
 	if (host == NULL) {
-		pr_info("====== Null msdc1, dump skipped ======\n");
+		pr_debug("====== Null msdc1, dump skipped ======\n");
 		goto exit;
 	}
 
-	pr_info("====== msdc1 dump ======\n");
+	pr_debug("====== msdc1 dump ======\n");
 	sd_cmd_dump(&buff, &free_size, NULL, host->mmc, sd_dbg_max_cnt);
 
 exit:
@@ -816,34 +816,34 @@ EXPORT_SYMBOL(get_msdc_aee_buffer);
 #else
 inline void dbg_add_sd_log(struct mmc_host *mmc, int type, int cmd, int arg)
 {
-	//pr_info("config MTK_MMC_DEBUG is not set: %s!\n",__func__);
+	//pr_debug("config MTK_MMC_DEBUG is not set: %s!\n",__func__);
 }
 inline void dbg_add_host_log(struct mmc_host *mmc, int type, int cmd, int arg)
 {
-	//pr_info("config MTK_MMC_DEBUG is not set: %s!\n",__func__);
+	//pr_debug("config MTK_MMC_DEBUG is not set: %s!\n",__func__);
 }
 inline void dbg_add_sirq_log(struct mmc_host *mmc, int type,
 		int cmd, int arg, int cpu, unsigned long active_reqs)
 {
-	//pr_info("config MTK_MMC_DEBUG is not set: %s!\n",__func__);
+	//pr_debug("config MTK_MMC_DEBUG is not set: %s!\n",__func__);
 }
 void mmc_cmd_dump(char **buff, unsigned long *size, struct seq_file *m,
 	struct mmc_host *mmc, u32 latest_cnt)
 {
-	//pr_info("config MTK_MMC_DEBUG is not set: %s!\n",__func__);
+	//pr_debug("config MTK_MMC_DEBUG is not set: %s!\n",__func__);
 }
 void msdc_dump_host_state(char **buff, unsigned long *size,
 		struct seq_file *m, struct msdc_host *host)
 {
-	//pr_info("config MTK_MMC_DEBUG is not set: %s!\n",__func__);
+	//pr_debug("config MTK_MMC_DEBUG is not set: %s!\n",__func__);
 }
 static void msdc_proc_dump(struct seq_file *m, u32 id)
 {
-	//pr_info("config MTK_MMC_DEBUG is not set : %s!\n",__func__);
+	//pr_debug("config MTK_MMC_DEBUG is not set : %s!\n",__func__);
 }
 void get_msdc_aee_buffer(unsigned long *vaddr, unsigned long *size)
 {
-	//pr_info("config MTK_MMC_DEBUG is not set : %s!\n",__func__);
+	//pr_debug("config MTK_MMC_DEBUG is not set : %s!\n",__func__);
 }
 #endif
 
@@ -1454,7 +1454,7 @@ static int multi_rw_compare_core(int host_num, int read, uint address,
 	rPtr = wPtr = (u8 *)multi_rwbuf;
 
 	if (!is_card_present(host_ctl)) {
-		pr_info("  [%s]: card is removed!\n", __func__);
+		pr_debug("  [%s]: card is removed!\n", __func__);
 		result = -1;
 		goto free;
 	}
@@ -1521,7 +1521,7 @@ static int multi_rw_compare_core(int host_num, int read, uint address,
 	msdc_data.stop = &msdc_stop;
 
 	if (!mmc_card_blockaddr(host_ctl->mmc->card)) {
-		/* pr_info("this device use byte address!!\n"); */
+		/* pr_debug("this device use byte address!!\n"); */
 		msdc_cmd.arg <<= 9;
 	}
 	msdc_cmd.flags = MMC_RSP_SPI_R1 | MMC_RSP_R1 | MMC_CMD_ADTC;
@@ -1541,7 +1541,7 @@ static int multi_rw_compare_core(int host_num, int read, uint address,
 	/* compare */
 	for (forIndex = 0; forIndex < MSDC_MULTI_BUF_LEN; forIndex++) {
 		if (rPtr[forIndex] != wData[forIndex % wData_len]) {
-			pr_info("index[%d]\tW_buffer[0x%x]\tR_buffer[0x%x]\tfailed\n",
+			pr_debug("index[%d]\tW_buffer[0x%x]\tR_buffer[0x%x]\tfailed\n",
 				forIndex, wData[forIndex % wData_len],
 				rPtr[forIndex]);
 			result = -1;
@@ -1595,7 +1595,7 @@ int multi_rw_compare(struct seq_file *m, int host_num,
 				seq_printf(m, "[%s]: failed to write data, error=%d\n",
 					__func__, error);
 			else
-				pr_info("[%s]: failed to write data, error=%d\n",
+				pr_debug("[%s]: failed to write data, error=%d\n",
 				__func__, error);
 			goto skip_read;
 		}
@@ -1618,7 +1618,7 @@ skip_read:
 				task_cpu(current), current->pid,
 				(error ? "FAILED" : "FINISH"), i);
 		else
-			pr_info("== cpu[%d] pid[%d]: %s %d time compare ==\n",
+			pr_debug("== cpu[%d] pid[%d]: %s %d time compare ==\n",
 				task_cpu(current), current->pid,
 				(error ? "FAILED" : "FINISH"), i);
 
@@ -1632,7 +1632,7 @@ skip_read:
 			seq_printf(m, "pid[%d]: success to compare data for %d times\n",
 				current->pid, count);
 		else
-			pr_info("pid[%d]: success to compare data for %d times\n",
+			pr_debug("pid[%d]: success to compare data for %d times\n",
 				current->pid, count);
 	}
 
@@ -1712,15 +1712,15 @@ static int write_read_thread(void *ptr)
 	struct seq_file *m = data->m;
 
 	if (data->host_id == 1) {
-		pr_info("sd thread start\n");
+		pr_debug("sd thread start\n");
 		multi_rw_compare(m, data->host_id, data->start_address,
 			data->count, MMC_TYPE_SD, 1);
-		pr_info("sd thread %d end\n", current->pid);
+		pr_debug("sd thread %d end\n", current->pid);
 	} else if (data->host_id == 0) {
-		pr_info("emmc thread %d start\n", current->pid);
+		pr_debug("emmc thread %d start\n", current->pid);
 		multi_rw_compare(m, data->host_id, data->start_address,
 			data->count, MMC_TYPE_MMC, 1);
-		pr_info("emmc thread %d end\n", current->pid);
+		pr_debug("emmc thread %d end\n", current->pid);
 	}
 	return 0;
 }
@@ -1973,7 +1973,7 @@ static int rwThread(void *data)
 	int read;
 	uint type = 0, address = 0;
 
-	pr_info("[****SD_rwThread****]id=%d, mode=%d\n", id, mode);
+	pr_debug("[****SD_rwThread****]id=%d, mode=%d\n", id, mode);
 
 	if (mode == 1)
 		read = 1;
@@ -2005,12 +2005,12 @@ static int rwThread(void *data)
 
 		i++;
 		if (i == 10000) {
-			pr_info("[***%s: %s***]", __func__,
+			pr_debug("[***%s: %s***]", __func__,
 				read_write_state == 1 ? "read" : "write");
 			i = 0;
 		}
 	}
-	pr_info("[SD_Debug]%s exit\n", __func__);
+	pr_debug("[SD_Debug]%s exit\n", __func__);
 	return 0;
 }
 
@@ -2839,7 +2839,7 @@ static int msdc_debug_proc_show(struct seq_file *m, void *v)
 		vcore = p2;
 		mode = p3;
 		host = mtk_msdc_host[id];
-		/* pr_info("[****AutoK test****]msdc host_id<%d>
+		/* pr_debug("[****AutoK test****]msdc host_id<%d>
 		 * vcore<%d> mode<%d>\n", id, vcore, mode);
 		 */
 

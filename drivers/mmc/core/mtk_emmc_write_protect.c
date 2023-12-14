@@ -70,7 +70,7 @@ unsigned long long size, unsigned int wp_grp_size, unsigned int *cnt)
 
 /*To make sure at least one aligned WP_GRP in the partition address range*/
 	if ((*start + wp_grp_size) > end) {
-		pr_info("%s: partition is too small to set wp!\n", __func__);
+		pr_debug("%s: partition is too small to set wp!\n", __func__);
 		*cnt = 0;
 	} else
 		*cnt = (end - *start)/wp_grp_size;

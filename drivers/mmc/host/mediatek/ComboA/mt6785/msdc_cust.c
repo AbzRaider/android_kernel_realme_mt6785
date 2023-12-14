@@ -249,7 +249,7 @@ void msdc_emmc_power(struct msdc_host *host, u32 on)
 
 	msdc_ldo_power(on, host->mmc->supply.vmmc,
 		VOL_3000, &host->power_flash);
-	pr_info("msdc%d power %s\n", host->id, (on ? "on" : "off"));
+	pr_debug("msdc%d power %s\n", host->id, (on ? "on" : "off"));
 #endif
 #ifdef MTK_MSDC_BRINGUP_DEBUG
 	msdc_dump_ldo_sts(NULL, 0, NULL, host);
@@ -297,7 +297,7 @@ void msdc_sd_power(struct msdc_host *host, u32 on)
 		msdc_ldo_power(on, host->mmc->supply.vqmmc, VOL_3000,
 			&host->power_io);
 
-		pr_info("msdc%d power %s\n", host->id, (on ? "on" : "off"));
+		pr_debug("msdc%d power %s\n", host->id, (on ? "on" : "off"));
 		break;
 
 	default:
@@ -423,7 +423,7 @@ void msdc_HQA_set_voltage(struct msdc_host *host)
 		PMIC_RG_VIO18_VOTRIM_MASK, PMIC_RG_VIO18_VOTRIM_SHIFT);
 	pmic_read_interface(PMIC_RG_VIO18_VOSEL_ADDR, &vio_sel,
 		PMIC_RG_VIO18_VOSEL_MASK, PMIC_RG_VIO18_VOSEL_SHIFT);
-	pr_info("[MSDC%d HQA] orig Vcore 0x%x, Vio_Sel=0x%x, Vio_trim 0x%x, Vio_cal 0x%x\n",
+	pr_debug("[MSDC%d HQA] orig Vcore 0x%x, Vio_Sel=0x%x, Vio_trim 0x%x, Vio_cal 0x%x\n",
 		host->id, vio_sel, vcore_orig, vio_trim, vio_cal);
 
 #if defined(MSDC_HQA_HV) || defined(MSDC_HQA_LV)
@@ -451,7 +451,7 @@ void msdc_HQA_set_voltage(struct msdc_host *host)
 	/*let DRAM do the setting for Vcore*/
 	/*pmic_config_interface(0x14aa, vcore, 0x7F, 0);*/
 
-	pr_info("[MSDC%d HQA] adj Vcore 0x%x, Vio_sel=%x, Vio_trim 0x%x, Vio_cal= 0x%x(0x9 = +90mv)\n",
+	pr_debug("[MSDC%d HQA] adj Vcore 0x%x, Vio_sel=%x, Vio_trim 0x%x, Vio_cal= 0x%x(0x9 = +90mv)\n",
 	host->id, vcore, vio_sel, vio_trim, vio_cal);
 	pmic_config_interface(PMIC_RG_VIO18_VOSEL_ADDR,
 		vio_sel, PMIC_RG_VIO18_VOSEL_MASK, PMIC_RG_VIO18_VOSEL_SHIFT);
@@ -473,7 +473,7 @@ void msdc_HQA_set_voltage(struct msdc_host *host)
 		PMIC_RG_VIO18_VOTRIM_MASK, PMIC_RG_VIO18_VOTRIM_SHIFT);
 	pmic_read_interface(PMIC_RG_VIO18_VOSEL_ADDR, &vio_sel,
 		PMIC_RG_VIO18_VOSEL_MASK, PMIC_RG_VIO18_VOSEL_SHIFT);
-	pr_info("[MSDC%d HQA] after set: Vcore 0x%x,Vio_sel=0x%x,Vio_trim 0x%x, Vio_cal 0x%x\n",
+	pr_debug("[MSDC%d HQA] after set: Vcore 0x%x,Vio_sel=0x%x,Vio_trim 0x%x, Vio_cal 0x%x\n",
 		host->id, vcore_orig, vio_sel, vio_trim, vio_cal);
 #endif
 }
@@ -561,7 +561,7 @@ int msdc_get_ccf_clk_pointer(struct platform_device *pdev,
 	}
 #endif
 
-	pr_info("[msdc%d] hclk:%d, clk_ctl:%p, hclk_ctl:%p\n",
+	pr_debug("[msdc%d] hclk:%d, clk_ctl:%p, hclk_ctl:%p\n",
 		pdev->id, host->hclk, host->clk_ctl, host->hclk_ctl);
 
 	return 0;
@@ -1486,7 +1486,7 @@ int msdc_of_parse(struct platform_device *pdev, struct mmc_host *mmc)
 	if (ret >= 0) {
 		cd_gpio = ret;
 		if (of_property_read_u8(np, "cd_level", &host->hw->cd_level))
-			pr_info("[msdc%d] cd_level isn't found in device tree\n",
+			pr_debug("[msdc%d] cd_level isn't found in device tree\n",
 				host->id);
 	}
 
@@ -1495,14 +1495,14 @@ int msdc_of_parse(struct platform_device *pdev, struct mmc_host *mmc)
 	msdc_get_pinctl_settings(host, np);
 	mmc->supply.vmmc = regulator_get(mmc_dev(mmc), "vmmc");
 	if (IS_ERR(mmc->supply.vmmc)) {
-		pr_info("err=%ld,failed to get vmmc\n",
+		pr_debug("err=%ld,failed to get vmmc\n",
 			PTR_ERR(mmc->supply.vmmc));
 		goto vmmc_fail;
 	}
 
 	mmc->supply.vqmmc = regulator_get(mmc_dev(mmc), "vqmmc");
 	if (IS_ERR(mmc->supply.vqmmc)) {
-		pr_info("err=%ld ,failed to get vqmmc\n",
+		pr_debug("err=%ld ,failed to get vqmmc\n",
 			PTR_ERR(mmc->supply.vqmmc));
 		goto vqmmc_fail;
 	}

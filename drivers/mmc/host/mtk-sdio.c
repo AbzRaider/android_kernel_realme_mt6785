@@ -1714,7 +1714,7 @@ static void msdc_dump_all_register(struct msdc_host *host)
 
 	byte16_align_cnt = MAX_REGISTER_ADDR / 16;
 	for (i = 0; i < byte16_align_cnt; i++)
-		pr_info("SDIO reg[%.2x]=0x%.8x reg[%.2x]=0x%.8x reg[%.2x]=0x%.8x reg[%.2x]=0x%.8x\n",
+		pr_debug("SDIO reg[%.2x]=0x%.8x reg[%.2x]=0x%.8x reg[%.2x]=0x%.8x reg[%.2x]=0x%.8x\n",
 			i * 16, readl(base + i * 16),
 			i * 16 + 4, readl(base + i * 16 + 4),
 			i * 16 + 8, readl(base + i * 16 + 8),
@@ -1722,13 +1722,13 @@ static void msdc_dump_all_register(struct msdc_host *host)
 
 	left_cnt = (MAX_REGISTER_ADDR - byte16_align_cnt * 16) / 4 + 1;
 	for (i = 0; i < left_cnt; i++)
-		pr_info("SDIO reg[%.2x]=0x%.8x\n",
+		pr_debug("SDIO reg[%.2x]=0x%.8x\n",
 		       byte16_align_cnt * 16 + i * 4,
 		       readl(base + byte16_align_cnt * 16 + i * 4));
 
 	if (host->top_base)
 		for (i = 0; i < 8; i++)
-			pr_info("SDIO top reg[%.2x]=0x%.8x\n", i * 4,
+			pr_debug("SDIO top reg[%.2x]=0x%.8x\n", i * 4,
 				readl(host->top_base + i * 4));
 }
 

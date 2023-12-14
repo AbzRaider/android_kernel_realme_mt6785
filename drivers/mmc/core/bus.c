@@ -331,13 +331,13 @@ int mmc_add_card(struct mmc_card *card)
 		uhs_bus_speed_mode = uhs_speeds[card->sd_bus_speed];
 
 	if (mmc_host_is_spi(card->host)) {
-		pr_info("%s: new %s%s%s card on SPI\n",
+		pr_debug("%s: new %s%s%s card on SPI\n",
 			mmc_hostname(card->host),
 			mmc_card_hs(card) ? "high speed " : "",
 			mmc_card_ddr52(card) ? "DDR " : "",
 			type);
 	} else {
-		pr_info("%s: new %s%s%s%s%s%s card at address %04x\n",
+		pr_debug("%s: new %s%s%s%s%s%s card at address %04x\n",
 			mmc_hostname(card->host),
 			mmc_card_uhs(card) ? "ultra high speed " :
 			(mmc_card_hs(card) ? "high speed " : ""),
@@ -378,10 +378,10 @@ void mmc_remove_card(struct mmc_card *card)
 
 	if (mmc_card_present(card)) {
 		if (mmc_host_is_spi(card->host)) {
-			pr_info("%s: SPI card removed\n",
+			pr_debug("%s: SPI card removed\n",
 				mmc_hostname(card->host));
 		} else {
-			pr_info("%s: card %04x removed\n",
+			pr_debug("%s: card %04x removed\n",
 				mmc_hostname(card->host), card->rca);
 		}
 		device_del(&card->dev);

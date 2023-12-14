@@ -1100,7 +1100,7 @@ static int via_sd_probe(struct pci_dev *pcidev,
 	u8  gatt;
 	int ret;
 
-	pr_info(DRV_NAME
+	pr_debug(DRV_NAME
 		": VIA SDMMC controller found at %s [%04x:%04x] (rev %x)\n",
 		pci_name(pcidev), (int)pcidev->vendor, (int)pcidev->device,
 		(int)pcidev->revision);
@@ -1236,7 +1236,7 @@ static void via_sd_remove(struct pci_dev *pcidev)
 	pci_release_regions(pcidev);
 	pci_disable_device(pcidev);
 
-	pr_info(DRV_NAME
+	pr_debug(DRV_NAME
 		": VIA SDMMC controller at %s [%04x:%04x] has been removed\n",
 		pci_name(pcidev), (int)pcidev->vendor, (int)pcidev->device);
 }

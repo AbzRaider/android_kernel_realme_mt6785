@@ -884,7 +884,7 @@ int mmc_interrupt_hpi(struct mmc_card *card)
 	unsigned long prg_wait;
 
 	if (!card->ext_csd.hpi_en) {
-		pr_info("%s: HPI enable bit unset\n", mmc_hostname(card->host));
+		pr_debug("%s: HPI enable bit unset\n", mmc_hostname(card->host));
 		return 1;
 	}
 

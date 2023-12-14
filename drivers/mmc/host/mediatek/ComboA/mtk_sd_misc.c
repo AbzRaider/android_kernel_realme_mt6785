@@ -909,17 +909,17 @@ static long simple_sd_ioctl(struct file *file, unsigned int cmd,
 		switch (cmd) {
 #ifdef CONFIG_PWR_LOSS_MTK_TEST
 		case MSDC_REINIT_SDCARD:
-			pr_info("sd ioctl re-init!!\n");
+			pr_debug("sd ioctl re-init!!\n");
 			ret = sd_ioctl_reinit((struct msdc_ioctl *)arg);
 			break;
 
 		case MSDC_CD_PIN_EN_SDCARD:
-			pr_info("sd ioctl cd pin\n");
+			pr_debug("sd ioctl cd pin\n");
 			ret = sd_ioctl_cd_pin_en((struct msdc_ioctl *)arg);
 			break;
 
 		case MSDC_SD_POWER_OFF:
-			pr_info("sd ioctl power off!!!\n");
+			pr_debug("sd ioctl power off!!!\n");
 			host = mtk_msdc_host[1];
 			if (host && host->mmc) {
 				mmc_claim_host(host->mmc);
@@ -929,7 +929,7 @@ static long simple_sd_ioctl(struct file *file, unsigned int cmd,
 			break;
 
 		case MSDC_SD_POWER_ON:
-			pr_info("sd ioctl power on!!!\n");
+			pr_debug("sd ioctl power on!!!\n");
 			host = mtk_msdc_host[1];
 			/* FIX ME: kernel 3.18 does not provide
 			 * mmc_resume_host,

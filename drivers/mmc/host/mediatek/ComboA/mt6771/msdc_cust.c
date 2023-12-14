@@ -118,7 +118,7 @@ void msdc_ldo_power(u32 on, struct regulator *reg, int voltage_mv, u32 *status)
 	if (on) { /* want to power on */
 		if (*status == 0) {  /* can power on */
 			/* Comment out to reduce log */
-			/* pr_info("msdc power on<%d>\n", voltage_uv); */
+			/* pr_debug("msdc power on<%d>\n", voltage_uv); */
 			(void)msdc_regulator_set_and_enable(reg, voltage_uv);
 			*status = voltage_uv;
 		} else if (*status == voltage_uv) {
@@ -131,7 +131,7 @@ void msdc_ldo_power(u32 on, struct regulator *reg, int voltage_mv, u32 *status)
 	} else {  /* want to power off */
 		if (*status != 0) {  /* has been powerred on */
 			/* Comment out to reduce log */
-			/* pr_info("msdc power off\n"); */
+			/* pr_debug("msdc power off\n"); */
 			(void)regulator_disable(reg);
 			*status = 0;
 		} else {
@@ -293,7 +293,7 @@ void msdc_emmc_power(struct msdc_host *host, u32 on)
 	msdc_ldo_power(on, host->mmc->supply.vmmc, VOL_3000,
 		&host->power_flash);
 
-	pr_info("msdc%d power %s\n", host->id, (on ? "on" : "off"));
+	pr_debug("msdc%d power %s\n", host->id, (on ? "on" : "off"));
 #endif
 #ifdef MTK_MSDC_BRINGUP_DEBUG
 	msdc_dump_ldo_sts(host);
@@ -376,7 +376,7 @@ void msdc_sd_power(struct msdc_host *host, u32 on)
 		if (!on)
 			pmic_set_register_value(PMIC_RG_VMC_VOCAL, 0x0);
 
-		pr_info("msdc%d power %s\n", host->id, (on ? "on" : "off"));
+		pr_debug("msdc%d power %s\n", host->id, (on ? "on" : "off"));
 		break;
 
 	default:
@@ -395,7 +395,7 @@ void msdc_sd_power_off(void)
 	struct msdc_host *host = mtk_msdc_host[1];
 
 	if (host) {
-		pr_info("Power Off, SD card\n");
+		pr_debug("Power Off, SD card\n");
 
 		/* power must be on */
 		host->power_io = VOL_3000 * 1000;
@@ -485,7 +485,7 @@ void msdc_HQA_set_voltage(struct msdc_host *host)
 
 	pmic_read_interface(0x1e94, &vio_cal, 0xF, 0);
 	pmic_read_interface(0x1ebe, &vio_trim, 0xF, 0);
-	pr_info("[MSDC%d HQA] orig Vcore 0x%x, Vio_trim 0x%x, Vio_cal 0x%x\n",
+	pr_debug("[MSDC%d HQA] orig Vcore 0x%x, Vio_trim 0x%x, Vio_cal 0x%x\n",
 		host->id, vcore_orig, vio_trim, vio_cal);
 
 #if defined(MSDC_HQA_HV) || defined(MSDC_HQA_LV)
@@ -512,7 +512,7 @@ void msdc_HQA_set_voltage(struct msdc_host *host)
 	pmic_config_interface(0x1e94, vio_cal, 0xF, 0);
 	pmic_config_interface(0x1ebe, vio_trim, 0xF, 0);
 
-	pr_info("[MSDC%d HQA] adj Vcore 0x%x, Vio_trim 0x%x, Vio_cal 0x%x\n",
+	pr_debug("[MSDC%d HQA] adj Vcore 0x%x, Vio_trim 0x%x, Vio_cal 0x%x\n",
 		host->id, vcore, vio_trim, vio_cal);
 #endif
 }
@@ -601,7 +601,7 @@ int msdc_get_ccf_clk_pointer(struct platform_device *pdev,
 		}
 	}
 #endif
-	pr_info("[msdc%d] hclk:%d, clk_ctl:%p, hclk_ctl:%p, aes_clk_ctl:%p\n",
+	pr_debug("[msdc%d] hclk:%d, clk_ctl:%p, hclk_ctl:%p, aes_clk_ctl:%p\n",
 		pdev->id, host->hclk, host->clk_ctl, host->hclk_ctl, host->aes_clk_ctl);
 #endif /* CLOCK_READY */
 	return 0;
@@ -1197,7 +1197,7 @@ int msdc_of_parse(struct platform_device *pdev, struct mmc_host *mmc)
 	host->id = id;
 	pdev->id = id;
 
-	pr_info("DT probe %s%d!\n", pdev->dev.of_node->name, id);
+	pr_debug("DT probe %s%d!\n", pdev->dev.of_node->name, id);
 
 	ret = mmc_of_parse(mmc);
 	if (ret) {
@@ -1217,7 +1217,7 @@ int msdc_of_parse(struct platform_device *pdev, struct mmc_host *mmc)
 
 	/* get irq # */
 	host->irq = irq_of_parse_and_map(np, 0);
-	pr_info("[msdc%d] get irq # %d\n", host->id, host->irq);
+	pr_debug("[msdc%d] get irq # %d\n", host->id, host->irq);
 	WARN_ON(host->irq < 0);
 
 #if !defined(FPGA_PLATFORM)

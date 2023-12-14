@@ -642,7 +642,7 @@ static inline bool msdc_cmd_is_ready(struct msdc_host *host,
 			 * leaves the program state.
 			 */
 			if (count > 1000 || time_after(jiffies, tmo)) {
-				pr_info("%s: Card is in programming state!\n",
+				pr_debug("%s: Card is in programming state!\n",
 				       mmc_hostname(host->mmc));
 				host->error |= REQ_CMD_BUSY;
 				msdc_cmd_done(host, MSDC_INT_CMDTMO, mrq, cmd);
@@ -961,7 +961,7 @@ static void sdio_status_notify_cb(int card_present, void *dev_id)
 {
 	struct msdc_host *host = (struct msdc_host *)dev_id;
 
-	pr_info("%s: card_present %d\n", mmc_hostname(host->mmc), card_present);
+	pr_debug("%s: card_present %d\n", mmc_hostname(host->mmc), card_present);
 
 	if (card_present == 1) {
 		host->mmc->rescan_disable = 0;
@@ -974,7 +974,7 @@ static void sdio_status_notify_cb(int card_present, void *dev_id)
 
 void sdio_card_detect(int card_present)
 {
-	pr_info("%s: enter present:%d\n", __func__, card_present);
+	pr_debug("%s: enter present:%d\n", __func__, card_present);
 	if (sdio_host)
 		sdio_status_notify_cb(card_present, sdio_host);
 
@@ -1198,13 +1198,13 @@ static unsigned int autok_debug_level = ATK_RES;
 #define ATK_DBG(_level, _fmt ...)	   \
 ({                                         \
 	if (autok_debug_level >= _level) { \
-		pr_info(_fmt);              \
+		pr_debug(_fmt);              \
 	}                                  \
 })
 
 #define ATK_ERR(_fmt ...)           \
 ({                                         \
-	pr_info(_fmt);                      \
+	pr_debug(_fmt);                      \
 })
 
 enum AUTOK_PARAM {
@@ -3467,7 +3467,7 @@ static void msdc_dump_all_register(struct msdc_host *host)
 
 	byte16_align_cnt = MAX_REGISTER_ADDR / 16;
 	for (i = 0; i < byte16_align_cnt; i++)
-		pr_info("SDIO reg[%.2x]=0x%.8x reg[%.2x]=0x%.8x reg[%.2x]=0x%.8x reg[%.2x]=0x%.8x\n",
+		pr_debug("SDIO reg[%.2x]=0x%.8x reg[%.2x]=0x%.8x reg[%.2x]=0x%.8x reg[%.2x]=0x%.8x\n",
 			i * 16, readl(base + i * 16),
 			i * 16 + 4, readl(base + i * 16 + 4),
 			i * 16 + 8, readl(base + i * 16 + 8),
@@ -3475,7 +3475,7 @@ static void msdc_dump_all_register(struct msdc_host *host)
 
 	left_cnt = (MAX_REGISTER_ADDR - byte16_align_cnt * 16) / 4 + 1;
 	for (i = 0; i < left_cnt; i++)
-		pr_info("SDIO reg[%.2x]=0x%.8x\n",
+		pr_debug("SDIO reg[%.2x]=0x%.8x\n",
 		       byte16_align_cnt * 16 + i * 4,
 		       readl(base + byte16_align_cnt * 16 + i * 4));
 }
@@ -3484,13 +3484,13 @@ static void msdc_dump_register(struct msdc_host *host)
 {
 	void __iomem *base = host->base;
 
-	pr_info("SDIO MSDC_CFG=0x%.8x\n", readl(base + MSDC_CFG));
-	pr_info("SDIO MSDC_IOCON=0x%.8x\n", readl(base + MSDC_IOCON));
-	pr_info("SDIO MSDC_PATCH_BIT0=0x%.8x\n", readl(base + MSDC_PATCH_BIT0));
-	pr_info("SDIO MSDC_PATCH_BIT1=0x%.8x\n", readl(base + MSDC_PATCH_BIT1));
-	pr_info("SDIO MSDC_PATCH_BIT2=0x%.8x\n", readl(base + MSDC_PATCH_BIT2));
-	pr_info("SDIO MSDC_PAD_TUNE0=0x%.8x\n", readl(base + MSDC_PAD_TUNE0));
-	pr_info("SDIO MSDC_PAD_TUNE1=0x%.8x\n", readl(base + MSDC_PAD_TUNE1));
+	pr_debug("SDIO MSDC_CFG=0x%.8x\n", readl(base + MSDC_CFG));
+	pr_debug("SDIO MSDC_IOCON=0x%.8x\n", readl(base + MSDC_IOCON));
+	pr_debug("SDIO MSDC_PATCH_BIT0=0x%.8x\n", readl(base + MSDC_PATCH_BIT0));
+	pr_debug("SDIO MSDC_PATCH_BIT1=0x%.8x\n", readl(base + MSDC_PATCH_BIT1));
+	pr_debug("SDIO MSDC_PATCH_BIT2=0x%.8x\n", readl(base + MSDC_PATCH_BIT2));
+	pr_debug("SDIO MSDC_PAD_TUNE0=0x%.8x\n", readl(base + MSDC_PAD_TUNE0));
+	pr_debug("SDIO MSDC_PAD_TUNE1=0x%.8x\n", readl(base + MSDC_PAD_TUNE1));
 }
 
 static int msdc_execute_tuning(struct mmc_host *mmc, u32 opcode)
@@ -3669,7 +3669,7 @@ static void msdc_pm(pm_message_t state, void *data)
 		if (host->suspend != 0)
 			return;
 
-		pr_info("msdc%d -> %s Suspend\n", SDIO_USE_PORT,
+		pr_debug("msdc%d -> %s Suspend\n", SDIO_USE_PORT,
 			evt == PM_EVENT_SUSPEND ? "PM" : "USR");
 		host->suspend = 1;
 		host->mmc->pm_flags |= MMC_PM_IGNORE_PM_NOTIFY;
@@ -3680,7 +3680,7 @@ static void msdc_pm(pm_message_t state, void *data)
 		if (host->suspend == 0)
 			return;
 
-		pr_info("msdc%d -> %s Resume\n", SDIO_USE_PORT,
+		pr_debug("msdc%d -> %s Resume\n", SDIO_USE_PORT,
 			evt == PM_EVENT_RESUME ? "PM" : "USR");
 		host->suspend = 0;
 		host->mmc->pm_flags |= MMC_PM_IGNORE_PM_NOTIFY;
@@ -3921,7 +3921,7 @@ static int msdc_drv_probe(struct platform_device *pdev)
 		writel(0x1 << host->module_reset_bit, host->infra_reset + 0x04);
 		udelay(1);
 		val = readl(host->infra_reset);
-		pr_info("msdc module reset done 0x10001030: 0x%x, MSDC_CFG: 0x%x\n",
+		pr_debug("msdc module reset done 0x10001030: 0x%x, MSDC_CFG: 0x%x\n",
 				val, readl(host->base + MSDC_CFG));
 	}
 
@@ -3966,7 +3966,7 @@ static int msdc_drv_probe(struct platform_device *pdev)
 	host->mmc->pm_flags |= MMC_PM_KEEP_POWER;
 
 	ret = mmc_add_host(mmc);
-	pr_info("%s: add new sdio_host %s, index=%d, ret=%d\n", __func__,
+	pr_debug("%s: add new sdio_host %s, index=%d, ret=%d\n", __func__,
 		mmc_hostname(host->mmc), mmc->index, ret);
 
 	sdio_host = host;

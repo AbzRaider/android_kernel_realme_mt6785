@@ -65,7 +65,7 @@ void msdc_fpga_pwr_init(void)
 			WARN_ON(1);
 		}
 		fpga_pwr_gpio_eo = fpga_pwr_gpio + 0x4;
-		pr_info("FPGA PWR_GPIO, PWR_GPIO_EO address 0x%p, 0x%p\n",
+		pr_debug("FPGA PWR_GPIO, PWR_GPIO_EO address 0x%p, 0x%p\n",
 			fpga_pwr_gpio, fpga_pwr_gpio_eo);
 	}
 	msdc_set_pwr_gpio_dir(fpga_pwr_gpio, fpga_pwr_gpio_eo);

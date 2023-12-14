@@ -339,7 +339,7 @@ static irqreturn_t goldfish_mmc_irq(int irq, void *dev_id)
 
 	if (state_changed) {
 		u32 state = GOLDFISH_MMC_READ(host, MMC_STATE);
-		pr_info("%s: Card detect now %d\n", __func__,
+		pr_debug("%s: Card detect now %d\n", __func__,
 			(state & MMC_STATE_INSERTED));
 		mmc_detect_change(host->mmc, 0);
 	}

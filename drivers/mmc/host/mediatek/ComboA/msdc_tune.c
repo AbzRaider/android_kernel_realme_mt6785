@@ -78,7 +78,7 @@ void msdc_set_bad_card_and_remove(struct msdc_host *host)
 	unsigned long flags;
 
 	if (host == NULL) {
-		pr_info("WARN: host is NULL");
+		pr_debug("WARN: host is NULL");
 		return;
 	}
 	if (host->card_inserted) {
