@@ -1417,10 +1417,10 @@ static void qla4_83xx_dump_pause_control_regs(struct scsi_qla_host *ha)
 	for (i = 0; i < 8; i++) {
 		status = qla4_83xx_rd_reg_indirect(ha,
 				QLA83XX_PORT0_RXB_PAUSE_THRS + (i * 0x4), &val);
-		DEBUG2(pr_info("0x%x ", val));
+		DEBUG2(pr_debug("0x%x ", val));
 	}
 
-	DEBUG2(pr_info("\n"));
+	DEBUG2(pr_debug("\n"));
 
 	/* Port 1 Rx Buffer Pause Threshold Registers. */
 	DEBUG2(ql4_printk(KERN_INFO, ha,
@@ -1428,10 +1428,10 @@ static void qla4_83xx_dump_pause_control_regs(struct scsi_qla_host *ha)
 	for (i = 0; i < 8; i++) {
 		status = qla4_83xx_rd_reg_indirect(ha,
 				QLA83XX_PORT1_RXB_PAUSE_THRS + (i * 0x4), &val);
-		DEBUG2(pr_info("0x%x  ", val));
+		DEBUG2(pr_debug("0x%x  ", val));
 	}
 
-	DEBUG2(pr_info("\n"));
+	DEBUG2(pr_debug("\n"));
 
 	/* Port 0 RxB Traffic Class Max Cell Registers. */
 	DEBUG2(ql4_printk(KERN_INFO, ha,
@@ -1439,10 +1439,10 @@ static void qla4_83xx_dump_pause_control_regs(struct scsi_qla_host *ha)
 	for (i = 0; i < 4; i++) {
 		status = qla4_83xx_rd_reg_indirect(ha,
 			       QLA83XX_PORT0_RXB_TC_MAX_CELL + (i * 0x4), &val);
-		DEBUG2(pr_info("0x%x  ", val));
+		DEBUG2(pr_debug("0x%x  ", val));
 	}
 
-	DEBUG2(pr_info("\n"));
+	DEBUG2(pr_debug("\n"));
 
 	/* Port 1 RxB Traffic Class Max Cell Registers. */
 	DEBUG2(ql4_printk(KERN_INFO, ha,
@@ -1450,10 +1450,10 @@ static void qla4_83xx_dump_pause_control_regs(struct scsi_qla_host *ha)
 	for (i = 0; i < 4; i++) {
 		status = qla4_83xx_rd_reg_indirect(ha,
 			       QLA83XX_PORT1_RXB_TC_MAX_CELL + (i * 0x4), &val);
-		DEBUG2(pr_info("0x%x  ", val));
+		DEBUG2(pr_debug("0x%x  ", val));
 	}
 
-	DEBUG2(pr_info("\n"));
+	DEBUG2(pr_debug("\n"));
 
 	/* Port 0 RxB Rx Traffic Class Stats. */
 	DEBUG2(ql4_printk(KERN_INFO, ha,
@@ -1468,10 +1468,10 @@ static void qla4_83xx_dump_pause_control_regs(struct scsi_qla_host *ha)
 		status = qla4_83xx_rd_reg_indirect(ha,
 						   QLA83XX_PORT0_RXB_TC_STATS,
 						   &val);
-		DEBUG2(pr_info("0x%x  ", val));
+		DEBUG2(pr_debug("0x%x  ", val));
 	}
 
-	DEBUG2(pr_info("\n"));
+	DEBUG2(pr_debug("\n"));
 
 	/* Port 1 RxB Rx Traffic Class Stats. */
 	DEBUG2(ql4_printk(KERN_INFO, ha,
@@ -1486,10 +1486,10 @@ static void qla4_83xx_dump_pause_control_regs(struct scsi_qla_host *ha)
 		status = qla4_83xx_rd_reg_indirect(ha,
 						   QLA83XX_PORT1_RXB_TC_STATS,
 						   &val);
-		DEBUG2(pr_info("0x%x  ", val));
+		DEBUG2(pr_debug("0x%x  ", val));
 	}
 
-	DEBUG2(pr_info("\n"));
+	DEBUG2(pr_debug("\n"));
 
 	status = qla4_83xx_rd_reg_indirect(ha, QLA83XX_PORT2_IFB_PAUSE_THRS,
 					   &val);

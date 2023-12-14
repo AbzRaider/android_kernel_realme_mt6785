@@ -109,7 +109,7 @@ qla2x00_async_iocb_timeout(void *data)
 
 		fcport->flags &= ~FCF_ASYNC_SENT;
 	} else {
-		pr_info("Async-%s timeout - hdl=%x.\n",
+		pr_debug("Async-%s timeout - hdl=%x.\n",
 		    sp->name, sp->handle);
 	}
 

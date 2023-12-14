@@ -211,14 +211,14 @@ _ctl_display_some_debug(struct MPT3SAS_ADAPTER *ioc, u16 smid,
 	if (!desc)
 		return;
 
-	pr_info(MPT3SAS_FMT "%s: %s, smid(%d)\n",
+	pr_debug(MPT3SAS_FMT "%s: %s, smid(%d)\n",
 	    ioc->name, calling_function_name, desc, smid);
 
 	if (!mpi_reply)
 		return;
 
 	if (mpi_reply->IOCStatus || mpi_reply->IOCLogInfo)
-		pr_info(MPT3SAS_FMT
+		pr_debug(MPT3SAS_FMT
 		    "\tiocstatus(0x%04x), loginfo(0x%08x)\n",
 		    ioc->name, le16_to_cpu(mpi_reply->IOCStatus),
 		    le32_to_cpu(mpi_reply->IOCLogInfo));
@@ -245,7 +245,7 @@ _ctl_display_some_debug(struct MPT3SAS_ADAPTER *ioc, u16 smid,
 		}
 		spin_unlock_irqrestore(&ioc->sas_device_lock, flags);
 		if (scsi_reply->SCSIState || scsi_reply->SCSIStatus)
-			pr_info(MPT3SAS_FMT
+			pr_debug(MPT3SAS_FMT
 			    "\tscsi_state(0x%02x), scsi_status"
 			    "(0x%02x)\n", ioc->name,
 			    scsi_reply->SCSIState,
@@ -471,7 +471,7 @@ mpt3sas_ctl_reset_handler(struct MPT3SAS_ADAPTER *ioc, int reset_phase)
 
 	switch (reset_phase) {
 	case MPT3_IOC_PRE_RESET:
-		dtmprintk(ioc, pr_info(MPT3SAS_FMT
+		dtmprintk(ioc, pr_debug(MPT3SAS_FMT
 			"%s: MPT3_IOC_PRE_RESET\n", ioc->name, __func__));
 		for (i = 0; i < MPI2_DIAG_BUF_TYPE_COUNT; i++) {
 			if (!(ioc->diag_buffer_status[i] &
@@ -484,7 +484,7 @@ mpt3sas_ctl_reset_handler(struct MPT3SAS_ADAPTER *ioc, int reset_phase)
 		}
 		break;
 	case MPT3_IOC_AFTER_RESET:
-		dtmprintk(ioc, pr_info(MPT3SAS_FMT
+		dtmprintk(ioc, pr_debug(MPT3SAS_FMT
 			"%s: MPT3_IOC_AFTER_RESET\n", ioc->name, __func__));
 		if (ioc->ctl_cmds.status & MPT3_CMD_PENDING) {
 			ioc->ctl_cmds.status |= MPT3_CMD_RESET;
@@ -493,7 +493,7 @@ mpt3sas_ctl_reset_handler(struct MPT3SAS_ADAPTER *ioc, int reset_phase)
 		}
 		break;
 	case MPT3_IOC_DONE_RESET:
-		dtmprintk(ioc, pr_info(MPT3SAS_FMT
+		dtmprintk(ioc, pr_debug(MPT3SAS_FMT
 			"%s: MPT3_IOC_DONE_RESET\n", ioc->name, __func__));
 
 		for (i = 0; i < MPI2_DIAG_BUF_TYPE_COUNT; i++) {
@@ -602,7 +602,7 @@ _ctl_set_task_mid(struct MPT3SAS_ADAPTER *ioc, struct mpt3_ioctl_command *karg,
 	spin_unlock_irqrestore(&ioc->scsi_lookup_lock, flags);
 
 	if (!found) {
-		dctlprintk(ioc, pr_info(MPT3SAS_FMT
+		dctlprintk(ioc, pr_debug(MPT3SAS_FMT
 			"%s: handle(0x%04x), lun(%d), no active mid!!\n",
 			ioc->name,
 		    desc, le16_to_cpu(tm_request->DevHandle), lun));
@@ -621,7 +621,7 @@ _ctl_set_task_mid(struct MPT3SAS_ADAPTER *ioc, struct mpt3_ioctl_command *karg,
 		return 1;
 	}
 
-	dctlprintk(ioc, pr_info(MPT3SAS_FMT
+	dctlprintk(ioc, pr_debug(MPT3SAS_FMT
 		"%s: handle(0x%04x), lun(%d), task_mid(%d)\n", ioc->name,
 	    desc, le16_to_cpu(tm_request->DevHandle), lun,
 	     le16_to_cpu(tm_request->TaskMID)));
@@ -677,13 +677,13 @@ _ctl_do_mpt_command(struct MPT3SAS_ADAPTER *ioc, struct mpt3_ioctl_command karg,
 		}
 		ssleep(1);
 		ioc_state = mpt3sas_base_get_iocstate(ioc, 1);
-		pr_info(MPT3SAS_FMT
+		pr_debug(MPT3SAS_FMT
 			"%s: waiting for operational state(count=%d)\n",
 			ioc->name,
 		    __func__, wait_state_count);
 	}
 	if (wait_state_count)
-		pr_info(MPT3SAS_FMT "%s: ioc is operational\n",
+		pr_debug(MPT3SAS_FMT "%s: ioc is operational\n",
 		    ioc->name, __func__);
 
 	mpi_request = kzalloc(ioc->request_sz, GFP_KERNEL);
@@ -802,7 +802,7 @@ _ctl_do_mpt_command(struct MPT3SAS_ADAPTER *ioc, struct mpt3_ioctl_command karg,
 		    mpt3sas_base_get_sense_buffer_dma(ioc, smid);
 		memset(ioc->ctl_cmds.sense, 0, SCSI_SENSE_BUFFERSIZE);
 		if (test_bit(device_handle, ioc->device_remove_in_progress)) {
-			dtmprintk(ioc, pr_info(MPT3SAS_FMT
+			dtmprintk(ioc, pr_debug(MPT3SAS_FMT
 				"handle(0x%04x) :ioctl failed due to device removal in progress\n",
 				ioc->name, device_handle));
 			mpt3sas_base_free_smid(ioc, smid);
@@ -822,7 +822,7 @@ _ctl_do_mpt_command(struct MPT3SAS_ADAPTER *ioc, struct mpt3_ioctl_command karg,
 		Mpi2SCSITaskManagementRequest_t *tm_request =
 		    (Mpi2SCSITaskManagementRequest_t *)request;
 
-		dtmprintk(ioc, pr_info(MPT3SAS_FMT
+		dtmprintk(ioc, pr_debug(MPT3SAS_FMT
 			"TASK_MGMT: handle(0x%04x), task_type(0x%02x)\n",
 			ioc->name,
 		    le16_to_cpu(tm_request->DevHandle), tm_request->TaskType));
@@ -840,7 +840,7 @@ _ctl_do_mpt_command(struct MPT3SAS_ADAPTER *ioc, struct mpt3_ioctl_command karg,
 		ioc->got_task_abort_from_ioctl = 0;
 
 		if (test_bit(device_handle, ioc->device_remove_in_progress)) {
-			dtmprintk(ioc, pr_info(MPT3SAS_FMT
+			dtmprintk(ioc, pr_debug(MPT3SAS_FMT
 				"handle(0x%04x) :ioctl failed due to device removal in progress\n",
 				ioc->name, device_handle));
 			mpt3sas_base_free_smid(ioc, smid);
@@ -888,7 +888,7 @@ _ctl_do_mpt_command(struct MPT3SAS_ADAPTER *ioc, struct mpt3_ioctl_command karg,
 	case MPI2_FUNCTION_SATA_PASSTHROUGH:
 	{
 		if (test_bit(device_handle, ioc->device_remove_in_progress)) {
-			dtmprintk(ioc, pr_info(MPT3SAS_FMT
+			dtmprintk(ioc, pr_debug(MPT3SAS_FMT
 				"handle(0x%04x) :ioctl failed due to device removal in progress\n",
 				ioc->name, device_handle));
 			mpt3sas_base_free_smid(ioc, smid);
@@ -976,7 +976,7 @@ _ctl_do_mpt_command(struct MPT3SAS_ADAPTER *ioc, struct mpt3_ioctl_command karg,
 		Mpi2SCSITaskManagementReply_t *tm_reply =
 		    (Mpi2SCSITaskManagementReply_t *)mpi_reply;
 
-		pr_info(MPT3SAS_FMT "TASK_MGMT: " \
+		pr_debug(MPT3SAS_FMT "TASK_MGMT: " \
 		    "IOCStatus(0x%04x), IOCLogInfo(0x%08x), "
 		    "TerminationCount(0x%08x)\n", ioc->name,
 		    le16_to_cpu(tm_reply->IOCStatus),
@@ -1028,7 +1028,7 @@ _ctl_do_mpt_command(struct MPT3SAS_ADAPTER *ioc, struct mpt3_ioctl_command karg,
 		    mpi_request->Function ==
 		    MPI2_FUNCTION_RAID_SCSI_IO_PASSTHROUGH ||
 		    mpi_request->Function == MPI2_FUNCTION_SATA_PASSTHROUGH)) {
-			pr_info(MPT3SAS_FMT "issue target reset: handle = (0x%04x)\n",
+			pr_debug(MPT3SAS_FMT "issue target reset: handle = (0x%04x)\n",
 				ioc->name,
 				le16_to_cpu(mpi_request->FunctionDependent1));
 			mpt3sas_halt_firmware(ioc);
@@ -1071,7 +1071,7 @@ _ctl_getiocinfo(struct MPT3SAS_ADAPTER *ioc, void __user *arg)
 		return -EFAULT;
 	}
 
-	dctlprintk(ioc, pr_info(MPT3SAS_FMT "%s: enter\n", ioc->name,
+	dctlprintk(ioc, pr_debug(MPT3SAS_FMT "%s: enter\n", ioc->name,
 	    __func__));
 
 	memset(&karg, 0 , sizeof(karg));
@@ -1131,7 +1131,7 @@ _ctl_eventquery(struct MPT3SAS_ADAPTER *ioc, void __user *arg)
 		return -EFAULT;
 	}
 
-	dctlprintk(ioc, pr_info(MPT3SAS_FMT "%s: enter\n", ioc->name,
+	dctlprintk(ioc, pr_debug(MPT3SAS_FMT "%s: enter\n", ioc->name,
 	    __func__));
 
 	karg.event_entries = MPT3SAS_CTL_EVENT_LOG_SIZE;
@@ -1162,7 +1162,7 @@ _ctl_eventenable(struct MPT3SAS_ADAPTER *ioc, void __user *arg)
 		return -EFAULT;
 	}
 
-	dctlprintk(ioc, pr_info(MPT3SAS_FMT "%s: enter\n", ioc->name,
+	dctlprintk(ioc, pr_debug(MPT3SAS_FMT "%s: enter\n", ioc->name,
 	    __func__));
 
 	memcpy(ioc->event_type, karg.event_types,
@@ -1202,7 +1202,7 @@ _ctl_eventreport(struct MPT3SAS_ADAPTER *ioc, void __user *arg)
 		return -EFAULT;
 	}
 
-	dctlprintk(ioc, pr_info(MPT3SAS_FMT "%s: enter\n", ioc->name,
+	dctlprintk(ioc, pr_debug(MPT3SAS_FMT "%s: enter\n", ioc->name,
 	    __func__));
 
 	number_bytes = karg.hdr.max_data_size -
@@ -1249,11 +1249,11 @@ _ctl_do_reset(struct MPT3SAS_ADAPTER *ioc, void __user *arg)
 	    ioc->is_driver_loading)
 		return -EAGAIN;
 
-	dctlprintk(ioc, pr_info(MPT3SAS_FMT "%s: enter\n", ioc->name,
+	dctlprintk(ioc, pr_debug(MPT3SAS_FMT "%s: enter\n", ioc->name,
 	    __func__));
 
 	retval = mpt3sas_base_hard_reset_handler(ioc, FORCE_BIG_HAMMER);
-	pr_info(MPT3SAS_FMT "host reset: %s\n",
+	pr_debug(MPT3SAS_FMT "host reset: %s\n",
 	    ioc->name, ((!retval) ? "SUCCESS" : "FAILED"));
 	return 0;
 }
@@ -1347,7 +1347,7 @@ _ctl_btdh_mapping(struct MPT3SAS_ADAPTER *ioc, void __user *arg)
 		return -EFAULT;
 	}
 
-	dctlprintk(ioc, pr_info(MPT3SAS_FMT "%s\n", ioc->name,
+	dctlprintk(ioc, pr_debug(MPT3SAS_FMT "%s\n", ioc->name,
 	    __func__));
 
 	rc = _ctl_btdh_search_sas_device(ioc, &karg);
@@ -1417,7 +1417,7 @@ _ctl_diag_register_2(struct MPT3SAS_ADAPTER *ioc,
 	u32 ioc_state;
 	u8 issue_reset = 0;
 
-	dctlprintk(ioc, pr_info(MPT3SAS_FMT "%s\n", ioc->name,
+	dctlprintk(ioc, pr_debug(MPT3SAS_FMT "%s\n", ioc->name,
 	    __func__));
 
 	ioc_state = mpt3sas_base_get_iocstate(ioc, 1);
@@ -1518,7 +1518,7 @@ _ctl_diag_register_2(struct MPT3SAS_ADAPTER *ioc,
 	mpi_request->VF_ID = 0; /* TODO */
 	mpi_request->VP_ID = 0;
 
-	dctlprintk(ioc, pr_info(MPT3SAS_FMT
+	dctlprintk(ioc, pr_debug(MPT3SAS_FMT
 		"%s: diag_buffer(0x%p), dma(0x%llx), sz(%d)\n",
 		ioc->name, __func__, request_data,
 	    (unsigned long long)request_data_dma,
@@ -1557,10 +1557,10 @@ _ctl_diag_register_2(struct MPT3SAS_ADAPTER *ioc,
 	if (ioc_status == MPI2_IOCSTATUS_SUCCESS) {
 		ioc->diag_buffer_status[buffer_type] |=
 			MPT3_DIAG_BUFFER_IS_REGISTERED;
-		dctlprintk(ioc, pr_info(MPT3SAS_FMT "%s: success\n",
+		dctlprintk(ioc, pr_debug(MPT3SAS_FMT "%s: success\n",
 		    ioc->name, __func__));
 	} else {
-		pr_info(MPT3SAS_FMT
+		pr_debug(MPT3SAS_FMT
 			"%s: ioc_status(0x%04x) log_info(0x%08x)\n",
 			ioc->name, __func__,
 		    ioc_status, le32_to_cpu(mpi_reply->IOCLogInfo));
@@ -1597,7 +1597,7 @@ mpt3sas_enable_diag_buffer(struct MPT3SAS_ADAPTER *ioc, u8 bits_to_register)
 	memset(&diag_register, 0, sizeof(struct mpt3_diag_register));
 
 	if (bits_to_register & 1) {
-		pr_info(MPT3SAS_FMT "registering trace buffer support\n",
+		pr_debug(MPT3SAS_FMT "registering trace buffer support\n",
 		    ioc->name);
 		ioc->diag_trigger_master.MasterData =
 		    (MASTER_TRIGGER_FW_FAULT + MASTER_TRIGGER_ADAPTER_RESET);
@@ -1609,7 +1609,7 @@ mpt3sas_enable_diag_buffer(struct MPT3SAS_ADAPTER *ioc, u8 bits_to_register)
 	}
 
 	if (bits_to_register & 2) {
-		pr_info(MPT3SAS_FMT "registering snapshot buffer support\n",
+		pr_debug(MPT3SAS_FMT "registering snapshot buffer support\n",
 		    ioc->name);
 		diag_register.buffer_type = MPI2_DIAG_BUF_TYPE_SNAPSHOT;
 		/* register for 2MB buffers  */
@@ -1619,7 +1619,7 @@ mpt3sas_enable_diag_buffer(struct MPT3SAS_ADAPTER *ioc, u8 bits_to_register)
 	}
 
 	if (bits_to_register & 4) {
-		pr_info(MPT3SAS_FMT "registering extended buffer support\n",
+		pr_debug(MPT3SAS_FMT "registering extended buffer support\n",
 		    ioc->name);
 		diag_register.buffer_type = MPI2_DIAG_BUF_TYPE_EXTENDED;
 		/* register for 2MB buffers  */
@@ -1676,7 +1676,7 @@ _ctl_diag_unregister(struct MPT3SAS_ADAPTER *ioc, void __user *arg)
 		return -EFAULT;
 	}
 
-	dctlprintk(ioc, pr_info(MPT3SAS_FMT "%s\n", ioc->name,
+	dctlprintk(ioc, pr_debug(MPT3SAS_FMT "%s\n", ioc->name,
 	    __func__));
 
 	buffer_type = karg.unique_id & 0x000000ff;
@@ -1749,7 +1749,7 @@ _ctl_diag_query(struct MPT3SAS_ADAPTER *ioc, void __user *arg)
 		return -EFAULT;
 	}
 
-	dctlprintk(ioc, pr_info(MPT3SAS_FMT "%s\n", ioc->name,
+	dctlprintk(ioc, pr_debug(MPT3SAS_FMT "%s\n", ioc->name,
 	    __func__));
 
 	karg.application_flags = 0;
@@ -1831,7 +1831,7 @@ mpt3sas_send_diag_release(struct MPT3SAS_ADAPTER *ioc, u8 buffer_type,
 	u32 ioc_state;
 	int rc;
 
-	dctlprintk(ioc, pr_info(MPT3SAS_FMT "%s\n", ioc->name,
+	dctlprintk(ioc, pr_debug(MPT3SAS_FMT "%s\n", ioc->name,
 	    __func__));
 
 	rc = 0;
@@ -1843,7 +1843,7 @@ mpt3sas_send_diag_release(struct MPT3SAS_ADAPTER *ioc, u8 buffer_type,
 		    MPT3_DIAG_BUFFER_IS_REGISTERED)
 			ioc->diag_buffer_status[buffer_type] |=
 			    MPT3_DIAG_BUFFER_IS_RELEASED;
-		dctlprintk(ioc, pr_info(MPT3SAS_FMT
+		dctlprintk(ioc, pr_debug(MPT3SAS_FMT
 			"%s: skipping due to FAULT state\n", ioc->name,
 		    __func__));
 		rc = -EAGAIN;
@@ -1905,10 +1905,10 @@ mpt3sas_send_diag_release(struct MPT3SAS_ADAPTER *ioc, u8 buffer_type,
 	if (ioc_status == MPI2_IOCSTATUS_SUCCESS) {
 		ioc->diag_buffer_status[buffer_type] |=
 		    MPT3_DIAG_BUFFER_IS_RELEASED;
-		dctlprintk(ioc, pr_info(MPT3SAS_FMT "%s: success\n",
+		dctlprintk(ioc, pr_debug(MPT3SAS_FMT "%s: success\n",
 		    ioc->name, __func__));
 	} else {
-		pr_info(MPT3SAS_FMT
+		pr_debug(MPT3SAS_FMT
 			"%s: ioc_status(0x%04x) log_info(0x%08x)\n",
 			ioc->name, __func__,
 		    ioc_status, le32_to_cpu(mpi_reply->IOCLogInfo));
@@ -1943,7 +1943,7 @@ _ctl_diag_release(struct MPT3SAS_ADAPTER *ioc, void __user *arg)
 		return -EFAULT;
 	}
 
-	dctlprintk(ioc, pr_info(MPT3SAS_FMT "%s\n", ioc->name,
+	dctlprintk(ioc, pr_debug(MPT3SAS_FMT "%s\n", ioc->name,
 	    __func__));
 
 	buffer_type = karg.unique_id & 0x000000ff;
@@ -2034,7 +2034,7 @@ _ctl_diag_read_buffer(struct MPT3SAS_ADAPTER *ioc, void __user *arg)
 		return -EFAULT;
 	}
 
-	dctlprintk(ioc, pr_info(MPT3SAS_FMT "%s\n", ioc->name,
+	dctlprintk(ioc, pr_debug(MPT3SAS_FMT "%s\n", ioc->name,
 	    __func__));
 
 	buffer_type = karg.unique_id & 0x000000ff;
@@ -2073,7 +2073,7 @@ _ctl_diag_read_buffer(struct MPT3SAS_ADAPTER *ioc, void __user *arg)
 		return -EINVAL;
 
 	diag_data = (void *)(request_data + karg.starting_offset);
-	dctlprintk(ioc, pr_info(MPT3SAS_FMT
+	dctlprintk(ioc, pr_debug(MPT3SAS_FMT
 		"%s: diag_buffer(%p), offset(%d), sz(%d)\n",
 		ioc->name, __func__,
 	    diag_data, karg.starting_offset, karg.bytes_to_read));
@@ -2096,12 +2096,12 @@ _ctl_diag_read_buffer(struct MPT3SAS_ADAPTER *ioc, void __user *arg)
 	if ((karg.flags & MPT3_FLAGS_REREGISTER) == 0)
 		return 0;
 
-	dctlprintk(ioc, pr_info(MPT3SAS_FMT
+	dctlprintk(ioc, pr_debug(MPT3SAS_FMT
 		"%s: Reregister buffer_type(0x%02x)\n",
 		ioc->name, __func__, buffer_type));
 	if ((ioc->diag_buffer_status[buffer_type] &
 	    MPT3_DIAG_BUFFER_IS_RELEASED) == 0) {
-		dctlprintk(ioc, pr_info(MPT3SAS_FMT
+		dctlprintk(ioc, pr_debug(MPT3SAS_FMT
 			"%s: buffer_type(0x%02x) is still registered\n",
 			ioc->name, __func__, buffer_type));
 		return 0;
@@ -2171,10 +2171,10 @@ _ctl_diag_read_buffer(struct MPT3SAS_ADAPTER *ioc, void __user *arg)
 	if (ioc_status == MPI2_IOCSTATUS_SUCCESS) {
 		ioc->diag_buffer_status[buffer_type] |=
 		    MPT3_DIAG_BUFFER_IS_REGISTERED;
-		dctlprintk(ioc, pr_info(MPT3SAS_FMT "%s: success\n",
+		dctlprintk(ioc, pr_debug(MPT3SAS_FMT "%s: success\n",
 		    ioc->name, __func__));
 	} else {
-		pr_info(MPT3SAS_FMT
+		pr_debug(MPT3SAS_FMT
 			"%s: ioc_status(0x%04x) log_info(0x%08x)\n",
 			ioc->name, __func__,
 		    ioc_status, le32_to_cpu(mpi_reply->IOCLogInfo));
@@ -2362,7 +2362,7 @@ _ctl_ioctl_main(struct file *file, unsigned int cmd, void __user *arg,
 			ret = _ctl_diag_read_buffer(ioc, arg);
 		break;
 	default:
-		dctlprintk(ioc, pr_info(MPT3SAS_FMT
+		dctlprintk(ioc, pr_debug(MPT3SAS_FMT
 		    "unsupported ioctl opcode(0x%08x)\n", ioc->name, cmd));
 		break;
 	}
@@ -2738,7 +2738,7 @@ _ctl_logging_level_store(struct device *cdev, struct device_attribute *attr,
 		return -EINVAL;
 
 	ioc->logging_level = val;
-	pr_info(MPT3SAS_FMT "logging_level=%08xh\n", ioc->name,
+	pr_debug(MPT3SAS_FMT "logging_level=%08xh\n", ioc->name,
 	    ioc->logging_level);
 	return strlen(buf);
 }
@@ -2774,7 +2774,7 @@ _ctl_fwfault_debug_store(struct device *cdev, struct device_attribute *attr,
 		return -EINVAL;
 
 	ioc->fwfault_debug = val;
-	pr_info(MPT3SAS_FMT "fwfault_debug=%d\n", ioc->name,
+	pr_debug(MPT3SAS_FMT "fwfault_debug=%d\n", ioc->name,
 	    ioc->fwfault_debug);
 	return strlen(buf);
 }
@@ -3079,7 +3079,7 @@ _ctl_host_trace_buffer_enable_store(struct device *cdev,
 		    MPT3_DIAG_BUFFER_IS_RELEASED) == 0))
 			goto out;
 		memset(&diag_register, 0, sizeof(struct mpt3_diag_register));
-		pr_info(MPT3SAS_FMT "posting host trace buffers\n",
+		pr_debug(MPT3SAS_FMT "posting host trace buffers\n",
 		    ioc->name);
 		diag_register.buffer_type = MPI2_DIAG_BUF_TYPE_TRACE;
 		diag_register.requested_buffer_size = (1024 * 1024);
@@ -3096,7 +3096,7 @@ _ctl_host_trace_buffer_enable_store(struct device *cdev,
 		if ((ioc->diag_buffer_status[MPI2_DIAG_BUF_TYPE_TRACE] &
 		    MPT3_DIAG_BUFFER_IS_RELEASED))
 			goto out;
-		pr_info(MPT3SAS_FMT "releasing host trace buffer\n",
+		pr_debug(MPT3SAS_FMT "releasing host trace buffer\n",
 		    ioc->name);
 		mpt3sas_send_diag_release(ioc, MPI2_DIAG_BUF_TYPE_TRACE,
 		    &issue_reset);

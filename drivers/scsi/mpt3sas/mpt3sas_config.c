@@ -157,7 +157,7 @@ _config_display_some_debug(struct MPT3SAS_ADAPTER *ioc, u16 smid,
 	if (!desc)
 		return;
 
-	pr_info(MPT3SAS_FMT
+	pr_debug(MPT3SAS_FMT
 		"%s: %s(%d), action(%d), form(0x%08x), smid(%d)\n",
 		ioc->name, calling_function_name, desc,
 	    mpi_request->Header.PageNumber, mpi_request->Action,
@@ -167,7 +167,7 @@ _config_display_some_debug(struct MPT3SAS_ADAPTER *ioc, u16 smid,
 		return;
 
 	if (mpi_reply->IOCStatus || mpi_reply->IOCLogInfo)
-		pr_info(MPT3SAS_FMT
+		pr_debug(MPT3SAS_FMT
 		    "\tiocstatus(0x%04x), loginfo(0x%08x)\n",
 		    ioc->name, le16_to_cpu(mpi_reply->IOCStatus),
 		    le32_to_cpu(mpi_reply->IOCLogInfo));
@@ -343,7 +343,7 @@ _config_request(struct MPT3SAS_ADAPTER *ioc, Mpi2ConfigRequest_t
 			r = -EFAULT;
 			goto free_mem;
 		}
-		pr_info(MPT3SAS_FMT "%s: attempting retry (%d)\n",
+		pr_debug(MPT3SAS_FMT "%s: attempting retry (%d)\n",
 		    ioc->name, __func__, retry_count);
 	}
 	wait_state_count = 0;
@@ -359,12 +359,12 @@ _config_request(struct MPT3SAS_ADAPTER *ioc, Mpi2ConfigRequest_t
 		}
 		ssleep(1);
 		ioc_state = mpt3sas_base_get_iocstate(ioc, 1);
-		pr_info(MPT3SAS_FMT
+		pr_debug(MPT3SAS_FMT
 			"%s: waiting for operational state(count=%d)\n",
 			ioc->name, __func__, wait_state_count);
 	}
 	if (wait_state_count)
-		pr_info(MPT3SAS_FMT "%s: ioc is operational\n",
+		pr_debug(MPT3SAS_FMT "%s: ioc is operational\n",
 		    ioc->name, __func__);
 
 	smid = mpt3sas_base_get_smid(ioc, ioc->config_cb_idx);
@@ -435,7 +435,7 @@ _config_request(struct MPT3SAS_ADAPTER *ioc, Mpi2ConfigRequest_t
 	}
 
 	if (retry_count)
-		pr_info(MPT3SAS_FMT "%s: retry (%d) completed!!\n", \
+		pr_debug(MPT3SAS_FMT "%s: retry (%d) completed!!\n", \
 		    ioc->name, __func__, retry_count);
 
 	if ((ioc_status == MPI2_IOCSTATUS_SUCCESS) &&

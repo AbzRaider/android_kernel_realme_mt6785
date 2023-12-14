@@ -4134,7 +4134,7 @@ static ssize_t ipr_store_update_fw(struct device *dev,
 		goto out;
 	}
 
-	ipr_info("Updating microcode, please be patient.  This may take up to 30 minutes.\n");
+	ipr_debug("Updating microcode, please be patient.  This may take up to 30 minutes.\n");
 
 	result = ipr_update_ioa_ucode(ioa_cfg, sglist);
 
@@ -6715,7 +6715,7 @@ static int ipr_ioctl(struct scsi_device *sdev, int cmd, void __user *arg)
 }
 
 /**
- * ipr_info - Get information about the card/driver
+ * ipr_debug - Get information about the card/driver
  * @scsi_host:	scsi host struct
  *
  * Return value:
@@ -10861,7 +10861,7 @@ static int __init ipr_init(void)
 {
 	int rc;
 
-	ipr_info("IBM Power RAID SCSI Device Driver version: %s %s\n",
+	ipr_debug("IBM Power RAID SCSI Device Driver version: %s %s\n",
 		 IPR_DRIVER_VERSION, IPR_DRIVER_DATE);
 
 	register_reboot_notifier(&ipr_notifier);

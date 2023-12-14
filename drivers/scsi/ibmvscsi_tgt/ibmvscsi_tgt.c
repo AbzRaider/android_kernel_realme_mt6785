@@ -4146,7 +4146,7 @@ out:
 
 static void __exit ibmvscsis_exit(void)
 {
-	pr_info("Unregister IBM virtual SCSI host driver\n");
+	pr_debug("Unregister IBM virtual SCSI host driver\n");
 	vio_unregister_driver(&ibmvscsis_driver);
 	target_unregister_template(&ibmvscsis_ops);
 	class_unregister(&ibmvscsis_class);

@@ -98,10 +98,10 @@ qedi_dbg_info(struct qedi_dbg_ctx *qedi, const char *func, u32 line,
 		goto ret;
 
 	if (likely(qedi) && likely(qedi->pdev))
-		pr_info("[%s]:[%s:%d]:%d: %pV", dev_name(&qedi->pdev->dev),
+		pr_debug("[%s]:[%s:%d]:%d: %pV", dev_name(&qedi->pdev->dev),
 			func, line, qedi->host_no, &vaf);
 	else
-		pr_info("[0000:00:00.0]:[%s:%d]: %pV", func, line, &vaf);
+		pr_debug("[0000:00:00.0]:[%s:%d]: %pV", func, line, &vaf);
 
 ret:
 	va_end(va);

@@ -44,15 +44,15 @@ enum cxgbi_dbg_flag {
 #define log_debug(level, fmt, ...)	\
 	do {	\
 		if (dbg_level & (level)) \
-			pr_info(fmt, ##__VA_ARGS__); \
+			pr_debug(fmt, ##__VA_ARGS__); \
 	} while (0)
 
-#define pr_info_ipaddr(fmt_trail,					\
+#define pr_debug_ipaddr(fmt_trail,					\
 			addr1, addr2, args_trail...)			\
 do {									\
 	if (!((1 << CXGBI_DBG_SOCK) & dbg_level))			\
 		break;							\
-	pr_info("%pISpc - %pISpc, " fmt_trail,				\
+	pr_debug("%pISpc - %pISpc, " fmt_trail,				\
 		addr1, addr2, args_trail);				\
 } while (0)
 
@@ -353,7 +353,7 @@ static inline struct sk_buff *alloc_wr(int wrlen, int dlen, gfp_t gfp)
 		__skb_put(skb, wrlen);
 		memset(skb->head, 0, wrlen + dlen);
 	} else
-		pr_info("alloc cpl wr skb %u+%u, OOM.\n", wrlen, dlen);
+		pr_debug("alloc cpl wr skb %u+%u, OOM.\n", wrlen, dlen);
 	return skb;
 }
 
@@ -555,7 +555,7 @@ static inline void cxgbi_set_iscsi_ipv4(struct cxgbi_hba *chba, __be32 ipaddr)
 	if (chba->cdev->flags & CXGBI_FLAG_IPV4_SET)
 		chba->ipv4addr = ipaddr;
 	else
-		pr_info("set iscsi ipv4 NOT supported, using %s ipv4.\n",
+		pr_debug("set iscsi ipv4 NOT supported, using %s ipv4.\n",
 			chba->ndev->name);
 }
 

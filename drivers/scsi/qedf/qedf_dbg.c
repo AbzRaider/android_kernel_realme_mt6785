@@ -113,10 +113,10 @@ qedf_dbg_info(struct qedf_dbg_ctx *qedf, const char *func, u32 line,
 		goto ret;
 
 	if (likely(qedf) && likely(qedf->pdev))
-		pr_info("[%s]:[%s:%d]:%d: %pV", dev_name(&(qedf->pdev->dev)),
+		pr_debug("[%s]:[%s:%d]:%d: %pV", dev_name(&(qedf->pdev->dev)),
 			nfunc, line, qedf->host_no, &vaf);
 	else
-		pr_info("[0000:00:00.0]:[%s:%d]: %pV", nfunc, line, &vaf);
+		pr_debug("[0000:00:00.0]:[%s:%d]: %pV", nfunc, line, &vaf);
 
 ret:
 	va_end(va);

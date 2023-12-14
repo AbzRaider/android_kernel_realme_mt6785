@@ -255,9 +255,9 @@ void ufs_mtk_pltfrm_gpio_trigger(int value)
 
 	pr_notice("error trigger, %d\n", value);
 
-	pr_info("%s vmc=%d uv\n", __func__, regulator_get_voltage(vmc));
+	pr_debug("%s vmc=%d uv\n", __func__, regulator_get_voltage(vmc));
 
-	pr_info("%s mode=0x%x, dir=0x%x, out=0x%x\n", __func__,
+	pr_debug("%s mode=0x%x, dir=0x%x, out=0x%x\n", __func__,
 		MSDC_READ32(MSDC1_GPIO_MODE17),
 		MSDC_READ32(MSDC1_GPIO_DIR4),
 		MSDC_READ32(MSDC1_GPIO_DOUT));

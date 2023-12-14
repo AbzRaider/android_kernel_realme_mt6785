@@ -55,7 +55,7 @@ do { \
 	if (evt) \
 		seq_printf(evt, fmt, ##args); \
 	if (!buff && !evt) { \
-		pr_info(fmt, ##args); \
+		pr_debug(fmt, ##args); \
 	} \
 } while (0)
 
@@ -87,7 +87,7 @@ enum {
 #define UFS_PRINFO_PROC_MSG(evt, fmt, args...) \
 do { \
 	if (evt == NULL) { \
-		pr_info(fmt, ##args); \
+		pr_debug(fmt, ##args); \
 	} \
 	else { \
 		seq_printf(evt, fmt, ##args); \

@@ -164,10 +164,10 @@ do {						\
 	shost_printk(KERN_INFO, host, fmt, ##args)
 
 #define SNIC_INFO(fmt, args...)				\
-	pr_info(PFX fmt, ## args)
+	pr_debug(PFX fmt, ## args)
 
 #define SNIC_DBG(fmt, args...)				\
-	pr_info(PFX fmt, ## args)
+	pr_debug(PFX fmt, ## args)
 
 #define SNIC_ERR(fmt, args...)				\
 	pr_err(PFX fmt, ## args)

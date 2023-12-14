@@ -508,7 +508,7 @@ int fnic_trace_buf_init(void)
 		pr_err("fnic: Failed to initialize debugfs for tracing\n");
 		goto err_fnic_trace_debugfs_init;
 	}
-	pr_info("fnic: Successfully Initialized Trace Buffer\n");
+	pr_debug("fnic: Successfully Initialized Trace Buffer\n");
 	return err;
 err_fnic_trace_debugfs_init:
 	fnic_trace_free();
@@ -599,7 +599,7 @@ int fnic_fc_trace_init(void)
 		pr_err("fnic: Failed to initialize FC_CTLR tracing.\n");
 		goto err_fnic_fc_ctlr_trace_debugfs_init;
 	}
-	pr_info("fnic: Successfully Initialized FC_CTLR Trace Buffer\n");
+	pr_debug("fnic: Successfully Initialized FC_CTLR Trace Buffer\n");
 	return err;
 
 err_fnic_fc_ctlr_trace_debugfs_init:
@@ -623,7 +623,7 @@ void fnic_fc_trace_free(void)
 		vfree((void *)fnic_fc_ctlr_trace_buf_p);
 		fnic_fc_ctlr_trace_buf_p = 0;
 	}
-	pr_info("fnic:Successfully FC_CTLR Freed Trace Buffer\n");
+	pr_debug("fnic:Successfully FC_CTLR Freed Trace Buffer\n");
 }
 
 /*
@@ -658,7 +658,7 @@ int fnic_fc_trace_set_data(u32 host_no, u8 frame_type,
 
 	if (fnic_fc_trace_cleared == 1) {
 		fc_trace_entries.rd_idx = fc_trace_entries.wr_idx = 0;
-		pr_info("fnic: Resetting the read idx\n");
+		pr_debug("fnic: Resetting the read idx\n");
 		memset((void *)fnic_fc_ctlr_trace_buf_p, 0,
 				fnic_fc_trace_max_pages * PAGE_SIZE);
 		fnic_fc_trace_cleared = 0;
@@ -734,7 +734,7 @@ int fnic_fc_trace_get_data(fnic_dbgfs_t *fnic_dbgfs_prt, u8 rdata_flag)
 	spin_lock_irqsave(&fnic_fc_trace_lock, flags);
 	if (fc_trace_entries.wr_idx == fc_trace_entries.rd_idx) {
 		spin_unlock_irqrestore(&fnic_fc_trace_lock, flags);
-		pr_info("fnic: Buffer is empty\n");
+		pr_debug("fnic: Buffer is empty\n");
 		return 0;
 	}
 	rd_idx = fc_trace_entries.rd_idx;
@@ -750,7 +750,7 @@ int fnic_fc_trace_get_data(fnic_dbgfs_t *fnic_dbgfs_prt, u8 rdata_flag)
 		tdata = (struct fc_trace_hdr *)
 			fc_trace_entries.page_offset[rd_idx];
 		if (!tdata) {
-			pr_info("fnic: Rd data is NULL\n");
+			pr_debug("fnic: Rd data is NULL\n");
 			spin_unlock_irqrestore(&fnic_fc_trace_lock, flags);
 			return 0;
 		}

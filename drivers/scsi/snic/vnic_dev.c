@@ -414,7 +414,7 @@ static int svnic_dev_init_devcmd2(struct vnic_dev *vdev)
 		goto err_free_desc_ring;
 
 	vdev->devcmd_rtn = &_svnic_dev_cmd2;
-	pr_info("DEVCMD2 Initialized.\n");
+	pr_debug("DEVCMD2 Initialized.\n");
 
 	return ret;
 

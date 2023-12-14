@@ -1511,7 +1511,7 @@ static void tcm_qla2xxx_update_sess(struct fc_port *sess, port_id_t s_id,
 
 
 	if (sess->loop_id != loop_id || sess->d_id.b24 != s_id.b24)
-		pr_info("Updating session %p from port %8phC loop_id %d -> %d s_id %x:%x:%x -> %x:%x:%x\n",
+		pr_debug("Updating session %p from port %8phC loop_id %d -> %d s_id %x:%x:%x -> %x:%x:%x\n",
 		    sess, sess->port_name,
 		    sess->loop_id, loop_id, sess->d_id.b.domain,
 		    sess->d_id.b.area, sess->d_id.b.al_pa, s_id.b.domain,

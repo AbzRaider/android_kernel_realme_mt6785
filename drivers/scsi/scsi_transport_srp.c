@@ -441,7 +441,7 @@ static void rport_fast_io_fail_timedout(struct work_struct *work)
 					struct srp_rport, fast_io_fail_work);
 	struct Scsi_Host *shost = rport_to_shost(rport);
 
-	pr_info("fast_io_fail_tmo expired for SRP %s / %s.\n",
+	pr_debug("fast_io_fail_tmo expired for SRP %s / %s.\n",
 		dev_name(&rport->dev), dev_name(&shost->shost_gendev));
 
 	mutex_lock(&rport->mutex);
@@ -461,7 +461,7 @@ static void rport_dev_loss_timedout(struct work_struct *work)
 	struct Scsi_Host *shost = rport_to_shost(rport);
 	struct srp_internal *i = to_srp_internal(shost->transportt);
 
-	pr_info("dev_loss_tmo expired for SRP %s / %s.\n",
+	pr_debug("dev_loss_tmo expired for SRP %s / %s.\n",
 		dev_name(&rport->dev), dev_name(&shost->shost_gendev));
 
 	mutex_lock(&rport->mutex);

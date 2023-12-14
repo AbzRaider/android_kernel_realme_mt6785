@@ -1733,7 +1733,7 @@ static int qla4xxx_ep_poll(struct iscsi_endpoint *ep, int timeout_ms)
 
 	qla_ep = ep->dd_data;
 	ha = to_qla_host(qla_ep->host);
-	DEBUG2(pr_info_ratelimited("%s: host: %ld\n", __func__, ha->host_no));
+	DEBUG2(pr_debug_ratelimited("%s: host: %ld\n", __func__, ha->host_no));
 
 	if (adapter_up(ha) && !test_bit(AF_BUILD_DDB_LIST, &ha->flags))
 		ret = 1;
@@ -3181,7 +3181,7 @@ qla4xxx_conn_create(struct iscsi_cls_session *cls_sess, uint32_t conn_idx)
 	cls_conn = iscsi_conn_setup(cls_sess, sizeof(struct qla_conn),
 				    conn_idx);
 	if (!cls_conn) {
-		pr_info("%s: Can not create connection for conn_idx = %u\n",
+		pr_debug("%s: Can not create connection for conn_idx = %u\n",
 			__func__, conn_idx);
 		return NULL;
 	}

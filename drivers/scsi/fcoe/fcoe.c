@@ -1921,7 +1921,7 @@ static int fcoe_device_notification(struct notifier_block *notifier,
 	if (link_possible && !fcoe_link_ok(lport)) {
 		switch (cdev->enabled) {
 		case FCOE_CTLR_DISABLED:
-			pr_info("Link up while interface is disabled.\n");
+			pr_debug("Link up while interface is disabled.\n");
 			break;
 		case FCOE_CTLR_ENABLED:
 		case FCOE_CTLR_UNUSED:
@@ -1930,7 +1930,7 @@ static int fcoe_device_notification(struct notifier_block *notifier,
 	} else if (fcoe_ctlr_link_down(ctlr)) {
 		switch (cdev->enabled) {
 		case FCOE_CTLR_DISABLED:
-			pr_info("Link down while interface is disabled.\n");
+			pr_debug("Link down while interface is disabled.\n");
 			break;
 		case FCOE_CTLR_ENABLED:
 		case FCOE_CTLR_UNUSED:

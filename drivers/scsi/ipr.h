@@ -1782,7 +1782,7 @@ struct ipr_ucode_image_header {
  * Error logging macros
  */
 #define ipr_err(...) printk(KERN_ERR IPR_NAME ": "__VA_ARGS__)
-#define ipr_info(...) printk(KERN_INFO IPR_NAME ": "__VA_ARGS__)
+#define ipr_debug(...) printk(KERN_INFO IPR_NAME ": "__VA_ARGS__)
 #define ipr_dbg(...) IPR_DBG_CMD(printk(KERN_INFO IPR_NAME ": "__VA_ARGS__))
 
 #define ipr_res_printk(level, ioa_cfg, bus, target, lun, fmt, ...) \

@@ -428,7 +428,7 @@ void get_ufs_aee_buffer(unsigned long *vaddr, unsigned long *size)
 	char *buff;
 
 	if (ufs_mtk_hba == NULL) {
-		pr_info("====== Null ufs_mtk_hba, dump skipped ======\n");
+		pr_debug("====== Null ufs_mtk_hba, dump skipped ======\n");
 		return;
 	}
 
@@ -710,7 +710,7 @@ int ufs_mtk_debug_proc_init(struct ufs_hba *hba)
 	kgid_t gid;
 
 	if (!hba || !hba->priv) {
-		pr_info("%s: NULL host, exiting\n", __func__);
+		pr_debug("%s: NULL host, exiting\n", __func__);
 		return -EINVAL;
 	}
 
@@ -724,12 +724,12 @@ int ufs_mtk_debug_proc_init(struct ufs_hba *hba)
 	if (prEntry)
 		proc_set_user(prEntry, uid, gid);
 	else
-		pr_info("%s: failed to create /proc/ufs_debug\n", __func__);
+		pr_debug("%s: failed to create /proc/ufs_debug\n", __func__);
 
 	prEntry = proc_create("ufs_help", PROC_PERM, NULL, &ufs_help_fops);
 
 	if (!prEntry)
-		pr_info("%s: failed to create /proc/ufs_help\n", __func__);
+		pr_debug("%s: failed to create /proc/ufs_help\n", __func__);
 
 	/* allow write permission in all builds */
 	prEntry = proc_create_data("ufs_perf", 0660, NULL, &ufs_perf_fops,
@@ -738,7 +738,7 @@ int ufs_mtk_debug_proc_init(struct ufs_hba *hba)
 	if (prEntry)
 		proc_set_user(prEntry, uid, gid);
 	else
-		pr_info("%s: failed to create /proc/ufs_perf\n", __func__);
+		pr_debug("%s: failed to create /proc/ufs_perf\n", __func__);
 
 	return 0;
 }

@@ -18,19 +18,19 @@ do {							\
 
 #define LIBFCOE_DBG(fmt, args...)					\
 	LIBFCOE_CHECK_LOGGING(LIBFCOE_LOGGING,				\
-			      pr_info("libfcoe: " fmt, ##args);)
+			      pr_debug("libfcoe: " fmt, ##args);)
 
 #define LIBFCOE_FIP_DBG(fip, fmt, args...)				\
 	LIBFCOE_CHECK_LOGGING(LIBFCOE_FIP_LOGGING,			\
-			      pr_info("host%d: fip: " fmt,		\
+			      pr_debug("host%d: fip: " fmt,		\
 				      (fip)->lp->host->host_no, ##args);)
 
 #define LIBFCOE_TRANSPORT_DBG(fmt, args...)				\
 	LIBFCOE_CHECK_LOGGING(LIBFCOE_TRANSPORT_LOGGING,		\
-			      pr_info("%s: " fmt, __func__, ##args);)
+			      pr_debug("%s: " fmt, __func__, ##args);)
 
 #define LIBFCOE_SYSFS_DBG(cdev, fmt, args...)				\
 	LIBFCOE_CHECK_LOGGING(LIBFCOE_SYSFS_LOGGING,			\
-			      pr_info("ctlr_%d: " fmt, cdev->id, ##args);)
+			      pr_debug("ctlr_%d: " fmt, cdev->id, ##args);)
 
 #endif /* _FCOE_LIBFCOE_H_ */

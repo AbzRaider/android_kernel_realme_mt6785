@@ -779,7 +779,7 @@ static __init int isci_init(void)
 {
 	int err;
 
-	pr_info("%s: Intel(R) C600 SAS Controller Driver - version %s\n",
+	pr_debug("%s: Intel(R) C600 SAS Controller Driver - version %s\n",
 		DRV_NAME, DRV_VERSION);
 
 	isci_transport_template = sas_domain_attach_transport(&isci_transport_ops);

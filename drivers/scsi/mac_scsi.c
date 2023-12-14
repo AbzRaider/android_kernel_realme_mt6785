@@ -421,7 +421,7 @@ static int __init mac_scsi_probe(struct platform_device *pdev)
 
 	if (!hwreg_present((unsigned char *)pio_mem->start +
 	                   (STATUS_REG << 4))) {
-		pr_info(PFX "no device detected at %pap\n", &pio_mem->start);
+		pr_debug(PFX "no device detected at %pap\n", &pio_mem->start);
 		return -ENODEV;
 	}
 

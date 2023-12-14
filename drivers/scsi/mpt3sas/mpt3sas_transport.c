@@ -146,7 +146,7 @@ _transport_set_identify(struct MPT3SAS_ADAPTER *ioc, u16 handle,
 	u32 ioc_status;
 
 	if (ioc->shost_recovery || ioc->pci_error_recovery) {
-		pr_info(MPT3SAS_FMT "%s: host reset in progress!\n",
+		pr_debug(MPT3SAS_FMT "%s: host reset in progress!\n",
 		    __func__, ioc->name);
 		return -EFAULT;
 	}
@@ -310,7 +310,7 @@ _transport_expander_report_manufacture(struct MPT3SAS_ADAPTER *ioc,
 	u16 wait_state_count;
 
 	if (ioc->shost_recovery || ioc->pci_error_recovery) {
-		pr_info(MPT3SAS_FMT "%s: host reset in progress!\n",
+		pr_debug(MPT3SAS_FMT "%s: host reset in progress!\n",
 		    __func__, ioc->name);
 		return -EFAULT;
 	}
@@ -337,12 +337,12 @@ _transport_expander_report_manufacture(struct MPT3SAS_ADAPTER *ioc,
 		}
 		ssleep(1);
 		ioc_state = mpt3sas_base_get_iocstate(ioc, 1);
-		pr_info(MPT3SAS_FMT
+		pr_debug(MPT3SAS_FMT
 			"%s: waiting for operational state(count=%d)\n",
 			ioc->name, __func__, wait_state_count);
 	}
 	if (wait_state_count)
-		pr_info(MPT3SAS_FMT "%s: ioc is operational\n",
+		pr_debug(MPT3SAS_FMT "%s: ioc is operational\n",
 		    ioc->name, __func__);
 
 	smid = mpt3sas_base_get_smid(ioc, ioc->transport_cb_idx);
@@ -388,7 +388,7 @@ _transport_expander_report_manufacture(struct MPT3SAS_ADAPTER *ioc,
 	ioc->build_sg(ioc, psge, data_out_dma, data_out_sz, data_in_dma,
 	    data_in_sz);
 
-	dtransportprintk(ioc, pr_info(MPT3SAS_FMT
+	dtransportprintk(ioc, pr_debug(MPT3SAS_FMT
 		"report_manufacture - send to sas_addr(0x%016llx)\n",
 		ioc->name, (unsigned long long)sas_address));
 	init_completion(&ioc->transport_cmds.done);
@@ -405,7 +405,7 @@ _transport_expander_report_manufacture(struct MPT3SAS_ADAPTER *ioc,
 		goto issue_host_reset;
 	}
 
-	dtransportprintk(ioc, pr_info(MPT3SAS_FMT
+	dtransportprintk(ioc, pr_debug(MPT3SAS_FMT
 		"report_manufacture - complete\n", ioc->name));
 
 	if (ioc->transport_cmds.status & MPT3_CMD_REPLY_VALID) {
@@ -413,7 +413,7 @@ _transport_expander_report_manufacture(struct MPT3SAS_ADAPTER *ioc,
 
 		mpi_reply = ioc->transport_cmds.reply;
 
-		dtransportprintk(ioc, pr_info(MPT3SAS_FMT
+		dtransportprintk(ioc, pr_debug(MPT3SAS_FMT
 		    "report_manufacture - reply data transfer size(%d)\n",
 		    ioc->name, le16_to_cpu(mpi_reply->ResponseDataLength)));
 
@@ -439,7 +439,7 @@ _transport_expander_report_manufacture(struct MPT3SAS_ADAPTER *ioc,
 			    manufacture_reply->component_revision_id;
 		}
 	} else
-		dtransportprintk(ioc, pr_info(MPT3SAS_FMT
+		dtransportprintk(ioc, pr_debug(MPT3SAS_FMT
 		    "report_manufacture - no reply\n", ioc->name));
 
  issue_host_reset:
@@ -1115,7 +1115,7 @@ _transport_get_expander_phy_error_log(struct MPT3SAS_ADAPTER *ioc,
 	u16 wait_state_count;
 
 	if (ioc->shost_recovery || ioc->pci_error_recovery) {
-		pr_info(MPT3SAS_FMT "%s: host reset in progress!\n",
+		pr_debug(MPT3SAS_FMT "%s: host reset in progress!\n",
 		    __func__, ioc->name);
 		return -EFAULT;
 	}
@@ -1142,12 +1142,12 @@ _transport_get_expander_phy_error_log(struct MPT3SAS_ADAPTER *ioc,
 		}
 		ssleep(1);
 		ioc_state = mpt3sas_base_get_iocstate(ioc, 1);
-		pr_info(MPT3SAS_FMT
+		pr_debug(MPT3SAS_FMT
 			"%s: waiting for operational state(count=%d)\n",
 			ioc->name, __func__, wait_state_count);
 	}
 	if (wait_state_count)
-		pr_info(MPT3SAS_FMT "%s: ioc is operational\n",
+		pr_debug(MPT3SAS_FMT "%s: ioc is operational\n",
 		    ioc->name, __func__);
 
 	smid = mpt3sas_base_get_smid(ioc, ioc->transport_cb_idx);
@@ -1196,7 +1196,7 @@ _transport_get_expander_phy_error_log(struct MPT3SAS_ADAPTER *ioc,
 	    data_out_dma + sizeof(struct phy_error_log_request),
 	    sizeof(struct phy_error_log_reply));
 
-	dtransportprintk(ioc, pr_info(MPT3SAS_FMT
+	dtransportprintk(ioc, pr_debug(MPT3SAS_FMT
 		"phy_error_log - send to sas_addr(0x%016llx), phy(%d)\n",
 		ioc->name, (unsigned long long)phy->identify.sas_address,
 		phy->number));
@@ -1214,14 +1214,14 @@ _transport_get_expander_phy_error_log(struct MPT3SAS_ADAPTER *ioc,
 		goto issue_host_reset;
 	}
 
-	dtransportprintk(ioc, pr_info(MPT3SAS_FMT
+	dtransportprintk(ioc, pr_debug(MPT3SAS_FMT
 		"phy_error_log - complete\n", ioc->name));
 
 	if (ioc->transport_cmds.status & MPT3_CMD_REPLY_VALID) {
 
 		mpi_reply = ioc->transport_cmds.reply;
 
-		dtransportprintk(ioc, pr_info(MPT3SAS_FMT
+		dtransportprintk(ioc, pr_debug(MPT3SAS_FMT
 		    "phy_error_log - reply data transfer size(%d)\n",
 		    ioc->name, le16_to_cpu(mpi_reply->ResponseDataLength)));
 
@@ -1232,7 +1232,7 @@ _transport_get_expander_phy_error_log(struct MPT3SAS_ADAPTER *ioc,
 		phy_error_log_reply = data_out +
 		    sizeof(struct phy_error_log_request);
 
-		dtransportprintk(ioc, pr_info(MPT3SAS_FMT
+		dtransportprintk(ioc, pr_debug(MPT3SAS_FMT
 		    "phy_error_log - function_result(%d)\n",
 		    ioc->name, phy_error_log_reply->function_result));
 
@@ -1246,7 +1246,7 @@ _transport_get_expander_phy_error_log(struct MPT3SAS_ADAPTER *ioc,
 		    be32_to_cpu(phy_error_log_reply->phy_reset_problem);
 		rc = 0;
 	} else
-		dtransportprintk(ioc, pr_info(MPT3SAS_FMT
+		dtransportprintk(ioc, pr_debug(MPT3SAS_FMT
 		    "phy_error_log - no reply\n", ioc->name));
 
  issue_host_reset:
@@ -1296,7 +1296,7 @@ _transport_get_linkerrors(struct sas_phy *phy)
 	}
 
 	if (mpi_reply.IOCStatus || mpi_reply.IOCLogInfo)
-		pr_info(MPT3SAS_FMT
+		pr_debug(MPT3SAS_FMT
 			"phy(%d), ioc_status (0x%04x), loginfo(0x%08x)\n",
 			ioc->name, phy->number,
 			le16_to_cpu(mpi_reply.IOCStatus),
@@ -1426,7 +1426,7 @@ _transport_expander_phy_control(struct MPT3SAS_ADAPTER *ioc,
 	u16 wait_state_count;
 
 	if (ioc->shost_recovery || ioc->pci_error_recovery) {
-		pr_info(MPT3SAS_FMT "%s: host reset in progress!\n",
+		pr_debug(MPT3SAS_FMT "%s: host reset in progress!\n",
 		    __func__, ioc->name);
 		return -EFAULT;
 	}
@@ -1453,12 +1453,12 @@ _transport_expander_phy_control(struct MPT3SAS_ADAPTER *ioc,
 		}
 		ssleep(1);
 		ioc_state = mpt3sas_base_get_iocstate(ioc, 1);
-		pr_info(MPT3SAS_FMT
+		pr_debug(MPT3SAS_FMT
 			"%s: waiting for operational state(count=%d)\n",
 			ioc->name, __func__, wait_state_count);
 	}
 	if (wait_state_count)
-		pr_info(MPT3SAS_FMT "%s: ioc is operational\n",
+		pr_debug(MPT3SAS_FMT "%s: ioc is operational\n",
 		    ioc->name, __func__);
 
 	smid = mpt3sas_base_get_smid(ioc, ioc->transport_cb_idx);
@@ -1512,7 +1512,7 @@ _transport_expander_phy_control(struct MPT3SAS_ADAPTER *ioc,
 	    data_out_dma + sizeof(struct phy_control_request),
 	    sizeof(struct phy_control_reply));
 
-	dtransportprintk(ioc, pr_info(MPT3SAS_FMT
+	dtransportprintk(ioc, pr_debug(MPT3SAS_FMT
 		"phy_control - send to sas_addr(0x%016llx), phy(%d), opcode(%d)\n",
 		ioc->name, (unsigned long long)phy->identify.sas_address,
 		phy->number, phy_operation));
@@ -1530,14 +1530,14 @@ _transport_expander_phy_control(struct MPT3SAS_ADAPTER *ioc,
 		goto issue_host_reset;
 	}
 
-	dtransportprintk(ioc, pr_info(MPT3SAS_FMT
+	dtransportprintk(ioc, pr_debug(MPT3SAS_FMT
 		"phy_control - complete\n", ioc->name));
 
 	if (ioc->transport_cmds.status & MPT3_CMD_REPLY_VALID) {
 
 		mpi_reply = ioc->transport_cmds.reply;
 
-		dtransportprintk(ioc, pr_info(MPT3SAS_FMT
+		dtransportprintk(ioc, pr_debug(MPT3SAS_FMT
 		    "phy_control - reply data transfer size(%d)\n",
 		    ioc->name, le16_to_cpu(mpi_reply->ResponseDataLength)));
 
@@ -1548,13 +1548,13 @@ _transport_expander_phy_control(struct MPT3SAS_ADAPTER *ioc,
 		phy_control_reply = data_out +
 		    sizeof(struct phy_control_request);
 
-		dtransportprintk(ioc, pr_info(MPT3SAS_FMT
+		dtransportprintk(ioc, pr_debug(MPT3SAS_FMT
 		    "phy_control - function_result(%d)\n",
 		    ioc->name, phy_control_reply->function_result));
 
 		rc = 0;
 	} else
-		dtransportprintk(ioc, pr_info(MPT3SAS_FMT
+		dtransportprintk(ioc, pr_debug(MPT3SAS_FMT
 		    "phy_control - no reply\n", ioc->name));
 
  issue_host_reset:
@@ -1612,7 +1612,7 @@ _transport_phy_reset(struct sas_phy *phy, int hard_reset)
 	}
 
 	if (mpi_reply.IOCStatus || mpi_reply.IOCLogInfo)
-		pr_info(MPT3SAS_FMT
+		pr_debug(MPT3SAS_FMT
 		"phy(%d), ioc_status(0x%04x), loginfo(0x%08x)\n",
 		ioc->name, phy->number, le16_to_cpu(mpi_reply.IOCStatus),
 		    le32_to_cpu(mpi_reply.IOCLogInfo));
@@ -1936,7 +1936,7 @@ _transport_smp_handler(struct bsg_job *job, struct Scsi_Host *shost,
 	unsigned int reslen = 0;
 
 	if (ioc->shost_recovery || ioc->pci_error_recovery) {
-		pr_info(MPT3SAS_FMT "%s: host reset in progress!\n",
+		pr_debug(MPT3SAS_FMT "%s: host reset in progress!\n",
 		    __func__, ioc->name);
 		rc = -EFAULT;
 		goto job_done;
@@ -1981,12 +1981,12 @@ _transport_smp_handler(struct bsg_job *job, struct Scsi_Host *shost,
 		}
 		ssleep(1);
 		ioc_state = mpt3sas_base_get_iocstate(ioc, 1);
-		pr_info(MPT3SAS_FMT
+		pr_debug(MPT3SAS_FMT
 			"%s: waiting for operational state(count=%d)\n",
 			ioc->name, __func__, wait_state_count);
 	}
 	if (wait_state_count)
-		pr_info(MPT3SAS_FMT "%s: ioc is operational\n",
+		pr_debug(MPT3SAS_FMT "%s: ioc is operational\n",
 		    ioc->name, __func__);
 
 	smid = mpt3sas_base_get_smid(ioc, ioc->transport_cb_idx);
@@ -2013,7 +2013,7 @@ _transport_smp_handler(struct bsg_job *job, struct Scsi_Host *shost,
 	ioc->build_sg(ioc, psge, dma_addr_out, dma_len_out - 4, dma_addr_in,
 			dma_len_in - 4);
 
-	dtransportprintk(ioc, pr_info(MPT3SAS_FMT
+	dtransportprintk(ioc, pr_debug(MPT3SAS_FMT
 		"%s - sending smp request\n", ioc->name, __func__));
 
 	init_completion(&ioc->transport_cmds.done);
@@ -2032,11 +2032,11 @@ _transport_smp_handler(struct bsg_job *job, struct Scsi_Host *shost,
 		}
 	}
 
-	dtransportprintk(ioc, pr_info(MPT3SAS_FMT
+	dtransportprintk(ioc, pr_debug(MPT3SAS_FMT
 		"%s - complete\n", ioc->name, __func__));
 
 	if (!(ioc->transport_cmds.status & MPT3_CMD_REPLY_VALID)) {
-		dtransportprintk(ioc, pr_info(MPT3SAS_FMT
+		dtransportprintk(ioc, pr_debug(MPT3SAS_FMT
 		    "%s - no reply\n", ioc->name, __func__));
 		rc = -ENXIO;
 		goto unmap_in;
@@ -2045,7 +2045,7 @@ _transport_smp_handler(struct bsg_job *job, struct Scsi_Host *shost,
 	mpi_reply = ioc->transport_cmds.reply;
 
 	dtransportprintk(ioc,
-		pr_info(MPT3SAS_FMT "%s - reply data transfer size(%d)\n",
+		pr_debug(MPT3SAS_FMT "%s - reply data transfer size(%d)\n",
 			ioc->name, __func__,
 			le16_to_cpu(mpi_reply->ResponseDataLength)));
 

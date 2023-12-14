@@ -1209,7 +1209,7 @@ csio_init(void)
 {
 	int rv = -ENOMEM;
 
-	pr_info("%s %s\n", CSIO_DRV_DESC, CSIO_DRV_VERSION);
+	pr_debug("%s %s\n", CSIO_DRV_DESC, CSIO_DRV_VERSION);
 
 	csio_dfs_init();
 
