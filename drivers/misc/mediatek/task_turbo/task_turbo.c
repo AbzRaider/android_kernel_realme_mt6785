@@ -36,7 +36,7 @@ static uint32_t launch_turbo =  SUB_FEAT_LOCK | SUB_FEAT_BINDER |
 				SUB_FEAT_SCHED | SUB_FEAT_FLAVOR_BIGCORE;
 static DEFINE_MUTEX(TURBO_MUTEX_LOCK);
 static pid_t turbo_pid[TURBO_PID_COUNT] = {0};
-static unsigned int task_turbo_feats;
+unsigned int task_turbo_feats;
 
 inline bool latency_turbo_enable(void)
 {
@@ -64,15 +64,18 @@ bool is_turbo_task(struct task_struct *p)
 	return p && (p->turbo || atomic_read(&p->inherit_types));
 }
 EXPORT_SYMBOL(is_turbo_task);
-
-int get_turbo_feats(void)
+int turbo_mode=0;
+int get_turbo_feats(int mode)
 {
+	task_turbo_feats = mode;
+	turbo_mode = mode;
 	return task_turbo_feats;
 }
 
+
 bool sub_feat_enable(int type)
 {
-	return get_turbo_feats() & type;
+	return type;
 }
 
 static inline void set_scheduler_tuning(struct task_struct *task)
@@ -317,12 +320,13 @@ static inline bool cgroup_check_set_turbo(struct task_struct *p)
  */
 static bool add_turbo_list_locked(pid_t pid)
 {
-	int i, free_idx = -1;
-	bool ret = false;
+        int i, free_idx = -1;
+        bool ret = false;
 
-	if (unlikely(!get_turbo_feats()))
-		goto done;
-
+	if (turbo_mode > 0) {
+		ret = true;
+        }
+	
 	for (i = 0; i < TURBO_PID_COUNT; i++) {
 		if (free_idx < 0 && !turbo_pid[i])
 			free_idx = i;
@@ -336,8 +340,9 @@ static bool add_turbo_list_locked(pid_t pid)
 	if (free_idx >= 0) {
 		turbo_pid[free_idx] = pid;
 		ret = true;
+
 	}
-done:
+
 	return ret;
 }
 

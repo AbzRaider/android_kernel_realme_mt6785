@@ -25,7 +25,7 @@ extern void init_turbo_attr(struct task_struct *p,
 			    struct task_struct *parent);
 extern bool is_turbo_task(struct task_struct *p);
 extern bool do_task_turbo(struct task_struct *p);
-extern int get_turbo_feats(void);
+extern int get_turbo_feats(int mode);
 extern void cgroup_set_turbo_task(struct task_struct *p);
 extern void sys_set_turbo_task(struct task_struct *p);
 void rwsem_list_add(struct task_struct *p,
