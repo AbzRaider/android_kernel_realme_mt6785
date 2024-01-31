@@ -18,7 +18,7 @@
 #include <linux/time.h>
 #include <linux/sysfs.h>
 #include <uapi/linux/sched/types.h>
-
+#include <mt-plat/turbo_common.h>
 #include <linux/sched/rt.h>
 
 #define cpu_boost_attr_rw(_name)		\
@@ -49,6 +49,8 @@ struct cpu_sync {
 };
 
 extern int set_sched_boost(int val);
+
+extern int get_turbo_feats(int mode);
 
 static DEFINE_PER_CPU(struct cpu_sync, sync_info);
 
@@ -216,6 +218,7 @@ static void do_input_boost_rem(struct work_struct *work)
 
 	if (sched_boost_active) {
 		set_sched_boost(0); /* SCHED_NO_BOOST */
+		get_turbo_feats(0); // No Boost
 		sched_boost_active = false;
 	}
 }
@@ -228,6 +231,7 @@ static void do_input_boost(struct kthread_work *work)
 	cancel_delayed_work_sync(&input_boost_rem);
 	if (sched_boost_active) {
 		set_sched_boost(0); /* SCHED_NO_BOOST */
+		get_turbo_feats(0); // No Boost
 		sched_boost_active = false;
 	}
 
@@ -244,6 +248,7 @@ static void do_input_boost(struct kthread_work *work)
 	/* Enable scheduler boost to migrate tasks to big cluster */
 	if (sched_boost_on_input) {
 		set_sched_boost(1); /* SCHED_ALL_BOOST */
+		get_turbo_feats(7); // Latwncy Boost Mode
 		sched_boost_active = true;
 	}
 
