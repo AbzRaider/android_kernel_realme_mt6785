@@ -64,11 +64,9 @@ bool is_turbo_task(struct task_struct *p)
 	return p && (p->turbo || atomic_read(&p->inherit_types));
 }
 EXPORT_SYMBOL(is_turbo_task);
-int turbo_mode=0;
 int get_turbo_feats(int mode)
 {
 	task_turbo_feats = mode;
-	turbo_mode = mode;
 	return task_turbo_feats;
 }
 
@@ -323,7 +321,7 @@ static bool add_turbo_list_locked(pid_t pid)
         int i, free_idx = -1;
         bool ret = false;
 
-	if (turbo_mode > 0) {
+	if (task_turbo_feats > 0) {
 		ret = true;
         }
 	
