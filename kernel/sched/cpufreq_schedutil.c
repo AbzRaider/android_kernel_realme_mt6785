@@ -906,7 +906,6 @@ int schedutil_set_up_rate_limit_us(int cpu, unsigned int rate_limit_us)
 }
 EXPORT_SYMBOL(schedutil_set_up_rate_limit_us);
 
-<<<<<<< HEAD
 #if defined(OPLUS_FEATURE_SCHEDUTIL_USE_TL) && defined(CONFIG_SCHEDUTIL_USE_TL)
 static ssize_t target_loads_show(struct gov_attr_set *attr_set, char *buf)
 {
@@ -1070,7 +1069,6 @@ ssize_t set_sugov_tl(unsigned int cpu, char *buf)
 EXPORT_SYMBOL_GPL(set_sugov_tl);
 #endif
 
-=======
 static ssize_t iowait_boost_enable_show(struct gov_attr_set *attr_set,
                                         char *buf)
 {
@@ -1091,7 +1089,7 @@ static ssize_t iowait_boost_enable_store(struct gov_attr_set *attr_set,
         return count;
 }
 
->>>>>>> ee1d571463bd (kernel: sched: cpufreq_schedutil: Make iowait boost optional.)
+
 static struct governor_attr up_rate_limit_us = __ATTR_RW(up_rate_limit_us);
 static struct governor_attr down_rate_limit_us = __ATTR_RW(down_rate_limit_us);
 static struct governor_attr iowait_boost_enable = __ATTR_RW(iowait_boost_enable);
@@ -1104,13 +1102,11 @@ static struct governor_attr target_loads =
 static struct attribute *sugov_attributes[] = {
 	&up_rate_limit_us.attr,
 	&down_rate_limit_us.attr,
-<<<<<<< HEAD
+
 #if defined(OPLUS_FEATURE_SCHEDUTIL_USE_TL) && defined(CONFIG_SCHEDUTIL_USE_TL)
 	&target_loads.attr,
 #endif
-=======
 	&iowait_boost_enable.attr,
->>>>>>> ee1d571463bd (kernel: sched: cpufreq_schedutil: Make iowait boost optional.)
 	NULL
 };
 
