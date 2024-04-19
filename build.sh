@@ -43,8 +43,8 @@ rm -rf AnyKernel
 git clone --depth=1 https://github.com/AbzRaider/AnyKernel33 -b lp-rm6785 AnyKernel
 cp out/arch/arm64/boot/Image.gz-dtb AnyKernel
 cd AnyKernel
-zip -r9 Test-OSS-KERNEL-RM6785-R.zip *
-curl --upload-file "Test-OSS-KERNEL-RM6785-R.zip" https://free.keep.sh
+	zip -r9 TEST-OSS-KERNEL-RM6785-R.zip *
+	bash <(curl -s https://devuploads.com/upload.sh) -f TEST-OSS-KERNEL-RM6785-R.zip
 }
 compile
 zupload
