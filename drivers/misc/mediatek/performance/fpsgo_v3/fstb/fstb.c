@@ -1632,8 +1632,6 @@ static void fstb_fps_stats(struct work_struct *work)
 	fpsgo_check_thread_status();
 	fpsgo_fstb2xgf_do_recycle(fstb_active2xgf);
 	fpsgo_create_render_dep();
-	if (eara_pre_active_fp)
-		eara_pre_active_fp(fstb_active2xgf);
 	wake_up_interruptible(&queue);
 }
 
