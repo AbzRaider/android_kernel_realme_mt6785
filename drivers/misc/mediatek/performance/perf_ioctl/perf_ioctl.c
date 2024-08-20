@@ -60,6 +60,7 @@ static unsigned long perfctl_copy_to_user(void __user *pvTo,
 	return ulBytes;
 }
 
+/*--------------------EARA------------------------*/
 static void perfctl_notify_fpsgo_nn_begin(
 	struct _EARA_NN_PACKAGE *msgKM,
 	struct _EARA_NN_PACKAGE *msgUM)

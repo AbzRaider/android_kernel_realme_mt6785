@@ -203,7 +203,7 @@ int fpsgo_ctrl2fstb_switch_fstb(int enable)
 	fstb_enable = enable;
 	fpsgo_systrace_c_fstb(-200, 0, fstb_enable, "fstb_enable");
 
-	mtk_fstb_dprintk_always("%s %d\n", __func__, fstb_enable);
+//	mtk_fstb_dprintk_always("%s %d\n", __func__, fstb_enable);
 	if (!fstb_enable) {
 		syslimiter_update_dfrc_fps(-1);
 		hlist_for_each_entry_safe(iter, t,
