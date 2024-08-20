@@ -30,6 +30,7 @@ extern unsigned int get_capacity_margin_dvfs(void);
 #else
 extern void set_capacity_margin(unsigned int margin);
 extern unsigned int get_capacity_margin(void);
+#endif
 extern void set_user_nice(struct task_struct *p, long nice);
 #endif
 
