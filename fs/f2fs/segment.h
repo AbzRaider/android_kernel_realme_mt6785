@@ -653,9 +653,6 @@ static inline int utilization(struct f2fs_sb_info *sbi)
  * F2FS_IPUT_DISABLE - disable IPU. (=default option in LFS mode)
  */
 #define DEF_MIN_IPU_UTIL	70
-/* VENDOR_EDIT yanwu@TECH.Storage.FS.oF2FS
- * 2019/08/12, enlarge min_fsync_blocks to optimize performance
- */
 #define DEF_MIN_FSYNC_BLOCKS	20
 //#define DEF_MIN_FSYNC_BLOCKS	8
 #define DEF_MIN_HOT_BLOCKS	16
@@ -916,9 +913,6 @@ wake_up:
 	wake_up_interruptible_all(&dcc->discard_wait_queue);
 }
 
-/* VENDOR_EDIT huangjianan@TECH.Storage.FS
-* 2020-1-14, add for oDiscard decoupling
-*/
 static inline void wake_up_discard_thread_aggressive(struct f2fs_sb_info *sbi,
 						     int policy)
 {

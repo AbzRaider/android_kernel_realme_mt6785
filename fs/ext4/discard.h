@@ -6,7 +6,6 @@
 ** To support ext4 async discard.
 ** Version: 1.0
 ** Date : 2018/11/26
-** Author: yh@PSW.BSP.Storage.EXT4
 **
 ** ------------------------------- Revision History:-------------------------------
 ** <author> <data> <version > <desc>

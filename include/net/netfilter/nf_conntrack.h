@@ -85,7 +85,6 @@ struct nf_conn {
 	struct { } __nfct_init_offset;
 
     //#ifdef OPLUS_FEATURE_WIFI_SLA
-    //HuangJunyuan@CONNECTIVITY.WIFI.INTERNET.1197891, 2018/04/10,Add code for appo sla function
 	u32 oplus_game_skb_len;
 	u32 oplus_game_detect_status;
 	u32 oplus_game_time_interval;
@@ -101,7 +100,6 @@ struct nf_conn {
 	//#endif /* OPLUS_FEATURE_WIFI_SLA */
 
 	#ifdef OPLUS_FEATURE_WIFI_LUCKYMONEY
-	//HuangYuan@CONNECTIVITY.WIFI.INTERNET, 2018/06/18, Add for WeChat lucky money recognition
 	u32 oplus_app_uid;
 	#endif /* OPLUS_FEATURE_WIFI_LUCKYMONEY */
 

@@ -94,13 +94,9 @@ struct ion_buffer {
 	struct list_head attachments;
 #endif
 #if defined(OPLUS_FEATURE_MEMLEAK_DETECT) && defined(CONFIG_DUMP_TASKS_MEM)
-	/* Kui.Zhang@BSP.Kernel.MM, 2020-05-20 record ions info of task. */
 	struct task_struct *tsk;
 #endif
 #if defined(OPLUS_FEATURE_MEMLEAK_DETECT) && defined(CONFIG_MEMLEAK_DETECT_THREAD) && defined(CONFIG_OPPO_SVELTE)
-	/* Kui.Zhang@BSP.Kernel.MM, 2020-05-20 add record the buffer
-	 * create time and calc the buffer age on dump.
-	 */
 	unsigned long jiffies;
 #endif
 };
@@ -122,8 +118,6 @@ struct ion_device {
 	struct rb_root buffers;
 	struct mutex buffer_lock; /* mutex */
 #ifdef OPLUS_FEATURE_MTK_ION_SEPARATE_LOCK
-/* Hailong.Liu@BSP.Kernel.MM, 2020-09-07, use two separate locks for heaps and
- * clients in ion_device */
 	struct rw_semaphore client_lock;
 	struct rw_semaphore heap_lock;
 #else /* OPLUS_FEATURE_MTK_ION_SEPARATE_LOCK */

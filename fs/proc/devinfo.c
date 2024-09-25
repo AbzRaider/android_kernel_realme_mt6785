@@ -6,11 +6,9 @@
 **
 ** Version: 1.0
 ** Date : 2018/05/10
-** Author: Ming.He@ODM_WT.BSP.Kernel.Driver
 **
 ** ------------------------------- Revision History: -------------------------------
 **  	<author>		    <data> 	         <version >	       <desc>
-**       Ming.He@ODM_WT     2018/05/11       1.0               source  devinfo for factory mode and debug usage
 **
 ****************************************************************/
 #include <linux/fs.h>
@@ -41,7 +39,6 @@ struct devinfo g_devinfo_items[] = {
     {"tp", "Null", "Null","Null",1},
 	//{"lcd", "Null", "Null","Null",0},
 #ifdef ODM_WT_EDIT
-// LiTao@ODM_WT.BSP.Sensors.Config, 2019/11/12, Add for proc devinfo
 	{"Sensor_alsps", "STK33562", "STK", "Null", 0},
     {"Sensor_alsps", "STK3331", "STK", "Null", 0},
 	{"Sensor_gyro", "GYROSCOPE", "MTK", "Null", 0},
@@ -144,7 +141,6 @@ static const struct file_operations devinfo_fops =
 };
 
 #ifdef ODM_WT_EDIT
-/*Junbo.Guo@ODM_WT.BSP.Kernel.Boot, 2019/10/29, Add for oppoversion and devinfo*/
 int proc_devinfo_init( struct proc_dir_entry *devinfo_dir)
 {
     int i;

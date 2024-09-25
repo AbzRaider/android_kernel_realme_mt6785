@@ -3843,7 +3843,6 @@ s32 exfat_find_dir_entry(struct super_block *sb, CHAIN_T *p_dir, UNI_NAME_T *p_u
 						if ((++order) == 2)
 							uniname = p_uniname->name;
 #ifndef VENDOR_EDIT
-/* Fuchun.Liao@BSP.CHG.Basic 2018/06/11 modify for uniname null pointer */
 						else
 							uniname += 15;
 #else
