@@ -1678,9 +1678,6 @@ static void default_options(struct f2fs_sb_info *sbi)
 	sbi->sb->s_flags |= MS_LAZYTIME;
 	clear_opt(sbi, DISABLE_CHECKPOINT);
 	F2FS_OPTION(sbi).unusable_cap = 0;
-	/* VENDOR_EDIT guoweichao@TECH.Storage.FS.oF2FS
-	 * 2019/08/15, no need to flush_merge as we have reduced most flushes
-	 */
 	//set_opt(sbi, FLUSH_MERGE);
 	set_opt(sbi, DISCARD);
 	if (f2fs_sb_has_blkzoned(sbi))
@@ -3619,9 +3616,6 @@ try_onemore:
 	set_sbi_flag(sbi, SBI_POR_DOING);
 	spin_lock_init(&sbi->stat_lock);
 
-	/* VENDOR_EDIT huangjianan@TECH.Storage.FS
-	 * 2020-1-14, add for oDiscard decoupling
-	 */
 	sbi->dc_opt_enable = true;
 	sbi->dpolicy_expect = DPOLICY_BG;
 	sbi->fsync_protect = false;

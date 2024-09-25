@@ -1529,8 +1529,6 @@ static int ion_mm_heap_debug_show(struct ion_heap *heap, struct seq_file *s,
 
 	/* dump all handle's backtrace */
 #ifdef OPLUS_FEATURE_MTK_ION_SEPARATE_LOCK
-/* Hailong.Liu@BSP.Kernel.MM, 2020-09-07, use two separate locks for heaps and
- * clients in ion_device */
 	down_read(&dev->client_lock);
 #else /* OPLUS_FEATURE_MTK_ION_SEPARATE_LOCK */
 	down_read(&dev->lock);
@@ -1592,8 +1590,6 @@ static int ion_mm_heap_debug_show(struct ion_heap *heap, struct seq_file *s,
 	mtk_iommu_log_dump(s);
 #endif
 #ifdef OPLUS_FEATURE_MTK_ION_SEPARATE_LOCK
-/* Hailong.Liu@BSP.Kernel.MM, 2020-09-07, use two separate locks for heaps and
- * clients in ion_device */
 	up_read(&dev->client_lock);
 #else /* OPLUS_FEATURE_MTK_ION_SEPARATE_LOCK */
 	up_read(&dev->lock);
@@ -1677,8 +1673,6 @@ void ion_mm_heap_memory_detail(void)
 	ION_DUMP(NULL, "--------------------------------------\n");
 
 #ifdef OPLUS_FEATURE_MTK_ION_SEPARATE_LOCK
-/* Hailong.Liu@BSP.Kernel.MM, 2020-09-07, use two separate locks for heaps and
- * clients in ion_device */
 	if (!down_read_trylock(&dev->client_lock)) {
 #else /* OPLUS_FEATURE_MTK_ION_SEPARATE_LOCK */
 	if (!down_read_trylock(&dev->lock)) {
@@ -1736,8 +1730,6 @@ void ion_mm_heap_memory_detail(void)
 
 	if (need_dev_lock)
 #ifdef OPLUS_FEATURE_MTK_ION_SEPARATE_LOCK
-/* Hailong.Liu@BSP.Kernel.MM, 2020-09-07, use two separate locks for heaps and
- * clients in ion_device */
 		up_read(&dev->client_lock);
 #else /* OPLUS_FEATURE_MTK_ION_SEPARATE_LOCK */
 		up_read(&dev->lock);
@@ -1908,7 +1900,6 @@ size_t ion_mm_heap_total_memory(void)
 }
 
 #ifdef VENDOR_EDIT
-/* Wen.Luo@BSP.Kernel.Stability, 2019/04/26, Add for Process memory statistics */
 size_t get_ion_heap_by_pid(pid_t pid)
 {
 	struct ion_device *dev = g_ion_device;
@@ -1919,8 +1910,6 @@ size_t get_ion_heap_by_pid(pid_t pid)
 	enum mtk_ion_heap_type mm_heap = ION_HEAP_TYPE_MULTIMEDIA;
 
 #ifdef OPLUS_FEATURE_MTK_ION_SEPARATE_LOCK
-/* Hailong.Liu@BSP.Kernel.MM, 2020-09-07, use two separate locks for heaps and
- * clients in ion_device */
 	if (!down_read_trylock(&dev->client_lock))
 #else /* OPLUS_FEATURE_MTK_ION_SEPARATE_LOCK */
 	if (!down_read_trylock(&dev->lock))
@@ -1948,8 +1937,6 @@ size_t get_ion_heap_by_pid(pid_t pid)
 		}
 	}
 #ifdef OPLUS_FEATURE_MTK_ION_SEPARATE_LOCK
-/* Hailong.Liu@BSP.Kernel.MM, 2020-09-07, use two separate locks for heaps and
- * clients in ion_device */
 	up_read(&dev->client_lock);
 #else /* OPLUS_FEATURE_MTK_ION_SEPARATE_LOCK */
 	up_read(&dev->lock);

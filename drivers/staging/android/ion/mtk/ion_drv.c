@@ -994,8 +994,6 @@ int ion_device_destroy_heaps(struct ion_device *dev)
 	struct ion_heap *heap, *tmp;
 
 #ifdef OPLUS_FEATURE_MTK_ION_SEPARATE_LOCK
-/* Hailong.Liu@BSP.Kernel.MM, 2020-09-07, use two separate locks for heaps and
- * clients in ion_device */
 	down_write(&dev->heap_lock);
 #else /* OPLUS_FEATURE_MTK_ION_SEPARATE_LOCK */
 	down_write(&dev->lock);
@@ -1007,8 +1005,6 @@ int ion_device_destroy_heaps(struct ion_device *dev)
 	}
 
 #ifdef OPLUS_FEATURE_MTK_ION_SEPARATE_LOCK
-/* Hailong.Liu@BSP.Kernel.MM, 2020-09-07, use two separate locks for heaps and
- * clients in ion_device */
 	up_write(&dev->heap_lock);
 #else /* OPLUS_FEATURE_MTK_ION_SEPARATE_LOCK */
 	up_write(&dev->lock);
@@ -1029,8 +1025,6 @@ static int ion_clients_summary_show(struct seq_file *s, void *unused)
 	enum mtk_ion_heap_type mm_heap = ION_HEAP_TYPE_MULTIMEDIA;
 
 #ifdef OPLUS_FEATURE_MTK_ION_SEPARATE_LOCK
-/* Hailong.Liu@BSP.Kernel.MM, 2020-09-07, use two separate locks for heaps and
- * clients in ion_device */
 	if (!down_read_trylock(&dev->client_lock))
 #else /* OPLUS_FEATURE_MTK_ION_SEPARATE_LOCK */
 	if (!down_read_trylock(&dev->lock))
@@ -1069,8 +1063,6 @@ static int ion_clients_summary_show(struct seq_file *s, void *unused)
 
 	seq_puts(s, "-------------------------------------------\n");
 #ifdef OPLUS_FEATURE_MTK_ION_SEPARATE_LOCK
-/* Hailong.Liu@BSP.Kernel.MM, 2020-09-07, use two separate locks for heaps and
- * clients in ion_device */
 	up_read(&dev->client_lock);
 #else /* OPLUS_FEATURE_MTK_ION_SEPARATE_LOCK */
 	up_read(&dev->lock);

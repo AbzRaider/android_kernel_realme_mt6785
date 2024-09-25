@@ -142,7 +142,6 @@ struct netns_ipv4 {
 	unsigned long tfo_active_disable_stamp;
 
 	#ifdef OPLUS_BUG_STABILITY
-	//PengHao@CONNECTIVITY.WIFI.INTERNET.1854960,2019/03/30,add for disable tcp random timestamp,some networks limit tcp syn before login
 	int sysctl_tcp_random_timestamp;
 	#endif /* OPLUS_BUG_STABILITY */
 

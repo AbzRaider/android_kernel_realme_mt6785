@@ -43,7 +43,6 @@
 #include <linux/fscrypt.h>
 #include <linux/fsverity.h>
 #if defined(VENDOR_EDIT) && defined(CONFIG_EXT4_ASYNC_DISCARD_SUPPORT)
-//yh@PSW.BSP.Storage.EXT4, 2018-11-26 add for ext4 async discard suppot
 #include "discard.h"
 #endif
 /*
@@ -1161,7 +1160,6 @@ struct ext4_inode_info {
 #define EXT4_MOUNT_JOURNAL_CHECKSUM	0x800000 /* Journal checksums */
 #define EXT4_MOUNT_JOURNAL_ASYNC_COMMIT	0x1000000 /* Journal Async Commit */
 #if defined(VENDOR_EDIT) && defined(CONFIG_EXT4_ASYNC_DISCARD_SUPPORT)
-//yh@PSW.BSP.Storage.EXT4, 2018-11-26 add for ext4 async discard suppot
 #define EXT4_MOUNT_ASYNC_DISCARD	0x2000000 /* Async issue discard request */
 #endif
 #define EXT4_MOUNT_INLINECRYPT		0x4000000 /* Inline encryption support */
@@ -1383,7 +1381,6 @@ struct ext4_super_block {
 
 #define EXT4_ENC_UTF8_12_1	1
 #if defined(VENDOR_EDIT) && defined(CONFIG_EXT4_ASYNC_DISCARD_SUPPORT)
-//yh@PSW.BSP.Storage.EXT4, 2018-11-26 add for ext4 async discard suppot
 struct discard_policy {
 	int type;			/* type of discard */
 	unsigned int min_interval;	/* used for candidates exist */
@@ -1596,7 +1593,6 @@ struct ext4_sb_info {
 	struct dax_device *s_daxdev;
 	/* for discard command control */
 #if defined(VENDOR_EDIT) && defined(CONFIG_EXT4_ASYNC_DISCARD_SUPPORT)
-//yh@PSW.BSP.Storage.EXT4, 2018-11-26 add for ext4 async discard suppot
 	struct discard_cmd_control *dcc_info;
 	unsigned long last_time;	/* to store time in jiffies */
 	long interval_time;		/* to store thresholds */
@@ -3184,7 +3180,6 @@ static inline void ext4_unlock_group(struct super_block *sb,
 }
 
 #if defined(VENDOR_EDIT) && defined(CONFIG_EXT4_ASYNC_DISCARD_SUPPORT)
-//yh@PSW.BSP.Storage.EXT4, 2018-11-26 add for ext4 async discard suppot
 static inline int ext4_utilization(struct ext4_sb_info *sbi)
 {
 	return div_u64((u64)ext4_free_blocks_count(sbi->s_es) * 100,

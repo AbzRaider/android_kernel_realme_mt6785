@@ -71,7 +71,6 @@ config F2FS_FS_SECURITY
 
 	  If you are not using a security module, say N.
 
-#VENDOR_EDIT huangjianan@TECH.Storage.FS.F2FS, 2020-03-08, add for aging version
 config OPPO_F2FS_DEBUG
 	string
 	option env="OPPO_F2FS_DEBUG"
@@ -79,7 +78,6 @@ config OPPO_F2FS_DEBUG
 config F2FS_CHECK_FS
 	bool "F2FS consistency checking feature"
 	depends on F2FS_FS
-	#VENDOR_EDIT huangjianan@TECH.Storage.FS.F2FS, 2020-03-08, add for aging version
 	default y if OPPO_F2FS_DEBUG = "true"
 	default n if !OPPO_F2FS_DEBUG
 	help
@@ -155,7 +153,6 @@ config F2FS_GRADING_SSR
 	help
 	  use grading ssr to improve the end performance
 
-#VENDOR_EDIT yanwu@TECH.Storage.FS.oF2FS, 2019/08/14, add f2fs big-data statistics
 config F2FS_BD_STAT
 	bool "F2FS Bigdata Statisitics Information"
 	depends on F2FS_FS

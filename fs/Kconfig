@@ -37,7 +37,6 @@ source "fs/ocfs2/Kconfig"
 source "fs/btrfs/Kconfig"
 source "fs/nilfs2/Kconfig"
 #ifdef VENDOR_EDIT
-#Yuwei.Guan@TECH.Storage.FS.OF2FS,2020/04/18, add to use of2fs Kconfig
 source "fs/of2fs/Kconfig"
 #else
 #source "fs/f2fs/Kconfig"

@@ -22,9 +22,6 @@
 #include <trace/events/f2fs.h>
 
 static struct kmem_cache *victim_entry_slab;
-/* VENDOR_EDIT yanwu@TECH.Storage.FS.oF2FS
- * 2019/08/13, add code to optimize gc
- */
 #define MIN_WAIT_MS 1000
 #define DEF_GC_BALANCE_MIN_SLEEP_TIME	10000		/* milliseconds */
 #define DEF_GC_FRAG_MIN_SLEEP_TIME	2000		/* milliseconds */
@@ -194,11 +191,6 @@ static int gc_thread_func(void *data)
 	do {
 		bool sync_mode;
 
-		/* VENDOR_EDIT yanwu@TECH.Storage.FS.oF2FS
-		 * 2019/08/13, add code to optimize gc.
-		 * 2019/08/14, add need_SSR GC.
-		 * 2019/08/14, do FG GC in GC thread.
-		 */
 		if (of2fs_gc_wait(sbi, wq, &wait_ms))
 			continue;
 		/*
@@ -321,9 +313,6 @@ int f2fs_start_gc_thread(struct f2fs_sb_info *sbi)
 
 	sbi->gc_thread = gc_th;
 	init_waitqueue_head(&sbi->gc_thread->gc_wait_queue_head);
-	/* VENDOR_EDIT yanwu@TECH.Storage.FS.oF2FS
-	 * 2019/08/14, do FG GC in GC thread.
-	 */
 	init_waitqueue_head(&sbi->gc_thread->fggc_wait_queue_head);
 	sbi->gc_thread->f2fs_gc_task = kthread_run(gc_thread_func, sbi,
 			"f2fs_gc-%u:%u", MAJOR(dev), MINOR(dev));
@@ -2010,9 +1999,6 @@ void f2fs_build_gc_manager(struct f2fs_sb_info *sbi)
 	DIRTY_I(sbi)->v_ops = &default_v_ops;
 
 	sbi->gc_pin_file_threshold = DEF_GC_FAILED_PINNED_FILES;
-	/* VENDOR_EDIT yanwu@TECH.Storage.FS.oF2FS
-	 * 2019/08/14, add need_SSR GC.
-	 */
 	atomic_set(&sbi->need_ssr_gc, 0);
 	sbi->gc_opt_enable = true;
 

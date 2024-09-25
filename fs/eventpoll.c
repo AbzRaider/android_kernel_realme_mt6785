@@ -1529,6 +1529,8 @@ static int ep_insert(struct eventpoll *ep, struct epoll_event *event,
 
 error_unregister:
 	ep_unregister_pollwait(ep, epi);
+
+
 error_remove_epi:
 	spin_lock(&tfile->f_lock);
 	list_del_rcu(&epi->fllink);
@@ -1826,7 +1828,6 @@ fetch_events:
 
 			spin_unlock_irqrestore(&ep->lock, flags);
 #ifdef OPLUS_FEATURE_HEALTHINFO
-// Liujie.Xie@TECH.Kernel.Sched, 2019/08/29, add for jank monitor
 #ifdef CONFIG_OPPO_JANK_INFO
 			current->in_epoll = 1;
 #endif
@@ -1835,7 +1836,6 @@ fetch_events:
 								HRTIMER_MODE_ABS))
 				timed_out = 1;
 #ifdef OPLUS_FEATURE_HEALTHINFO
-// Liujie.Xie@TECH.Kernel.Sched, 2019/08/29, add for jank monitor
 #ifdef CONFIG_OPPO_JANK_INFO
 			current->in_epoll = 0;
 #endif
@@ -1911,11 +1911,11 @@ static int ep_loop_check_proc(void *priv, void *cookie, int call_nests)
 			 * not already there, and calling reverse_path_check()
 			 * during ep_insert().
 			 */
-			if (list_empty(&epi->ffd.file->f_tfile_llink)) {
+
+			if (list_empty(&epi->ffd.file->f_tfile_llink))
 				if (get_file_rcu(epi->ffd.file))
-					list_add(&epi->ffd.file->f_tfile_llink,
-						 &tfile_check_list);
-			}
+				list_add(&epi->ffd.file->f_tfile_llink,
+					 &tfile_check_list);
 		}
 	}
 	mutex_unlock(&ep->mtx);

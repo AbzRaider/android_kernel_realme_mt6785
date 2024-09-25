@@ -67,7 +67,6 @@ struct __compat_mtp_event {
 	compat_caddr_t  data;
 };
 #ifdef OPLUS_FEATURE_CHG_BASIC
-//Tong.Han@BSP.Group.Tp, 2016/11/01, transplant the code from mt6755(L_MR1) for MTP compt 32 bit & 64 bitT
 struct __compat_mtp_file_range {
 	compat_int_t	fd;
 	compat_loff_t	offset;

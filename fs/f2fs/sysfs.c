@@ -400,9 +400,6 @@ out:
 		return count;
 	}
 
-	/* VENDOR_EDIT huangjianan@TECH.Storage.FS
-	 * 2020-1-14, add for oDiscard decoupling
-	 */
 	if (!strcmp(a->attr.name, "fsync_protect")) {
 		sbi->fsync_protect = !!t;
 		return count;
@@ -602,9 +599,6 @@ F2FS_RW_ATTR(F2FS_HOT_COLD_PARAMS, f2fs_hot_cold_params, hc_warm_node_lower_limi
 F2FS_RW_ATTR(F2FS_HOT_COLD_PARAMS, f2fs_hot_cold_params, hc_warm_node_waterline, warm_node_waterline);
 F2FS_RW_ATTR(F2FS_HOT_COLD_PARAMS, f2fs_hot_cold_params, hc_enable, enable);
 #endif
-/* VENDOR_EDIT huangjianan@TECH.Storage.FS
- * 2020-1-14, add for oDiscard decoupling
- */
 F2FS_ATTR_OFFSET(F2FS_SBI, fsync_protect, 0666, f2fs_sbi_show, f2fs_sbi_store,
 		 offsetof(struct f2fs_sb_info, fsync_protect));
 F2FS_ATTR_OFFSET(F2FS_SBI, dpolicy_expect, 0666, f2fs_sbi_show, f2fs_sbi_store,
@@ -705,9 +699,6 @@ static struct attribute *f2fs_attrs[] = {
 	ATTR_LIST(hc_warm_node_waterline),
 	ATTR_LIST(hc_enable),
 #endif
-	/* VENDOR_EDIT huangjianan@TECH.Storage.FS
-	 * 2020-1-14, add for oDiscard decoupling
-	 */
 	ATTR_LIST(fsync_protect),
 	ATTR_LIST(dpolicy_expect),
 #ifdef CONFIG_F2FS_FAULT_INJECTION
@@ -960,9 +951,6 @@ static int __maybe_unused victim_bits_seq_show(struct seq_file *seq,
 	return 0;
 }
 
-/* VENDOR_EDIT yanwu@TECH.Storage.FS.oF2FS
- * 2019/09/11, add f2fs frag_score and undiscard_score
- */
 extern block_t of2fs_seg_freefrag(struct f2fs_sb_info *sbi,
 				unsigned int segno, block_t* blocks, unsigned int n);
 
@@ -1125,9 +1113,6 @@ static const struct file_operations f2fs_seq_gc_opt_enable_fops = {
 	.release = single_release,
 };
 
-/* VENDOR_EDIT shifei.ge@TECH.Storage.FS
- * 2019-08-14, add for oDiscard
- */
 static int f2fs_dc_opt_enable_seq_show(struct seq_file *seq, void *p)
 {
 	struct super_block *sb = seq->private;
@@ -1250,9 +1235,6 @@ int f2fs_register_sysfs(struct f2fs_sb_info *sbi)
 				 &f2fs_seq_iostat_info_fops, sb);
 		proc_create_data("victim_bits", S_IRUGO, sbi->s_proc,
 				 &f2fs_seq_victim_bits_fops, sb);
-		/* VENDOR_EDIT yanwu@TECH.Storage.FS.oF2FS
-		 * 2019/09/11, add f2fs frag_score and undiscard_score
-		 */
 		proc_create_data("frag_score", S_IRUGO, sbi->s_proc,
 				 &f2fs_seq_frag_score_fops, sb);
 		proc_create_data("free_frag", S_IRUGO, sbi->s_proc,
@@ -1261,9 +1243,6 @@ int f2fs_register_sysfs(struct f2fs_sb_info *sbi)
 				 &f2fs_seq_undiscard_score_fops, sb);
 		proc_create_data("gc_opt_enable", S_IRUGO | S_IWUGO, sbi->s_proc,
 				 &f2fs_seq_gc_opt_enable_fops, sb);
-		/* VENDOR_EDIT shifei.ge@TECH.Storage.FS
-		 * 2019-08-14, add for oDiscard
-		 */
 		proc_create_data("dc_enable", S_IRUGO | S_IWUGO, sbi->s_proc,
 				 &f2fs_dc_opt_enable_fops, sb);
 #ifdef CONFIG_F2FS_BD_STAT
@@ -1283,16 +1262,10 @@ void f2fs_unregister_sysfs(struct f2fs_sb_info *sbi)
 		remove_proc_entry("segment_info", sbi->s_proc);
 		remove_proc_entry("segment_bits", sbi->s_proc);
 		remove_proc_entry("victim_bits", sbi->s_proc);
-		/* VENDOR_EDIT yanwu@TECH.Storage.FS.oF2FS
-		 * 2019/09/11, add f2fs frag_score and undiscard_score
-		 */
 		remove_proc_entry("gc_opt_enable", sbi->s_proc);
 		remove_proc_entry("undiscard_score", sbi->s_proc);
 		remove_proc_entry("frag_score", sbi->s_proc);
 		remove_proc_entry("free_frag", sbi->s_proc);
-		/* VENDOR_EDIT shifei.ge@TECH.Storage.FS
-		 * 2019-08-14, add for oDiscard
-		 */
 		remove_proc_entry("dc_enable", sbi->s_proc);
 		remove_proc_entry(sbi->sb->s_id, f2fs_proc_root);
 	}
