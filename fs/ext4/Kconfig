@@ -113,7 +113,6 @@ config EXT4_FS_ENCRYPTION
 	default y
 	depends on EXT4_ENCRYPTION
 #ifdef VENDOR_EDIT
-#//yh@PSW.BSP.Storage.EXT4, 2018-11-26 add for ext4 async discard suppot
 config EXT4_ASYNC_DISCARD_SUPPORT
 	bool "Ext4 async discard Support"
 	default n

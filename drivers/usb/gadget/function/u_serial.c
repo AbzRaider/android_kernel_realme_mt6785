@@ -737,7 +737,6 @@ static int gs_start_io(struct gs_port *port)
 	unsigned		started;
 
 #ifdef OPLUS_FEATURE_CHG_BASIC
-/* tongfeng.huang@BSP.CHG.Basic, 2020/11/03, add for null point issue */
 	if(!port->port_usb) {
 		pr_err("%s: port->port_usb is a invalid device,disconnect it?\n",__func__);
 		return -ENODEV;
@@ -770,7 +769,6 @@ static int gs_start_io(struct gs_port *port)
 		/* Unblock any pending writes into our circular buffer, in case
 		 * we didn't in gs_start_tx() */
 #ifdef OPLUS_FEATURE_CHG_BASIC
-/* tongfeng.huang@BSP.CHG.Basic, 2020/11/03, add for null point issue  */
 		if (port->port.tty) {
 			tty_wakeup(port->port.tty);
 		}
@@ -1580,7 +1578,6 @@ void gserial_disconnect(struct gserial *gser)
 
 	port->port_usb = NULL;
 #ifdef OPLUS_FEATURE_CHG_BASIC
-/* tongfeng.huang@BSP.CHG.Basic, 2020/11/03, add for null point issue */
 	pr_debug("%s port_usb NULL\n",__func__);
 #endif
 	gser->ioport = NULL;

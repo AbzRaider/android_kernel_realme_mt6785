@@ -33,9 +33,6 @@
 struct f2fs_gc_kthread {
 	struct task_struct *f2fs_gc_task;
 	wait_queue_head_t gc_wait_queue_head;
-	/* VENDOR_EDIT yanwu@TECH.Storage.FS.oF2FS
-	 * 2019/08/14, do FG GC in GC thread
-	 */
 	wait_queue_head_t fggc_wait_queue_head;
 
 	/* for gc sleep time */

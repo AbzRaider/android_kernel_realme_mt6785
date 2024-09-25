@@ -20,7 +20,6 @@
 #include <asm/pgtable.h>
 #include "internal.h"
 #ifdef OPLUS_FEATURE_HEALTHINFO
-/* Huacai.Zhou@PSW.BSP.Kernel.MM, 2018-06-26, add ion total used account*/
 #include <linux/oppo_healthinfo/oppo_ion.h>
 #endif /* OPLUS_FEATURE_HEALTHINFO */
 void __attribute__((weak)) arch_report_meminfo(struct seq_file *m)
@@ -162,7 +161,6 @@ static int meminfo_proc_show(struct seq_file *m, void *v)
 		    global_zone_page_state(NR_FREE_CMA_PAGES));
 #endif
 #ifdef OPLUS_FEATURE_HEALTHINFO
-/* Huacai.Zhou@PSW.BSP.Kernel.MM, 2018-06-26, add ion total used account*/
 #ifdef CONFIG_ION
 	show_val_kb(m, "IonTotalCache:  ", global_zone_page_state(NR_IONCACHE_PAGES));
 	show_val_kb(m, "IonTotalUsed:   ", ion_total() >> PAGE_SHIFT);
