@@ -390,9 +390,6 @@ sync_nodes:
 	f2fs_remove_ino_entry(sbi, ino, APPEND_INO);
 	clear_inode_flag(inode, FI_APPEND_WRITE);
 flush_out:
-	/* VENDOR_EDIT yawnu@TECH.Storage.FS.oF2FS
-	 * 2019/09/13, fsync nobarrier protection
-	 */
 	if (!atomic && (F2FS_OPTION(sbi).fsync_mode != FSYNC_MODE_NOBARRIER ||
 							sbi->fsync_protect)) {
 	//if (!atomic && F2FS_OPTION(sbi).fsync_mode != FSYNC_MODE_NOBARRIER) {

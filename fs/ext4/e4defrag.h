@@ -6,7 +6,6 @@
 **
 ** Version: 1.0
 ** Date : 2020/02/29
-** Author: yanwu@TECH.Storage.FS.EXT4, add code to support ext4 defrag
 **
 ** ------------------ Revision History:------------------------
 ** <author> <data> <version > <desc>

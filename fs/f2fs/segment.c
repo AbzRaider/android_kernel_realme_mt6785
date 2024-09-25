@@ -15,9 +15,6 @@
 #include <linux/timer.h>
 #include <linux/freezer.h>
 #include <linux/sched/signal.h>
-/* VENDOR_EDIT yanwu@TECH.Storage.FS.oF2FS
- * 2019/08/16, trigger need_SSR GC base on bigdata stats
- */
 #include <linux/random.h>
 
 #include "f2fs.h"
@@ -243,9 +240,6 @@ static inline bool need_SSR_by_type(struct f2fs_sb_info *sbi , int type, int con
 	return (free_segs-ovp_segments) * 100 / (left_space/KBS_PER_SEGMENT) <= waterline;
 }
 #endif
-/* VENDOR_EDIT yanwu@TECH.Storage.FS.oF2FS,
- * 2019/08/13, add code to optimize gc
- */
 block_t of2fs_seg_freefrag(struct f2fs_sb_info *sbi, unsigned int segno,
 				block_t* blocks, unsigned int n)
 {
@@ -570,11 +564,6 @@ int f2fs_commit_inmem_pages(struct inode *inode)
 	return err;
 }
 
-/* VENDOR_EDIT yanwu@TECH.Storage.FS.oF2FS
- * 2019/08/14, add need_SSR GC
- * 2019/08/14, do FG GC in GC thread
- * 2019/08/16, trigger need_SSR GC base on bigdata stats
- */
 #define DEF_DIRTY_STAT_INTERVAL 15 /* 15 secs */
 static inline bool of2fs_need_balance_dirty(struct f2fs_sb_info *sbi)
 {
@@ -689,9 +678,6 @@ void f2fs_balance_fs(struct f2fs_sb_info *sbi, bool need)
 	if (!f2fs_is_checkpoint_ready(sbi))
 		return;
 
-	/* VENDOR_EDIT yanwu@TECH.Storage.FS.oF2FS
-	* 2019/08/14, add need_SSR GC
-	*/
 	of2fs_balance_fs(sbi);
 	/*
 	 * We should do GC or end up with checkpoint, if there are so many dirty
@@ -1301,9 +1287,6 @@ static void __init_discard_policy(struct f2fs_sb_info *sbi,
 	dpolicy->io_aware_gran = MAX_PLIST_NUM;
 	dpolicy->timeout = false;
 	//dpolicy->timeout = 0;
-	/* VENDOR_EDIT shifei.ge@TECH.Storage.FS
-	 * 2019-10-15, add for oDiscard
-	 */
 	dpolicy->io_busy = false;
 
 	if (discard_type == DPOLICY_BG) {
@@ -1318,9 +1301,6 @@ static void __init_discard_policy(struct f2fs_sb_info *sbi,
 			dpolicy->max_interval = DEF_MIN_DISCARD_ISSUE_TIME;
 		}
 	} else if (discard_type == DPOLICY_FORCE) {
-		/* VENDOR_EDIT shifei.ge@TECH.Storage.FS
-		 * 2019-10-15, add for oDiscard
-		 */
 		dpolicy->min_interval = DEF_URGENT_DISCARD_ISSUE_TIME;
 		//dpolicy->min_interval = DEF_MIN_DISCARD_ISSUE_TIME;
 		dpolicy->mid_interval = DEF_MID_DISCARD_ISSUE_TIME;
@@ -1335,9 +1315,6 @@ static void __init_discard_policy(struct f2fs_sb_info *sbi,
 		dpolicy->timeout = true;
 	} else if (discard_type == DPOLICY_BALANCE ||
 			discard_type == DPOLICY_PERFORMANCE) {
-		/* VENDOR_EDIT shifei.ge@TECH.Storage.FS
-		 * 2019-10-15, add for oDiscard
-		 */
 		dpolicy->granularity = 1;
 		dpolicy->min_interval = 0;
 		dpolicy->mid_interval = 500;
@@ -1673,9 +1650,6 @@ static unsigned int __issue_discard_cmd_orderly(struct f2fs_sb_info *sbi,
 			goto next;
 
 		if (dpolicy->io_aware && !is_idle(sbi, DISCARD_TIME)) {
-			/* VENDOR_EDIT shifei.ge@TECH.Storage.FS
-			 * 2019-10-15, add for oDiscard
-			 */
 			if (sbi->dc_opt_enable) {
 				dpolicy->io_busy = true;
 			}
@@ -1755,9 +1729,6 @@ retry:
 			if (dpolicy->io_aware && i < dpolicy->io_aware_gran &&
 						!is_idle(sbi, DISCARD_TIME)) {
 				io_interrupted = true;
-				/* VENDOR_EDIT shifei.ge@TECH.Storage.FS
-				 * 2019-10-15, add for oDiscard
-				 */
 				if (sbi->dc_opt_enable) {
 					dpolicy->io_busy = true;
 				}
@@ -1950,9 +1921,6 @@ bool f2fs_issue_discard_timeout(struct f2fs_sb_info *sbi)
 	return dropped;
 }
 
-/* VENDOR_EDIT huangjianan@TECH.Storage.FS
- * 2020-1-14, add for oDiscard decoupling
- */
 static inline void check_dpolicy_expect(struct f2fs_sb_info *sbi, int *dpolicy_curr)
 {
 	if (!sbi->dc_opt_enable)
@@ -1978,18 +1946,12 @@ static int issue_discard_thread(void *data)
 	unsigned int wait_ms = DEF_MIN_DISCARD_ISSUE_TIME;
 	int issued;
 
-	/* VENDOR_EDIT huangjianan@TECH.Storage.FS
-	 * 2020-1-14, add for oDiscard decoupling
-	 */
 	int dpolicy_curr = DPOLICY_BG;
 	unsigned long balance_end_time = 0;
 
 	set_freezable();
 
 	do {
-		/* VENDOR_EDIT huangjianan@TECH.Storage.FS
-		 * 2020-1-14, add for oDiscard decoupling
-		 */
 		if (sbi->dpolicy_expect == DPOLICY_BG)
 			__init_discard_policy(sbi, &dpolicy, DPOLICY_BG,
 					      dcc->discard_granularity);
@@ -2000,9 +1962,6 @@ static int issue_discard_thread(void *data)
 				msecs_to_jiffies(wait_ms));
 
 		if (dcc->discard_wake) {
-			/* VENDOR_EDIT huangjianan@TECH.Storage.FS
-			 * 2020-1-14, add for oDiscard decoupling
-			 */
 			switch (dcc->discard_wake) {
 			case 1:
 				if (sbi->dpolicy_expect == DPOLICY_BG)
@@ -2034,16 +1993,10 @@ static int issue_discard_thread(void *data)
 		if (kthread_should_stop())
 			return 0;
 		if (is_sbi_flag_set(sbi, SBI_NEED_FSCK)) {
-			/* VENDOR_EDIT huangjianan@TECH.Storage.FS
-			 * 2020-1-14, add for oDiscard decoupling
-			 */
 			wait_ms = DEF_MAX_DISCARD_ISSUE_TIME;
 			//wait_ms = dpolicy.max_interval;
 		}
 
-		/* VENDOR_EDIT huangjianan@TECH.Storage.FS
-		 * 2020-1-14, add for oDiscard decoupling
-		 */
 		if (dpolicy_curr == DPOLICY_BALANCE) {
 			if (time_after(jiffies, balance_end_time)) {
 				wait_ms = DEF_MAX_DISCARD_ISSUE_TIME;
@@ -2054,16 +2007,10 @@ static int issue_discard_thread(void *data)
 		}
 
 		if (sbi->gc_mode == GC_URGENT) {
-			/* VENDOR_EDIT huangjianan@TECH.Storage.FS
-			 * 2020-1-14, add for oDiscard decoupling
-			 */
 			if (sbi->dc_opt_enable)
 				dpolicy_curr = DPOLICY_FORCE;
 			__init_discard_policy(sbi, &dpolicy, DPOLICY_FORCE, 1);
 		} else {
-			/* VENDOR_EDIT huangjianan@TECH.Storage.FS
-			 * 2020-1-14, add for oDiscard decoupling
-			 */
 			check_dpolicy_expect(sbi, &dpolicy_curr);
 			__init_discard_policy(sbi, &dpolicy, dpolicy_curr,
 					      dcc->discard_granularity);
@@ -2075,9 +2022,6 @@ static int issue_discard_thread(void *data)
 		if (issued > 0) {
 			__wait_all_discard_cmd(sbi, &dpolicy);
 			wait_ms = dpolicy.min_interval;
-			/* VENDOR_EDIT huangjianan@TECH.Storage.FS
-			 * 2020-1-14, add for oDiscard decoupling
-			 */
 			if (dpolicy.io_busy) {
 				wait_ms = f2fs_time_to_wait(sbi, DISCARD_TIME);
 				if (!wait_ms)
@@ -3549,9 +3493,6 @@ int f2fs_trim_fs(struct f2fs_sb_info *sbi, struct fstrim_range *range)
 	 * or periodic fstrim instead of it.
 	 */
 	if (f2fs_realtime_discard_enable(sbi)) {
-		/* VENDOR_EDIT shifei.ge@TECH.Storage.FS
-		 * 2019-10-15, add for oDiscard
-		 */
 		if (sbi->dc_opt_enable)
 			wake_up_discard_thread_aggressive(sbi, DPOLICY_PERFORMANCE);
 		goto out;

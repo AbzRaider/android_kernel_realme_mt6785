@@ -343,7 +343,6 @@ int pstore_mkfile(struct dentry *root, struct pstore_record *record)
 		break;
 	case PSTORE_TYPE_CONSOLE:
 //#ifdef OPLUS_BUG_STABILITY
-//Qiwu.Chen@Bsp.Kernel.Stability, 2020/10/16, keep pstore with 4.19
 //		if (record->id)
 			scnprintf(name, sizeof(name), "console-%s-%llu",
 				  record->psi->name, record->id);

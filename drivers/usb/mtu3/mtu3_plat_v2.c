@@ -287,7 +287,6 @@ DEVICE_ATTR(sib_enable, 0664, musb_sib_enable_show, musb_sib_enable_store);
 #endif
 
 #ifdef CONFIG_OPLUS_CHARGER_MTK6771
-/* Qiao.Hu@@Prd6.BaseDrv.USB.Basic, 2017/07/28, Add for otg */
 struct ssusb_mtk *mtu3_ssusb;
 extern bool is_switch_done(void);
 extern void mtk_xhci_eint_iddig_gpio_mode(void);
@@ -353,7 +352,6 @@ static int set_start_id_polling(void)
 }
 
  #ifndef CONFIG_OPLUS_CHARGER_MT6370_TYPEC
-/* Jianchao.Shi@BSP.CHG.Basic, 2019/06/15, sjc Modify for OTG switch, typec not define it */
 void oplus_set_otg_switch_status(bool value)
 {
 	start_id_polling = value;
@@ -419,7 +417,6 @@ struct attribute *mtu3_attributes[] = {
 	&dev_attr_cmode.attr,
 	&dev_attr_saving.attr,
 #ifdef CONFIG_OPLUS_CHARGER_MTK6771
-/* Qiao.Hu@@Prd6.BaseDrv.USB.Basic, 2017/07/25, Add for charger */
 	&dev_attr_idpolling.attr,
 	&dev_attr_idstate.attr,
 #endif /* CONFIG_OPLUS_CHARGER_MTK6771 */
@@ -801,7 +798,6 @@ static int mtu3_probe(struct platform_device *pdev)
 	}
 
 #ifdef CONFIG_OPLUS_CHARGER_MTK6771
-/* Qiao.Hu@@Prd6.BaseDrv.USB.Basic, 2017/07/28, Add for otg */
 	mtu3_ssusb = ssusb;
 	mtu3_ssusb->user_request_polling = false;
 	spin_lock_init(&mtu3_ssusb->change_irq_lock);

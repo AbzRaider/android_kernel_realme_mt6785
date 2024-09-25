@@ -225,9 +225,6 @@ enum {
 //#define DEF_MAX_DISCARD_ISSUE_TIME	60000	/* 60 s, if no candidates */
 #define DEF_DISCARD_URGENT_UTIL		80	/* do more discard over 80% */
 #define DEF_CP_INTERVAL			60	/* 60 secs */
-/* VENDOR_EDIT shifei.ge@TECH.Storage.FS
- * 2019-10-15, add for oDiscard
- */
 #define DEF_MIN_DISCARD_ISSUE_TIME	100	/* 100 ms, if exists */
 #define DEF_MID_DISCARD_ISSUE_TIME	2000	/* 2 s, if dev is busy */
 #define DEF_MAX_DISCARD_ISSUE_TIME	120000	/* 120 s, if no candidates */
@@ -235,9 +232,6 @@ enum {
 #define DEF_DISCARD_BALANCE_TIME	8000	/* 8000 ms */
 #define DEF_URGENT_DISCARD_ISSUE_TIME	50	/* 50 ms, if force */
 #define DEF_DISCARD_EMPTY_ISSUE_TIME	600000	/* 10 min, undiscard block=0 */
-/* VENDOR_EDIT yanwu@TECH.Storage.FS.oF2FS
- * 2019/08/12, set default idle interval to 1s
- */
 #define DEF_GC_IDLE_INTERVAL		1	/* 1 secs */
 #define DEF_IDLE_INTERVAL		5	/* 5 secs */
 #define DEF_DISABLE_INTERVAL		5	/* 5 secs */
@@ -358,9 +352,6 @@ enum {
 	DPOLICY_FORCE,
 	DPOLICY_FSTRIM,
 	DPOLICY_UMOUNT,
-	/* VENDOR_EDIT huangjianan@TECH.Storage.FS
-	 * 2020-1-14, add for oDiscard decoupling
-	 */
 	DPOLICY_BALANCE,
 	DPOLICY_PERFORMANCE,
 	MAX_DPOLICY,
@@ -378,9 +369,6 @@ struct discard_policy {
 	bool ordered;			/* issue discard by lba order */
 	bool timeout;			/* discard timeout for put_super */
 	unsigned int granularity;	/* discard granularity */
-	/* VENDOR_EDIT shifei.ge@TECH.Storage.FS
-	 * 2019-10-15, add for oDiscard
-	 */
 	bool io_busy;			/* interrupt by user io */
 };
 
@@ -1673,20 +1661,10 @@ struct f2fs_sb_info {
 	/* for GC_AT */
 	bool atgc_enabled;
 
-	/* VENDOR_EDIT yanwu@TECH.Storage.FS.oF2FS
-	 * 2019/08/13, add code to optimize gc
-	 * 2019/08/14, add need_SSR GC
-	 */
 	bool is_frag;				/* urgent gc flag */
 	unsigned long last_frag_check;		/* last urgent check jiffies */
 	atomic_t need_ssr_gc;			/* ssr gc count */
-	/* VENDOR_EDIT yanwu@TECH.Storage.FS.oF2FS
-	 * 2019/10/15, control of2fs gc code, will remove
-	 */
 	bool gc_opt_enable;
-	/* VENDOR_EDIT huangjianan@TECH.Storage.FS
-	* 2020-1-14, add for oDiscard decoupling
-	*/
 	bool dc_opt_enable;
 	int dpolicy_expect;
 	bool fsync_protect;
@@ -4253,15 +4231,9 @@ static inline bool is_journalled_quota(struct f2fs_sb_info *sbi)
 	return false;
 }
 
-/* VENDOR_EDIT shifei.ge@TECH.Storage.FS
- * 2019-10-15, add for oDiscard
- */
 #define F2FS_FS_FREE_PERCENT		20
 #define F2FS_DEVICE_FREE_PERCENT	10
 
-/* VENDOR_EDIT huangjianan@TECH.Storage.FS
- * 2020-1-14, add for oDiscard decoupling
- */
 static inline bool f2fs_is_space_free(struct f2fs_sb_info *sbi)
 {
 	struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;

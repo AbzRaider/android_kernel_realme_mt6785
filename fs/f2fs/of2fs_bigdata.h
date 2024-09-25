@@ -6,7 +6,6 @@
 **
 ** Version: 1.0
 ** Date : 2019/08/14
-** Author: yanw@TECH.Storage.FS.oF2FS, add code for f2fs bigdata statistics
 **
 ** ------------------ Revision History:------------------------
 ** <author> <data> <version > <desc>

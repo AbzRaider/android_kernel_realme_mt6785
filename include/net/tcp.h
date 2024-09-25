@@ -115,7 +115,6 @@ void tcp_time_wait(struct sock *sk, int state, int timeo);
 				 * current initial RTO.
 				 */
 #ifdef OPLUS_BUG_STABILITY
-//SongYongyao@NETWORK.DATA.1097684, 2017/10/02, modify for connect timeout too long
 //add for fin retrans too many
 #define TCP_ORPHAN_RETRIES 3
 #endif /* OPLUS_BUG_STABILITY */
@@ -289,7 +288,6 @@ extern struct percpu_counter tcp_sockets_allocated;
 extern unsigned long tcp_memory_pressure;
 
 #ifdef OPLUS_BUG_STABILITY
-//ZhaoMengqing@CONNECTIVITY.WIFI.INTERNET.1394484, 2019/04/02,add for: When find TCP SYN-ACK Timestamp value error, just do not use Timestamp
 extern int sysctl_tcp_ts_control[2];
 #endif /* OPLUS_BUG_STABILITY */
 
