@@ -143,14 +143,11 @@ static int mmc_crypto_keyslot_program(struct keyslot_manager *ksm,
 		return -EINVAL;
 
 	memset(&cfg, 0, sizeof(cfg));
-
+#ifndef CONFIG_MMC_CRYPTO_LEGACY
 	cfg.data_unit_size = data_unit_mask;
-#ifdef CONFIG_MMC_CRYPTO_LEGACY
-	/* used fsrypt v2 in OTA fscrypt v1 environment */
-	if (key->hie_duint_size != 4096)
-		cfg.data_unit_size = 1;
+#else
+	cfg.data_unit_size = 1;
 #endif
-
 	cfg.crypto_cap_idx = cap_idx;
 	cfg.config_enable |= MMC_CRYPTO_CONFIGURATION_ENABLE;
 
@@ -291,7 +288,8 @@ static int mmc_prepare_mqr_crypto_spec(struct mmc_host *host,
 	 * with F2FS (dun is 512 bytes), the dun[0] had
 	 * multiplied by 8.
 	 */
-	if (bc->hie_ext4)
+	if (bc->bc_dun[0] == 0xFFFFFFFFFFFFFFFFULL &&
+		bc->bc_dun[1] == 0xFFFFFFFFFFFFFFFFULL)
 		mrq->data_unit_num =
 			(blk_rq_pos(request) & 0xFFFFFFFF);
 	else

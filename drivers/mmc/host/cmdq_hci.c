@@ -704,7 +704,7 @@ ring_doorbell:
 #if defined(VENDOR_EDIT) && defined(CONFIG_OPPO_HEALTHINFO)
     mrq->cmdq_request_time_start = ktime_get();
 #endif
-	
+
 	cmdq_writel(cq_host, 1 << tag, CQTDBR);
 	/* Commit the doorbell write immediately */
 	wmb();
