@@ -2694,7 +2694,7 @@ static struct mmc_cmdq_req *mmc_blk_cmdq_rw_prep(
 	 * call it in CQHCI for safe, SWcmdq will do this in
 	 * mmc_blk_swcq_issue_rw_rq().
 	 */
-#ifdef CONFIG_MTK_EMMC_HW_CQ
+#ifndef CONFIG_MTK_EMMC_CQ_SUPPORT
 	mmc_crypto_prepare_req(mqrq);
 #endif
 #ifdef MMC_CQHCI_DEBUG
@@ -4555,7 +4555,7 @@ static int mmc_sector_count_open(struct inode *inode, struct file *filp)
 	u8 *ext_csd;
 	int err;
     unsigned int sector_count = 0;
-    
+
 	buf = kmalloc(SECTOR_COUNT_BUF_LEN + 1, GFP_KERNEL);
 	if (!buf)
 		return -ENOMEM;
@@ -4579,7 +4579,7 @@ static int mmc_sector_count_open(struct inode *inode, struct file *filp)
 	sector_count = (ext_csd[215]<<24) |(ext_csd[214]<<16)|
 			(ext_csd[213]<<8)|(ext_csd[212]);
 	n = sprintf(buf, "0x%08x\n", sector_count);
-    
+
 	if (n > SECTOR_COUNT_BUF_LEN) {
 		err = -EINVAL;
 		kfree(ext_csd);
@@ -4650,7 +4650,7 @@ static int mmc_life_time_open(struct inode *inode, struct file *filp)
 	int err;
 	unsigned char life_time_A = 0;
 	unsigned char life_time_B = 0;
-    
+
 	buf = kmalloc(LIFE_TIME_BUF_LEN + 1, GFP_KERNEL);
 	if (!buf)
 		return -ENOMEM;
