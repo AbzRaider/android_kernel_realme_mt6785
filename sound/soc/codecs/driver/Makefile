@@ -11,6 +11,7 @@
 # GNU General Public License for more details.
 #
 
-obj-y += driver/
-#obj-y += aw87339/
-obj-$(CONFIG_SND_SOC_TFA9874) += tfa98xx/
+snd-audio-extend-objs := audio_extend_drv.o
+obj-y += snd-audio-extend.o
+snd-hal-feedback-objs := hal_feedback.o
+obj-$(CONFIG_OPLUS_FEATURE_MM_FEEDBACK) += snd-hal-feedback.o

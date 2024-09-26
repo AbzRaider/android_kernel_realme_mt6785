@@ -387,7 +387,6 @@ enum Tfa98xx_Error tfa98xx_set_volume_level(struct tfa_device *tfa,
 				  unsigned short vol);
 
 #ifdef VENDOR_EDIT
-/* Zhao.Pan@MM.AudioDriver.SmartPA, 2020/01/13, add for analog volume */
 enum Tfa98xx_Error tfa98xx_set_ana_volume(struct tfa_device *tfa, unsigned int vol);
 enum Tfa98xx_Error tfa98xx_get_ana_volume(struct tfa_device *tfa, unsigned int *vol);
 #endif /* VENDOR_EDIT */
@@ -1026,7 +1025,6 @@ enum Tfa98xx_Error tfaRunSpeakerStartup(struct tfa_device *tfa, int force,
  */
 enum Tfa98xx_Error tfaRunSpeakerCalibration(struct tfa_device *tfa);
 #ifdef VENDOR_EDIT
-/*xiang.fei@PSW.MM.AudioDriver.Codec, 2018/03/12, Add for speaker resistance*/
 enum Tfa98xx_Error tfaRunSpeakerCalibration_result(struct tfa_device *tfa,
 						   int *result);
 #endif
@@ -1094,7 +1092,6 @@ enum Tfa98xx_Error tfa_status(struct tfa_device *tfa);
 int tfa_dev_get_mtpb(struct tfa_device *tfa);
 
 #ifdef OPLUS_ARCH_EXTENDS
-/*Yongpei.Yao@MULTIMEDIA.AUDIODRIVER.SMARTPA, 2020/08/29, Add for aging calibration*/
 enum Tfa98xx_Error tfa_dsp_get_calibration_impedance_for_aging(struct tfa_device *tfa);
 #endif
 

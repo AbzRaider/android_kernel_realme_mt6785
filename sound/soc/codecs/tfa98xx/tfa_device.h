@@ -173,7 +173,6 @@ struct tfa_device {
 	struct kmem_cache *cachep; /**< Memory allocator handle */
 
 	#ifdef VENDOR_EDIT
-	/*Jianfeng.Qiu@PSW.MM.AudioDriver.SmartPA, 2019/09/10, Add for calibration range*/
 	u32 min_mohms;
 	u32 max_mohms;
 	#endif /* VENDOR_EDIT */

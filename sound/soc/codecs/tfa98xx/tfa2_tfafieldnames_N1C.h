@@ -353,7 +353,6 @@ enum nxpTfa2BfEnumList {
 	TFA2_BF_VOLSEC = 0x5a07,
 	TFA2_BF_SWPROFIL = 0x5a87,
 	#ifdef VENDOR_EDIT
-	/* Zhao.Pan@MM.AudioDriver.SmartPA, 2020/01/13, add for analog volume */
 	TFA2_BF_TDMSPKG = 0x6163,
 	#endif //VENDOR_EDIT
 	TFA2_BF_DCVO = 0x7002,
