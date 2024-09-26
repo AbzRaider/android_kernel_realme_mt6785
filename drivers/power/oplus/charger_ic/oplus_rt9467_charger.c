@@ -44,7 +44,6 @@
 #define I2C_ACCESS_MAX_RETRY	5
 #define RT9467_DRV_VERSION	"1.0.18_MTK"
 
-/*Shouli.Wang@ODM_WT.BSP.CHG 2019/11/25, add for charger*/
 #define TOTAL_CHG_PERCENT 100
 #define PRIMARY_CHG_PERCENT 70
 #define SECONDARY_CHG_PERCENT (TOTAL_CHG_PERCENT-PRIMARY_CHG_PERCENT)
@@ -53,7 +52,6 @@ struct rt9467_info *rt9467 = NULL;
 static enum power_supply_type charger_type = POWER_SUPPLY_TYPE_UNKNOWN;
 
 #ifdef OPLUS_FEATURE_CHG_BASIC
-//Junbo.Guo@ODM_WT.BSP.CHG, 2019/11/11, Modify for qc
 extern struct oplus_chg_chip *g_oplus_chip;
 void oplus_wake_up_usbtemp_thread(void);
 #endif
@@ -338,7 +336,6 @@ struct rt9467_info {
 };
 
 #ifdef OPLUS_FEATURE_CHG_BASIC
-//Junbo.Guo@ODM_WT.BSP.CHG, 2019/11/11, Modify for pe20
 static bool disable_PE = 0;
 static bool disable_QC = 0;
 static bool disable_PD = 0;
@@ -1215,7 +1212,6 @@ static int __rt9467_chgdet_handler(struct rt9467_info *info)
 		/* force clear HVDCP_EN */
 		rt9467_clr_bit(info, RT9467_REG_CHG_DPDM1, 0x40);
 #ifdef OPLUS_FEATURE_CHG_BASIC
-//Junbo.Guo@ODM_WT.BSP.CHG, 2019/11/11, Modify for pe20
 		memset(&rt9467->ptime[0], 0, sizeof(struct timespec));
 		memset(&rt9467->ptime[1], 0, sizeof(struct timespec));
 		info->desc->pre_current_ma = -1;
@@ -1818,7 +1814,6 @@ static int rt9467_hvdcpi_irq_handler(struct rt9467_info *info)
 	dev_notice(info->dev, "%s\n", __func__);
 	
 #ifdef OPLUS_FEATURE_CHG_BASIC
-//Junbo.Guo@ODM_WT.BSP.CHG, 2019/11/11, Modify for pe20	
 	if(disable_QC){
 		dev_info(info->dev, "%s:disable_QC\n", __func__);
 		return 0;
@@ -2433,7 +2428,6 @@ static int __rt9467_set_ichg(struct rt9467_info *info, u32 ichg)
 	int ret = 0;
 	u8 reg_ichg = 0;
 #if 0
-/*Shouli.Wang@ODM_WT.BSP.CHG 2019/12/05, remove 500ma current limit*/
 	if (strcmp(info->desc->chg_dev_name, "primary_chg") == 0) {
 		ichg = (ichg < 500000) ? 500000 : ichg;
 		rt9467_ichg_workaround(info, ichg);
@@ -3618,7 +3612,6 @@ static int rt9467_sw_reset(struct rt9467_info *info)
 	return ret;
 }
 
-/*Shouli.Wang@ODM_WT.BSP.CHG 2019/12/07, add for ship mode function*/
 int rt9467_enable_shipmode(bool en)
 {
 	if(en)
@@ -3733,7 +3726,6 @@ static int rt9467_init_setting(struct rt9467_info *info)
 				__func__);
 	}
 #ifdef OPLUS_FEATURE_CHG_BASIC
-/*Shouli.Wang@ODM_WT.BSP.CHG 2019/11/18, disable charger ic system reset function*/
 	ret = rt9467_set_bit(info, RT9467_REG_CHG_CTRL19, 0x80);
 	if (ret < 0) {
 		dev_notice(info->dev, "%s: disable system reset fail\n",
@@ -4106,7 +4098,6 @@ void oplus_rt9467_set_mivr(int vbatt)
 
 	u32 uV = vbatt*1000 + 200000;
 #ifdef OPLUS_FEATURE_CHG_BASIC
-//Junbo.Guo@ODM_WT.BSP.CHG, 2019/11/11, Modify for pe20
     if(uV<4200000)
         uV = 4200000;
 #endif	
@@ -4263,7 +4254,6 @@ int oplus_rt9467_charging_enable(void)
 int oplus_rt9467_charging_disable(void)
 {
 #ifdef OPLUS_FEATURE_CHG_BASIC
-/*Liu.Yong@BSP.CHG.Basic, 2021/01/19, Modify for PD charger*/
 	int ret = 0;
 	struct charger_manager *info = NULL;
 	struct oplus_chg_chip *chip = g_oplus_chip;
@@ -4475,7 +4465,6 @@ int oplus_rt9467_get_dyna_aicl_result(void)
 int oplus_rt9467_set_qc_config(void)
 {
 #ifdef OPLUS_FEATURE_CHG_BASIC
-	//Junbo.Guo@ODM_WT.BSP.CHG, 2019/11/11, Modify for qc
 	struct oplus_chg_chip *chip = g_oplus_chip;
 	struct charger_manager *info = NULL;
 		
@@ -4533,7 +4522,6 @@ bool oplus_rt9467_get_shortc_hw_gpio_status(void)
 }
 
 #ifdef OPLUS_FEATURE_CHG_BASIC
-//Junbo.Guo@ODM_WT.BSP.CHG, 2019/11/11, Modify for pe20
 int oplus_rt9467_chg_get_pe20_type(void)
 {
 	struct charger_manager *info = NULL;
@@ -4617,7 +4605,6 @@ EXPORT_SYMBOL(oplus_rt9467_chg_reset_pe20);
 #endif
 
 #ifdef OPLUS_FEATURE_CHG_BASIC
-//Junbo.Guo@ODM_WT.BSP.CHG, 2019/11/11, Modify for PD
 bool oplus_rt9467_get_pd_type(void)
 {
 	struct charger_manager *info = NULL;
@@ -4820,7 +4807,6 @@ struct oplus_chg_operations  oplus_chg_rt9467_ops = {
 	.set_qc_config = oplus_rt9467_set_qc_config,
 	.enable_qc_detect = oplus_rt9467_enable_qc_detect,
 //#ifdef OPLUS_FEATURE_CHG_BASIC
-		//Junbo.Guo@ODM_WT.BSP.CHG, 2019/11/11, Modify for pe20
 //	.oplus_chg_get_pe20_type = oplus_rt9467_chg_get_pe20_type,
 //	.oplus_chg_pe20_setup = oplus_rt9467_chg_pe20_setup,
 //	.oplus_chg_reset_pe20 = oplus_rt9467_chg_reset_pe20,
@@ -4914,7 +4900,6 @@ static int rt9467_probe(struct i2c_client *client,
 		return -ENOMEM;
 	rt9467 = info;
 #ifdef OPLUS_FEATURE_CHG_BASIC
-/*Sidong.Zhao@ODM_WT.BSP.CHG 2019/11/4,for detect hvdcp*/
 	info->chg_consumer =
 		charger_manager_get_by_name(&client->dev, "rt9467");
 #endif

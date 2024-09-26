@@ -51,7 +51,6 @@
 
 
 #ifdef OPLUS_FEATURE_CHG_BASIC
-/* Jianchao.Shi@BSP.CHG.Basic, 2018/11/09, sjc Add for charging */
 //====================================================================//
 #include <linux/gpio.h>
 #include <linux/of_gpio.h>
@@ -67,7 +66,6 @@
 #include "oplus_bq25910.h"
 	
 #ifdef OPLUS_FEATURE_CHG_BASIC
-/* LiYue@BSP.CHG.Basic, 2019/09/26, add for usb temperature check */
 #include <linux/iio/consumer.h>
 #endif
 #include "oplus_da9313.h"
@@ -87,7 +85,6 @@ static int oplus_mt6360_set_termchg_current(int term_curr);
 static int oplus_mt6360_set_rechg_voltage(int rechg_mv);
 int oplus_tbatt_power_off_task_init(struct oplus_chg_chip *chip);
 #ifdef OPLUS_FEATURE_CHG_BASIC
-/*Baoquan.Lai@@BSP.CHG.Basic, 2020/05/22, Add for chargeric temp */
 static void oplus_get_chargeric_temp_volt(struct charger_data *pdata);
 static void get_chargeric_temp(struct charger_data *pdata);
 #endif
@@ -127,7 +124,6 @@ extern int oplus_set_divider_work_mode(int work_mode);
 
 //====================================================================//
 #ifdef OPLUS_FEATURE_CHG_BASIC
-/* changsheng.long@BSP.CHG.Basic, 2020/12/17, lcs Add for cc detect */
 bool oplus_ccdetect_check_is_gpio(struct oplus_chg_chip *chip);
 int oplus_ccdetect_gpio_init(struct oplus_chg_chip *chip);
 void oplus_ccdetect_irq_init(struct oplus_chg_chip *chip);
@@ -141,7 +137,6 @@ int oplus_chg_ccdetect_parse_dt(struct oplus_chg_chip *chip);
 
 //====================================================================//
 #ifdef OPLUS_FEATURE_CHG_BASIC
-/* Jianchao.Shi@BSP.CHG.Basic, 2019/01/22, sjc Add for usb status */
 #define USB_TEMP_HIGH		0x01//bit0
 #define USB_WATER_DETECT	0x02//bit1
 #define USB_RESERVE2		0x04//bit2
@@ -178,7 +173,6 @@ static struct list_head consumer_head = LIST_HEAD_INIT(consumer_head);
 static DEFINE_MUTEX(consumer_mutex);
 
 #ifndef OPLUS_FEATURE_CHG_BASIC
-/* LiYue@BSP.CHG.Basic, 2020/02/12, remove to mtk_pe40_intf.c, resolve compile error */
 bool mtk_is_TA_support_pd_pps(struct charger_manager *pinfo)
 {
 	if (pinfo->enable_pe_4 == false && pinfo->enable_pe_5 == false)
@@ -315,7 +309,6 @@ void charger_log_flash(const char *fmt, ...)
 void _wake_up_charger(struct charger_manager *info)
 {
 #ifdef OPLUS_FEATURE_CHG_BASIC
-	/* Jianchao.Shi@BSP.CHG.Basic, 2018/11/09, sjc Modify for charging */
 		return;
 #else
 	unsigned long flags;
@@ -576,7 +569,6 @@ int charger_manager_get_charger_temperature(struct charger_consumer *consumer,
 		struct charger_data *pdata;
 
 #ifndef OPLUS_FEATURE_CHG_BASIC
-/* Baoquan.Lai@BSP.CHG.Basic, 2020/05/13, add for updating mtkscharger when no cable in*/
 		if (!upmu_get_rgs_chrdet()) {
 			pr_err("[%s] No cable in, skip it\n", __func__);
 			*tchg_min = -127;
@@ -654,7 +646,6 @@ int charger_manager_enable_kpoc_shutdown(struct charger_consumer *consumer,
 	bool en)
 {
 #ifndef OPLUS_FEATURE_CHG_BASIC
-/* Jianchao.Shi@BSP.CHG.Basic, 2018/11/09, sjc Delete for charging */
 	struct charger_manager *info = consumer->cm;
 
 	if (en)
@@ -889,7 +880,6 @@ int charger_psy_event(struct notifier_block *nb, unsigned long event, void *v)
 void mtk_charger_int_handler(void)
 {
 #ifdef OPLUS_FEATURE_CHG_BASIC
-/* Jianchao.Shi@BSP.CHG.Basic, 2018/11/09, sjc Add for charging */
 	chr_err("%s\n", __func__);
 	if (is_vooc_project() == false) {
 		if (mt_get_charger_type() != CHARGER_UNKNOWN) {
@@ -912,7 +902,6 @@ void mtk_charger_int_handler(void)
 	} else {
 		if (mt_get_charger_type() != CHARGER_UNKNOWN){
 			oplus_wake_up_usbtemp_thread();			
-			/* Lukaili@BSP.CHG.Basic, 2020/06/02, add for charge pump adjust frequency */
 			oplus_set_divider_work_mode(OPLUS_DIVIDER_WORK_MODE_FIXED);
 			chr_err("charge_pump_mode = %d\n", charge_pump_mode);
 
@@ -925,7 +914,6 @@ void mtk_charger_int_handler(void)
 			}
 			chr_err("Charger Plug In\n");
 		} else {
-			/* Lukaili@BSP.CHG.Basic, 2020/06/02, add for charge pump adjust frequency */
 			oplus_set_divider_work_mode(charge_pump_mode);
 			chr_err("charge_pump_mode = %d\n", charge_pump_mode);
 			if (mtkhv_flashled_pinctrl.hv_flashled_support){
@@ -936,7 +924,6 @@ void mtk_charger_int_handler(void)
 		}
 	
 		charger_dev_set_input_current(g_oplus_chip->chgic_mtk.oplus_info->chg1_dev, 500000);
-		/* LiYue@BSP.CHG.Basic, 2020/04/20, suspend mt6360 for svooc */
 		if (g_oplus_chip && g_oplus_chip->vbatt_num == 2) {
 			oplus_mt6360_suspend_charger();
 		}	
@@ -1203,7 +1190,6 @@ void notify_adapter_event(enum adapter_type type, enum adapter_event evt,
 			if (pinfo->water_detected == true) {
 				pinfo->notify_code |= CHG_TYPEC_WD_STATUS;
 #ifdef OPLUS_FEATURE_CHG_BASIC
-/* Jianchao.Shi@BSP.CHG.Basic, 2019/01/22, sjc Add for usb status */
 			oplus_set_usb_status(USB_WATER_DETECT);
 			oplus_vooc_set_disable_adapter_output(true);
 			if (g_oplus_chip && g_oplus_chip->usb_psy)
@@ -1213,7 +1199,6 @@ void notify_adapter_event(enum adapter_type type, enum adapter_event evt,
 		} else {
 			pinfo->notify_code &= ~CHG_TYPEC_WD_STATUS;
 #ifdef OPLUS_FEATURE_CHG_BASIC
-/* Jianchao.Shi@BSP.CHG.Basic, 2019/01/22, sjc Add for usb status */
 			oplus_clear_usb_status(USB_WATER_DETECT);
 			oplus_vooc_set_disable_adapter_output(false);
 			if (g_oplus_chip && g_oplus_chip->usb_psy)
@@ -1236,7 +1221,6 @@ void notify_adapter_event(enum adapter_type type, enum adapter_event evt,
 }
 
 #ifdef OPLUS_FEATURE_CHG_BASIC
-/* Jianchao.Shi@BSP.CHG.Basic, 2018/11/09, sjc Add for charging */
 //====================================================================//
 static void oplus_mt6360_dump_registers(void)
 {
@@ -1925,7 +1909,6 @@ bool oplus_mt_get_vbus_status(void)
 	static bool pre_vbus_status = false;
 	int ret = 0;
 
-	/* Lukaili@BSP.CHG.Basic, 2020/06/06, Add for OTG */
 	if(g_oplus_chip && g_oplus_chip->vbatt_num == 2 && oplus_chg_get_otg_online()){
 		return false;
 	}
@@ -2300,7 +2283,6 @@ static int oplus_chg_chargerid_parse_dt(struct oplus_chg_chip *chip)
 
 //====================================================================//
 #ifdef OPLUS_FEATURE_CHG_BASIC
-/* Jianchao.Shi@BSP.CHG.Basic, 2018/11/09, sjc Add for HW shortc */
 static bool oplus_shortc_check_is_gpio(struct oplus_chg_chip *chip)
 {
 	if (!chip) {
@@ -2401,7 +2383,6 @@ static int oplus_chg_shortc_hw_parse_dt(struct oplus_chg_chip *chip)
 
 //====================================================================//
 #ifdef OPLUS_FEATURE_CHG_BASIC
-/* Jianchao.Shi@BSP.CHG.Basic, 2018/11/09, sjc Add for using gpio as shipmode stm6620 */
 static bool oplus_ship_check_is_gpio(struct oplus_chg_chip *chip)
 {
 	if (!chip) {
@@ -2532,7 +2513,6 @@ static int oplus_chg_shipmode_parse_dt(struct oplus_chg_chip *chip)
 //====================================================================//
 
 #ifdef OPLUS_FEATURE_CHG_BASIC
-/* Baoquan.Lai@BSP.CHG.Basic, 2020/05/19, Add for chargeric temp checkout*/
 #define CHARGER_25C_VOLT	2457//mv
 static void oplus_get_chargeric_temp_volt(struct charger_data *pdata)
 {
@@ -2590,7 +2570,6 @@ static void get_chargeric_temp(struct charger_data *pdata)
 
 //====================================================================//
 #ifdef OPLUS_FEATURE_CHG_BASIC
-/* Jianchao.Shi@BSP.CHG.Basic, 2019/06/18, sjc Add for usbtemp */
 static bool oplus_usbtemp_check_is_gpio(struct oplus_chg_chip *chip)
 {
 	if (!chip) {
@@ -3357,7 +3336,6 @@ static int oplus_chg_parse_custom_dt(struct oplus_chg_chip *chip)
 
 //====================================================================//
 #ifdef OPLUS_FEATURE_CHG_BASIC
-/* Jianchao.Shi@BSP.CHG.Basic, 2018/11/09, sjc Add for charging */
 /************************************************/
 /* Power Supply Functions
 *************************************************/
@@ -3484,7 +3462,6 @@ static int battery_prop_is_writeable(struct power_supply *psy,
 			break;
 		}
 	} else {
-		/* Lukaili@BSP.CHG.Basic, 2020/06/02, add for charge pump adjust frequency */
 		if (is_vooc_project()) {
 			switch (psp) {
 				case POWER_SUPPLY_PROP_FIXED_FREQ:
@@ -3523,7 +3500,6 @@ static int battery_set_property(struct power_supply *psy,
 			break;
 		}
 	} else {
-		/* Lukaili@BSP.CHG.Basic, 2020/06/02, add for charge pump adjust frequency */
 		if (is_vooc_project()) {
 			switch (psp) {
 				case POWER_SUPPLY_PROP_EM_MODE:
@@ -3599,7 +3575,6 @@ static int battery_get_property(struct power_supply *psy,
 			break;
 		}
 	} else {
-		/* Lukaili@BSP.CHG.Basic, 2020/06/02, add for charge pump adjust frequency */
 		if (is_vooc_project()) {
 			switch (psp) {
 				case POWER_SUPPLY_PROP_FIXED_FREQ:
@@ -3823,7 +3798,6 @@ err_ac_psy:
 
 //====================================================================//
 #ifdef OPLUS_FEATURE_CHG_BASIC
-/* Jianchao.Shi@PSW.BSP.CHG.Basic, 2018/12/10, sjc Add for OTG switch */
 void oplus_set_otg_switch_status(bool value)
 {
 	if (pinfo != NULL && pinfo->tcpc != NULL) {
@@ -3838,7 +3812,6 @@ EXPORT_SYMBOL(oplus_set_otg_switch_status);
 
 //====================================================================//
 #ifdef OPLUS_FEATURE_CHG_BASIC
-/* Jianchao.Shi@PSW.BSP.CHG.Basic, 2019/07/05, sjc Add for mmi status */
 int oplus_chg_get_mmi_status(void)
 {
 	struct oplus_chg_chip *chip = g_oplus_chip;
@@ -3858,7 +3831,6 @@ EXPORT_SYMBOL(oplus_chg_get_mmi_status);
 
 //====================================================================//
 #ifdef OPLUS_FEATURE_CHG_BASIC
-/* Jianchao.Shi@BSP.CHG.Basic, 2019/01/11, sjc Add for PD */
 #define VBUS_9V	9000
 #define VBUS_5V	5000
 #define IBUS_2A	2000
@@ -4046,7 +4018,6 @@ int oplus_mt6360_pd_setup(void)
 }
 
 
-/*Lukaili@BSP.CHG.Basic, 2020/06/06, Add for compatible adapter pd && qc*/
 int oplus_chg_enable_hvdcp_detect(void);
 int oplus_chg_set_pd_config(void)
 {
@@ -4060,7 +4031,6 @@ int oplus_chg_enable_qc_detect(void)
 #endif /* OPLUS_FEATURE_CHG_BASIC */
 
 #ifdef OPLUS_FEATURE_CHG_BASIC
-/* LiYue@BSP.CHG.Basic, 2019/10/30, Add for fast_chg_type */
 int oplus_chg_get_charger_subtype(void)
 {
 	if (!pinfo)
@@ -4316,7 +4286,6 @@ struct oplus_chg_operations  mtk6360_chg_ops = {
 };
 //====================================================================//
 
-/* Lukaili@BSP.CHG.Basic, 2020/06/06, Add for OTG */
 bool oplus_otgctl_by_buckboost(void)
 {
 	if (!g_oplus_chip)
@@ -4400,13 +4369,11 @@ static int mtk_charger_probe(struct platform_device *pdev)
 	struct charger_consumer *ptr;
 	int ret;
 #ifdef OPLUS_FEATURE_CHG_BASIC
-/* Jianchao.Shi@BSP.CHG.Basic, 2018/11/09, sjc Add for charging*/
 	struct oplus_chg_chip *oplus_chip;
 #endif
 
 	chr_err("%s: starts support \n", __func__);
 #ifdef OPLUS_FEATURE_CHG_BASIC
-/* Jianchao.Shi@BSP.CHG.Basic, 2018/11/09, sjc Add for charging*/
 	oplus_chip = devm_kzalloc(&pdev->dev, sizeof(*oplus_chip), GFP_KERNEL);
 	if (!oplus_chip)
 		return -ENOMEM;
@@ -4445,7 +4412,6 @@ static int mtk_charger_probe(struct platform_device *pdev)
 	oplus_step_charging_parse_dt(info, &pdev->dev);
 
 #ifdef OPLUS_FEATURE_CHG_BASIC
-/* Jianchao.Shi@BSP.CHG.Basic, 2018/11/09, sjc Add for charging*/
 	oplus_chip->chgic_mtk.oplus_info = info;
 
 	info->chg1_dev = get_charger_by_name("primary_chg");
@@ -4460,7 +4426,6 @@ static int mtk_charger_probe(struct platform_device *pdev)
 	mutex_init(&info->charger_pd_lock);
 
 #ifdef OPLUS_FEATURE_CHG_BASIC
-/* Jianchao.Shi@BSP.CHG.Basic, 2018/11/09, sjc Add for charging*/
 	g_oplus_chip = oplus_chip;
 	oplus_power_supply_init(oplus_chip);
 	oplus_chg_parse_custom_dt(oplus_chip);
@@ -4475,7 +4440,6 @@ static int mtk_charger_probe(struct platform_device *pdev)
 #endif
 
 #ifdef OPLUS_FEATURE_CHG_BASIC
-/*Baoquan.Lai@BSP.CHG.Basic, 2020/05/19, modefy for chargeric temp check*/
 	pinfo->chargeric_temp_chan = iio_channel_get(oplus_chip->dev, "auxadc3-chargeric_temp");
         if (IS_ERR(pinfo->chargeric_temp_chan)) {
                 chg_err("Couldn't get chargeric_temp_chan...\n");
@@ -4483,7 +4447,6 @@ static int mtk_charger_probe(struct platform_device *pdev)
         }
 #endif
 #ifdef OPLUS_FEATURE_CHG_BASIC
-/*LiYue@BSP.CHG.Basic, 2019/07/04, modefy for usb connector temp check*/
 	pinfo->charger_id_chan = iio_channel_get(oplus_chip->dev, "auxadc3-charger_id");
         if (IS_ERR(pinfo->charger_id_chan)) {
                 chg_err("Couldn't get charger_id_chan...\n");
@@ -4504,13 +4467,11 @@ static int mtk_charger_probe(struct platform_device *pdev)
 #endif
 
 #ifdef OPLUS_FEATURE_CHG_BASIC
-/* Jianchao.Shi@BSP.CHG.Basic, 2019/06/18, sjc Add for usbtemp */
 	if (oplus_usbtemp_check_is_support() == true)
 		oplus_usbtemp_thread_init();
 #endif
 
 #ifdef VENDOR_EDIT
-/* longchangsheng@BSP.CHG.Basic, 2020/12/18, lcs Add for ccdetect work */
 	if (oplus_ccdetect_support_check() == true){
 		INIT_DELAYED_WORK(&ccdetect_work,oplus_ccdetect_work);
 		oplus_ccdetect_irq_register(oplus_chip);
@@ -4518,7 +4479,6 @@ static int mtk_charger_probe(struct platform_device *pdev)
 #endif
 
 #ifdef OPLUS_FEATURE_CHG_BASIC
-	/* LiYue@BSP.CHG.Basic, 2020/04/20, suspend mt6360 for svooc */
 	if (is_vooc_project() == true)
 		oplus_mt6360_suspend_charger();
 #endif
@@ -4534,7 +4494,6 @@ static int mtk_charger_probe(struct platform_device *pdev)
 	else
 		chr_err("*** Error : can't find PD adapter ***\n");
 #ifdef OPLUS_FEATURE_CHG_BASIC
-/*LuKaili@BSP.CHG.Basic, 2020/05/09, Add for detecting otg plug in/out*/
 	pinfo->tcpc = tcpc_dev_get_by_name("type_c_port0");
 	if (!pinfo->tcpc) {
 		chr_err("%s get tcpc device type_c_port0 fail\n", __func__);
@@ -4554,7 +4513,6 @@ static int mtk_charger_probe(struct platform_device *pdev)
 	}
 	mutex_unlock(&consumer_mutex);
 #ifdef OPLUS_FEATURE_CHG_BASIC
-/* LiYue@BSP.CHG.Basic, 2020/03/16, Add for step charging */
 	INIT_DELAYED_WORK(&pinfo->step_charging_work, mt6360_step_charging_work);
 #endif
 	return 0;
@@ -4579,13 +4537,11 @@ static void mtk_charger_shutdown(struct platform_device *dev)
 		pr_debug("%s: reset TA before shutdown\n", __func__);
 	}
 #ifdef OPLUS_FEATURE_CHG_BASIC
-/* Lukaili.Shi@BSP.CHG.Basic, 2020/0602/09, lkl Add for mtk_hv_flashled */
 	if (mtkhv_flashled_pinctrl.hv_flashled_support){
 		mtkhv_flashled_pinctrl.bc1_2_done = false;
 		pinctrl_select_state(mtkhv_flashled_pinctrl.pinctrl, mtkhv_flashled_pinctrl.chgvin_enable);
 	}
 
-/* Jianchao.Shi@BSP.CHG.Basic, 2018/11/09, sjc Add for shipmode stm6620 */
 	if (g_oplus_chip) {
 		enter_ship_mode_function(g_oplus_chip);
 	}

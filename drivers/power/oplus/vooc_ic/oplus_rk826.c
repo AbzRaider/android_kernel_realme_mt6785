@@ -1320,7 +1320,6 @@ static int init_proc_vooc_fw_check(void)
 	return 0;
 }
 
-/* Jiaoyang@CM.BSP.CHG 2020/10/17 add for sala_A SVOOC charging */
 static int get_hwpcb_version(void)
 {
 	int pcb;

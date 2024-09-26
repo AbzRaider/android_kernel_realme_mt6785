@@ -2841,7 +2841,6 @@ write_parameter:
 
 #define REG_DUMP_SIZE  1024
 static int dump_reg[] = {0x08, 0x12, 0x2c};
-/*Jacky.Zhuo@BSP.CHG.BASIC 2020/04/29 add for dump register*/
 static int gauge_reg_dump(void) {
 	int val = 0;
 	int i = 0;

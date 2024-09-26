@@ -160,12 +160,10 @@ struct oplus_vooc_chip {
 	int adapter_update_report;
 	int dpdm_switch_mode;
 	bool support_vooc_by_normal_charger_path;
-/* wenbin.liu@BSP.CHG.Vooc, 2016/10/20*/
 /* Add for vooc batt 4.40*/
 	bool batt_type_4400mv;
 	bool vooc_fw_check;
 	int vooc_fw_type;
-//PengNan@BSP.CHG.Vooc, 2018/02/28, add for vooc fw update.
 	int fw_update_flag;
 	struct manufacture_info manufacture_info;
 	bool vooc_fw_update_newmethod;
@@ -221,14 +219,12 @@ struct oplus_vooc_chip {
 	int vooc_strategy_change_count;
 	int *vooc_current_lvl;
 	int vooc_current_lvl_cnt;
-/* Zhangkun@BSP.CHG.Basic, 2020/08/17, Add for svooc detect and detach */
 	int detach_unexpectly;
 	bool disable_real_fast_chg;
 	bool reset_adapter;
 	bool temp_range_init;
 	bool w_soc_temp_to_mcu;
 	int soc_range;
-/*Jiaoyang@BSP.CHG.Basic, 2021/08/25, Add for vooc strategy for normal temp range*/
 	int vooc_strategy_normal_little_cold_current; /* 0-5C */
 	int vooc_strategy_normal_cool_current; /* 5-12C */
 	int vooc_strategy_normal_little_cool_current; /* 12-16C */
@@ -313,7 +309,6 @@ int oplus_vooc_get_fast_chg_type(void);
 int oplus_vooc_get_reply_bits(void);
 void oplus_vooc_set_disable_adapter_output(bool disable);
 void oplus_vooc_set_vooc_max_current_limit(int current_level);
-/* Zhangkun@BSP.CHG.Basic, 2020/08/17, Add for svooc detect and detach */
 bool oplus_vooc_get_detach_unexpectly(void);
 void oplus_vooc_set_detach_unexpectly(bool val);
 void oplus_vooc_set_disable_real_fast_chg(bool val);
