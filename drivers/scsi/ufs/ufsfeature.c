@@ -322,7 +322,6 @@ void ufsf_device_check(struct ufs_hba *hba)
 		if (ret == -ENOMEM)
 			goto out_free_mem;
 	}
-	/* huangjianan@TECH.Storage.UFS, 2019/12/09, Add for UFS+ RUS */
 	create_ufsplus_ctrl_proc(ufsf);
 
 	return;
@@ -735,7 +734,6 @@ inline void ufsf_tw_reset_host(struct ufsf_feature *ufsf) {}
 inline void ufsf_tw_ee_handler(struct ufsf_feature *ufsf) {}
 #endif
 
-/* huangjianan@TECH.Storage.UFS, 2019/12/09, Add for UFS+ RUS */
 int create_ufsplus_ctrl_proc(struct ufsf_feature *ufsf)
 {
 	ufsf_para.ctrl_dir = NULL;
