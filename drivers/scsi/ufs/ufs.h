@@ -219,7 +219,6 @@ enum ufs_desc_def_size {
 };
 
 #ifdef VENDOR_EDIT
-//xiaofan.yang@PSW.TECH.Stability, 2019/03/15,Add for check storage endurance
 /* Health descriptor parameters offsets in bytes*/
 enum health_desc_param {
        HEALTH_DESC_PARAM_LEN                   = 0x0,

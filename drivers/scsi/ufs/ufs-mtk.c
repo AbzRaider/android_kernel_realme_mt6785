@@ -1868,7 +1868,6 @@ int ufs_mtk_ioctl_query(struct ufs_hba *hba, u8 lun, void __user *buf_user)
 		case QUERY_DESC_IDN_DEVICE:
 		case QUERY_DESC_IDN_STRING:
 #ifdef OPLUS_FEATURE_STORAGE_TOOL
-    //jason.wu@BSP.Storage.UFS, 2020/8/14 used for memory monitor.
         case QUERY_DESC_IDN_HEALTH:
 #endif
 			break;
