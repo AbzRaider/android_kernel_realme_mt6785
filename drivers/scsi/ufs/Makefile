@@ -16,7 +16,7 @@ ccflags-y += -I$(srctree)/$(MTK_MISC_INC)/mt-plat/$(MTK_PLATFORM)/include
 ccflags-y += -I$(srctree)/$(MTK_MISC_INC)/mt-plat
 ccflags-y += -I$(srctree)/$(MTK_MISC_INC)
 ccflags-y += -I$(srctree)/drivers/misc/mediatek/base/power/include
-ccflags-y += -I$(srctree)/drivers/scsi/ufs/mediatek/$(MTK_PLATFORM)
+ccflags-y += -I$(srctree)/drivers/scsi/oufs/mediatek/$(MTK_PLATFORM)
 endif
 
 obj-$(CONFIG_SCSI_UFS_QCOM) += ufs-qcom.o
