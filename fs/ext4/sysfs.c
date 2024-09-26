@@ -27,6 +27,10 @@ typedef enum {
 	attr_feature,
 	attr_pointer_ui,
 	attr_pointer_atomic,
+#ifdef CONFIG_OPLUS_FEATURE_EXT4_FSYNC
+	attr_fsync_nobarrier,
+	attr_fsync_protect,
+#endif
 } attr_id_t;
 
 typedef enum {
@@ -262,6 +266,12 @@ EXT4_ATTR_FEATURE(casefold);
 EXT4_ATTR_FEATURE(verity);
 #endif
 EXT4_ATTR_FEATURE(metadata_csum_seed);
+#ifdef CONFIG_OPLUS_FEATURE_EXT4_FSYNC
+extern bool ext4_fsync_nobarrier;
+extern bool ext4_fsync_protect;
+EXT4_ATTR(fsync_nobarrier, 0666, fsync_nobarrier);
+EXT4_ATTR(fsync_protect, 0666, fsync_protect);
+#endif
 
 static struct attribute *ext4_feat_attrs[] = {
 	ATTR_LIST(lazy_itable_init),
@@ -278,6 +288,10 @@ static struct attribute *ext4_feat_attrs[] = {
 	ATTR_LIST(verity),
 #endif
 	ATTR_LIST(metadata_csum_seed),
+#ifdef CONFIG_OPLUS_FEATURE_EXT4_FSYNC
+	ATTR_LIST(fsync_nobarrier),
+	ATTR_LIST(fsync_protect),
+#endif
 	NULL,
 };
 
@@ -340,6 +354,12 @@ static ssize_t ext4_attr_show(struct kobject *kobj,
 				atomic_read((atomic_t *) ptr));
 	case attr_feature:
 		return snprintf(buf, PAGE_SIZE, "supported\n");
+#ifdef CONFIG_OPLUS_FEATURE_EXT4_FSYNC
+	case attr_fsync_nobarrier:
+		return snprintf(buf, PAGE_SIZE, "%d\n", ext4_fsync_nobarrier);
+	case attr_fsync_protect:
+		return snprintf(buf, PAGE_SIZE, "%d\n", ext4_fsync_protect);
+#endif
 	}
 
 	return 0;
@@ -374,6 +394,20 @@ static ssize_t ext4_attr_store(struct kobject *kobj,
 		return inode_readahead_blks_store(a, sbi, buf, len);
 	case attr_trigger_test_error:
 		return trigger_test_error(a, sbi, buf, len);
+#ifdef CONFIG_OPLUS_FEATURE_EXT4_FSYNC
+	case attr_fsync_nobarrier:
+		ret = kstrtoul(skip_spaces(buf), 0, &t);
+		if (ret)
+			return ret;
+		ext4_fsync_nobarrier = !!t;
+		return len;
+	case attr_fsync_protect:
+		ret = kstrtoul(skip_spaces(buf), 0, &t);
+		if (ret)
+			return ret;
+		ext4_fsync_protect = !!t;
+		return len;
+#endif
 	}
 	return 0;
 }
