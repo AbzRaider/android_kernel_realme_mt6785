@@ -52,7 +52,6 @@ static int ufshpb_create_sysfs(struct ufsf_feature *ufsf,
 			       struct ufshpb_lu *hpb);
 static int ufshpb_remove_sysfs(struct ufshpb_lu *hpb);
 
-/* huangjianan@TECH.Storage.UFS, 2019/12/09, Add for UFS+ RUS */
 static int create_hpbfn_enable_proc(void);
 static void remove_hpbfn_enable_proc(void);
 
@@ -2895,7 +2894,6 @@ static int ufshpb_init(struct ufsf_feature *ufsf)
 		if (ufsf->ufshpb_lup[lun])
 			INFO_MSG("UFSHPB LU %d working", lun);
 
-	/* huangjianan@TECH.Storage.UFS, 2019/12/09, Add for UFS+ RUS */
 	create_hpbfn_enable_proc();
 
 	return 0;
@@ -3033,7 +3031,6 @@ void ufshpb_release(struct ufsf_feature *ufsf, int state)
 	RELEASE_INFO("kref count %d",
 		     atomic_read(&ufsf->ufshpb_kref.refcount.refs));
 
-	/* huangjianan@TECH.Storage.UFS, 2019/12/09, Add for UFS+ RUS */
 	remove_hpbfn_enable_proc();
 
 	seq_scan_lu(lun) {
@@ -3827,7 +3824,6 @@ static int ufshpb_remove_sysfs(struct ufshpb_lu *hpb)
 	return 0;
 }
 
-/* huangjianan@TECH.Storage.UFS, 2019/12/09, Add for UFS+ RUS */
 static inline void hpbfn_enable_ctrl(struct ufshpb_lu *hpb, long val)
 {
 	switch (val) {

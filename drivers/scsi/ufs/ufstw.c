@@ -46,7 +46,6 @@ static int ufstw_create_sysfs(struct ufsf_feature *ufsf, struct ufstw_lu *tw);
 static int ufstw_clear_lu_flag(struct ufstw_lu *tw, u8 idn, bool *flag_res);
 static int ufstw_read_lu_attr(struct ufstw_lu *tw, u8 idn, u32 *attr_val);
 
-/* huangjianan@TECH.Storage.UFS, 2019/12/09, Add for UFS+ RUS */
 static int create_wbfn_enable(void);
 static void remove_wbfn_enable(void);
 
@@ -935,7 +934,6 @@ void ufstw_init(struct ufsf_feature *ufsf)
 			goto out;
 	}
 #endif
-	/* huangjianan@TECH.Storage.UFS, 2019/12/09, Add for UFS+ RUS */
 	create_wbfn_enable();
 	return;
 out_free_mem:
@@ -1053,7 +1051,6 @@ void ufstw_release(struct kref *kref)
 	ret = cancel_work_sync(&ufsf->tw_reset_work);
 	RELEASE_INFO("cancel_work_sync(tw_reset_work) = %d", ret);
 
-	/* huangjianan@TECH.Storage.UFS, 2019/12/09, Add for UFS+ RUS */
 	remove_wbfn_enable();
 
 	seq_scan_lu(lun) {
@@ -1765,7 +1762,6 @@ static int ufstw_create_sysfs(struct ufsf_feature *ufsf, struct ufstw_lu *tw)
 	return err;
 }
 
-/* huangjianan@TECH.Storage.UFS, 2019/12/09, Add for UFS+ RUS */
 static inline void wbfn_enable_ctrl(struct ufstw_lu *tw, long val)
 {
 
