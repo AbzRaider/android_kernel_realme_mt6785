@@ -204,7 +204,6 @@ struct ufs_pm_lvl_states ufs_pm_lvl_states[] = {
 const int ufs_pm_lvl_states_size = ARRAY_SIZE(ufs_pm_lvl_states);
 
 #ifdef VENDOR_EDIT
-//hank.liu@Tech.Storage.UFS, 2019-10-11 add for ufsplus status node in /proc/devinfo
 int ufsplus_tw_status = 0;
 EXPORT_SYMBOL(ufsplus_tw_status);
 int ufsplus_hpb_status = 0;
@@ -1753,7 +1752,6 @@ out:
 }
 
 #ifdef OPLUS_FEATURE_MIDAS
-//Jinghua.Yu@BSP.Storage.UFS 2020/06/12, Add t for ufs transmission_status for midas
 static ssize_t ufshcd_transmission_status_data_show(struct device *dev,
 		struct device_attribute *attr, char *buf)
 {
@@ -1999,7 +1997,6 @@ static void ufshcd_gate_work(struct work_struct *work)
 
 	spin_lock_irqsave(hba->host->host_lock, flags);
 #ifdef VENDOR_EDIT
-//yh@BSP.Storage.UFS, 2020-1-15 add for fix race condition during hrtimer active(ufshcd_release/ufshcd_gate_work)
 	if (hba->clk_gating.state == CLKS_OFF)
 	{
 		goto rel_lock;
@@ -2276,7 +2273,6 @@ void ufshcd_send_command(struct ufs_hba *hba, unsigned int task_tag)
 	else
 		ufshcd_cond_add_cmd_trace(hba, task_tag, UFS_TRACE_DEV_SEND);
 #ifdef OPLUS_FEATURE_MIDAS
-//Jinghua.Yu@BSP.Storage.UFS 2020/06/12, Add t for ufs transmission_status for midas
 	if (hba->ufs_transmission_status.transmission_status_enable) {
 		if(hba->lrb[task_tag].cmd) {
 			hba->ufs_transmission_status.scsi_send_count++;
@@ -4500,7 +4496,6 @@ static int ufshcd_link_recovery(struct ufs_hba *hba)
 }
 
 #if defined(VENDOR_EDIT) && defined(CONFIG_UFSFEATURE)
-/* Hank.liu@TECH.PLAT.Storage, 2019-10-31, add ufs+ node to oppohealthinfo*/
 static void oppo_ufs_update_h8_info(struct ufs_hba *hba, bool hibern8_enter){
 	u64 calc_h8_time_ms = 0;
 	if (hibern8_enter) {
@@ -4574,7 +4569,6 @@ static int __ufshcd_uic_hibern8_enter(struct ufs_hba *hba)
 		dev_dbg(hba->dev, "%s: Hibern8 Enter at %lld us", __func__,
 			ktime_to_us(ktime_get()));
 #if defined(VENDOR_EDIT) && defined(CONFIG_UFSFEATURE)
-		/* Hank.liu@TECH.PLAT.Storage, 2019-10-31, add ufs+ node to oppohealthinfo*/
 		oppo_ufs_update_h8_info(hba, true);
 #endif
 	}
@@ -4622,7 +4616,6 @@ int ufshcd_uic_hibern8_exit(struct ufs_hba *hba)
 		hba->ufs_stats.last_hibern8_exit_tstamp = ktime_get();
 		hba->ufs_stats.hibern8_exit_cnt++;
 #if defined(VENDOR_EDIT) && defined(CONFIG_UFSFEATURE)
-		/* Hank.liu@TECH.PLAT.Storage, 2019-10-31, add ufs+ node to oppohealthinfo*/
 		oppo_ufs_update_h8_info(hba, false);
 #endif
 	}
@@ -5689,7 +5682,6 @@ static void ufshcd_uic_cmd_compl(struct ufs_hba *hba, u32 intr_status)
 }
 
 #ifdef OPLUS_FEATURE_MIDAS
-//Jinghua.Yu@BSP.Storage.UFS 2020/06/12, Add t for ufs transmission_status for midas
 static void ufshcd_lrb_scsicmd_time_statistics(struct ufs_hba *hba, struct ufshcd_lrb *lrbp)
 {
 	if (lrbp->cmd->cmnd[0] == WRITE_10 || lrbp->cmd->cmnd[0] == WRITE_16) {
@@ -5806,7 +5798,6 @@ static int __ufshcd_transfer_req_compl(struct ufs_hba *hba,
 #endif
 			lrbp->complete_time_stamp = sched_clock();
 #ifdef OPLUS_FEATURE_MIDAS
-//Jinghua.Yu@BSP.Storage.UFS 2020/06/12, Add t for ufs transmission_status for midas
 			if (hba->ufs_transmission_status.transmission_status_enable) {
 				ufshcd_lrb_scsicmd_time_statistics(hba, lrbp);
 			}
@@ -5816,7 +5807,6 @@ static int __ufshcd_transfer_req_compl(struct ufs_hba *hba,
 			lrbp->cmd = NULL;
 			clear_bit_unlock(index, &hba->lrb_in_use);
 #ifdef VENDOR_EDIT
-//yh@BSP.Storage.UFS, 2019-02-19 add for ufs io latency info calculate
 			req = cmd->request;
 			if (req) {
 				cmd->request->flash_io_latency = ktime_us_delta(ktime_get(), cmd->request->ufs_io_start);
@@ -5845,7 +5835,6 @@ static int __ufshcd_transfer_req_compl(struct ufs_hba *hba,
 			/* Do not touch lrbp after scsi done */
 			ufs_mtk_biolog_scsi_done_start(index); /* MTK PATCH */
 #if defined(VENDOR_EDIT) && defined(CONFIG_TRACEPOINTS)
-//yh@BSP.Storage.UFS, 2019-09-13 add for ufs io latency info calculate
 			if (trace_ufshcd_command_enabled())
 			{
 				struct request *req = cmd->request;
@@ -5867,7 +5856,6 @@ static int __ufshcd_transfer_req_compl(struct ufs_hba *hba,
 			lrbp->command_type == UTP_CMD_TYPE_UFS_STORAGE) {
 #ifdef OPLUS_FEATURE_MIDAS
 			lrbp->complete_time_stamp = sched_clock();
-//Jinghua.Yu@BSP.Storage.UFS 2020/06/12, Add t for ufs transmission_status for midas
 			if (hba->ufs_transmission_status.transmission_status_enable) {
 				ufshcd_lrb_devcmd_time_statistics(hba, lrbp);
 			}
@@ -7803,7 +7791,6 @@ static int ufshcd_scsi_add_wlus(struct ufs_hba *hba)
 	strncpy(model, hba->sdev_ufs_device->model, 16);
 	register_device_proc("ufs_version", temp_version, vendor);
 	register_device_proc("ufs", model, vendor);
-	//hank.liu@Tech.Storage.UFS, 2019-10-11 add for ufsplus status node in /proc/devinfo
 	register_device_proc_for_ufsplus("ufsplus_status", &ufsplus_hpb_status,&ufsplus_tw_status);
 #endif
 
@@ -8155,7 +8142,6 @@ static void ufshcd_init_desc_sizes(struct ufs_hba *hba)
 
 
 #ifdef VENDOR_EDIT
-	//xiaofan.yang@PSW.TECH.Stability, 2019/03/15,Add for check storage endurance
 	err = ufshcd_read_desc_length(hba, QUERY_DESC_IDN_HEALTH, 0,
 	    &hba->desc_size.hlth_desc);
 	if (err)
@@ -8172,7 +8158,6 @@ static void ufshcd_def_desc_sizes(struct ufs_hba *hba)
 	hba->desc_size.unit_desc = QUERY_DESC_UNIT_DEF_SIZE;
 	hba->desc_size.geom_desc = QUERY_DESC_GEOMETRY_DEF_SIZE;
 #ifdef VENDOR_EDIT
-	//xiaofan.yang@PSW.TECH.Stability, 2019/03/15,Add for check storage endurance
 	hba->desc_size.hlth_desc = QUERY_DESC_HEALTH_MAX_SIZE;
 #endif
 }
@@ -9308,14 +9293,6 @@ static int ufshcd_suspend(struct ufs_hba *hba, enum ufs_pm_op pm_op)
 		}
 	}
 
-#if defined(CONFIG_UFSFEATURE) && defined(CONFIG_UFSTW)
-	if (ufstw_need_flush(&hba->ufsf)) {
-		ret = -EAGAIN;
-		pm_runtime_mark_last_busy(hba->dev);
-		goto enable_gating;
-	}
-#endif
-
 	/* MTK PATCH */
 	ret = ufshcd_check_hibern8_exit(hba);
 	if (ret)
@@ -9996,7 +9973,6 @@ void ufshcd_remove(struct ufs_hba *hba)
 #if defined(CONFIG_UFSFEATURE)
 	ufsf_hpb_release(&hba->ufsf);
 	ufsf_tw_release(&hba->ufsf);
-	/* huangjianan@TECH.Storage.UFS, 2019/12/09, Add for UFS+ RUS */
 	remove_ufsplus_ctrl_proc();
 #endif
 #if defined(CONFIG_SCSI_SKHPB)
@@ -10008,7 +9984,7 @@ void ufshcd_remove(struct ufs_hba *hba)
 	 * MTK PATCH: Unregister RPMB device
 	 * during shutdown and UFSHCD removal
 	 */
-	ufshcd_rpmb_remove(hba);	
+	ufshcd_rpmb_remove(hba);
 	ufshcd_remove_sysfs_nodes(hba);
 	scsi_remove_host(hba->host);
 	/* disable interrupts */
@@ -10091,7 +10067,6 @@ out_error:
 EXPORT_SYMBOL(ufshcd_alloc_host);
 
 #ifdef VENDOR_EDIT
-//xiaofan.yang@PSW.TECH.Stability, 2019/03/15,Add for check storage endurance
 #include <asm/unaligned.h>
 static ssize_t ufs_sysfs_read_desc_param(struct ufs_hba *hba,
 				  enum desc_idn desc_id,
@@ -10383,7 +10358,6 @@ int ufshcd_init(struct ufs_hba *hba, void __iomem *mmio_base, unsigned int irq)
 	ufshcd_set_ufs_dev_active(hba);
 
 #ifdef OPLUS_FEATURE_MIDAS
-//Jinghua.Yu@BSP.Storage.UFS 2020/06/12, Add t for ufs transmission_status for midas
 	ufshcd_transmission_status_init_sysfs(hba);
 #endif
 
@@ -10399,7 +10373,6 @@ int ufshcd_init(struct ufs_hba *hba, void __iomem *mmio_base, unsigned int irq)
 	async_schedule(ufshcd_async_scan, hba);
 	ufshcd_add_sysfs_nodes(hba);
 #ifdef VENDOR_EDIT
-    //xiaofan.yang@PSW.TECH.Stability, 2019/03/15,Add for check storage endurance
 	ufs_sysfs_add_nodes(hba->dev);
 #endif
 

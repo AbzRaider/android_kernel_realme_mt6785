@@ -253,7 +253,6 @@ struct ufs_desc_size {
 	int unit_desc;
 	int conf_desc;
 #ifdef VENDOR_EDIT
-    //xiaofan.yang@PSW.TECH.Stability, 2019/03/15,Add for check storage endurance    
 	int hlth_desc;
 #endif
 };
@@ -597,7 +596,6 @@ enum ufs_crypto_state {
 };
 
 #ifdef OPLUS_FEATURE_MIDAS
-//Jinghua.Yu@BSP.Storage.UFS 2020/06/12, Add t for ufs transmission_status for midas
 struct ufs_transmission_status_t
 {
 	u8  transmission_status_enable;
@@ -976,7 +974,6 @@ struct ufs_hba {
 #endif /* CONFIG_SCSI_UFS_CRYPTO */
 
 #ifdef OPLUS_FEATURE_MIDAS
-//Jinghua.Yu@BSP.Storage.UFS 2020/06/12, Add t for ufs transmission_status for midas
 	struct ufs_transmission_status_t ufs_transmission_status;
 	struct device_attribute ufs_transmission_status_attr;
 #endif
