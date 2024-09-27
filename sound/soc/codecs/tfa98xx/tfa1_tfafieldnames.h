@@ -169,6 +169,7 @@ enum nxpTfa1BfEnumList {
 	TFA1_BF_INTPOLACK = 0x2b01,
 	TFA1_BF_CLIP = 0x4900,
 	#ifdef VENDOR_EDIT
+	/* Zhao.Pan@MM.AudioDriver.SmartPA, 2020/01/13, add for analog volume */
 	TFA1_BF_TDMSPKG = 0x6163,
 	#endif //VENDOR_EDIT
 	TFA1_BF_CIMTP = 0x62b0,

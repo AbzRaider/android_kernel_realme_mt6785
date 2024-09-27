@@ -1093,6 +1093,9 @@ enum Tfa98xx_Error tfa_status(struct tfa_device *tfa);
  */
 int tfa_dev_get_mtpb(struct tfa_device *tfa);
 
+/*To support tfa9873*/
+enum Tfa98xx_Error tfaGetFwApiVersion(struct tfa_device *tfa, unsigned char *pFirmwareVersion);
+
 #ifdef OPLUS_ARCH_EXTENDS
 /*Yongpei.Yao@MULTIMEDIA.AUDIODRIVER.SMARTPA, 2020/08/29, Add for aging calibration*/
 enum Tfa98xx_Error tfa_dsp_get_calibration_impedance_for_aging(struct tfa_device *tfa);

@@ -35,6 +35,15 @@
 #include "tfa98xx.h"
 #include "tfa.h"
 
+#ifdef OPLUS_ARCH_EXTENDS
+//Yongpei.Yao@MULTIMEDIA.AUDIODRIVER.FEATURE, 2020/06/26, use proc fs to replace debug fs
+#undef CONFIG_DEBUG_FS
+#endif /* OPLUS_ARCH_EXTENDS */
+#ifdef CONFIG_DEBUG_FS
+#include <linux/debugfs.h>
+#else
+#include <linux/proc_fs.h>
+#endif
 /* required for enum tfa9912_irq */
 #include "tfa98xx_tfafieldnames.h"
 
@@ -48,9 +57,6 @@ struct tfa98xx *tfa98xx_whole_v6;
 extern bool g_speaker_resistance_fail;
 #endif /* VENDOR_EDIT */
 
-#ifndef CONFIG_DEBUG_FS
-//#define CONFIG_DEBUG_FS
-#endif
 
 #define TFA98XX_VERSION	TFA98XX_API_REV_STR
 
@@ -135,6 +141,11 @@ static void tfa98xx_interrupt_enable(struct tfa98xx *tfa98xx, bool enable);
 static int get_profile_from_list(char *buf, int id);
 static int get_profile_id_for_sr(int id, unsigned int rate);
 
+#ifdef VENDOR_EDIT
+/*Jianfeng.Qiu@PSW.MM.AudioDriver.SmartPA, 2019/09/10, Add for calibration range*/
+#define SMART_PA_RANGE_DEFAULT_MIN (5000)
+#define SMART_PA_RANGE_DEFAULT_MAX (7800)
+#endif /* VENDOR_EDIT */
 struct tfa98xx_rate {
 	unsigned int rate;
 	unsigned int fssel;
@@ -505,7 +516,7 @@ static void tfa98xx_inputdev_unregister(struct tfa98xx *tfa98xx)
 	__tfa98xx_inputdev_check_register(tfa98xx, true);
 }
 
-#ifdef CONFIG_DEBUG_FS
+
 /* OTC reporting
  * Returns the MTP0 OTC bit value
  */
@@ -634,7 +645,12 @@ static ssize_t tfa98xx_dbgfs_start_set(struct file *file,
 				     const char __user *user_buf,
 				     size_t count, loff_t *ppos)
 {
-	struct i2c_client *i2c = file->private_data;
+#ifdef CONFIG_DEBUG_FS
+        struct i2c_client *i2c = file->private_data;
+#else /*CONFIG_DEBUG_FS*/
+        struct i2c_client *i2c = PDE_DATA(file_inode(file));
+#endif/*CONFIG_DEBUG_FS*/
+
 	struct tfa98xx *tfa98xx = i2c_get_clientdata(i2c);
 	enum Tfa98xx_Error ret;
 	char buf[32];
@@ -712,7 +728,12 @@ static ssize_t tfa98xx_dbgfs_r_read(struct file *file,
 				     char __user *user_buf, size_t count,
 				     loff_t *ppos)
 {
-	struct i2c_client *i2c = file->private_data;
+#ifdef CONFIG_DEBUG_FS
+        struct i2c_client *i2c = file->private_data;
+#else /*CONFIG_DEBUG_FS*/
+        struct i2c_client *i2c = PDE_DATA(file_inode(file));
+#endif/*CONFIG_DEBUG_FS*/
+
 	struct tfa98xx *tfa98xx = i2c_get_clientdata(i2c);
 	char *str;
 	uint16_t status;
@@ -796,6 +817,54 @@ r_c_err:
 	return ret;
 }
 
+#ifdef VENDOR_EDIT
+/*Jianfeng.Qiu@PSW.MM.AudioDriver.SmartPA, 2019/09/10, Add for calibration range*/
+static ssize_t tfa98xx_dbgfs_range_read(struct file *file,
+				char __user *user_buf, size_t count,
+				loff_t *ppos)
+{
+#ifdef CONFIG_DEBUG_FS
+        struct i2c_client *i2c = file->private_data;
+#else /*CONFIG_DEBUG_FS*/
+        struct i2c_client *i2c = PDE_DATA(file_inode(file));
+#endif/*CONFIG_DEBUG_FS*/
+
+	struct tfa98xx *tfa98xx = i2c_get_clientdata(i2c);
+	char *str = NULL;
+	int ret = 0;
+
+	if (!tfa98xx) {
+		pr_err("%s tfa98xx is null\n", __func__);
+		return -EINVAL;
+	}
+
+	if (!tfa98xx->tfa) {
+		pr_err("%s tfa is null\n", __func__);
+		return -EINVAL;
+	}
+
+	str = kmalloc(PAGE_SIZE, GFP_KERNEL);
+	if (!str) {
+		ret = -ENOMEM;
+		pr_err("[0x%x] memory allocation failed\n", tfa98xx->i2c->addr);
+		goto range_err;
+	}
+
+	ret = snprintf(str, PAGE_SIZE, " Min:%d mOhms, Max:%d mOhms\n",
+		tfa98xx->tfa->min_mohms, tfa98xx->tfa->max_mohms);
+	pr_warning("%s addr 0x%x, str=%s\n", __func__, tfa98xx->i2c->addr, str);
+
+	ret = simple_read_from_buffer(user_buf, count, ppos, str, ret);
+
+	kfree(str);
+
+range_err:
+	return ret;
+}
+
+
+
+#endif /* VENDOR_EDIT */
 static ssize_t tfa98xx_dbgfs_version_read(struct file *file,
 				     char __user *user_buf, size_t count,
 				     loff_t *ppos)
@@ -812,7 +881,12 @@ static ssize_t tfa98xx_dbgfs_dsp_state_get(struct file *file,
 				     char __user *user_buf, size_t count,
 				     loff_t *ppos)
 {
-	struct i2c_client *i2c = file->private_data;
+#ifdef CONFIG_DEBUG_FS
+        struct i2c_client *i2c = file->private_data;
+#else /*CONFIG_DEBUG_FS*/
+        struct i2c_client *i2c = PDE_DATA(file_inode(file));
+#endif/*CONFIG_DEBUG_FS*/
+
 	struct tfa98xx *tfa98xx = i2c_get_clientdata(i2c);
 	int ret = 0;
 	char *str;
@@ -847,7 +921,12 @@ static ssize_t tfa98xx_dbgfs_dsp_state_set(struct file *file,
 				     const char __user *user_buf,
 				     size_t count, loff_t *ppos)
 {
-	struct i2c_client *i2c = file->private_data;
+#ifdef CONFIG_DEBUG_FS
+        struct i2c_client *i2c = file->private_data;
+#else /*CONFIG_DEBUG_FS*/
+        struct i2c_client *i2c = PDE_DATA(file_inode(file));
+#endif/*CONFIG_DEBUG_FS*/
+
 	struct tfa98xx *tfa98xx = i2c_get_clientdata(i2c);
 	enum Tfa98xx_Error ret;
 	char buf[32];
@@ -893,7 +972,11 @@ static ssize_t tfa98xx_dbgfs_fw_state_get(struct file *file,
 				     char __user *user_buf, size_t count,
 				     loff_t *ppos)
 {
-	struct i2c_client *i2c = file->private_data;
+#ifdef CONFIG_DEBUG_FS
+        struct i2c_client *i2c = file->private_data;
+#else /*CONFIG_DEBUG_FS*/
+        struct i2c_client *i2c = PDE_DATA(file_inode(file));
+#endif/*CONFIG_DEBUG_FS*/
 	struct tfa98xx *tfa98xx = i2c_get_clientdata(i2c);
 	char *str;
 
@@ -923,7 +1006,12 @@ static ssize_t tfa98xx_dbgfs_rpc_read(struct file *file,
 				     char __user *user_buf, size_t count,
 				     loff_t *ppos)
 {
-	struct i2c_client *i2c = file->private_data;
+#ifdef CONFIG_DEBUG_FS
+        struct i2c_client *i2c = file->private_data;
+#else /*CONFIG_DEBUG_FS*/
+        struct i2c_client *i2c = PDE_DATA(file_inode(file));
+#endif/*CONFIG_DEBUG_FS*/
+
 	struct tfa98xx *tfa98xx = i2c_get_clientdata(i2c);
 	int ret = 0;
 	uint8_t *buffer;
@@ -965,7 +1053,11 @@ static ssize_t tfa98xx_dbgfs_rpc_send(struct file *file,
 				     const char __user *user_buf,
 				     size_t count, loff_t *ppos)
 {
-	struct i2c_client *i2c = file->private_data;
+#ifdef CONFIG_DEBUG_FS
+        struct i2c_client *i2c = file->private_data;
+#else /*CONFIG_DEBUG_FS*/
+        struct i2c_client *i2c = PDE_DATA(file_inode(file));
+#endif/*CONFIG_DEBUG_FS*/
 	struct tfa98xx *tfa98xx = i2c_get_clientdata(i2c);
 	nxpTfaFileDsc_t *msg_file;
 	enum Tfa98xx_Error error;
@@ -1081,6 +1173,16 @@ static const struct file_operations tfa98xx_dbgfs_r_fops = {
 	.llseek = default_llseek,
 };
 
+#ifdef OPLUS_ARCH_EXTENDS
+/*Jianfeng.Qiu@PSW.MM.AudioDriver.SmartPA, 2019/09/10, Add for calibration range*/
+static const struct file_operations tfa98xx_dbgfs_range_fops = {
+	.open = simple_open,
+	.read = tfa98xx_dbgfs_range_read,
+	.llseek = default_llseek,
+};
+
+#endif /* OPLUS_ARCH_EXTENDS */
+
 static const struct file_operations tfa98xx_dbgfs_version_fops = {
 	.open = simple_open,
 	.read = tfa98xx_dbgfs_version_read,
@@ -1112,40 +1214,90 @@ static void tfa98xx_debug_init(struct tfa98xx *tfa98xx, struct i2c_client *i2c)
 	char name[50];
 
 	scnprintf(name, MAX_CONTROL_NAME, "%s-%x", i2c->name, i2c->addr);
+#ifdef CONFIG_DEBUG_FS
 	tfa98xx->dbg_dir = debugfs_create_dir(name, NULL);
-	debugfs_create_file("OTC", S_IRUGO|S_IWUGO, tfa98xx->dbg_dir,
-						i2c, &tfa98xx_dbgfs_calib_otc_fops);
-	debugfs_create_file("MTPEX", S_IRUGO|S_IWUGO, tfa98xx->dbg_dir,
-						i2c, &tfa98xx_dbgfs_calib_mtpex_fops);
-	debugfs_create_file("TEMP", S_IRUGO|S_IWUGO, tfa98xx->dbg_dir,
-						i2c, &tfa98xx_dbgfs_calib_temp_fops);
-	debugfs_create_file("calibrate", S_IRUGO|S_IWUGO, tfa98xx->dbg_dir,
-						i2c, &tfa98xx_dbgfs_calib_start_fops);
-	debugfs_create_file("R", S_IRUGO, tfa98xx->dbg_dir,
-						i2c, &tfa98xx_dbgfs_r_fops);
-	debugfs_create_file("version", S_IRUGO, tfa98xx->dbg_dir,
-						i2c, &tfa98xx_dbgfs_version_fops);
-	debugfs_create_file("dsp-state", S_IRUGO|S_IWUGO, tfa98xx->dbg_dir,
-						i2c, &tfa98xx_dbgfs_dsp_state_fops);
-	debugfs_create_file("fw-state", S_IRUGO|S_IWUGO, tfa98xx->dbg_dir,
-						i2c, &tfa98xx_dbgfs_fw_state_fops);
-	debugfs_create_file("rpc", S_IRUGO|S_IWUGO, tfa98xx->dbg_dir,
-						i2c, &tfa98xx_dbgfs_rpc_fops);
+	debugfs_create_file("OTC", 0664, tfa98xx->dbg_dir,
+			    i2c,
+			    &tfa98xx_dbgfs_calib_otc_fops);
+	debugfs_create_file("MTPEX", 0664, tfa98xx->dbg_dir,
+			    i2c,
+			    &tfa98xx_dbgfs_calib_mtpex_fops);
+	debugfs_create_file("TEMP", 0664, tfa98xx->dbg_dir,
+			    i2c,
+			    &tfa98xx_dbgfs_calib_temp_fops);
+	debugfs_create_file("calibrate", 0664, tfa98xx->dbg_dir,
+			    i2c,
+			    &tfa98xx_dbgfs_calib_start_fops);
+	#ifdef VENDOR_EDIT
+	/*Jianfeng.Qiu@PSW.MM.AudioDriver.SmartPA, 2019/09/10, Add for calibration range*/
+	debugfs_create_file("range", S_IRUGO, tfa98xx->dbg_dir,
+						i2c, &tfa98xx_dbgfs_range_fops);
+	#endif /* VENDOR_EDIT */
+	debugfs_create_file("version", 0444, tfa98xx->dbg_dir,
+			    i2c,
+			    &tfa98xx_dbgfs_version_fops);
+	debugfs_create_file("dsp-state", 0664, tfa98xx->dbg_dir,
+			    i2c,
+			    &tfa98xx_dbgfs_dsp_state_fops);
+	debugfs_create_file("fw-state", 0664, tfa98xx->dbg_dir,
+			    i2c,
+			    &tfa98xx_dbgfs_fw_state_fops);
+	debugfs_create_file("rpc", 0664, tfa98xx->dbg_dir,
+			    i2c, &tfa98xx_dbgfs_rpc_fops);
 
 	if (tfa98xx->flags & TFA98XX_FLAG_SAAM_AVAILABLE) {
 		dev_dbg(tfa98xx->dev, "Adding pga_gain debug interface\n");
-		debugfs_create_file("pga_gain", S_IRUGO, tfa98xx->dbg_dir,
+		debugfs_create_file("pga_gain", 0444, tfa98xx->dbg_dir,
 						tfa98xx->i2c,
 						&tfa98xx_dbgfs_pga_gain_fops);
 	}
+#else /*CONFIG_DEBUG_FS*/
+	tfa98xx->dbg_dir = proc_mkdir(name, NULL);
+	proc_create_data("OTC", S_IRUGO|S_IWUGO, tfa98xx->dbg_dir,
+					&tfa98xx_dbgfs_calib_otc_fops, i2c);
+	proc_create_data("MTPEX", S_IRUGO|S_IWUGO, tfa98xx->dbg_dir,
+					&tfa98xx_dbgfs_calib_mtpex_fops, i2c);
+	proc_create_data("TEMP", S_IRUGO|S_IWUGO, tfa98xx->dbg_dir,
+					&tfa98xx_dbgfs_calib_temp_fops, i2c);
+	proc_create_data("calibrate", S_IRUGO|S_IWUGO, tfa98xx->dbg_dir,
+					&tfa98xx_dbgfs_calib_start_fops, i2c);
+	proc_create_data("R", S_IRUGO, tfa98xx->dbg_dir,
+					&tfa98xx_dbgfs_r_fops, i2c);
+#ifdef OPLUS_ARCH_EXTENDS
+	/*Jianfeng.Qiu@PSW.MM.AudioDriver.SmartPA, 2019/09/10, Add for calibration range*/
+	proc_create_data("range", S_IRUGO, tfa98xx->dbg_dir,
+					&tfa98xx_dbgfs_range_fops, i2c);
+#endif /* OPLUS_ARCH_EXTENDS */
+	proc_create_data("version", S_IRUGO, tfa98xx->dbg_dir,
+					&tfa98xx_dbgfs_version_fops, i2c);
+	proc_create_data("dsp-state", S_IRUGO|S_IWUGO, tfa98xx->dbg_dir,
+					&tfa98xx_dbgfs_dsp_state_fops, i2c);
+	proc_create_data("fw-state", S_IRUGO|S_IWUGO, tfa98xx->dbg_dir,
+					&tfa98xx_dbgfs_fw_state_fops, i2c);
+	proc_create_data("rpc", S_IRUGO|S_IWUGO, tfa98xx->dbg_dir,
+					&tfa98xx_dbgfs_rpc_fops, i2c);
+
+
+	if (tfa98xx->flags & TFA98XX_FLAG_SAAM_AVAILABLE) {
+		dev_dbg(tfa98xx->dev, "Adding pga_gain debug interface\n");
+		proc_create_data("pga_gain", S_IRUGO, tfa98xx->dbg_dir,
+						&tfa98xx_dbgfs_pga_gain_fops,
+						tfa98xx->i2c);
+	}
+#endif /*CONFIG_DEBUG_FS*/
 }
 
 static void tfa98xx_debug_remove(struct tfa98xx *tfa98xx)
 {
-	if (tfa98xx->dbg_dir)
-		debugfs_remove_recursive(tfa98xx->dbg_dir);
+#ifdef CONFIG_DEBUG_FS
+        if (tfa98xx->dbg_dir)
+            debugfs_remove_recursive(tfa98xx->dbg_dir);
+#else
+        if (tfa98xx->dbg_dir)
+            proc_remove(tfa98xx->dbg_dir);
+#endif/*CONFIG_DEBUG_FS*/
 }
-#endif
+
 
 
 /* copies the profile basename (i.e. part until .) into buf */
@@ -3508,6 +3660,23 @@ static int tfa98xx_i2c_probe(struct i2c_client *i2c,
 	tfa98xx->tfa->data = (void *)tfa98xx;
 	tfa98xx->tfa->cachep = tfa98xx_cache;
 
+	#ifdef VENDOR_EDIT
+	/*Jianfeng.Qiu@PSW.MM.AudioDriver.SmartPA, 2019/09/10, Add for calibration range*/
+	ret = of_property_read_u32(i2c->dev.of_node, "tfa_min_range", &tfa98xx->tfa->min_mohms);
+	if (ret) {
+		dev_err(&i2c->dev, "Failed to parse spk_min_range node\n");
+		tfa98xx->tfa->min_mohms = SMART_PA_RANGE_DEFAULT_MIN;
+	}
+
+	ret = of_property_read_u32(i2c->dev.of_node, "tfa_max_range", &tfa98xx->tfa->max_mohms);
+	if (ret) {
+		dev_err(&i2c->dev, "Failed to parse spk_max_range node\n");
+		tfa98xx->tfa->max_mohms = SMART_PA_RANGE_DEFAULT_MAX;
+	}
+
+	dev_err(&i2c->dev, "min_mohms=%d, max_mohms=%d\n",
+			tfa98xx->tfa->min_mohms, tfa98xx->tfa->max_mohms);
+	#endif /* VENDOR_EDIT */
 	/* Modify the stream names, by appending the i2c device address.
 	 * This is used with multicodec, in order to discriminate the devices.
 	 * Stream names appear in the dai definition and in the stream  	 .
@@ -3560,10 +3729,10 @@ static int tfa98xx_i2c_probe(struct i2c_client *i2c,
 	prEntry_temp = proc_create("oppo_tfa98xx_fw_update", 0644, prEntry_tfa9890,&proc_firmware_update);
 	#endif /* VENDOR_EDIT */
 
-#ifdef CONFIG_DEBUG_FS
+
 	if (no_start == 0)
 		tfa98xx_debug_init(tfa98xx, i2c);
-#endif
+
 
 	#ifdef VENDOR_EDIT
 	/*xiang.fei@PSW.MM.AudioDriver.FTM, 2018/06/09, Add for ringing*/
@@ -3611,9 +3780,9 @@ static int tfa98xx_i2c_remove(struct i2c_client *i2c)
 
 	device_remove_bin_file(&i2c->dev, &dev_attr_reg);
 	device_remove_bin_file(&i2c->dev, &dev_attr_rw);
-#ifdef CONFIG_DEBUG_FS
+
 	tfa98xx_debug_remove(tfa98xx);
-#endif
+
 
 	snd_soc_unregister_codec(&i2c->dev);
 

@@ -3619,7 +3619,7 @@ bool is_tfa98xx_series_v6(int rev)
 {
 	bool ret = false;
 
-	if ((rev == 0x80) || (rev == 0x81) || (rev == 0x94) || (rev == 0x74))
+	if ((rev == 0x80) || (rev == 0x81) || (rev == 0x94) || (rev == 0x74) || (rev == 0x73))
 		ret = true;
 	return ret;
 }
@@ -3690,6 +3690,18 @@ static void tfa98xx_tapdet_work(struct work_struct *work)
 		tfa98xx_tapdet(tfa98xx);
 
 	queue_delayed_work(tfa98xx->tfa98xx_wq, &tfa98xx->tapdet_work, HZ / 10);
+}
+
+static void tfa98xx_nmode_update_work(struct work_struct *work)
+{
+	struct tfa98xx *tfa98xx;
+
+	//MCH_TO_TEST, checking if noise mode update is required or not
+	tfa98xx = container_of(work, struct tfa98xx, nmodeupdate_work.work);
+	mutex_lock(&tfa98xx->dsp_lock);
+	tfa_adapt_noisemode(tfa98xx->tfa);
+	mutex_unlock(&tfa98xx->dsp_lock);
+	queue_delayed_work(tfa98xx->tfa98xx_wq, &tfa98xx->nmodeupdate_work,5 * HZ);
 }
 
 static void tfa98xx_monitor(struct work_struct *work)
@@ -4241,6 +4253,8 @@ static int tfa98xx_mute(struct snd_soc_dai *dai, int mute, int stream)
 		tfa_dev_stop(tfa98xx->tfa);
 		tfa98xx->dsp_init = TFA98XX_DSP_INIT_STOPPED;
 		mutex_unlock(&tfa98xx->dsp_lock);
+        if(tfa98xx->flags & TFA98XX_FLAG_ADAPT_NOISE_MODE)
+        	cancel_delayed_work_sync(&tfa98xx->nmodeupdate_work);
 	} else {
 		if (stream == SNDRV_PCM_STREAM_PLAYBACK) {
 			tfa98xx->pstream = 1;
@@ -4265,6 +4279,12 @@ static int tfa98xx_mute(struct snd_soc_dai *dai, int mute, int stream)
 			tfa98xx_dsp_init(tfa98xx);
 
 		#endif /* VENDOR_EDIT */
+
+	     if(tfa98xx->flags & TFA98XX_FLAG_ADAPT_NOISE_MODE)
+		 	queue_delayed_work(tfa98xx->tfa98xx_wq,
+						&tfa98xx->nmodeupdate_work,
+						0);
+
 	}
 
 	return 0;
@@ -4334,6 +4354,8 @@ static int tfa98xx_probe(struct snd_soc_codec *codec)
 	INIT_DELAYED_WORK(&tfa98xx->monitor_work, tfa98xx_monitor);
 	INIT_DELAYED_WORK(&tfa98xx->interrupt_work, tfa98xx_interrupt);
 	INIT_DELAYED_WORK(&tfa98xx->tapdet_work, tfa98xx_tapdet_work);
+
+	INIT_DELAYED_WORK(&tfa98xx->nmodeupdate_work, tfa98xx_nmode_update_work);
 
 	tfa98xx->codec = codec;
 
@@ -4487,9 +4509,9 @@ static int tfa98xx_ext_reset(struct tfa98xx *tfa98xx)
 {
 	if (tfa98xx && gpio_is_valid(tfa98xx->reset_gpio)) {
 		gpio_set_value_cansleep(tfa98xx->reset_gpio, 1);
-		mdelay(1);
+		mdelay(5);
 		gpio_set_value_cansleep(tfa98xx->reset_gpio, 0);
-		mdelay(1);
+		mdelay(5);
 	}
 	return 0;
 }
@@ -4832,6 +4854,13 @@ int tfa98xx_i2c_probe(struct i2c_client *i2c,
 			/* tfa98xx->flags |= TFA98XX_FLAG_LP_MODES; */
 			tfa98xx->flags |= TFA98XX_FLAG_TDM_DEVICE;
 			break;
+		case 0x73: /* tfa9873 */
+			pr_info("TFA9873 detected\n");
+			tfa98xx->flags |= TFA98XX_FLAG_MULTI_MIC_INPUTS;
+			tfa98xx->flags |= TFA98XX_FLAG_CALIBRATION_CTL;
+			tfa98xx->flags |= TFA98XX_FLAG_TDM_DEVICE;
+			tfa98xx->flags |= TFA98XX_FLAG_ADAPT_NOISE_MODE; /***MCH_TO_TEST***/
+			break;
 		case 0x74: /* tfa9874 */
 			pr_info("TFA9874 detected\n");
 			tfa98xx->flags |= TFA98XX_FLAG_MULTI_MIC_INPUTS;
@@ -5045,6 +5074,8 @@ int tfa98xx_i2c_remove(struct i2c_client *i2c)
 	cancel_delayed_work_sync(&tfa98xx->init_work);
 	cancel_delayed_work_sync(&tfa98xx->tapdet_work);
 
+	cancel_delayed_work_sync(&tfa98xx->nmodeupdate_work);
+
 	device_remove_bin_file(&i2c->dev, &dev_attr_reg);
 	device_remove_bin_file(&i2c->dev, &dev_attr_rw);
 
@@ -5083,6 +5114,7 @@ MODULE_DEVICE_TABLE(i2c, tfa98xx_i2c_id);
 static struct of_device_id tfa98xx_dt_match[] = {
 	{ .compatible = "nxp,tfa98xx" },
 	{ .compatible = "nxp,tfa9872" },
+	{ .compatible = "nxp,tfa9873" },
 	{ .compatible = "nxp,tfa9874" },
 	{ .compatible = "nxp,tfa9888" },
 	{ .compatible = "nxp,tfa9890" },

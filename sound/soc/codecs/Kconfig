@@ -223,6 +223,7 @@ config SND_SOC_ALL_CODECS
 	select SND_SOC_RT5509 if I2C
 	select SND_SOC_MT6660 if I2C
 	select SND_SOC_TFA9874 if I2C
+	select SND_SOC_CODEC_AW88264 if I2C
         help
           Normally ASoC codec drivers are only built if a machine driver which
           uses them is also built since they are only usable with a machine
@@ -1251,4 +1252,22 @@ endmenu
 config SND_SOC_CODEC_AW87339
 	bool "Use AW87339 As PA"
 	default n
+#endif /* OPLUS_BUG_COMPATIBILITY */
+
+#ifdef OPLUS_BUG_COMPATIBILITY
+config SND_SOC_CODEC_MICBIAS_2P8V
+	bool "Set Micbias 2.8V After Recording"
+	default n
+#endif /* OPLUS_BUG_COMPATIBILITY */
+
+#Wang.kun@MULTIMEDIA.AUDIODRIVER.SMARTPA, 2020/12/09, add for aw882xx
+#ifdef OPLUS_BUG_COMPATIBILITY
+config SND_SOC_CODEC_AW88264
+	tristate "AW AW88264 speaker amplifier"
+	depends on I2C
+	help
+	  Config of AW88264. It is a Smart power
+	  amplifier which contain speaker protection,
+	  multi-band DRC, equalizer function. It would
+	  be set to yes if device with AW88264 on it.
 #endif /* OPLUS_BUG_COMPATIBILITY */

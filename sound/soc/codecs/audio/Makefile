@@ -17,3 +17,5 @@ obj-y += driver/
 #obj-y += aw87339/
 # Jingjing.Jiang@MULTIMEDIA.AUDIODRIVER.SMARTPA, 2020/05/19, add for tfa98xx smartPA
 obj-$(CONFIG_SND_SOC_TFA9874) += tfa98xx/
+# Wang.kun@MULTIMEDIA.AUDIODRIVER.SMARTPA, 2020/12/16, add for aw882xx smartPA
+obj-$(CONFIG_SND_SOC_CODEC_AW88264) += aw882xx/

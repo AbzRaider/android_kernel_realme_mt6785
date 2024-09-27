@@ -2523,8 +2523,15 @@ static int mt_mic_bias_1_event(struct snd_soc_dapm_widget *w,
 			regmap_write(priv->regmap,
 				     MT6359_AUDENC_ANA_CON16, 0x0160);
 		else
+#ifdef CONFIG_SND_SOC_CODEC_MICBIAS_2P8V
+			/* Yongzhi.Zhang@PSW.MM.AudioDriver.Platform, 2019/04/02,
+			 * add for setting micbias 2.8V after recording */
+			regmap_write(priv->regmap,
+				     MT6359_AUDENC_ANA_CON16, 0x3060);
+#else /* CONFIG_SND_SOC_CODEC_MICBIAS_2P8V */
 			regmap_write(priv->regmap,
 				     MT6359_AUDENC_ANA_CON16, 0x0060);
+#endif /* CONFIG_SND_SOC_CODEC_MICBIAS_2P8V */
 
 		/* vow low power select */
 		regmap_update_bits(priv->regmap, MT6359_AUDENC_ANA_CON16,
@@ -6629,6 +6636,12 @@ static int mt6359_codec_init_reg(struct mt6359_priv *priv)
 	regmap_update_bits(priv->regmap, MT6359_AUDDEC_ANA_CON7,
 			   RG_AUDLOLSCDISABLE_VAUDP32_MASK_SFT,
 			   0x1 << RG_AUDLOLSCDISABLE_VAUDP32_SFT);
+
+	//Fuhua.wang@MULTIMEDIA.AUDIODRIVER,2020/12/02,remove to compatible iphone se headset
+	/* Set HP_EINT trigger level to 2.0v */
+	//regmap_update_bits(priv->regmap, MT6359_AUDENC_ANA_CON19,
+	//		   RG_EINTCOMPVTH_MASK_SFT,
+	//		   0x2 << RG_EINTCOMPVTH_SFT);
 
 	/* set gpio */
 	gpio_smt_set(priv);
