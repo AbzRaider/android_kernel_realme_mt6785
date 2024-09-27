@@ -106,7 +106,6 @@ static bool isprintSyms = true;
 static char sort_cache_name[13];
 static struct mutex sort_mutex;
 
-//wen.luo@bsp.kernel.stability ,2020-1-16, sort by pid
 struct pid_cnt_struct {
 	struct list_head list;
 	unsigned cnt;           /* slab pid count */
