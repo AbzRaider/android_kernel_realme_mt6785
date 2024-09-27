@@ -1,8 +1,3 @@
-&lk_charger{
-	charger_by_buckboost;
-	//support_tuv_authentication;
-};
-
 &charger {
 	io-channels = <&auxadc 2>,
 		      <&auxadc 3>,
@@ -36,7 +31,7 @@
 	qcom,input_current_led_ma_forcmcc = <500>;
 	qcom,input_current_camera_ma = <2000>;
 	qcom,input_current_calling_ma = <1500>;
-	qcom,input_current_led_ma_high = <1200>;
+	qcom,input_current_led_ma_high = <500>;
 	qcom,input_current_led_ma_limit_high = <1200>;
 	qcom,input_current_led_ma_warm = <1500>;
 	qcom,input_current_led_ma_normal = <2000>;
@@ -87,7 +82,6 @@
 	qcom,temp_cool_fastchg_current_ma_high = <1000>;
 	qcom,temp_cool_fastchg_current_ma_low = <1100>;
 	qcom,pd_temp_cool_fastchg_current_ma_high = <2000>;
-	qcom,pd_temp_cool_fastchg_current_ma_low = <1500>;
 	qcom,qc_temp_cool_fastchg_current_ma_high = <2000>;
 	qcom,qc_temp_cool_fastchg_current_ma_low = <2000>;
 
@@ -175,11 +169,10 @@
 	qcom,ffc_warm_vfloat_sw_limit = <4450>;
 	qcom,ffc_temp_warm_vfloat_mv = <4500>;
 	qcom,ffc_warm_vfloat_over_sw_limit = <4500>;
-	qcom,ffc1_temp_normal_vfloat_mv = <4500>;
+
 	/*hongzhenglong@ODM.HQ.BSP.CHG 2020/06/08 modify for thershold current in 20682*/
 	qcom,ffc2_normal_vfloat_sw_limit = <4445>;
 	qcom,ffc2_temp_normal_vfloat_mv = <4500>;
-	qcom,ffc1_normal_vfloat_over_sw_limit = <4500>;
 	qcom,ffc2_normal_vfloat_over_sw_limit = <4500>;
 	qcom,ffc2_warm_vfloat_sw_limit = <4440>;
 	qcom,ffc2_temp_warm_vfloat_mv = <4500>;
@@ -202,8 +195,6 @@
 	qcom,chg_ctrl_by_vooc;
 	qcom,chg_ctrl_by_camera;
 	qcom,sw_vfloat_over_protect_enable;
-	qcom,vooc_show_ui_soc_decimal;
-	qcom,ui_soc_decimal_speedmin = <20>;//2A
 
 	//for PD9V or QC9V
 	qcom,vbatt_pdqc_to_5v_thr = <4100>;

@@ -329,12 +329,13 @@
 	cam3_vcamio-supply = <&mt_pmic_vcamio_ldo_reg>;
 	cam4_vcamio-supply = <&mt_pmic_vcamio_ldo_reg>;
 
-	cam0_enable_sensor = "imx682_mipi_raw s5kgm1sp_mipi_raw sarter_qtech_main_s5kgm1sp ov13b10_mipi_raw s5kgw1_mipi_raw salaa_qtech_main_s5kgm1sp";
+	cam0_enable_sensor = "imx682_mipi_raw s5kgm1sp_mipi_raw ov13b10_mipi_raw ov64b_mipi_raw s5kgm1st_mipi_raw";
 	cam1_enable_sensor = "imx471_mipi_raw1 s5k4h7_mipi_raw s5k3p9sp_mipi_raw";
-	cam2_enable_sensor = "ov8856_mipi_raw sala_wide_ov8856";
+	cam2_enable_sensor = "ov8856_mipi_raw";
 	cam3_enable_sensor = "ov02b10_mipi_raw gc2375h_mipi_raw_19661 gc02k0_mipi_raw";
 	cam4_enable_sensor = "ov02b1b_mipi_mono gc02m0_mipi_mono";
 
 	status = "okay";
 };
+
 /* CAMERA GPIO  end */

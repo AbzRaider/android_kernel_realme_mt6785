@@ -87,7 +87,6 @@
 		fw_update_in_probe_with_headfile;
 		touchpanel,button-type = <4>;
 		spi_fast_read_support;
-		irq_need_dev_resume_ok;
 	};
 };
 
@@ -153,7 +152,7 @@
 	};
 	vibrator0:vibrator@0 {
 		compatible = "mediatek,vibrator";
-		vib_timer = <50>;
+		vib_timer = <30>;
 		vib_limit = <0>;
 		vib_vol= <11>;
 	};
@@ -291,22 +290,10 @@
 		i2c_addr = <0x46>;
 		direction = <4>;
 		eint_num = <12>;
-		als_ratio = <191>;
+		als_ratio = <65>;
 		als_buffer_length =<8>;
 		als_type = <1>;//<1-normal;2-under screen;3-normal needed compensation>
 		device_name = "stk33502";
-	};
-	pick_up: pick_up {
-		status = "okay";
-		use-proximity = <1>;
-	};
-	lux_aod: lux_aod {
-		status = "okay";
-		use-proximity = <1>;
-	};
-	mtk_cali: mtk_cali {
-		status = "okay";
-		mtk-cali-supported = <1>;
 	};
 	alsps_arch: alsps_arch {
 		status = "okay";
@@ -328,7 +315,6 @@
     nfc_chipset:nfc_chipset {
         compatible = "oppo-nfc-chipset";
         chipset-19661-102 = "NQ310";
-        chipset-19661-114 = "NQ310";
     };
     //#endif /* OPLUS_FEATURE_NFC_CONSOFT */
 };
@@ -405,13 +391,6 @@
 	};
 };
 
-//#ifdef CONFIG_OPLUS_FEATURE_SDCARD
-//WeiZhenXi@BSP.Storage.Sdcard, 2020/09/27, Modify for enable sdcard
-&mt6360_ldo {
- 	ldo5_ctrls = [00 80 01 2d a4];
-};
-//#endif /* OPLUS_FEATURE_SDCARD */
-
 &mtkfb {
 	pinctrl-names = "lcd_bias_enp1_gpio", "lcd_bias_enp0_gpio",
 		"lcd_bias_enn1_gpio", "lcd_bias_enn0_gpio",
@@ -425,8 +404,7 @@
 	pinctrl-5 = <&mtkfb_pins_lcm_rst_out0_gpio>;
 	pinctrl-6 = <&mtkfb_pins_lcm_dsi_te>;
 	status = "okay";
-	oplus_display_elevenbits_support;
-	oplus_display_cabc_cmdq_support;
+	oplus_display_twelvebits_support;
 };
 
 &dispsys_config {
@@ -1004,10 +982,10 @@
 	qcom,overtemp_bat_decidegc = <350>;
 	qcom,iterm_disabled = <0>;
 	//sw_full_count = <25>;
-	qcom,iterm_ma = <250>;
+	qcom,iterm_ma = <300>;
 	qcom,recharge-mv = <115>;
 
-	qcom,batt_capacity_mah = <4300>; /*typical capacity*/
+	qcom,batt_capacity_mah = <5000>; /*typical capacity*/
 	//qcom,batt_capacity_mah = <3900>; /*rated capacity*/
 
 	qcom,removed_bat_decidegc = <190>;  /* < -19C */
@@ -1018,8 +996,8 @@
 
 	qcom,little_cold_bat_decidegc = <0>;	/* 0C ~ 5C */
 	qcom,temp_little_cold_vfloat_mv = <4435>;
-	qcom,temp_little_cold_fastchg_current_ma_high = <2000>;
-	qcom,temp_little_cold_fastchg_current_ma_low = <1200>;
+	qcom,temp_little_cold_fastchg_current_ma_high = <2200>;
+	qcom,temp_little_cold_fastchg_current_ma_low = <1400>;
 	qcom,temp_little_cold_fastchg_current_ma = <1200>;
 	qcom,pd_temp_little_cold_fastchg_current_ma_high = <1800>;
 	qcom,pd_temp_little_cold_fastchg_current_ma_low = <1500>;
@@ -1049,8 +1027,8 @@
 
 	qcom,warm_bat_decidegc = <450>;		/* 45C ~ 53C */ /*8pin Bat Vooc project need add 3 degree C*/
 
-	qcom,temp_warm_vfloat_mv = <4130>;
-	qcom,temp_warm_fastchg_current_ma = <1200>;
+	qcom,temp_warm_vfloat_mv = <4150>;
+	qcom,temp_warm_fastchg_current_ma = <1500>;
 	qcom,pd_temp_warm_fastchg_current_ma = <600>;
 	qcom,qc_temp_warm_fastchg_current_ma = <600>;
 	qcom,temp_warm_fastchg_current_ma_led_on = <250>;
@@ -1073,7 +1051,7 @@
 	qcom,warm_vfloat_sw_limit = <4080>;
 	qcom,non_standard_vfloat_sw_limit = <3930>;
 
-	qcom,max_chg_time_sec = <30000>;
+	qcom,max_chg_time_sec = <67360>;
 	qcom,charger_hv_thr = <5800>;
 	qcom,charger_lv_thr = <3400>;
 	qcom,vbatt_full_thr = <4400>;
@@ -1102,9 +1080,9 @@
 
 	qcom,ff1_normal_fastchg_ma = <1500>;
 	qcom,ff1_warm_fastchg_ma = <1500>;
-	qcom,ffc2_normal_fastchg_ma = <1100>;/*16C~35c*/
+	qcom,ffc2_normal_fastchg_ma = <1200>;/*16C~35c*/
 	qcom,ffc2_temp_warm_decidegc = <350>;
-	qcom,ffc2_warm_fastchg_ma = <1100>;/*35C~40c*/
+	qcom,ffc2_warm_fastchg_ma = <1350>;/*35C~40c*/
 	qcom,ffc2_temp_high_decidegc = <400>;
 	qcom,ffc2_temp_low_decidegc = <120>;
 	qcom,ff1_exit_step_ma = <488>;
@@ -1127,7 +1105,7 @@
 	qcom,ffc2_temp_warm_vfloat_mv = <4500>;
 	qcom,ffc2_warm_vfloat_over_sw_limit = <4500>;
 
-	qcom,default_iterm_ma = <250>;
+	qcom,default_iterm_ma = <300>;
 	qcom,default_temp_normal_fastchg_current_ma = <2200>;
 	qcom,default_normal_vfloat_sw_limit = <4385>;
 	qcom,default_temp_normal_vfloat_mv = <4435>;
@@ -1145,8 +1123,6 @@
 	qcom,chg_ctrl_by_vooc;
 	qcom,chg_ctrl_by_camera;
 	qcom,sw_vfloat_over_protect_enable;
-	qcom,vooc_show_ui_soc_decimal;
-	qcom,ui_soc_decimal_speedmin = <20>;//2A
 
 	//for PD9V or QC9V
 	qcom,vbatt_pdqc_to_5v_thr = <4100>;
@@ -1174,13 +1150,13 @@
 	};
 
 	da9313-divider@68 {
-		status = "disabled";
+		status = "okay";
 		compatible = "oplus,da9313-divider";
 		reg = <0x68 0>;
 	};
 
 	mp2650-charger@5c {
-		status = "disabled";
+		status = "okay";
 		compatible = "oplus,mp2650-charger";
 		reg = <0x5c 0>;
 
@@ -1202,11 +1178,11 @@
 		qcom,vooc-fw-type = <7>;
 		qcom,vooc-high-temp = <430>;
 		qcom,vooc-low-soc = <1>;
-		qcom,vooc-high-soc = <85>;
+		qcom,vooc-high-soc = <90>;
 
 		qcom,vooc_multistep_adjust_current_support;
 		qcom,vooc_multistep_initial_batt_temp = <1000>;
-		qcom,vooc_strategy_normal_current = <0x06>;
+		qcom,vooc_strategy_normal_current = <0x0d>;
 
 		qcom,vooc_batt_over_high_temp = <440>;
 		qcom,vooc_batt_over_low_temp = <50>;
@@ -1214,9 +1190,9 @@
 		qcom,vooc_strategy1_batt_high_temp0 = <410>;
 		qcom,vooc_strategy1_batt_high_temp1 = <425>;
 		qcom,vooc_strategy1_batt_high_temp2 = <435>;
-		qcom,vooc_strategy1_batt_low_temp2 = <430>;
+		qcom,vooc_strategy1_batt_low_temp2 = <420>;
 		qcom,vooc_strategy1_batt_low_temp1 = <410>;
-		qcom,vooc_strategy1_batt_low_temp0 = <390>;
+		qcom,vooc_strategy1_batt_low_temp0 = <400>;
 
 		qcom,vooc_strategy1_high_current0 = <0x04>;//4A
 		qcom,vooc_strategy1_high_current1 = <0x03>;//3A
@@ -1535,74 +1511,6 @@
 	};
 };
 
-/* Jiao.Yang@CM.BSP.CHG.Basic, 2020/12/09, Add for uart0 */
-&apuart0 {
-	pinctrl-names = "uart0_rx_gpio",
-			"uart0_tx_gpio";
-	pinctrl-0 = <&uart0_rx_gpio_input>;
-	pinctrl-1 = <&uart0_tx_gpio_input>;
-	status = "okay";
-};
-
-&pio {
-	uart0_rx_gpio_input:uart0_rx_gpio@gpio53 {
-		pins_cmd_dat {
-			pinmux = <PINMUX_GPIO53__FUNC_GPIO53>;
-			input-enable;
-			slew-rate = <0>;
-			bias-disable;
-			//bias-pull-down = <00>;
-		};
-	};
-	uart0_tx_gpio_input:uart0_tx_gpio@gpio54 {
-		pins_cmd_dat {
-			pinmux = <PINMUX_GPIO54__FUNC_GPIO54>;
-			input-enable;
-			slew-rate = <0>;
-			bias-disable;
-			//bias-pull-down = <00>;
-		};
-	};
-};
-
-//tongfeng.huang@BSP.CHG.Basic, 2018/2/27 Add for i2c-7 reset, patch:REQ30000477623
-&i2c7 {
-       pinctrl-names = "i2c-state", "output-low-state";
-
-       pinctrl-0 = <&i2c7_sda_state &i2c7_scl_state>;
-       pinctrl-1 = <&i2c7_sda_output_low_state &i2c7_scl_output_low_state>;
-};
-&pio {
-       i2c7_sda_state: i2c7_sda_i2c_state {
-                pins_cmd_dat {
-                          pinmux = <PINMUX_GPIO199__FUNC_SDA7>;
-                          slew-rate = <0>;
-                          bias-pull-up;
-                };
-       };
-       i2c7_sda_output_low_state: i2c7_sda_output_low_state {
-                pins_cmd_dat {
-                          pinmux = <PINMUX_GPIO199__FUNC_GPIO199>;
-                          slew-rate = <1>;
-                          output-low;
-                };
-       };
-
-       i2c7_scl_state: i2c7_scl_i2c_state {
-                pins_cmd_dat {
-                          pinmux = <PINMUX_GPIO198__FUNC_SCL7>;
-                          slew-rate = <0>;
-                          bias-pull-up;
-                };
-       };
-       i2c7_scl_output_low_state: i2c7_scl_output_low_state {
-                pins_cmd_dat {
-                          pinmux = <PINMUX_GPIO198__FUNC_GPIO198>;
-                          slew-rate = <1>;
-                          output-low;
-                };
-       };
-};
 
 #include "mediatek/cust_mt6785_camera_20682.dtsi"
 #include <oppo6785_19661/cust.dtsi>
