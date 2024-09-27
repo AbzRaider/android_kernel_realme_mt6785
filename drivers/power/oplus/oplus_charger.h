@@ -34,6 +34,12 @@
 #ifdef CONFIG_OPLUS_CHARGER_MTK6779Q
 #include "charger_ic/oplus_battery_mtk6779Q.h"
 #endif
+#ifdef CONFIG_OPLUS_CHARGER_MTK6779R
+#include "charger_ic/oplus_battery_mtk6779R.h"
+#endif
+#ifdef CONFIG_OPLUS_CHARGER_MTK6765R
+#include "charger_ic/oplus_battery_mtk6765R.h"
+#endif
 #ifdef CONFIG_OPLUS_CHARGER_MTK6885
 #include "charger_ic/oplus_battery_mtk6885R.h"
 #endif
@@ -45,6 +51,12 @@
 #endif
 #ifdef CONFIG_OPLUS_CHARGER_MTK6853
 #include "charger_ic/oplus_battery_mtk6853R.h"
+#endif
+#ifdef CONFIG_OPLUS_CHARGER_MTK6768
+#include "charger_ic/oplus_battery_mtk6768R.h"
+#endif
+#ifdef CONFIG_OPLUS_CHARGER_MTK6769R
+#include "charger_ic/oplus_battery_mtk6769R.h"
 #endif
 #ifdef CONFIG_OPLUS_CHARGER_MTK6769
 #include "charger_ic/oplus_battery_mtk6769.h"
@@ -90,6 +102,8 @@
 #include "charger_ic/oplus_battery_msm7250_Q.h"
 #elif defined CONFIG_OPLUS_SM7250R_CHARGER
 #include "charger_ic/oplus_battery_msm7250_R.h"
+#elif defined CONFIG_OPLUS_SM7225R_CHARGER
+#include "charger_ic/oplus_battery_msm7225_R.h"
 #else /* CONFIG_OPLUS_MSM8953_CHARGER */
 #include "charger_ic/oplus_battery_msm8976.h"
 #endif /* CONFIG_OPLUS_MSM8953_CHARGER */
@@ -137,6 +151,7 @@
 #define NOTIFY_SHORT_C_BAT_DYNAMIC_ERR_CODE5	19
 #define	NOTIFY_CHARGER_TERMINAL			20
 #define NOTIFY_GAUGE_I2C_ERR			21
+#define NOTIFY_CHARGER_BATT_TERMINAL	22
 
 #define OPLUS_CHG_500_CHARGING_CURRENT	500
 #define OPLUS_CHG_900_CHARGING_CURRENT	900
@@ -350,7 +365,11 @@ struct oplus_chg_limits {
 	int temp_little_cool_fastchg_current_ma_high;
 	int temp_little_cool_fastchg_current_ma_low;
 	int pd_temp_little_cool_fastchg_current_ma;
+	int pd_temp_little_cool_fastchg_current_ma_high;
+	int pd_temp_little_cool_fastchg_current_ma_low;
 	int qc_temp_little_cool_fastchg_current_ma;
+	int qc_temp_little_cool_fastchg_current_ma_high;
+	int qc_temp_little_cool_fastchg_current_ma_low;
 	int normal_bat_decidegc;						/*16C*/
 	int temp_normal_fastchg_current_ma;
 	int pd_temp_normal_fastchg_current_ma;
@@ -426,6 +445,7 @@ struct oplus_chg_limits {
 	int non_normal_vterm_hw_inc;
 	int vbatt_pdqc_to_5v_thr;
 	int vbatt_pdqc_to_9v_thr;
+	int tbatt_pdqc_to_5v_thr;
 	int ff1_normal_fastchg_ma;
 	int ff1_warm_fastchg_ma;
 	int ff1_exit_step_ma;				/*<=35C,700ma*/
@@ -587,7 +607,6 @@ struct oplus_chg_chip {
 	struct power_supply	*batt_psy;
 /*	struct battery_data battery_main	*/
 	struct delayed_work update_work;
-	struct delayed_work fastcheck_work;
 	struct delayed_work ui_soc_decimal_work;
 	struct delayed_work  mmi_adapter_in_work;
 	struct delayed_work  reset_adapter_work;
@@ -664,7 +683,6 @@ struct oplus_chg_chip {
 	int cool_down;
 	int smart_charge_user;
 	int usbtemp_cool_down;
-	bool usbtemp_check;
 	bool led_on;
 	bool led_on_change;
 	bool led_temp_change;
@@ -691,6 +709,7 @@ struct oplus_chg_chip {
 	bool suspend_after_full;
 	bool check_batt_full_by_sw;
 	bool external_gauge;
+	bool external_authenticate;
 	bool chg_ctrl_by_lcd;
 	bool chg_ctrl_by_lcd_default;
 	bool chg_ctrl_by_camera;
@@ -736,6 +755,7 @@ struct oplus_chg_chip {
 	int slave_chg_enable_ma;
 	int slave_chg_disable_ma;
 	bool dischg_flag;
+	int internal_gauge_with_asic;
 	bool smart_charging_screenoff;
 	int usb_status;
 	int *con_volt;
@@ -748,15 +768,15 @@ struct oplus_chg_chip {
 	int ui_soc_decimal_speedmin;
 	bool decimal_control;
 	bool vooc_show_ui_soc_decimal;
+	bool em_mode;
 	struct thermal_zone_device *shell_themal;
+	/* Zhangkun@BSP.CHG.Basic, 2020/08/17, Add for svooc detect and detach */
 	int svooc_disconnect_count;
 	struct device_node *fast_node;
 	const struct oplus_chg_operations *sub_chg_ops;
 	bool  is_double_charger_support;
 	int pd_svooc;
 	int pd_chging;
-
-	struct thermal_zone_device *tzd;
 };
 
 
@@ -825,6 +845,7 @@ struct oplus_chg_operations {
 	int (*oplus_chg_pd_setup) (void);
 	int (*get_charger_subtype)(void);
 	int (*set_qc_config)(void);
+	void (*em_mode_enable)(void);
 	int (*enable_qc_detect)(void);
 	int (*input_current_write_without_aicl)(int current_ma);
 	int (*set_charger_vsys_threshold)(int val);
@@ -882,7 +903,11 @@ bool oplus_chg_wake_update_work(void);
 void oplus_chg_soc_update_when_resume(unsigned long sleep_tm_sec);
 void oplus_chg_soc_update(void);
 int oplus_chg_get_batt_volt(void);
+int oplus_chg_get_cool_bat_decidegc(void);
+int oplus_chg_get_little_cool_bat_decidegc(void);
+int oplus_chg_get_normal_bat_decidegc(void);
 int oplus_chg_get_icharging(void);
+bool oplus_chg_get_chging_status(void);
 
 int oplus_chg_get_ui_soc(void);
 int oplus_chg_get_soc(void);
@@ -913,7 +938,6 @@ bool oplus_chg_get_rechging_status(void);
 bool oplus_chg_check_chip_is_null(void);
 void oplus_chg_set_charger_type_unknown(void);
 int oplus_chg_get_charger_voltage(void);
-int oplus_chg_update_voltage(void);
 
 void oplus_chg_set_chargerid_switch_val(int value);
 void oplus_chg_turn_on_charging(struct oplus_chg_chip *chip);
@@ -922,13 +946,16 @@ void oplus_smart_charge_by_cool_down(struct oplus_chg_chip *chip, int val);
 int oplus_convert_current_to_level(struct oplus_chg_chip *chip, int val);
 void oplus_smart_charge_by_shell_temp(struct oplus_chg_chip *chip, int val);
 int oplus_chg_override_by_shell_temp(int temp);
+
 int oplus_chg_get_shell_temp(void);
 void oplus_chg_clear_chargerid_info(void);
+int oplus_chg_get_gauge_and_asic_status(void);
 #ifndef CONFIG_OPLUS_CHARGER_MTK
 void oplus_chg_variables_reset(struct oplus_chg_chip *chip, bool in);
 void oplus_chg_external_power_changed(struct power_supply *psy);
 #endif
 int oplus_is_rf_ftm_mode(void);
+//huangtongfeng@BSP.CHG.Basic, 2017/01/13, add for kpoc charging param.
 int oplus_get_charger_chip_st(void);
 void oplus_chg_set_allow_switch_to_fastchg(bool allow);
 int oplus_tbatt_power_off_task_init(struct oplus_chg_chip *chip);
@@ -947,7 +974,5 @@ void oplus_chg_ui_soc_decimal_init(void);
 bool oplus_chg_get_boot_completed(void);
 int oplus_chg_match_temp_for_chging(void);
 void oplus_chg_reset_adapter(void);
-bool opchg_get_shipmode_value(void);
-
 
 #endif /*_OPLUS_CHARGER_H_*/

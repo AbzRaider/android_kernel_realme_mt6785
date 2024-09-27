@@ -43,8 +43,6 @@ struct wakeup_source *usbtemp_wakelock;
 #define RETRY_CNT_DELAY         5 //ms
 #define HIGH_TEMP_SHORT_CHECK_TIMEOUT 1000 /*ms*/
 
-int __attribute__((weak)) qpnp_get_prop_charger_voltage_now() {return 0;}
-
 static int usbtemp_debug = 0;
 module_param(usbtemp_debug, int, 0644);
 #define OPEN_LOG_BIT BIT(0)
@@ -114,6 +112,9 @@ int oplus_usbtemp_dischg_action(struct oplus_chg_chip *chip)
 		}
 
 		usleep_range(10000,10000);///msleep(10);
+		if (is_vooc_support_single_batt_svooc() == true) {
+			vooc_enable_cp_ovp(0);
+                }
 		chip->chg_ops->charger_suspend();
 		usleep_range(10000,10000);
 		pr_err("[oplus_usbtemp_dischg_action]:run_action");
@@ -285,7 +286,7 @@ int oplus_usbtemp_monitor_common(void *data)
 
 	while (!kthread_should_stop()) {
 		if(chip->chg_ops->oplus_usbtemp_monitor_condition != NULL){
-			wait_event_interruptible(chip->oplus_usbtemp_wq,chip->usbtemp_check);
+			wait_event_interruptible(chip->oplus_usbtemp_wq,chip->chg_ops->oplus_usbtemp_monitor_condition());
 		} else {
 			pr_err("[oplus_usbtemp_monitor_main]:condition pointer is NULL");
 			return 0;
@@ -299,10 +300,7 @@ int oplus_usbtemp_monitor_common(void *data)
 		}
 		get_usb_temp(chip);
 		if ((chip->usb_temp_l < USB_50C) && (chip->usb_temp_r < USB_50C)){//get vbus when usbtemp < 50C
-			vbus_volt = qpnp_get_prop_charger_voltage_now();
-			if (vbus_volt == 0) {
-				vbus_volt = chip->chg_ops->get_charger_volt();
-			}
+			vbus_volt = chip->chg_ops->get_charger_volt();
 		} else{
 			vbus_volt = 0;
 		}
@@ -325,9 +323,9 @@ int oplus_usbtemp_monitor_common(void *data)
 			for (i = 1; i < retry_cnt; i++) {
 				mdelay(RETRY_CNT_DELAY);
 				get_usb_temp(chip);
-				if (chip->usb_temp_r >= USB_57C && chip->usb_temp_r < USB_100C)
+				if (chip->usb_temp_r >= USB_57C)
 					count_r++;
-				if (chip->usb_temp_l >= USB_57C && chip->usb_temp_l < USB_100C)
+				if (chip->usb_temp_l >= USB_57C)
 					count_l++;
 				pr_err("countl : %d",count_l);
 			}
@@ -347,12 +345,12 @@ int oplus_usbtemp_monitor_common(void *data)
 		if (chip->tbatt_temp/10 > USB_50C && (((chip->usb_temp_l >= chip->tbatt_temp/10 + 7) && (chip->usb_temp_l < USB_100C))
 			|| ((chip->usb_temp_r >= chip->tbatt_temp/10 + 7) && (chip->usb_temp_r < USB_100C)))) {
 			pr_err("in loop 1");
-			for (i = 1; i <= retry_cnt; i++) {
+			for (i = 1; i < retry_cnt; i++) {
 				mdelay(RETRY_CNT_DELAY);
 				get_usb_temp(chip);
-				if ((chip->usb_temp_r >= chip->tbatt_temp/10 + 7) && chip->usb_temp_r < USB_100C)
+				if (chip->usb_temp_r >= chip->tbatt_temp/10 + 7)
 					count_r++;
-				if ((chip->usb_temp_l >= chip->tbatt_temp/10 + 7) && chip->usb_temp_l < USB_100C)
+				if (chip->usb_temp_l >= chip->tbatt_temp/10 + 7)
 					count_l++;
 				pr_err("countl : %d", count_l);
 			}
@@ -385,19 +383,19 @@ int oplus_usbtemp_monitor_common(void *data)
 				current_temp_l = chip->usb_temp_l;
 			}
 			if (((current_temp_l - last_usb_temp_l) >= 3) || (current_temp_r - last_usb_temp_r) >= 3) {
-				for (i = 1; i <= retry_cnt; i++) {
+				for (i = 1; i < retry_cnt; i++) {
 					mdelay(RETRY_CNT_DELAY);
 					get_usb_temp(chip);
-					if ((chip->usb_temp_r - last_usb_temp_r) >= 3 && chip->usb_temp_r < USB_100C)
+					if ((chip->usb_temp_r - last_usb_temp_r) >= 3)
 						count_r++;
-					if ((chip->usb_temp_l - last_usb_temp_l) >= 3 && chip->usb_temp_l < USB_100C)
+					if ((chip->usb_temp_l - last_usb_temp_l) >= 3)
 						count_l++;
 					pr_err("countl : %d,countr : %d", count_l, count_r);
 				}
 				current_temp_l = chip->usb_temp_l;
 				current_temp_r = chip->usb_temp_r;
-				if ((count_l >= retry_cnt &&  chip->usb_temp_l > USB_30C && chip->usb_temp_l < USB_100C)
-						|| (count_r >= retry_cnt &&  chip->usb_temp_r > USB_30C  && chip->usb_temp_r < USB_100C))  {
+				if ((count_l >= retry_cnt &&  chip->usb_temp_l > USB_20C)
+						|| (count_r >= retry_cnt &&  chip->usb_temp_r > USB_20C))  {
 					if (!IS_ERR_OR_NULL(chip->normalchg_gpio.dischg_enable)) {
 						chip->dischg_flag = true;
 						chg_err("dischg enable3...,current_temp_l=%d,last_usb_temp_l=%d,current_temp_r=%d,last_usb_temp_r =%d\n",

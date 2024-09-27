@@ -1030,7 +1030,6 @@ static int oplus_bq2591x_set_input_current_limit(int curr)
 	if(curr < BQ2591X_IINLIM_BASE)
 		curr = BQ2591X_IINLIM_BASE;
 
-	dev_info(g_bq->dev, "%s:%d\n", __func__, curr);
 	val = (curr - BQ2591X_IINLIM_BASE) / BQ2591X_IINLIM_LSB;
 	val <<= BQ2591X_IINLIM_SHIFT;
 

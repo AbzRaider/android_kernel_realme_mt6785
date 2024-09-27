@@ -504,7 +504,7 @@ static int oplus_chg_read_filedata(struct timespec *ts)
 
 	filp = filp_open(OPLUS_CHG_MONITOR_FILE, O_RDONLY, 0644);
 	if (IS_ERR(filp)) {
-		/*chg_err("open file %s failed[%d].\n", OPLUS_CHG_MONITOR_FILE, PTR_ERR(filp));*/
+		chg_err("open file %s failed[%d].\n", OPLUS_CHG_MONITOR_FILE, PTR_ERR(filp));
 		return -1;
 	}
 

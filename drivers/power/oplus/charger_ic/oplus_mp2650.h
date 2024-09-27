@@ -555,7 +555,7 @@
 #define REG39_MP2650_ADDRESS                                 0x39
 
 #define REG53_MP2650_ADDRESS                                 0x53
-#define REG2D_MP2650_ADDRESS                                 0x2D
+
 enum {
 	OVERTIME_AC = 0,
 	OVERTIME_USB,

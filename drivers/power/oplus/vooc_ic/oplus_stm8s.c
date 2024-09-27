@@ -546,7 +546,7 @@ static int stm8s_fw_check_then_recover(struct oplus_vooc_chip *chip)
 		opchg_set_clock_active(chip);
 		chip->mcu_boot_by_gpio = true;
 		msleep(10);
-		opchg_set_reset_active_force(chip);
+		opchg_set_reset_active(chip);
 		chip->mcu_update_ing = true;
 		msleep(2500);
 		chip->mcu_boot_by_gpio = false;
@@ -560,7 +560,7 @@ static int stm8s_fw_check_then_recover(struct oplus_vooc_chip *chip)
 				chip->mcu_boot_by_gpio = true;
 				msleep(10);
 				chip->mcu_update_ing = false;
-				opchg_set_reset_active_force(chip);
+				opchg_set_reset_active(chip);
 				chip->mcu_update_ing = true;
 				msleep(2500);
 				chip->mcu_boot_by_gpio = false;
@@ -714,6 +714,8 @@ static int stm8s_driver_probe(struct i2c_client *client,
 	chip->vooc_fw_check = false;
 	mutex_init(&chip->pinctrl_mutex);
 
+/* wenbin.liu@BSP.CHG.Vooc, 2016/10/20 
+**    Modify for vooc batt 4.40   */
 	oplus_vooc_fw_type_dt(chip);
 	if (chip->batt_type_4400mv) {
 		chip->firmware_data = Stm8s_firmware_data_4400mv;

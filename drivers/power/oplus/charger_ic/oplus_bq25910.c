@@ -161,8 +161,22 @@ static int __bq25910_read_reg(int reg, int *returnData)
 {
 	int ret = 0;
 	struct chip_bq25910 *chip = charger_ic;
+	int retry = 3;
 
 	ret = i2c_smbus_read_byte_data(chip->client, (unsigned char)reg);
+
+	if (ret < 0) {
+		while(retry > 0) {
+			usleep_range(5000, 5000);
+			ret = i2c_smbus_read_byte_data(chip->client, (unsigned char)reg);
+			if (ret < 0) {
+				retry--;
+			} else {
+				break;
+			}
+		}
+	}
+
 	if (ret < 0) {
 		chg_err("i2c read fail: can't read from %02x: %d\n", reg, ret);
 		return ret;
@@ -187,6 +201,7 @@ static int bq25910_read_reg(int reg, int *returnData)
 static int __bq25910_write_reg(int reg, int val)
 {
 	int ret = 0;
+	int retry = 3;
 	struct chip_bq25910 *chip = charger_ic;
 
 	if (reg_access_allow != 0) {
@@ -195,6 +210,19 @@ static int __bq25910_write_reg(int reg, int val)
 	}
 
 	ret = i2c_smbus_write_byte_data(chip->client, reg, val);
+
+	if (ret < 0) {
+		while(retry > 0) {
+			usleep_range(5000, 5000);
+			ret = i2c_smbus_write_byte_data(chip->client, reg, val);
+			if (ret < 0) {
+				retry--;
+			} else {
+				break;
+			}
+		}
+	}
+
 	if (ret < 0) {
 		chg_err("i2c write fail: can't write %02x to %02x: %d\n",
 			val, reg, ret);
@@ -333,11 +361,11 @@ int bq25910_input_current_limit_write(int current_ma)
 	int rc = 0;
 	struct chip_bq25910 *chip = charger_ic;
 
-	if (bq25910_is_detected() == false){
+	if (bq25910_is_detected() == false) {
 		return 0;
 	}
 
-	if(atomic_read(&chip->charger_suspended) == 1) {
+	if (atomic_read(&chip->charger_suspended) == 1) {
 		return 0;
 	}
 
@@ -357,7 +385,7 @@ int bq25910_charging_current_write_fast(int chg_cur)
 	int tmp = 0;
 	struct chip_bq25910 *chip = charger_ic;
 
-	if (bq25910_is_detected() == false){
+	if (bq25910_is_detected() == false) {
 		return 0;
 	}
 
@@ -445,7 +473,7 @@ int bq25910_float_voltage_write(int vfloat_mv)
 	int tmp = 0;
 	struct chip_bq25910 *chip = charger_ic;
 
-	if (bq25910_is_detected() == false){
+	if (bq25910_is_detected() == false) {
 		return 0;
 	}
 
@@ -565,7 +593,7 @@ int bq25910_enable_charging(void)
 	int rc;
 	struct chip_bq25910 *chip = charger_ic;
 
-	if (bq25910_is_detected() == false){
+	if (bq25910_is_detected() == false) {
 		return 0;
 	}
 
@@ -590,7 +618,7 @@ int bq25910_disable_charging(void)
 	int rc;
 	struct chip_bq25910 *chip = charger_ic;
 
-	if (bq25910_is_detected() == false){
+	if (bq25910_is_detected() == false) {
 		return 0;
 	}
 
@@ -823,7 +851,7 @@ void bq25910_dump_registers(void)
 
 	unsigned int val_buf[BQ25910_DUMP_MAX_REG+1] = {0x0};
 
-	if (bq25910_is_detected() == false){
+	if (bq25910_is_detected() == false) {
 		return ;
 	}
 
@@ -968,7 +996,7 @@ int bq25910_hardware_init(void)
 {
 	struct chip_bq25910 *chip = charger_ic;
 	
-	if (bq25910_is_detected() == false){
+	if (bq25910_is_detected() == false) {
 		return 0;
 	}
 
@@ -1160,7 +1188,7 @@ static int bq25910_driver_probe(struct i2c_client *client, const struct i2c_devi
 		chg_err("!!!bq25910 is not detected\n");
 		return -ENODEV;
 	}
-	if (bq25910_is_detected() == true){
+	if (bq25910_is_detected() == true) {
 		chg_err("bq25910 is detected\n");
 	}
 	bq25910_dump_registers();

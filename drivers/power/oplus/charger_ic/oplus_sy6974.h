@@ -1,15 +1,17 @@
 /************************************************************************************
 ** VENDOR_EDIT
-** Copyright (C), 2018-2019, OPPO Mobile Comm Corp., Ltd
+** Copyright (C), 2018-2019, OPLUS Mobile Comm Corp., Ltd
 **
 ** Description:
 **    For SY6974 charger ic driver
 **
 ** Version: 1.0
 ** Date created: 2018-09-24
+** Author: Jianchao.Shi@PSW.BSP.CHG
 **
 ** --------------------------- Revision History: ------------------------------------
 * <version>       <date>         <author>              			<desc>
+* Revision 1.0    2018-09-24   Jianchao.Shi@PSW.BSP.CHG   	Created for new architecture
 *************************************************************************************/
 
 #ifndef __OPLUS_SY6974_H__

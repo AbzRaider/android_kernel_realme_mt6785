@@ -39,6 +39,7 @@
 #define RT9471_DRV_VERSION	"1.0.6_MTK"
 
 #ifdef OPLUS_FEATURE_CHG_BASIC
+//Mingyao.Xie@ODM_WT.BSP.Storage.Usb, 2018/08/07, Modify for USB
 #include <soc/oppo/oppo_project.h>
 extern unsigned int is_project(int project );
 #endif /*OPLUS_FEATURE_CHG_BASIC*/
@@ -258,13 +259,47 @@ enum power_supply_type charger_type = POWER_SUPPLY_TYPE_UNKNOWN;
 
 static int rt9471_read_device(void *client, u32 addr, int len, void *dst)
 {
-	return i2c_smbus_read_i2c_block_data(client, addr, len, dst);
+	int rc = 0;
+	int retry = 3;
+
+	rc = i2c_smbus_read_i2c_block_data(client, addr, len, dst);
+	
+	if (rc < 0) {
+		while(retry > 0) {
+			usleep_range(5000, 5000);
+			rc = i2c_smbus_read_i2c_block_data(client, addr, len, dst);
+			if (rc < 0) {
+				retry--;
+			} else {
+				break;
+			}
+		}
+	}
+
+	return rc;
 }
 
 static int rt9471_write_device(void *client, u32 addr, int len,
 			       const void *src)
 {
-	return i2c_smbus_write_i2c_block_data(client, addr, len, src);
+	int rc = 0;
+	int retry = 3;
+
+	rc = i2c_smbus_write_i2c_block_data(client, addr, len, src);
+
+	if (rc < 0) {
+		while(retry > 0) {
+			usleep_range(5000, 5000);
+			rc = i2c_smbus_write_i2c_block_data(client, addr, len, src);
+			if (rc < 0) {
+				retry--;
+			} else {
+				break;
+			}
+		}
+	}
+
+	return rc;
 }
 
 #if 0
@@ -848,6 +883,7 @@ static int __rt9471_enable_shipmode(struct rt9471_chip *chip, bool en)
 		(chip, RT9471_REG_FUNCTION, RT9471_BATFETDIS_MASK);
 }
 
+/*Shouli.Wang@ODM_WT.BSP.CHG 2019/12/07, add for ship mode function*/
 int rt9471_enable_shipmode(bool en)
 {
 	return __rt9471_enable_shipmode(rt9471, en);
@@ -1228,6 +1264,7 @@ static int rt9471_detach_irq_handler(struct rt9471_chip *chip)
 	dev_info(chip->dev, "%s\n", __func__);
 //#ifndef CONFIG_TCPC_CLASS
 #ifdef OPLUS_FEATURE_CHG_BASIC
+		//Junbo.Guo@ODM_WT.BSP.CHG, 2019/11/11, Modify for subcharge
 	if(is_project(OPPO_19741)) {
 		mutex_lock(&chip->bc12_lock);
 		atomic_set(&chip->vbus_gd, rt9471_is_vbusgd(chip));
@@ -1324,6 +1361,7 @@ static int rt9471_vbus_gd_irq_handler(struct rt9471_chip *chip)
 	dev_info(chip->dev, "%s\n", __func__);
 //#ifndef CONFIG_TCPC_CLASS
 #ifdef OPLUS_FEATURE_CHG_BASIC
+	//Junbo.Guo@ODM_WT.BSP.CHG, 2019/11/11, Modify for subcharge
 	if(is_project(OPPO_19741)) {
 		mutex_lock(&chip->bc12_lock);
 		atomic_set(&chip->vbus_gd, rt9471_is_vbusgd(chip));
@@ -1712,6 +1750,7 @@ static int rt9471_parse_dt(struct rt9471_chip *chip)
 	dev_info(chip->dev, "%s intr_gpio %u\n", __func__, chip->intr_gpio);
 
 #ifndef OPLUS_FEATURE_CHG_BASIC
+//Junbo.Guo@ODM_WT.BSP.CHG, 2019/11/11, Modify for subcharger
 	/* ceb gpio */
 	if (strcmp(desc->chg_name, "secondary_chg") == 0) {
 		len = strlen(desc->chg_name);
@@ -1923,6 +1962,7 @@ static int rt9471_init_setting(struct rt9471_chip *chip)
 		dev_notice(chip->dev, "%s set ovp fail(%d)\n", __func__, ret);
 
 #ifdef OPLUS_FEATURE_CHG_BASIC
+/*Shouli.Wang@ODM_WT.BSP.CHG 2019/11/18, disable charger ic system reset function*/
 	if(is_project(19741)){
 		ret = rt9471_clr_bit(chip, RT9471_REG_TOP, 0x80);
 		if (ret < 0) {
@@ -1944,8 +1984,22 @@ static int rt9471_reset_register(struct rt9471_chip *chip)
 static bool rt9471_check_devinfo(struct rt9471_chip *chip)
 {
 	int ret = 0;
+	int retry = 3;
 
 	ret = i2c_smbus_read_byte_data(chip->client, RT9471_REG_INFO);
+
+	if (ret < 0) {
+		while(retry > 0) {
+			usleep_range(5000, 5000);
+			ret = i2c_smbus_read_byte_data(chip->client, RT9471_REG_INFO);
+			if (ret < 0) {
+				retry--;
+			} else {
+				break;
+			}
+		}
+	}
+
 	if (ret < 0) {
 		dev_notice(chip->dev, "%s get devinfo fail(%d)\n",
 				      __func__, ret);
@@ -2096,6 +2150,7 @@ static int __rt9471_enable_charging(struct rt9471_chip *chip, bool en)
 			return ret;
 		}
 #ifndef OPLUS_FEATURE_CHG_BASIC
+		//Junbo.Guo@ODM_WT.BSP.CHG, 2019/11/11, Modify for subcharger
 		if (chip->desc->ceb_invert)
 			gpio_set_value(chip->ceb_gpio, en);
 		else
@@ -2510,6 +2565,7 @@ int oplus_rt9471_set_ichg(int cur)
 {
 	u32 uA = cur*1000;
 #ifdef OPLUS_FEATURE_CHG_BASIC
+		//Junbo.Guo@ODM_WT.BSP.CHG, 2019/11/11, Modify for subcharger
    if (strcmp(rt9471->desc->chg_name, "secondary_chg") == 0){ 
 		if(cur){
 			__rt9471_enable_chip(rt9471,true);
@@ -2525,6 +2581,7 @@ void oplus_rt9471_set_mivr(int vbatt)
 {
 	u32 uV = vbatt*1000 + 200000;
 #ifdef OPLUS_FEATURE_CHG_BASIC
+//Junbo.Guo@ODM_WT.BSP.CHG, 2019/11/11, Modify for pe20
     if(uV<4200000)
         uV = 4200000;
 	
@@ -2625,7 +2682,6 @@ int oplus_rt9471_set_aicr(int current_ma)
 	aicl_point_temp = aicl_point;
 	__rt9471_set_aicr(rt9471, usb_icl[i] * 1000);
 	msleep(90);
-	chg_vol = battery_meter_get_charger_voltage();
 	if (chg_vol < aicl_point_temp) {
 		i =  i - 2;//1.5
 		goto aicl_pre_step;
@@ -2675,17 +2731,14 @@ int oplus_rt9471_charging_disable(void)
 {
 
 #ifdef OPLUS_FEATURE_CHG_BASIC
-   int ret = 0;
-
-   if (strcmp(rt9471->desc->chg_name, "secondary_chg") == 0){
+		//Junbo.Guo@ODM_WT.BSP.CHG, 2019/11/11, Modify for subcharger
+   if (strcmp(rt9471->desc->chg_name, "secondary_chg") == 0){ 
 	  __rt9471_enable_chip(rt9471,false);
-   }
-
+   	}
+ 
 	/* Disable WDT */
-   ret =  __rt9471_set_wdt(rt9471, 0);
-   if (ret < 0) {
-       dev_notice(rt9471->dev, "%s: en wdt fail\n", __func__);
-   }
+	 __rt9471_set_wdt(rt9471, 0);
+
 #endif
     rt9471->desc->pre_current_ma = -1;
 	return __rt9471_enable_charging(rt9471, false);
@@ -2698,6 +2751,7 @@ int oplus_rt9471_hardware_init(void)
 	dev_info(rt9471->dev, "%s\n", __func__);
 
 #ifndef OPLUS_FEATURE_CHG_BASIC
+	//Junbo.Guo@ODM_WT.BSP.CHG, 2019/11/11, Modify for subcharger
 	if (strcmp(rt9471->desc->chg_name, "primary_chg")) {
 		dev_info(rt9471->dev, "%s not primary_chg\n", __func__);
 		return ret;
@@ -2717,6 +2771,7 @@ int oplus_rt9471_hardware_init(void)
 
 	
 #ifdef OPLUS_FEATURE_CHG_BASIC
+		//Junbo.Guo@ODM_WT.BSP.CHG, 2019/11/11, Modify for subcharger
    if (strcmp(rt9471->desc->chg_name, "secondary_chg") == 0){ 
 	  __rt9471_enable_chip(rt9471,true);
    	}
@@ -3072,6 +3127,7 @@ static int rt9471_probe(struct i2c_client *client,
 		goto err_create_file;
 	}
 #ifdef OPLUS_FEATURE_CHG_BASIC
+/*Sidong.Zhao@ODM_WT.BSP.CHG 2019/11/4,for BC1.2 charger detection*/
 	if(is_project(OPPO_19741)) {
 		if (strcmp(chip->desc->chg_name, "primary_chg") == 0)
 			schedule_work(&chip->init_work);
@@ -3123,6 +3179,7 @@ static void rt9471_shutdown(struct i2c_client *client)
 
 	dev_info(chip->dev, "%s\n", __func__);
 #ifndef OPLUS_FEATURE_CHG_BASIC
+/* Junbo.Guo@ODM_WT.BSP.CHG.Basic, 20191109,Add for charger connect error */
 	disable_irq_nosync(chip->irq);
 #endif
 	rt9471_reset_register(chip);
