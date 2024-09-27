@@ -1310,6 +1310,7 @@ page_owner=on loop.max_part=7";
 		reg = <0 0x10204000 0 0x1000>;
 		mediatek,cirq_num = <277>;
 		mediatek,spi_start_offset = <64>;
+		sw_reset = <1>;
 		interrupts = <GIC_SPI 340 IRQ_TYPE_LEVEL_LOW>;
 	};
 
@@ -2845,6 +2846,13 @@ page_owner=on loop.max_part=7";
 		mediatek,pwrap-regmap = <&pwrap>;
 	};
 
+//#ifdef OPLUS_ARCH_EXTENDS
+/* Yongpei.Yao@MULTIMEDIA.AUDIODRIVER.MACHINE, 2020/08/31, Add for oplus extend audio */
+	audio_extend: audio_extend {
+		compatible = "oplus,asoc-audio";
+};
+//#endif
+
 	sound: sound {
 		compatible = "mediatek,mt6785-mt6359-sound";
 		mediatek,audio-codec = <&mt6359_snd>;
@@ -3403,6 +3411,7 @@ page_owner=on loop.max_part=7";
 	vdec_gcon: vdec_gcon@16000000 {
 		compatible = "mediatek,vdec_gcon", "syscon";
 		reg = <0 0x16000000 0 0x1000>,		/* VDEC_SYS */
+			 <0 0x16020000 0 0x400>,		/* VDEC_VLD */
 			 <0 0x16025000 0 0x1000>;		/* VDEC_MISC */
 #ifdef CONFIG_MTK_IOMMU_V2
 		iommus = <&iommu0 M4U_PORT_HW_VDEC_MC_EXT>;
@@ -4175,9 +4184,11 @@ page_owner=on loop.max_part=7";
 		interrupts = <GIC_SPI 285 IRQ_TYPE_LEVEL_LOW>;
 
 		clocks = <&camsys CAMSYS_CCU_CGPDN>,
-			 <&mmsys_config MMSYS_GALS_CCU2MM>;
+			<&mmsys_config MMSYS_GALS_CCU2MM>,
+			<&scpsys SCP_SYS_CAM>;
 		clock-names = "CCU_CLK_CAM_CCU",
-			      "CCU_CLK_MMSYS_CCU";
+			    "CCU_CLK_MMSYS_CCU",
+			    "CAM_PWR";
 #ifdef CONFIG_MTK_IOMMU_V2
 		iommus = <&iommu0 M4U_PORT_CCUG>;
 #endif
@@ -4365,6 +4376,10 @@ page_owner=on loop.max_part=7";
 //Qi.zhang@BSP.Biometrics.Fingerprint 2020/09/25 add  fingerprint driver.
 	goodix_fp: goodix_fp {
 		compatible = "goodix,goodix_fp";
+		status = "okay";
+	};
+	jiiov_fp: jiiov_fp {
+		compatible = "jiiov,fingerprint";
 		status = "okay";
 	};
 	fpc_interrupt:fpc_interrupt {
@@ -5657,8 +5672,6 @@ page_owner=on loop.max_part=7";
 #include "mediatek/cust_mt6785_msdc.dtsi"
 #include "mediatek/mt6360.dtsi"
 #include "mediatek/mt6360_pd.dtsi"
-/* wuhui@Multimedia.Audio.Driver 2021/01/02 modified for sia8109 bringup */
-#include "mediatek/mt6785-sia81xx.dtsi"
 #ifdef CONFIG_MTK_ENABLE_GENIEZONE
 #include "mediatek/trusty.dtsi"
 #endif
