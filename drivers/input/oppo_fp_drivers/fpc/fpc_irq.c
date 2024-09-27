@@ -120,7 +120,6 @@ struct fpc1020_data {
         struct platform_device *pldev;
         int irq_gpio;
         int rst_gpio;
-        /* Long.Liu@PSW.BSP.Fingerprint.Basic, 2019/9/18, Add for FPC driver baseon trustonic tee */
         int vdd_en_gpio;
         int cs_gpio;
         bool cs_gpio_set;
@@ -130,12 +129,10 @@ struct fpc1020_data {
         int irq_num;
         struct mutex lock;
         bool prepared;
-        //LiBin@BSP.Fingerprint.Basic, 2016/10/13, modify for enable/disable irq
         int irq_enabled;
         struct wakeup_source ttw_wl;
         struct wakeup_source fpc_wl;
         struct wakeup_source fpc_irq_wl;
-        /* Long.Liu@PSW.BSP.Fingerprint.Basic, 2019/9/18, Add for FPC driver */
         //struct regulator                                *vreg[ARRAY_SIZE(vreg_conf)];
         unsigned power_num;
         fp_power_info_t pwr_list[FP_MAX_PWR_LIST_LEN];
@@ -183,7 +180,6 @@ static int fpc1020_request_named_gpio(struct fpc1020_data *fpc1020,
 }
 
 
-/* Long.Liu@PSW.BSP.Fingerprint.Basic, 2019/9/18, Add for FPC driver */
 static int vreg_setup(struct fpc1020_data *fpc_fp, fp_power_info_t *pwr_info,
         bool enable)
 {
@@ -378,7 +374,6 @@ static ssize_t clk_enable_set(struct device *dev,
 
 static DEVICE_ATTR(clk_enable, S_IWUSR, NULL, clk_enable_set);
 
-//LiBin@BSP.Fingerprint.Basic, 2016/10/13, modify for enable/disable irq
 static DEFINE_SPINLOCK(fpc1020_lock);
 
 static int fpc1020_enable_irq(struct fpc1020_data *fpc1020, bool enable)
@@ -461,7 +456,6 @@ static ssize_t regulator_enable_set(struct device *dev,
         return rc ? rc : count;
 }
 
-//LiBin@BSP.Fingerprint.Basic, 2016/10/13, modify for enable/disable irq
 static ssize_t irq_enable_set(struct device *dev,
                 struct device_attribute *attribute, const char *buffer, size_t count)
 {
@@ -519,7 +513,6 @@ static ssize_t wakelock_enable_set(struct device *dev,
         return count;
 }
 
-/* Long.Liu@PSW.BSP.Fingerprint.Basic, 2019/9/18, Add for FPC driver */
 static ssize_t hardware_reset(struct device *dev, struct device_attribute *attribute, const char *buffer, size_t count)
 {
         if (g_use_gpio_power_enable == 1) {
@@ -552,7 +545,6 @@ static struct attribute *attributes[] = {
         &dev_attr_irq_enable.attr,
         &dev_attr_wakelock_enable.attr,
         &dev_attr_clk_enable.attr,
-        /* Long.Liu@PSW.BSP.Fingerprint.Basic, 2019/9/18, Add for FPC driver */
         &dev_attr_irq_unexpected.attr,
         NULL
 };
@@ -582,7 +574,6 @@ static irqreturn_t fpc1020_irq_handler(int irq, void *handle)
 }
 
 
-/* Long.Liu@PSW.BSP.Fingerprint.Basic, 2019/9/18, Add for FPC driver */
 void fpc_cleanup_pwr_list(struct fpc1020_data* fpc_dev) {
     unsigned index = 0;
     pr_err("%s cleanup", __func__);
@@ -756,7 +747,6 @@ static int fpc1020_irq_probe(struct platform_device *pldev)
                 goto ERR_ALLOC;
         }
         g_use_gpio_power_enable = 0;
-        /* Long.Liu@PSW.BSP.Fingerprint.Basic, 2019/9/18, Add for FPC driver */
         fpc1020->cs_gpio_set = false;
         fpc1020->pinctrl = NULL;
         fpc1020->pstate_cs_func = NULL;
@@ -791,7 +781,6 @@ static int fpc1020_irq_probe(struct platform_device *pldev)
             g_use_gpio_power_enable = 0;
         }
 
-        /* Long.Liu@PSW.BSP.Fingerprint.Basic, 2019/9/18, Add for FPC driver */
         if (g_use_gpio_power_enable == 1) {
             fpc1020->pinctrl = devm_pinctrl_get(&pldev->dev);
             if (IS_ERR(fpc1020->pinctrl)) {
@@ -844,7 +833,6 @@ static int fpc1020_irq_probe(struct platform_device *pldev)
         /* Request that the interrupt should be wakeable */
         /*enable_irq_wake( gpio_to_irq( fpc1020->irq_gpio ) );*/
 
-        /*LiBin@BSP.Fingerprint.Basic, 2016/10/13, modify for enable/disable irq*/
         disable_irq_nosync(gpio_to_irq(fpc1020->irq_gpio));
         fpc1020->irq_enabled = 0;
 
@@ -854,7 +842,6 @@ static int fpc1020_irq_probe(struct platform_device *pldev)
                 goto ERR_AFTER_WAKELOCK;
         }
 
-        /* Long.Liu@PSW.BSP.Fingerprint.Basic, 2019/9/18, Add for FPC driver */
         if (g_use_gpio_power_enable == 1) {
         /*get cs resource*/
                 fpc1020->cs_gpio = of_get_named_gpio(pldev->dev.of_node, "fpc,gpio_cs", 0);
@@ -885,7 +872,6 @@ static int fpc1020_irq_probe(struct platform_device *pldev)
                 goto ERR_AFTER_WAKELOCK;
         }
 
-        /* Long.Liu@PSW.BSP.Fingerprint.Basic, 2019/9/18, Add for FPC driver */
         rc = fpc_parse_pwr_list(fpc1020);
         if (rc) {
             pr_err("failed to parse power list, rc = %d\n", rc);
