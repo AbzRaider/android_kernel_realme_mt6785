@@ -5306,7 +5306,6 @@ static int hx83112f_reset(void *chip_data)
     himax_sense_on(0x00);
     himax_check_remapping();
 
-    /*Yulianghan@RM.PSW.BSP.TP, 2018/09/07, add for hx83112f_noflash lcd esd TP irq exception in realme 18612*/
 #ifdef CONFIG_TOUCHPANEL_MTK_PLATFORM
     // enable_irq(chip_info->hx_irq);
     hx83112f_enable_interrupt(chip_info, true);

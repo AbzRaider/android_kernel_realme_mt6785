@@ -5574,7 +5574,6 @@ static int hx83112b_nf_reset(void *chip_data)
     }
     hx83112b_nf_sense_on(0x00);
 
-    /*Yulianghan@RM.PSW.BSP.TP, 2018/09/07, add for hx83112a_noflash lcd esd TP irq exception in realme 18612*/
     #ifdef CONFIG_TOUCHPANEL_MTK_PLATFORM
     enable_irq(chip_info->hx_irq);
     #endif

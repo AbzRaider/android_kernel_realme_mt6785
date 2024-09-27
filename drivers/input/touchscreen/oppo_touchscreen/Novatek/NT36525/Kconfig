@@ -1,6 +1,5 @@
 
 #ifdef OPLUS_FEATURE_TP_BASIC
-#Added by Cong.Dai@Bsp.group.Tp for nova nt36525 ic driver
 
 config TOUCHPANEL_NOVA_NT36525
 #	default y

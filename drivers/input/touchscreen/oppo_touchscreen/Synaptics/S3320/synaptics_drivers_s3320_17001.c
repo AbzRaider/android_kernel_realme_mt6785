@@ -1076,7 +1076,6 @@ static void synaptics_auto_test(struct seq_file *s, void *chip_data, struct syna
     checkCMD(chip_info);
     ret = touch_i2c_read_block(client, reg_info->F54_ANALOG_DATA_BASE + 3, 4, buffer);//for s3320 only need to check 32 Rx channels
 
-    //guomingqiang@phone.bsp, 2016-06-27, add for tp test step2
     touch_i2c_write_byte(client, 0xff, 0x3);
     touch_i2c_read_block(client, reg_info->F55_SENSOR_CTRL01, syna_testdata->RX_NUM, buffer_rx);
     touch_i2c_read_block(client, reg_info->F55_SENSOR_CTRL02, syna_testdata->TX_NUM, buffer_tx);
