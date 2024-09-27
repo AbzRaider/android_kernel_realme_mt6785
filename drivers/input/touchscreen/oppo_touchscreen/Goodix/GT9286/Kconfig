@@ -1,6 +1,5 @@
 
 #ifdef OPLUS_FEATURE_TP_BASIC
-#Added by Cong.Dai@Bsp.group.Tp for focal gt9286 ic driver
 
 config TOUCHPANEL_GOODIX_GT9286
 #   default y

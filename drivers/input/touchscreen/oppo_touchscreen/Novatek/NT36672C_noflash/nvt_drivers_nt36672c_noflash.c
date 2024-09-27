@@ -219,7 +219,6 @@ void nvt_bootloader_reset_noflash(struct chip_data_nt36672c *chip_info)
 
     mdelay(5);  //wait tBRST2FR after Bootload RST
 //#ifdef OPLUS_FEATURE_TP_BASIC
-/*Xiaofei.Gong@BSP.TP.Function, 2020/10/15, Solve the problem of TP stuck point .*/
     if (chip_info->spi_fast_read_support) {
         nvt_write_addr(chip_info->s_client, SPI_READ_FAST, 0x40);
         TPD_INFO("%s load spi fast read 0x40\n", __func__);
@@ -5657,7 +5656,6 @@ static void nova_init_oppo_apk_op(struct touchpanel_data *ts)
 #endif // end of CONFIG_OPPO_TP_APK
 
 //#ifdef OPLUS_FEATURE_TP_BASIC
-/*Xiaofei.Gong@BSP.TP.Function, 2020/10/15, Solve the problem of TP stuck point .*/
 static int nt36672c_parse_dts(struct chip_data_nt36672c *chip_info, struct spi_device *client)
 {
     struct device *dev;

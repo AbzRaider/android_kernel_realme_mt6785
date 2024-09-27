@@ -738,7 +738,6 @@ firmware into each partition.
 return:
         n.a.
 *******************************************************/
-/* Pan.Chen@BSP.TP.Function, 2020/09/11, bringup add for touchscreen mould. */
 /*static int32_t Write_Partition(struct chip_data_nt36525b *chip_info, const u8 *fwdata, size_t fwsize)
 {
     uint32_t list = 0;
@@ -798,7 +797,6 @@ out:
     return ret;
 }*/
 
-/* Pan.Chen@BSP.TP.Function, 2020/09/11, bringup add for touchscreen mould. */
 static int32_t Write_Partition(struct chip_data_nt36525b *chip_info, const u8 *fwdata, size_t fwsize)
 {
     uint32_t list = 0;
@@ -5310,7 +5308,6 @@ ts_malloc_failed:
     TPD_INFO("%s, probe error\n", __func__);
     return ret;
 }
-/* Pan.Chen@BSP.TP.Function, 2020/09/11, bringup add for touchscreen mould */
 static int nvt_tp_remove(struct spi_device *client)
 {
     struct touchpanel_data *ts = spi_get_drvdata(client);
@@ -5320,7 +5317,6 @@ static int nvt_tp_remove(struct spi_device *client)
 
     return 0;
 }
-/* Pan.Chen@BSP.TP.Function, 2020/09/11, bringup add for touchscreen mould */
 static int nvt_spi_suspend(struct device *dev)
 {
     struct touchpanel_data *ts = dev_get_drvdata(dev);

@@ -1,6 +1,5 @@
 
 #ifdef OPLUS_FEATURE_TP_BASIC
-#Added by Cong.Dai@Bsp.group.Tp for focal ft8006 ic driver
 
 config TOUCHPANEL_FOCAL_FT8006
 #	default y

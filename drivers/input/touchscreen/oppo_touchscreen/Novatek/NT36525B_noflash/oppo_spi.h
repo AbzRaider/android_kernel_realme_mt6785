@@ -11,7 +11,6 @@
 #include <linux/io.h>
 #ifdef CONFIG_TRUSTONIC_TEE_SUPPORT
 #include <mobicore_driver_api.h>
-/* Pan.Chen@BSP.TP.Function, 2020/09/11, bringup add for touchscreen mould. */
 //#include <tlspi_Api.h>
 #endif
 /*******************************************************************************
