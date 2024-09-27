@@ -567,6 +567,12 @@ struct dynamic_fps_info {
 	/*unsigned int idle_check_interval;*//*ms*/
 };
 
+struct vsync_trigger_time {
+	unsigned int fps;
+	unsigned int trigger_after_te;
+	unsigned int config_expense_time;
+};
+
 
 /*DynFPS*/
 enum DynFPS_LEVEL {
@@ -788,6 +794,7 @@ struct LCM_DSI_PARAMS {
 	/*for ARR*/
 	unsigned int dynamic_fps_levels;
 	struct dynamic_fps_info dynamic_fps_table[DYNAMIC_FPS_LEVELS];
+	struct vsync_trigger_time vsync_after_te[DFPS_LEVELS];
 
 #ifdef CONFIG_MTK_HIGH_FRAME_RATE
 	/****DynFPS start****/
@@ -843,6 +850,15 @@ struct LCM_PARAMS {
 	unsigned int min_luminance;
 	unsigned int average_luminance;
 	unsigned int max_luminance;
+
+	/* #ifdef OPLUS_FEATURE_ONSCREENFINGERPRINT */
+	/*
+	* Ling.Guo@PSW.MM.Display.LCD.Stability, 2019/06/11,
+	* modify for support aod state.
+	*/
+	unsigned int hbm_en_time;
+	unsigned int hbm_dis_time;
+	/* #endif */ /* OPLUS_FEATURE_ONSCREENFINGERPRINT */
 
 #if 1//def ODM_HQ_EDIT
 /* Liyan@ODM.HQ.Multimedia.LCM 2019/09/19 modified for backlight remapping */
@@ -987,6 +1003,10 @@ struct LCM_UTIL_FUNCS {
 	void (*send_data)(unsigned int data);
 	unsigned int (*read_data)(void);
 
+	//#ifdef OPLUS_FEATURE_RAMLESS_AOD
+	void (*dsi_set_cmdq_V4)(struct LCM_setting_table_V3 *para_list,
+			unsigned int size,  bool hs);
+	//#endif /* OPLUS_FEATURE_RAMLESS_AOD */
 	void (*dsi_set_cmdq_V3)(struct LCM_setting_table_V3 *para_list,
 			unsigned int size, unsigned char force_update);
 	void (*dsi_set_cmdq_V2)(unsigned int cmd, unsigned char count,
@@ -1075,8 +1095,6 @@ struct LCM_DRIVER {
 	void(*set_cabc_cmdq)(void *handle, unsigned int level);
 	void (*get_cabc_status)(int *status);
 	//void (*set_cabc_mode_cmdq)(void *handle, unsigned int level);
-	//Tongxing.Liu@ODM_WT.MM.Display.Lcd, 21/01/23 add gamma write interface,
-	void (*set_gamma_mode_cmdq)(void *handle,unsigned int level);
 #endif
 	void (*set_pwm)(unsigned int divider);
 	unsigned int (*get_pwm)(unsigned int divider);
@@ -1107,6 +1125,8 @@ struct LCM_DRIVER {
 	*/
 	void (*disp_lcm_aod_from_display_on)(void);
 	void (*set_aod_brightness)(void *handle, unsigned int mode);
+	void (*set_safe_mode)(void *handle, unsigned int mode);
+	bool (*set_hbm_wait_ramless)(bool wait, void *qhandle);
 #endif /* VENDOR_EDIT */
 
 	int (*adjust_fps)(void *cmdq, int fps, struct LCM_PARAMS *params);
@@ -1142,6 +1162,11 @@ struct LCM_DRIVER {
 		unsigned int from_level, unsigned int to_level, struct LCM_PARAMS *params);
 	bool (*dfps_need_send_cmd)(
 	unsigned int from_level, unsigned int to_level, struct LCM_PARAMS *params);
+
+	void (*set_aod_area_cmdq)(void *handle, unsigned char *area);
+	void (*set_aod_cv_mode)(void *qhandle,unsigned int mode);
+	void (*doze_enable)(void *handle);
+	void (*doze_disable)(void *handle);
 };
 
 /* LCM Driver Functions */

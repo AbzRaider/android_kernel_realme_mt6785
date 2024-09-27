@@ -110,7 +110,8 @@ static const unsigned char LCD_MODULE_ID = 0x01;
 //extern int gesture_flag;  wuxuewen temp delete 
 //extern void lcd_queue_load_tp_fw(void); wuxuewen temp delete 
 //extern nvt_tp;  wuxuewen temp delete 
-extern bool is_sala_a(void);
+extern int __attribute__((weak)) is_sala_a_project(void) {return 1;}; //20682 140
+extern int __attribute__((weak)) is_sala_three_camera(void) {return 0;};
 
 #define LCM_DSI_CMD_MODE    0
 #define FRAME_WIDTH        (1080)
@@ -743,7 +744,7 @@ static void lcm_get_params(LCM_PARAMS *params)
         params->dsi.lcm_esd_check_table[0].para_list[0] = 0x9C;
     }
 /* Liyan@ODM.HQ.Multimedia.LCM 2019/09/19 modified for backlight remapping */
-	if(!is_sala_a()) {
+	if((!(is_sala_a_project() == 2)) && (is_sala_three_camera() == 0)) {
 		params->blmap = blmap_table_v2;
 		params->blmap_size = sizeof(blmap_table_v2) / sizeof(blmap_table_v2[0]);
 	} else {
@@ -875,7 +876,7 @@ static unsigned int lcm_compare_id(void)
 
 static void lcm_setbacklight_cmdq(void *handle, unsigned int level)
 {
-	if (!is_sala_a()) {
+	if ((!(is_sala_a_project() == 2)) && (is_sala_three_camera() == 0)) {
 		LCM_LOGI("%s,nt36672c sala backlight: level = %d\n", __func__, level);
 		if (level == 0) {
 			bl_level_dimming_exit[1].para_list[0] = (level >> 8) & 0x0F;
@@ -898,7 +899,7 @@ static void lcm_setbacklight_cmdq(void *handle, unsigned int level)
 			1);
 		}
 	} else {
-		LCM_LOGI("%s,nt sala-A backlight: level = %d\n", __func__, level);
+		LCM_LOGI("%s,nt sala_A/3 backlight: level = %d\n", __func__, level);
 		if (level == 0) {
 			bl_level_dimming_exit[1].para_list[0] = (level >> 8) & 0x0F;
 			bl_level_dimming_exit[1].para_list[1] = level & 0xFF;

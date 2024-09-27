@@ -484,6 +484,49 @@ static void lcm_resume_power(void)
 	SET_RESET_PIN(1);
 	MDELAY(10);
 }
+
+static void lcm_init(void)
+{
+	pr_debug("lcm_init\n");
+	/*//SET_RESET_PIN(1);*/
+	/*//MDELAY(10);*/
+	SET_RESET_PIN(0);
+	MDELAY(10);
+	SET_RESET_PIN(1);
+/*#ifdef OPLUS_FEATURE_TP_BASIC*/
+/*Xiaofei.Gong@BSP.TP.Function, 2020/09/23, Enable black gestures for pascal*/
+	MDELAY(11);
+	lcd_queue_load_tp_fw();
+	MDELAY(1);
+/*Xiaofei.Gong@BSP.TP.Function, 2020/09/23, Enable black gestures for pascal*/
+/*#endif OPLUS_FEATURE_TP_BASIC*/
+	if (lcm_dsi_mode == CMD_MODE) {
+		push_table(NULL, init_setting_cmd,
+			sizeof(init_setting_cmd) / sizeof(struct LCM_setting_table), 1);
+		pr_debug("nt36525b_hlt_lcm_mode = cmd mode :%d----\n", lcm_dsi_mode);
+
+	} else {
+		push_table(NULL, init_setting_vdo,
+			sizeof(init_setting_vdo) / sizeof(struct LCM_setting_table), 1);
+		pr_debug("nt36525b_hlt_lcm_mode = vdo mode :%d\n", lcm_dsi_mode);
+	}
+}
+
+static void lcm_suspend(void)
+{
+	pr_debug("lcm_suspend\n");
+
+	push_table(NULL, lcm_suspend_setting,
+		sizeof(lcm_suspend_setting) / sizeof(struct LCM_setting_table), 1);
+
+
+}
+
+static void lcm_resume(void)
+{
+	pr_debug("lcm_resume\n");
+	lcm_init();
+}
 #if 0
 static struct LCM_setting_table lcm_cabc_enter_setting[] = {
 	{0x53, 1, {0x2c}},
@@ -570,49 +613,6 @@ static void lcm_set_cabc_cmdq(void *handle, unsigned int level)
 	cabc_status = level;
 	/*//dump_stack();*/
 }
-
-static void lcm_init(void)
-{
-	pr_debug("lcm_init\n");
-	/*SET_RESET_PIN(1);*/
-	/*MDELAY(10);*/
-	SET_RESET_PIN(0);
-	MDELAY(10);
-	SET_RESET_PIN(1);
-/*#ifdef OPLUS_FEATURE_TP_BASIC*/
-/*Xiaofei.Gong@BSP.TP.Function, 2020/09/23, Enable black gestures for pascal*/
-	MDELAY(11);
-	lcd_queue_load_tp_fw();
-	MDELAY(1);
-/*Xiaofei.Gong@BSP.TP.Function, 2020/09/23, Enable black gestures for pascal*/
-/*#endif OPLUS_FEATURE_TP_BASIC*/
-	if (lcm_dsi_mode == CMD_MODE) {
-		push_table(NULL, init_setting_cmd,
-			sizeof(init_setting_cmd) / sizeof(struct LCM_setting_table), 1);
-		pr_debug("nt36525b_hlt_lcm_mode = cmd mode :%d----\n", lcm_dsi_mode);
-
-	} else {
-		push_table(NULL, init_setting_vdo,
-			sizeof(init_setting_vdo) / sizeof(struct LCM_setting_table), 1);
-		pr_debug("nt36525b_hlt_lcm_mode = vdo mode :%d\n", lcm_dsi_mode);
-	}
-	lcm_set_cabc_cmdq(NULL, cabc_status);
-}
-
-static void lcm_suspend(void)
-{
-	pr_debug("lcm_suspend\n");
-
-	push_table(NULL, lcm_suspend_setting,
-		sizeof(lcm_suspend_setting) / sizeof(struct LCM_setting_table), 1);
-}
-
-static void lcm_resume(void)
-{
-	pr_debug("lcm_resume\n");
-	lcm_init();
-}
-
 static void lcm_get_cabc_status(int *status)
 {
 	pr_debug("[lcm] cabc get to %d\n", cabc_status);
@@ -641,17 +641,11 @@ static struct LCM_setting_table bl_level[] = {
 	{REGFLAG_END_OF_TABLE, 0x00, {} }
 };
 
-extern int __attribute((weak)) cabc_sun_flag;
 static void lcm_setbacklight_cmdq(void *handle, unsigned int level)
 {
 //Jiantao.Liu@ODM_WT.MM.Display.Lcd, 2020/07/06, Add dimming off for power off sequence with tBLOFF
-	if (0 == level) {
-		push_table(handle, lcm_dimming_off_setting, sizeof(lcm_dimming_off_setting) / sizeof(struct LCM_setting_table), 1);
-	} else if (level > 3343) {
-		cabc_sun_flag = 1;
-	} else {
-		cabc_sun_flag = 0;
-	}
+	if(0 == level)
+	push_table(handle, lcm_dimming_off_setting, sizeof(lcm_dimming_off_setting) / sizeof(struct LCM_setting_table), 1);
 	bl_level[0].para_list[0] = 0x000F & (level >> 8);
 	bl_level[0].para_list[1] = 0x00FF & (level);
 	pr_err("[ HW check ac backlight nt36525b+boe]level=%d para_list[0]=%x,para_list[1]=%x\n",
@@ -687,7 +681,6 @@ static unsigned int lcm_esd_recover(void)
 		pr_debug("nt36525b_hlt_lcm_mode = vdo mode esd recovery :%d----\n",
 			lcm_dsi_mode);
 	}
-	lcm_set_cabc_cmdq(NULL, cabc_status);
 
 	pr_debug("lcm_esd_recovery\n");
 	push_table(NULL, bl_level, sizeof(bl_level) / sizeof(struct LCM_setting_table), 1);
