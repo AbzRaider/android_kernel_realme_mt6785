@@ -611,6 +611,9 @@ enum Tfa98xx_Error tfa98xx_init(struct tfa_device *tfa)
 		error = (tfa->dev_ops.tfa_init)(tfa);
 
 	#ifdef VENDOR_EDIT
+	/* xiang.fei@PSW.MM.AudioDriver.Codec, 2018/03/12,
+	 * Add for speaker resistance
+	 */
 	g_speaker_resistance_fail = false;
 	#endif /* VENDOR_EDIT */
 
@@ -976,6 +979,7 @@ enum Tfa98xx_Error tfa98xx_set_volume_level(struct tfa_device *tfa,
 }
 
 #ifdef VENDOR_EDIT
+/* Zhao.Pan@MM.AudioDriver.SmartPA, 2020/01/13, add for analog volume */
 enum Tfa98xx_Error tfa98xx_set_ana_volume(struct tfa_device *tfa, unsigned int vol)
 {
 	if(tfa->in_use == 0)
@@ -1198,6 +1202,7 @@ tfa_dsp_patch(struct tfa_device *tfa, int patchLength,
 		 const unsigned char *patchBytes)
 {
 	#ifndef VENDOR_EDIT
+	/*Jianfeng.Qiu@PSW.MM.AudioDriver.SmartPA.1514327,*/
 	/*2018/08/10,Modify for smart mute issue.*/
 	enum Tfa98xx_Error error;
 	#else /* VENDOR_EDIT */
@@ -1215,6 +1220,7 @@ tfa_dsp_patch(struct tfa_device *tfa, int patchLength,
 		return error;
 
 	#ifdef VENDOR_EDIT
+	/*Jianfeng.Qiu@PSW.MM.AudioDriver.SmartPA.1514327,*/
 	/*2018/08/10,Add for smart mute issue.*/
 	tfa98xx_dsp_system_stable(tfa, &status);
 	if (!status) {
@@ -2827,6 +2833,9 @@ enum Tfa98xx_Error tfaRunSpeakerBoost(struct tfa_device *tfa,
 	enum Tfa98xx_Error err = Tfa98xx_Error_Ok;
 	int value;
 	#ifdef VENDOR_EDIT
+	/* xiang.fei@PSW.MM.AudioDriver.Codec, 2018/03/12
+	 * Add for speaker resistance
+	 */
 	int calibrate_done = 0;
 	#endif /* VENDOR_EDIT */
 
@@ -2859,6 +2868,9 @@ enum Tfa98xx_Error tfaRunSpeakerBoost(struct tfa_device *tfa,
 		if ((tfa->tfa_family == 1) && (tfa->daimap == Tfa98xx_DAI_TDM))
 			tfa->sync_iv_delay = 1;
 		#ifdef VENDOR_EDIT
+		/* xiang.fei@PSW.MM.AudioDriver.Codec, 2018/03/12,
+		 * Add for speaker resistance
+		 */
 		tfa_dev_set_state(tfa, TFA_STATE_OPERATING);
 		tfaRunSpeakerCalibration_result(tfa, &calibrate_done);
 		#endif /* VENDOR_EDIT */
@@ -2943,6 +2955,7 @@ enum Tfa98xx_Error tfaRunSpeakerCalibration(struct tfa_device *tfa)
 }
 
 #ifdef VENDOR_EDIT
+/*xiang.fei@PSW.MM.AudioDriver.Codec, 2018/03/12, Add for speaker resistance*/
 enum Tfa98xx_Error tfaRunSpeakerCalibration_result(struct tfa_device *tfa,
 						   int *result)
 {
@@ -2976,6 +2989,9 @@ enum Tfa98xx_Error tfaRunSpeakerCalibration_result(struct tfa_device *tfa,
 				tfa->mohm[0],
 				tfa->mohm[1]);
 
+		/* Huiqun.Han@PSW.MM.AudioDriver.Codec, 2018/08/17,
+		 * Add for new speaker
+		 */
 		#ifdef SPKR_RES_48_75_OHM
 		pr_info("%s: speaker resistance acceptable: 4.8-7.5 mOhm\n",
 			__func__);
@@ -2985,9 +3001,15 @@ enum Tfa98xx_Error tfaRunSpeakerCalibration_result(struct tfa_device *tfa,
 		if ((tfa->mohm[0] < 6000) || (tfa->mohm[0] > 10500)) {
 		#endif /* SPKR_RES_48_72_OHM*/
 			pr_info("speaker_resistance_fail\n");
+			/* Jianfeng.Qiu@PSW.MM.AudioDriver.FTM.1226731,
+			 * 2018/05/12, Add for FTM
+			 */
 			if (ftm_mode == BOOT_MODE_FACTORY)
 				strcpy(ftm_spk_resistance,
 				       "speaker_resistance_fail");
+			/* Jianfeng.Qiu@PSW.MM.AudioDriver.FTM.1226731,
+			 * 2018/05/12, Add for FTM end
+			 */
 			g_speaker_resistance_fail = true;
 
 			/* When MTPOTC is set (cal=once) re-lock key2 */
@@ -3305,6 +3327,9 @@ enum Tfa98xx_Error tfaRunWaitCalibration(struct tfa_device *tfa,
 
 	if (*calibrateDone != 1) {
 		#ifdef VENDOR_EDIT
+		/* Jianfeng.Qiu@PSW.MM.AudioDriver.FTM.1226731,
+		 * 2018/05/12, Add for FTM
+		 */
 		if (ftm_mode == BOOT_MODE_FACTORY)
 			strcpy(ftm_SpeakerCalibration, "calibration_fail");
 		#endif /* VENDOR_EDIT */
@@ -3384,6 +3409,7 @@ enum tfa_error tfa_dev_start(struct tfa_device *tfa,
 
 		/* Go to the Operating state */
 		#ifndef VENDOR_EDIT
+		/*Jianfeng.Qiu@PSW.MM.AudioDriver.SmartPA,*/
 		/*2018/06/18, Modify for mute issue*/
 		/*every time umute PA, because PA umute need some time.*/
 		tfa_dev_set_state(tfa, TFA_STATE_OPERATING | TFA_STATE_MUTE);
@@ -3446,6 +3472,7 @@ enum tfa_error tfa_dev_stop(struct tfa_device *tfa)
 {
 	enum Tfa98xx_Error err = Tfa98xx_Error_Ok;
 	#ifdef VENDOR_EDIT
+	/*Jianfeng.Qiu@PSW.MM.AudioDriver.SmartPA,*/
 	/* 2018/06/18, Add for mute issue*/
 	int total_wait_count = 20;
 	int times = 0, ready = 0;
@@ -3468,6 +3495,7 @@ enum tfa_error tfa_dev_stop(struct tfa_device *tfa)
 	err = tfa98xx_aec_output(tfa, 0);
 
 	#ifdef VENDOR_EDIT
+	/*Jianfeng.Qiu@PSW.MM.AudioDriver.SmartPA,*/
 	/*2018/06/18, Add for mute issue*/
 	/* we should ensure state machine in powedown here. */
 	while ((TFA_GET_BF(tfa, MANSTATE) != 0) &&
@@ -3754,6 +3782,7 @@ enum Tfa98xx_Error tfa_dsp_get_calibration_impedance(struct tfa_device *tfa)
 }
 
 #ifdef OPLUS_ARCH_EXTENDS
+/*Yongpei.Yao@MULTIMEDIA.AUDIODRIVER.SMARTPA, 2020/08/29, Add for aging calibration*/
 enum Tfa98xx_Error tfa_dsp_get_calibration_impedance_for_aging(struct tfa_device *tfa)
 {
 	enum Tfa98xx_Error error = Tfa98xx_Error_Ok;
@@ -4172,6 +4201,9 @@ enum tfa_error tfa_dev_set_state(struct tfa_device *tfa, enum tfa_state state)
 
 		if (!tfa->is_probus_device) {
 			#ifdef VENDOR_EDIT
+			/* xiang.fei@PSW.MM.AudioDriver.Codec,
+			 * 2018/03/12, Add for speaker resistance
+			 */
 			err = (enum tfa_error)tfa98xx_set_mtp(tfa,
 							      1,
 				TFA98XX_KEY2_PROTECTED_MTP0_MTPOTC_MSK);

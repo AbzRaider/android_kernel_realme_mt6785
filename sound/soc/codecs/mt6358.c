@@ -160,6 +160,7 @@ struct mt6358_priv {
 	struct dc_trim_data dc_trim;
 	bool apply_n12db_gain;
 	int hp_plugged;
+	bool switch_ever_pulled_down;
 
 	/* hp impedance */
 	int hp_impedance;
@@ -878,6 +879,8 @@ static void hp_pull_down(struct mt6358_priv *priv, bool enable)
 			udelay(600);
 		}
 	}
+
+	priv->switch_ever_pulled_down = true;
 }
 
 static bool is_valid_hp_pga_idx(int reg_idx)
@@ -1000,6 +1003,105 @@ static int dl_pga_set(struct snd_kcontrol *kcontrol,
 static const struct soc_enum dl_pga_enum[] = {
 	SOC_ENUM_SINGLE_EXT(ARRAY_SIZE(dl_pga_gain), dl_pga_gain),
 };
+#ifdef OPLUS_BUG_COMPATIBILITY
+/* zhangbo2@MULTIMEDIA.AUDIODRIVER.MACHINE, 2021/06/28, add for audio extern config */
+extern int is_sia_chip;
+static int audio_compatible = 0;
+enum oplus_pa_type_def {
+	OPLUS_PA_NXP = 0,
+	OPLUS_PA_AWINIC,
+	OPLUS_PA_SIA,
+	OPLUS_PA_TYPE_NUM
+};
+static int oplus_pa_type = OPLUS_PA_NXP;
+
+//if more config values, set a bigger number
+#define AUDIO_EXTERN_CONFIG_MAX_NUM  4
+#define OPLUS_PA_TYPE_OFFSET 0
+int audio_extern[AUDIO_EXTERN_CONFIG_MAX_NUM] = {0};
+
+bool is_awinic_pa_type(void)
+{
+	return (oplus_pa_type == OPLUS_PA_AWINIC);
+}
+
+bool is_nxp_pa_type(void)
+{
+	return (oplus_pa_type == OPLUS_PA_NXP);
+}
+
+static int read_audio_compatible_dts(struct platform_device *pdev)
+{
+	int ret;
+	ret = of_property_read_u32(pdev->dev.of_node, "audio_compatible", &audio_compatible);
+	if (ret) {
+		dev_err(&pdev->dev, "%s: read audio_compatible error = %d\n", __func__, ret);
+		audio_compatible = 0;
+		return ret;
+	}
+	return ret;
+}
+
+static int read_audio_extern_config_dts(struct platform_device *pdev)
+{
+	int ret;
+	int count, i;
+	count = of_property_count_u32_elems(pdev->dev.of_node, "audio_extern_config");
+	if (count <= 0) {
+		dev_err(&pdev->dev, "%s: no property match audio_extern_config\n", __func__);
+		return -ENODATA;
+	} else if (count > AUDIO_EXTERN_CONFIG_MAX_NUM) {
+		dev_err(&pdev->dev, "%s: audio_extern_config num=%d > %d(max numbers)\n",
+				__func__, count, AUDIO_EXTERN_CONFIG_MAX_NUM);
+		return -EINVAL;
+	}
+
+	ret = of_property_read_u32_array(pdev->dev.of_node, "audio_extern_config",
+			audio_extern, count);
+	if (ret) {
+		dev_err(&pdev->dev, "%s: read audio_extern_config error = %d\n", __func__, ret);
+		return ret;
+	}
+	for (i = 0; i < count; i++) {
+		dev_info(&pdev->dev, "%s: audio_extern[%d] = %d\n",
+				__func__, i ,audio_extern[i]);
+	}
+	if (OPLUS_PA_TYPE_OFFSET < count) {
+		oplus_pa_type = audio_extern[OPLUS_PA_TYPE_OFFSET];
+		dev_info(&pdev->dev, "%s: pa_type = audio_extern[%d] = %d\n",
+				__func__, OPLUS_PA_TYPE_OFFSET , oplus_pa_type);
+	}
+	return ret;
+}
+
+static int mt6358_audio_extern_config_get(struct snd_kcontrol *kcontrol,
+			       struct snd_ctl_elem_value *ucontrol)
+{
+	int i;
+	if (is_sia_chip == 1 && audio_compatible == 1) {
+		pr_info("%s: is sia chip\n",__func__);
+		audio_extern[OPLUS_PA_TYPE_OFFSET] = OPLUS_PA_SIA;
+	}
+	for (i = 0; i < AUDIO_EXTERN_CONFIG_MAX_NUM; i++) {
+		ucontrol->value.integer.value[i] = audio_extern[i];
+		pr_info("%s(), OPLUS_AUDIO_EXTERN_CONFIG get value(%d) = %d",
+				__func__, i, audio_extern[i]);
+	}
+
+	return 0;
+}
+
+static int mt6358_audio_extern_config_ctl(struct snd_kcontrol *kcontrol,
+			       struct snd_ctl_elem_info *uinfo)
+{
+	uinfo->type = SNDRV_CTL_ELEM_TYPE_INTEGER;
+	uinfo->count = AUDIO_EXTERN_CONFIG_MAX_NUM;
+	uinfo->value.integer.min = 0;
+	uinfo->value.integer.max = 0x7fffffff; /* 32 bit value,  */
+
+	return 0;
+}
+#endif  /* OPLUS_BUG_COMPATIBILITY */
 
 #define MT_SOC_ENUM_EXT_ID(xname, xenum, xhandler_get, xhandler_put, id) \
 {	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = xname, .device = id,\
@@ -1023,6 +1125,15 @@ static const struct snd_kcontrol_new mt6358_snd_controls[] = {
 	MT_SOC_ENUM_EXT_ID("Lineout_PGAR_GAIN", dl_pga_enum[0],
 			   dl_pga_get, dl_pga_set,
 			   AUDIO_ANALOG_VOLUME_LINEOUTR),
+	/* zhangbo2@MULTIMEDIA.AUDIODRIVER.MACHINE, 2021/06/28, add for audio extern config */
+	{
+		.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
+		.name = "OPLUS_AUDIO_EXTERN_CONFIG",
+		.access = SNDRV_CTL_ELEM_ACCESS_READ,
+		.info = mt6358_audio_extern_config_ctl,
+		.get = mt6358_audio_extern_config_get
+	},
+
 };
 
 /* ul pga gain */
@@ -1553,8 +1664,8 @@ static int mtk_hp_enable(struct mt6358_priv *priv)
 #endif
 	dev_info(priv->dev, "+%s()\n", __func__);
 
-	/* Pull-down HPL/R to AVSS28_AUD */
-	hp_pull_down(priv, true);
+	/* No pull-down HPL/R to AVSS28_AUD for depop */
+
 	/* release HP CMFB gate rstb */
 	regmap_update_bits(priv->regmap, MT6358_AUDDEC_ANA_CON4,
 			   0x1 << 6, 0x1 << 6);
@@ -1775,8 +1886,7 @@ static int mtk_hp_disable(struct mt6358_priv *priv)
 	/* Set HP CMFB gate rstb */
 	regmap_update_bits(priv->regmap, MT6358_AUDDEC_ANA_CON4,
 			   0x1 << 6, 0x0);
-	/* disable Pull-down HPL/R to AVSS28_AUD */
-	hp_pull_down(priv, false);
+	/* No disable Pull-down HPL/R to AVSS28_AUD for depop */
 
 	return 0;
 }
@@ -1810,8 +1920,8 @@ static int mtk_hp_spk_enable(struct mt6358_priv *priv)
 #endif
 	dev_info(priv->dev, "+%s()\n", __func__);
 
-	/* Pull-down HPL/R to AVSS28_AUD */
-	hp_pull_down(priv, true);
+	/* No pull-down HPL/R to AVSS28_AUD for depop */
+
 	/* release HP CMFB gate rstb */
 	regmap_update_bits(priv->regmap, MT6358_AUDDEC_ANA_CON4,
 			0x1 << 6, 0x1 << 6);
@@ -2071,8 +2181,7 @@ static int mtk_hp_spk_disable(struct mt6358_priv *priv)
 	/* Set HP CMFB gate rstb */
 	regmap_update_bits(priv->regmap, MT6358_AUDDEC_ANA_CON4,
 			0x1 << 6, 0x0);
-	/* disable Pull-down HPL/R to AVSS28_AUD */
-	hp_pull_down(priv, false);
+	/* No disable Pull-down HPL/R to AVSS28_AUD for depop */
 
 	return 0;
 }
@@ -2159,6 +2268,9 @@ static int mtk_hp_impedance_disable(struct mt6358_priv *priv)
 
 	/* Disable AUD_CLK */
 	regmap_update_bits(priv->regmap, MT6358_AUDDEC_ANA_CON13, 0x1, 0x0);
+
+	/* Pull-down HPL/R to AVSS28_AUD */
+	hp_pull_down(priv, true);
 
 	/* Disable HP main output stage */
 	regmap_update_bits(priv->regmap, MT6358_AUDDEC_ANA_CON1, 0x3, 0x0);
@@ -2850,8 +2962,10 @@ static int mt6358_amic_enable(struct mt6358_priv *priv)
 			regmap_write(priv->regmap,
 				     MT6358_AUDENC_ANA_CON10, 0x0161);
 		else
+		/* zhangbo2@MULTIMEDIA.AUDIODRIVER, 2021/05/28,
+		* modify for changing micbias vol to 2.7V for headset mic not recording */
 			regmap_write(priv->regmap,
-				     MT6358_AUDENC_ANA_CON10, 0x0061);
+				     MT6358_AUDENC_ANA_CON10, 0x0071);
 	}
 
 	/* set mic pga gain */
@@ -4151,7 +4265,8 @@ static void start_trim_hardware(struct mt6358_priv *priv, bool buffer_on)
 	mt6358_set_aud_global_bias(priv, true);
 
 	/* Pull-down HPL/R to AVSS30_AUD */
-	hp_pull_down(priv, true);
+	if (!priv->switch_ever_pulled_down)
+		hp_pull_down(priv, true);
 
 	/* release HP CMFB gate rstb */
 	regmap_update_bits(priv->regmap, MT6358_AUDDEC_ANA_CON4,
@@ -4434,8 +4549,7 @@ static void stop_trim_hardware(struct mt6358_priv *priv)
 	regmap_update_bits(priv->regmap, MT6358_AUDDEC_ANA_CON4,
 			   0x1 << 6, 0x0);
 
-	/* Disable Pull-down HPL/R to AVSS30_AUD  */
-	hp_pull_down(priv, false);
+	/* No disable Pull-down HPL/R to AVSS30_AUD for depop */
 
 	/* disable AUDGLB */
 	mt6358_set_aud_global_bias(priv, false);
@@ -4458,8 +4572,7 @@ static void start_trim_hardware_with_lo(struct mt6358_priv *priv,
 	/* Enable AUDGLB */
 	mt6358_set_aud_global_bias(priv, true);
 
-	/* Pull-down HPL/R to AVSS30_AUD */
-	hp_pull_down(priv, true);
+	/* No pull-down HPL/R to AVSS30_AUD */
 
 	/* release HP CMFB gate rstb */
 	regmap_update_bits(priv->regmap, MT6358_AUDDEC_ANA_CON4,
@@ -4778,8 +4891,7 @@ static void stop_trim_hardware_with_lo(struct mt6358_priv *priv)
 	regmap_update_bits(priv->regmap, MT6358_AUDDEC_ANA_CON4,
 			   0x1 << 6, 0x0);
 
-	/* Disable Pull-down HPL/R to AVSS30_AUD  */
-	hp_pull_down(priv, false);
+	/* No disable Pull-down HPL/R to AVSS30_AUD for depop */
 
 	/* disable AUDGLB */
 	mt6358_set_aud_global_bias(priv, false);
@@ -6667,6 +6779,11 @@ static int mt6358_codec_init_reg(struct mt6358_priv *priv)
 			   RG_AUDLOLSCDISABLE_VAUDP15_MASK_SFT,
 			   0x1 << RG_AUDLOLSCDISABLE_VAUDP15_SFT);
 
+	/* Set HP_EINT trigger level to 2.0v */
+	regmap_update_bits(priv->regmap, MT6358_AUDENC_ANA_CON11,
+			   RG_EINTCOMPVTH_MASK_SFT,
+			   0x1 << RG_EINTCOMPVTH_SFT);
+
 	/* gpio miso driving set to 4mA */
 	regmap_write(priv->regmap, MT6358_DRV_CON3, 0x8888);
 
@@ -7707,6 +7824,13 @@ static int mt6358_platform_driver_probe(struct platform_device *pdev)
 					    S_IFREG | 0444, NULL,
 					    priv, &mt6358_debugfs_ops);
 #endif
+
+#ifdef OPLUS_BUG_COMPATIBILITY
+/* zhangbo2@MULTIMEDIA.AUDIODRIVER.MACHINE, 2021/06/28, add for audio extern config */
+	read_audio_extern_config_dts(pdev);
+	read_audio_compatible_dts(pdev);
+#endif /*OPLUS_BUG_COMPATIBILITY*/
+
 	dev_info(priv->dev, "%s(), dev name %s\n",
 		__func__, dev_name(&pdev->dev));
 

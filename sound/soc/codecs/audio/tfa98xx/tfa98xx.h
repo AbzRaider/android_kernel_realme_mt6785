@@ -34,6 +34,9 @@
 #define TFA98XX_FLAG_TDM_DEVICE         (1 << 8)
 #define TFA98XX_FLAG_CHIP_SELECTED      (1 << 16)
 
+/*To support tfa9873*/
+#define TFA98XX_FLAG_ADAPT_NOISE_MODE   (1 << 9)
+
 #define TFA98XX_NUM_RATES		9
 
 #undef CONFIG_DEBUG_FS
@@ -95,6 +98,10 @@ struct tfa98xx {
 	struct delayed_work monitor_work;
 	struct delayed_work interrupt_work;
 	struct delayed_work tapdet_work;
+
+	/*To support tfa9873*/
+	struct delayed_work nmodeupdate_work;
+
 	struct mutex dsp_lock;
 	int dsp_init;
 	int dsp_fw_state;

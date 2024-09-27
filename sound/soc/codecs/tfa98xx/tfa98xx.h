@@ -39,6 +39,7 @@
 #undef CONFIG_DEBUG_FS
 
 #ifdef VENDOR_EDIT
+/* xiang.fei@MM.AudioDriver.Codec, 2018/03/12, add for codec */
 extern bool g_speaker_resistance_fail;
 extern int get_boot_mode(void);
 #endif /* VENDOR_EDIT */
@@ -139,6 +140,9 @@ struct tfa98xx {
 	bool set_mtp_cal;
 	uint16_t cal_data;
 	#ifdef VENDOR_EDIT
+	/* Jianfeng.Qiu@PSW.MM.AudioDriver.SmartPA,
+	 *2018/04/20, Add for resource
+	 */
 	struct regulator *tfa98xx_vdd;
 	#endif /* VENDOR_EDIT */
 };

@@ -41,6 +41,7 @@
 #define TFA98XX_FLAG_TDM_DEVICE         (1 << 8)
 
 #define TFA98XX_NUM_RATES		9
+#undef CONFIG_DEBUG_FS
 
 /* DSP init status */
 enum tfa98xx_dsp_init_state {
@@ -125,6 +126,8 @@ struct tfa98xx {
 
 #ifdef CONFIG_DEBUG_FS
 	struct dentry *dbg_dir;
+#else
+    struct proc_dir_entry *dbg_dir;
 #endif
 	u8 reg;
 	unsigned int flags;
