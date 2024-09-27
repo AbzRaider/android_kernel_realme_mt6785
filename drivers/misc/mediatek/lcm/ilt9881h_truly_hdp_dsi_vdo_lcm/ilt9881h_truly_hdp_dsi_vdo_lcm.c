@@ -386,16 +386,22 @@ extern void lcd_queue_load_tp_fw(void);
 extern int tp_gesture_enable_flag(void);
 static void lcm_suspend_power(void)
 {
-	pr_debug("%s: tp_gesture_enable_flag = %d \n", __func__, tp_gesture_enable_flag());
-	if (0 == tp_gesture_enable_flag()) {
+    pr_debug("%s: tp_gesture_enable_flag = %d \n", __func__, tp_gesture_enable_flag());
+    if (0 == tp_gesture_enable_flag()) {
 	pr_debug("lcm_suspend_power\n");
+
+
+
+
 		SET_LCM_VSN_PIN(0);
 		MDELAY(2);
 		SET_LCM_VSP_PIN(0);
+
 	}
+
 }
 
-#ifdef OPLUS_BUG_STABILITY
+#ifdef ODM_WT_EDIT
 //Tongxing.Liu@ODM_WT.MM.LCM.FUNCTION.2019/11/25, add lcd_shutdown power.
 static void lcm_shudown_power(void)
 {
@@ -420,6 +426,44 @@ static void lcm_resume_power(void)
 //	if ( display_bias_setting(0x14) )
 //		pr_err("fatal error: lcd gate ic setting failed \n");
 	MDELAY(1);
+}
+
+static void lcm_init(void)
+{
+	/*pr_debug("lcm_init\n");*/
+	SET_RESET_PIN(1);
+	MDELAY(1);
+	SET_RESET_PIN(0);
+	MDELAY(1);
+	SET_RESET_PIN(1);
+
+
+	MDELAY(5);
+	lcd_queue_load_tp_fw();
+	MDELAY(10);
+
+	if (lcm_dsi_mode == CMD_MODE) {
+		push_table(NULL, init_setting_cmd, sizeof(init_setting_cmd) / sizeof(struct LCM_setting_table), 1);
+		pr_debug("ili9881h_truly_lcm_mode = cmd mode :%d----\n", lcm_dsi_mode);
+	} else {
+		push_table(NULL, init_setting_vdo, sizeof(init_setting_vdo) / sizeof(struct LCM_setting_table), 1);
+		pr_info("ili9881h_truly_lcm_mode = vdo mode :%d----\n", lcm_dsi_mode);
+	}
+}
+
+static void lcm_suspend(void)
+{
+	pr_info("truly lcm_suspend\n");
+
+	push_table(NULL, lcm_suspend_setting, sizeof(lcm_suspend_setting) / sizeof(struct LCM_setting_table), 1);
+
+
+}
+
+static void lcm_resume(void)
+{
+	/*pr_debug("lcm_resume\n");*/
+	lcm_init();
 }
 
 #if 0
@@ -498,63 +542,23 @@ static int cabc_status;
 	}
 	cabc_status = level;
 }
-
-static void lcm_init(void)
-{
-	SET_RESET_PIN(1);
-	MDELAY(1);
-	SET_RESET_PIN(0);
-	MDELAY(1);
-	SET_RESET_PIN(1);
-
-	MDELAY(5);
-	lcd_queue_load_tp_fw();
-	MDELAY(10);
-
-	if (lcm_dsi_mode == CMD_MODE) {
-		push_table(NULL, init_setting_cmd, sizeof(init_setting_cmd) / sizeof(struct LCM_setting_table), 1);
-		pr_debug("ili9881h_truly_lcm_mode = cmd mode :%d----\n", lcm_dsi_mode);
-	} else {
-		push_table(NULL, init_setting_vdo, sizeof(init_setting_vdo) / sizeof(struct LCM_setting_table), 1);
-		pr_info("ili9881h_truly_lcm_mode = vdo mode :%d----\n", lcm_dsi_mode);
-	}
-	lcm_set_cabc_cmdq(NULL, cabc_status);
-}
-
-static void lcm_suspend(void)
-{
-	pr_info("truly lcm_suspend\n");
-	push_table(NULL, lcm_suspend_setting, sizeof(lcm_suspend_setting) / sizeof(struct LCM_setting_table), 1);
-}
-
-static void lcm_resume(void)
-{
-	lcm_init();
-}
-
  static void lcm_get_cabc_status(int *status){
 	pr_info("[lcm] cabc get to %d\n", cabc_status);
 	*status = cabc_status;
 }
 
 
-/*
+
 static struct LCM_setting_table_V3 bl_level[] = {
 	{0x39,0x51, 2, {0x04, 0x00} }
-};*/
-
-static struct LCM_setting_table bl_level[] = {
-	{0x51, 2, {0x0F,0xFF} },
-	{REGFLAG_END_OF_TABLE, 0x00, {} }
 };
 static void lcm_setbacklight_cmdq(void *handle, unsigned int level)
 {
 	pr_debug("ili9881h_truly backlight_level = %d\n", level);
 	bl_level[0].para_list[0] = 0x000F&(level >> 7);
 	bl_level[0].para_list[1] = 0x00FF&(level << 1);
-	pr_err("[ HW check backlight ili9881+truly]level=%d  para_list[0]=%x,para_list[1]=%x\n",level,bl_level[0].para_list[0],bl_level[0].para_list[1]);
-	push_table(handle, bl_level, sizeof(bl_level) / sizeof(struct LCM_setting_table), 1);
-	//push_table_cust(handle, bl_level, sizeof(bl_level) / sizeof(struct LCM_setting_table_V3), 0);
+	//push_table(handle, bl_level, sizeof(bl_level) / sizeof(struct LCM_setting_table), 1);
+	push_table_cust(handle, bl_level, sizeof(bl_level) / sizeof(struct LCM_setting_table_V3), 0);
 }
 
 static unsigned int lcm_esd_recover(void)
@@ -574,10 +578,9 @@ static unsigned int lcm_esd_recover(void)
 		push_table(NULL, init_setting_vdo, sizeof(init_setting_vdo) / sizeof(struct LCM_setting_table), 1);
 		pr_debug("ili9881h_truly_lcm_mode = vdo mode esd recovery :%d----\n", lcm_dsi_mode);
 	}
-	lcm_set_cabc_cmdq(NULL, cabc_status);
 	pr_debug("lcm_esd_recovery\n");
-	push_table(NULL, bl_level, sizeof(bl_level) / sizeof(struct LCM_setting_table), 1);
-	//push_table_cust(NULL, bl_level, sizeof(bl_level) / sizeof(struct LCM_setting_table_V3), 0);
+	//push_table(NULL, bl_level, sizeof(bl_level) / sizeof(struct LCM_setting_table), 1);
+	push_table_cust(NULL, bl_level, sizeof(bl_level) / sizeof(struct LCM_setting_table_V3), 0);
 	return FALSE;
 #else
 	return FALSE;
@@ -595,7 +598,7 @@ struct LCM_DRIVER ilt9881h_truly_hdp_dsi_vdo_lcm_drv = {
 	.init_power = lcm_init_power,
 	.resume_power = lcm_resume_power,
 	.suspend_power = lcm_suspend_power,
-#ifdef OPLUS_BUG_STABILITY
+#ifdef ODM_WT_EDIT
     //Tongxing.Liu@ODM_WT.MM.LCM.FUNCTION.2019/11/25, add lcd_shutdown power.
 	.shutdown_power = lcm_shudown_power,
 #endif

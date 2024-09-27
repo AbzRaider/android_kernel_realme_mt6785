@@ -28,6 +28,24 @@ enum LCM_DSI_MODE_CON lcm_dsi_mode;
 #define LCD_HW_ID_STATUS_ERROR  0x03
 
 struct LCM_DRIVER *lcm_driver_list[] = {
+
+/* lianghao_wt@wt.MM_DisplayDriver.LCD 2021/01/6,EVEN LCD bring up */
+#if defined(ILT9882N_TRULY_EVEN_HDP_DSI_VDO_LCM)
+		&ilt9882n_truly_even_hdp_dsi_vdo_lcm_drv,
+#endif
+
+#if defined(ILT7807S_HLT_EVEN_HDP_DSI_VDO_LCM)
+		&ilt7807s_hlt_even_hdp_dsi_vdo_lcm_drv,
+#endif
+
+#if defined(NT36525B_HLT_EVEN_BOE_HDP_DSI_VDO_LCM)
+		&nt36525b_hlt_even_boe_hdp_dsi_vdo_lcm_drv,
+#endif
+
+#if defined(VIRTUAL_DSI_EVEN_VDO_DEFAULT)
+		&virtual_dsi_even_vdo_default,
+#endif
+
 #ifdef OPLUS_BUG_STABILITY
 //Hao.Liang@ODM_WT.MM.Display.Lcd, 2019/9/25, LCD bringup
 #if defined(ILT9881H_TRULY_HDP_DSI_VDO_LCM)
@@ -75,9 +93,11 @@ struct LCM_DRIVER *lcm_driver_list[] = {
 	&nt36672c_fhdp_dsi_vdo_jdi_zal1852_lcm_drv,
 #endif //NT36672C_FHDP_DSI_VDO_JDI_ZAL1852
 
-#if defined(NT36672C_FHDP_DSI_VDO_BOE_ZAL1852)
-		&nt36672c_fhdp_dsi_vdo_boe_zal1852_lcm_drv,
-#endif //NT36672C_FHDP_DSI_VDO_BOE_ZAL1852
+#if defined(OPPO20730_SAMSUNG_AMS643XY04_DSI_CMD)
+	&oppo20730_samsung_ams643xy04_1080p_dsi_vdo_lcm_drv_1,
+	&oppo20730_samsung_ams643xy04_1080p_dsi_vdo_lcm_drv_2,
+#endif
+
 #endif //OPLUS_BUG_STABILITY
 
 #ifdef OPLUS_BUG_STABILITY

@@ -451,16 +451,26 @@ static void lcm_init_power(void)
 	MDELAY(3);
 	SET_LCM_VSN_PIN(1);
 }
-extern void lcd_queue_load_tp_fw(void);
-extern int tp_gesture_enable_flag(void);
+#ifdef ODM_WT_EDIT
+//Tongxing.Liu@ODM_WT.BSP.TP.FUNCTION.2019/10/07, add tp_gesture flag.
+extern int tp_gesture;
+#endif
 static void lcm_suspend_power(void)
 {
-	if (0 == tp_gesture_enable_flag()) {
-		pr_debug("lcm_suspend_power\n");
+	/*pr_debug("lcm_suspend_power\n");*/
+	pr_debug("lcm_suspend_power\n");
+#ifdef ODM_WT_EDIT
+//Tongxing.Liu@ODM_WT.BSP.TP.FUNCTION.2019/10/07, add tp_gesture flag.
+	if(!tp_gesture){
+		printk("lcm_tp_gesture_suspend_power_on\n");
+#endif
 		SET_LCM_VSN_PIN(0);
 		MDELAY(2);
 		SET_LCM_VSP_PIN(0);
+#ifdef ODM_WT_EDIT
+//Tongxing.Liu@ODM_WT.BSP.TP.FUNCTION.2019/10/07, add tp_gesture flag.
 	}
+#endif
 }
 
 static void lcm_resume_power(void)
@@ -477,6 +487,44 @@ static void lcm_resume_power(void)
 	MDELAY(10);
 	SET_RESET_PIN(1);
 	MDELAY(10);
+}
+
+static void lcm_init(void)
+{
+	pr_debug("lcm_init\n");
+	//SET_RESET_PIN(1);
+	//MDELAY(10);
+	SET_RESET_PIN(0);
+	MDELAY(10);
+	SET_RESET_PIN(1);
+#ifdef ODM_WT_EDIT
+//Tongxing.Liu@ODM_WT.BSP.TP.Timing.2019/10/10,Adjust TP timing in suspend and resume status
+	MDELAY(11);
+	update_tpfw_notifier_call_chain(1,NULL);
+	MDELAY(1);
+#endif
+	if (lcm_dsi_mode == CMD_MODE) {
+		push_table(NULL, init_setting_cmd, sizeof(init_setting_cmd) / sizeof(struct LCM_setting_table), 1);
+		pr_debug("nt36525b_hlt_lcm_mode = cmd mode :%d----\n", lcm_dsi_mode);
+	} else {
+		push_table(NULL, init_setting_vdo, sizeof(init_setting_vdo) / sizeof(struct LCM_setting_table), 1);
+		pr_debug("nt36525b_hlt_lcm_mode = vdo mode :%d\n", lcm_dsi_mode);
+	}
+}
+
+static void lcm_suspend(void)
+{
+	pr_debug("lcm_suspend\n");
+
+	push_table(NULL, lcm_suspend_setting, sizeof(lcm_suspend_setting) / sizeof(struct LCM_setting_table), 1);
+
+
+}
+
+static void lcm_resume(void)
+{
+	pr_debug("lcm_resume\n");
+	lcm_init();
 }
 
 #if 0
@@ -526,58 +574,18 @@ static int cabc_status;
 	}
 	cabc_status = level;
 }
-
-static void lcm_init(void)
-{
-	pr_debug("lcm_init\n");
-	SET_RESET_PIN(0);
-	MDELAY(10);
-	SET_RESET_PIN(1);
-
-	MDELAY(11);
-	lcd_queue_load_tp_fw();
-	MDELAY(1);
-
-	if (lcm_dsi_mode == CMD_MODE) {
-		push_table(NULL, init_setting_cmd, sizeof(init_setting_cmd) / sizeof(struct LCM_setting_table), 1);
-		pr_debug("nt36525b_hlt_lcm_mode = cmd mode :%d----\n", lcm_dsi_mode);
-	} else {
-		push_table(NULL, init_setting_vdo, sizeof(init_setting_vdo) / sizeof(struct LCM_setting_table), 1);
-		pr_debug("nt36525b_hlt_lcm_mode = vdo mode :%d\n", lcm_dsi_mode);
-	}
-	lcm_set_cabc_cmdq(NULL, cabc_status);
-}
-
-static void lcm_suspend(void)
-{
-	pr_debug("lcm_suspend\n");
-	push_table(NULL, lcm_suspend_setting, sizeof(lcm_suspend_setting) / sizeof(struct LCM_setting_table), 1);
-}
-
-static void lcm_resume(void)
-{
-	pr_debug("lcm_resume\n");
-	lcm_init();
-}
-
  static void lcm_get_cabc_status(int *status){
 	pr_err("[lcm] cabc get to %d\n", cabc_status);
 	*status = cabc_status;
 }
-/*
+
 static void push_table_cust(void *cmdq, struct LCM_setting_table_V3*table,
 	unsigned int count, bool hs)
 {
 	set_lcm(table, count, hs);
 }
-
 static struct LCM_setting_table_V3 bl_level[] = {
 	{0x39,0x51, 2, {0x04, 0x00} }
-};
-*/
-static struct LCM_setting_table bl_level[] = {
-	{0x51, 2, {0x0F,0xFF} },
-	{REGFLAG_END_OF_TABLE, 0x00, {} }
 };
 static void lcm_setbacklight_cmdq(void *handle, unsigned int level)
 {
@@ -585,9 +593,8 @@ static void lcm_setbacklight_cmdq(void *handle, unsigned int level)
 	bl_level[0].para_list[0] = 0x0007&(level >> 8);
 	bl_level[0].para_list[1] = 0x00FF&(level);
 	MDELAY(5);
-	pr_err("[ HW check backlight nt36525_hlt]level=%d  para_list[0]=%x,para_list[1]=%x\n",level,bl_level[0].para_list[0],bl_level[0].para_list[1]);
-	push_table(handle, bl_level, sizeof(bl_level) / sizeof(struct LCM_setting_table), 1);
-	//push_table_cust(handle, bl_level, sizeof(bl_level) / sizeof(struct LCM_setting_table_V3), 1);
+	//push_table(handle, bl_level, sizeof(bl_level) / sizeof(struct LCM_setting_table), 1);
+	push_table_cust(handle, bl_level, sizeof(bl_level) / sizeof(struct LCM_setting_table_V3), 0);
 	//dump_stack();
 }
 
@@ -614,10 +621,9 @@ static unsigned int lcm_esd_recover(void)
 		push_table(NULL, init_setting_vdo, sizeof(init_setting_vdo) / sizeof(struct LCM_setting_table), 1);
 		pr_debug("nt36525b_hlt_lcm_mode = vdo mode esd recovery :%d----\n", lcm_dsi_mode);
 	}
-	lcm_set_cabc_cmdq(NULL, cabc_status);
 	pr_debug("lcm_esd_recovery\n");
-	push_table(NULL, bl_level, sizeof(bl_level) / sizeof(struct LCM_setting_table), 1);
-	//push_table_cust(NULL, bl_level, sizeof(bl_level) / sizeof(struct LCM_setting_table_V3), 1);
+	//push_table(NULL, bl_level, sizeof(bl_level) / sizeof(struct LCM_setting_table), 1);
+	push_table_cust(NULL, bl_level, sizeof(bl_level) / sizeof(struct LCM_setting_table_V3), 0);
 	return FALSE;
 #else
 	return FALSE;

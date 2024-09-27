@@ -34,6 +34,8 @@ extern struct LCM_DRIVER nt36672c_fhdp_dsi_vdo_jdi_zal1878_lcm_drv; // Add for N
 extern struct LCM_DRIVER nt36672c_fhdp_dsi_vdo_tianma_zal1852_lcm_drv; // Add for sala
 extern struct LCM_DRIVER nt36672c_fhdp_dsi_vdo_jdi_zal1852_lcm_drv; // Add for Sala
 extern struct LCM_DRIVER nt36672c_fhdp_dsi_vdo_boe_zal1852_lcm_drv; // Add for sala
+extern struct LCM_DRIVER oppo20730_samsung_ams643xy04_1080p_dsi_vdo_lcm_drv_1; // add for Nash-C
+extern struct LCM_DRIVER oppo20730_samsung_ams643xy04_1080p_dsi_vdo_lcm_drv_2; // add for Nash-C second panel
 #endif //OPLUS_BUG_STABILITY
 #ifdef OPLUS_BUG_STABILITY
 /* YongPeng.Yi@PSW.MM.Display.LCD.Machine 2019/09/21, Add for 19151 lcm ic samsung*/
@@ -388,6 +390,12 @@ extern struct LCM_DRIVER nt51021h_wuxga_vdo_oncell_boe_lcm_drv;
 extern struct LCM_DRIVER ft8201_wuxga_dsi_vdo_boe_lcm_drv;
 extern struct LCM_DRIVER ft8756_fhdp_dsi_vdo_auo_rt4801_lcm_drv;
 
+/* lianghao_wt@wt.MM_DisplayDriver.LCD 2021/01/06,EVEN add for xxx lcd */
+extern struct LCM_DRIVER virtual_dsi_even_vdo_default;
+extern struct LCM_DRIVER ilt9882n_truly_even_hdp_dsi_vdo_lcm_drv;
+extern struct LCM_DRIVER ilt7807s_hlt_even_hdp_dsi_vdo_lcm_drv;
+extern struct LCM_DRIVER nt36525b_hlt_even_boe_hdp_dsi_vdo_lcm_drv;
+/* lianghao_wt@wt.MM_DisplayDriver.LCD 2020/12/18,add for xxx lcd */
 #ifdef BUILD_LK
 extern void mdelay(unsigned long msec);
 #endif

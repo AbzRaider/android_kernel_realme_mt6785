@@ -133,7 +133,7 @@ static bool aod_state = false;
 static bool aod_out = true;
 
 static bool hbm_en;
-/* static bool hbm_wait; */
+static bool hbm_wait;
 
 static unsigned int aod_light_brightness_mode = 0;
 
@@ -296,7 +296,6 @@ static struct LCM_setting_table lcm_aod_in_setting[] = {
 	{REGFLAG_END_OF_TABLE, 0x00, {}}
 };
 
-#if 0
 static struct LCM_setting_table lcm_seed_setting[] = {
 	{0x81, 1, {0x90}},
 	{0xF0, 2, {0x5A,0x5A}},
@@ -351,7 +350,7 @@ static int interpolate(int x, int xa, int xb, int ya, int yb)
 	return ya + factor + plus + sub;
 }
 
-static int oppo_seed_bright_to_alpha(int brightness)
+static int oplus_seed_bright_to_alpha(int brightness)
 {
 	int level = ARRAY_SIZE(brightness_seed_alpha_lut_dc);
 	int i = 0;
@@ -375,7 +374,6 @@ static int oppo_seed_bright_to_alpha(int brightness)
 
 	return alpha;
 }
-#endif
 
 static struct LCM_setting_table lcm_aod_display_on_setting[] = {
 	/* Display On*/
@@ -386,7 +384,6 @@ static struct LCM_setting_table lcm_aod_display_on_setting[] = {
 	{REGFLAG_END_OF_TABLE, 0x00, {}}
 };
 
-#if 0
 static struct LCM_setting_table lcm_aod_from_display_on[] = {
 	/* AOD MODE ON Setting*/
 	{0xF0, 2, {0x5A,0x5A}},
@@ -401,7 +398,6 @@ static struct LCM_setting_table lcm_aod_from_display_on[] = {
 	{0xF0, 2, {0xA5,0xA5}},
 	{REGFLAG_END_OF_TABLE, 0x00, {}}
 };
-#endif
 
 static struct LCM_setting_table lcm_aod_out_setting[] = {
 	/* Display On*/
@@ -434,7 +430,6 @@ static struct LCM_setting_table lcm_backlight_level_setting[] = {
 	{0x51, 2, {0x00,0x00}}
 };
 
-#if 0
 static struct LCM_setting_table lcm_normal_HBM_on_setting[] = {
 	{0xF0, 2, {0x5A,0x5A}},
 	{0x51, 2, {0x03,0xFF}},
@@ -466,7 +461,6 @@ static struct LCM_setting_table lcm_finger_HBM_off_setting[] = {
 	{0xBD, 2, {0x00,0x02}},
 	{0xF0, 2, {0xA5,0xA5}},
 };
-#endif
 
 static struct LCM_setting_table lcm_aod_high_mode[] = {
 	/* aod 50nit*/
@@ -605,6 +599,8 @@ static void lcm_get_params(struct LCM_PARAMS *params)
 	//params->dsi.dynamic_switch_mipi = 1;
 	//params->dsi.data_rate_dyn = 1124;
 
+	params->dsi.data_rate_dyn = 1124;
+
 	params->dsi.ssc_disable = 1;
 	params->dsi.CLK_TRAIL = 10;
 	params->dsi.HS_PRPR = 9;
@@ -649,11 +645,8 @@ static void lcm_get_params(struct LCM_PARAMS *params)
 	params->corner_pattern_height_bot = 184;
 #endif
 
-/*
 	params->hbm_en_time = 2;
 	params->hbm_dis_time = 0;
-*/
-
 
 #ifndef BUILD_LK
 	register_device_proc("lcd", "S6E3FC2X03_MTK03", "samsung1024 cmd mode");
@@ -710,6 +703,11 @@ static void lcm_aod(int enter)
 			lcm_aod_in_setting[53].para_list[0] = 0x23;
 		}
 		push_table(lcm_aod_in_setting, sizeof(lcm_aod_in_setting) / sizeof(struct LCM_setting_table), 1);
+	} else {
+		/* Zhijun.Ye@MM.Display.LCD.Stability, 2020/11/11, add for aod
+		 * fix aod quiting fail issue.
+		 */
+		aod_in = false;
 	}
 	printk("[soso] lcm aod %d \n",enter);
 }
@@ -800,21 +798,20 @@ static void lcm_update(unsigned int x, unsigned int y, unsigned int width, unsig
 
 #define OPPO_DC_BACKLIGHT_THRESHOLD 260
 
-#if 0
-extern int oppo_dc_enable_real;
-extern int oppo_dc_alpha;
-static int oppo_lcm_dc_backlight(void *handle, unsigned int level, int hbm_en)
+extern int oplus_dc_enable_real;
+extern int oplus_dc_alpha;
+static int oplus_lcm_dc_backlight(void *handle, unsigned int level, int hbm_en)
 {
 	int i, k;
 	struct LCM_setting_table *seed_table;
-	int seed_alpha = oppo_seed_bright_to_alpha(level);
+	int seed_alpha = oplus_seed_bright_to_alpha(level);
 
-	if (!oppo_dc_enable_real || hbm_en || level >= OPPO_DC_BACKLIGHT_THRESHOLD ||
+	if (!oplus_dc_enable_real || hbm_en || level >= OPPO_DC_BACKLIGHT_THRESHOLD ||
 	    level < 2) {
 		goto dc_disable;
 	}
 
-	if (oppo_dc_alpha == seed_alpha)
+	if (oplus_dc_alpha == seed_alpha)
 		goto dc_enable;
 
 	seed_table = kmemdup(lcm_seed_setting, sizeof(lcm_seed_setting), GFP_KERNEL);
@@ -837,16 +834,16 @@ static int oppo_lcm_dc_backlight(void *handle, unsigned int level, int hbm_en)
 			sizeof(lcm_seed_setting)/sizeof(lcm_seed_setting[0]), 1);
 
 	kfree(seed_table);
-	if (!oppo_dc_alpha)
+	if (!oplus_dc_alpha)
 		pr_err("Enter DC");
 
-	oppo_dc_alpha = seed_alpha;
+	oplus_dc_alpha = seed_alpha;
 
 dc_enable:
 	return OPPO_DC_BACKLIGHT_THRESHOLD;
 
 dc_disable:
-	if (oppo_dc_alpha) {
+	if (oplus_dc_alpha) {
 		if (handle)
 			push_table22(handle,lcm_seed_setting,
 				sizeof(lcm_seed_setting)/sizeof(lcm_seed_setting[0]), 1);
@@ -856,10 +853,9 @@ dc_disable:
 		pr_err("exit DC");
 	}
 
-	oppo_dc_alpha = 0;
+	oplus_dc_alpha = 0;
 	return level;
 }
-#endif
 
 static void lcm_setbacklight_cmdq(void *handle, unsigned int level)
 {
@@ -898,7 +894,7 @@ static void lcm_setbacklight_cmdq(void *handle, unsigned int level)
 		}
 
 		hbm_mode_backlight_level = mapped_level;
-		mapped_level = level /* oppo_lcm_dc_backlight(handle, mapped_level, hbm_en) */;
+		mapped_level = oplus_lcm_dc_backlight(handle, mapped_level, hbm_en);
 
 		if (!hbm_en) {
 			printk("[soso] %s level is %d\n", __func__, mapped_level);
@@ -914,7 +910,6 @@ static void lcm_setbacklight_cmdq(void *handle, unsigned int level)
 	}
 }
 
-#if 0
 static void lcm_set_hbm_mode(void *handle,unsigned int hbm_level)
 {
 	unsigned int BL_MSB = 0;
@@ -929,9 +924,9 @@ static void lcm_set_hbm_mode(void *handle,unsigned int hbm_level)
 	if (hbm_level == 1) {
 		push_table22(handle,lcm_finger_HBM_on_setting,
 			 sizeof(lcm_finger_HBM_on_setting)/sizeof(lcm_finger_HBM_on_setting[0]),1);
-		oppo_lcm_dc_backlight(handle, hbm_mode_backlight_level, 1);
+		oplus_lcm_dc_backlight(handle, hbm_mode_backlight_level, 1);
 	} else if ((hbm_level == 0) || (hbm_level == 2)) {
-		int level = oppo_lcm_dc_backlight(handle, hbm_mode_backlight_level, 0);
+		int level = oplus_lcm_dc_backlight(handle, hbm_mode_backlight_level, 0);
 
 		BL_LSB = level / 256;
 		BL_MSB = level % 256;
@@ -941,7 +936,7 @@ static void lcm_set_hbm_mode(void *handle,unsigned int hbm_level)
 		push_table22(handle,lcm_normal_HBM_off_setting,
 			 sizeof(lcm_normal_HBM_off_setting)/sizeof(lcm_normal_HBM_off_setting[0]),1);
 	} else {
-		oppo_lcm_dc_backlight(handle, hbm_mode_backlight_level, 1);
+		oplus_lcm_dc_backlight(handle, hbm_mode_backlight_level, 1);
 		push_table22(handle,lcm_normal_HBM_on_setting,
 			 sizeof(lcm_normal_HBM_on_setting)/sizeof(lcm_normal_HBM_on_setting[0]),1);
 	}
@@ -968,7 +963,7 @@ static bool lcm_set_hbm_wait(bool wait)
 	 * update backlight after enter fingerprint hbm mode
 	 */
 	if (!wait && hbm_en)
-		oppo_lcm_dc_backlight(NULL, 0, 1);
+		oplus_lcm_dc_backlight(NULL, 0, 1);
 
 	return old;
 }
@@ -989,7 +984,7 @@ static bool lcm_set_hbm_cmdq(bool en, void *qhandle)
 		printk("[soso] %s : %d !\n",__func__, en);
 	} else {
 		if (!aod_state) {
-			int level = oppo_lcm_dc_backlight(qhandle, hbm_mode_backlight_level, 0);
+			int level = oplus_lcm_dc_backlight(qhandle, hbm_mode_backlight_level, 0);
 
 			BL_LSB = level / 256;
 			BL_MSB = level % 256;
@@ -1022,7 +1017,6 @@ static bool lcm_set_hbm_cmdq(bool en, void *qhandle)
 done:
 	return old;
 }
-#endif
 
 static void lcm_set_aod_brightness(void *qhandle,unsigned int mode)
 {
@@ -1161,13 +1155,11 @@ struct LCM_DRIVER oppo19531_samsung_ams641rw01_1080p_dsi_cmd_lcm_drv =
 	.update = lcm_update,
 	.poweron_before_ulps = poweron_before_ulps,
 	.poweroff_after_ulps = poweroff_after_ulps,
-/*
 	.get_hbm_state = lcm_get_hbm_state,
 	.set_hbm_cmdq = lcm_set_hbm_cmdq,
 	.get_hbm_wait = lcm_get_hbm_wait,
 	.set_hbm_wait = lcm_set_hbm_wait,
 	.set_hbm_mode_cmdq = lcm_set_hbm_mode,
-*/
 	.aod = lcm_aod,
 	.disp_lcm_aod_from_display_on = disp_lcm_aod_from_display_on,
 	.set_aod_brightness = lcm_set_aod_brightness,

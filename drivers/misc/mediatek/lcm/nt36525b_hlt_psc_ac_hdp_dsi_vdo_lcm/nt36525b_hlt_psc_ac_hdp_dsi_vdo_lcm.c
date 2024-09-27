@@ -454,14 +454,12 @@ extern void lcd_queue_load_tp_fw(void);
 extern int tp_gesture_enable_flag(void);
 static void lcm_suspend_power(void)
 {
-/*Xiaofei.Gong@BSP.TP.Function, 2020/09/23, Enable black gestures for pascal*/
     pr_debug("%s: tp_gesture_enable_flag = %d \n", __func__, tp_gesture_enable_flag());
     if (0 == tp_gesture_enable_flag()) {
-        pr_debug("lcm_suspend_power\n");
-
-        SET_LCM_VSN_PIN(0);
-        MDELAY(2);
-        SET_LCM_VSP_PIN(0);
+	pr_debug("lcm_suspend_power\n");
+		SET_LCM_VSN_PIN(0);
+		MDELAY(2);
+		SET_LCM_VSP_PIN(0);
 	}
 }
 
@@ -489,13 +487,11 @@ static void lcm_init(void)
 	SET_RESET_PIN(0);
 	MDELAY(10);
 	SET_RESET_PIN(1);
-/*#ifdef OPLUS_FEATURE_TP_BASIC*/
-/*Xiaofei.Gong@BSP.TP.Function, 2020/09/23, Enable black gestures for pascal*/
+	MDELAY(1);
 	MDELAY(11);
 	lcd_queue_load_tp_fw();
 	MDELAY(1);
-/*Xiaofei.Gong@BSP.TP.Function, 2020/09/23, Enable black gestures for pascal*/
-/*#endif OPLUS_FEATURE_TP_BASIC*/
+
 	if (lcm_dsi_mode == CMD_MODE) {
 		push_table(NULL, init_setting_cmd, sizeof(init_setting_cmd) / sizeof(struct LCM_setting_table), 1);
 		pr_debug("nt36525b_hlt_lcm_mode = cmd mode :%d----\n", lcm_dsi_mode);
@@ -616,17 +612,12 @@ static struct LCM_setting_table bl_level[] = {
 	{REGFLAG_END_OF_TABLE, 0x00, {} }
 };
 
-extern int __attribute((weak)) cabc_sun_flag;
+
 static void lcm_setbacklight_cmdq(void *handle, unsigned int level)
 {
 //Jiantao.Liu@ODM_WT.MM.Display.Lcd, 2020/07/06, Add dimming off for power off sequence with tBLOFF
-	if (0 == level) {
-		push_table(handle, lcm_dimming_off_setting, sizeof(lcm_dimming_off_setting) / sizeof(struct LCM_setting_table), 1);
-	} else if (level > 3343) {
-		cabc_sun_flag = 1;
-	} else {
-		cabc_sun_flag = 0;
-	}
+	if(0 == level)
+	push_table(handle, lcm_dimming_off_setting, sizeof(lcm_dimming_off_setting) / sizeof(struct LCM_setting_table), 1);
 
 	bl_level[0].para_list[0] = 0x000F&(level >> 8);
 	bl_level[0].para_list[1] = 0x00FF&(level);

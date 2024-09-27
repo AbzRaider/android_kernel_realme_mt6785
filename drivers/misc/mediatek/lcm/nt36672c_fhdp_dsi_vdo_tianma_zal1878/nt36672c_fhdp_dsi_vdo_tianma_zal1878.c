@@ -616,7 +616,10 @@ static void lcm_init_power(void)
 		SET_LCM_VSP_PIN(1);
 		MDELAY(3);
 		SET_LCM_VSN_PIN(1);
+#ifdef CONFIG_SET_LCD_BIAS_ODM_HQ
+		SET_LCD_BIAS_EN(ON, VSP_FIRST_VSN_AFTER, 5500);  //open lcd bias
 		MDELAY(10);
+#endif
 	}
 	LCM_LOGI("%s: exit\n", __func__);
 }
@@ -635,7 +638,10 @@ static void lcm_suspend_power(void)
         SET_LCM_VSN_PIN(0);
         MDELAY(1);
         SET_LCM_VSP_PIN(0);
+#ifdef CONFIG_SET_LCD_BIAS_ODM_HQ
+        SET_LCD_BIAS_EN(OFF, VSN_FIRST_VSP_AFTER, 5500);  //close lcd bias
         MDELAY(10);
+#endif
     }
     LCM_LOGI("%s: exit\n", __func__);
 }
