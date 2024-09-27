@@ -4,7 +4,6 @@
 ** Description : MM kevent fb data
 ** Version : 1.0
 ** Date : 2018/12/03
-** Author : Ling.Guo@PSW.MM.Display.Stability
 **
 ** ------------------------------- Revision History: -----------
 **  <author>        <data>        <version >        <desc>
@@ -52,7 +51,6 @@ enum OPLUS_MM_DIRVER_FB_EVENT_ID {
 
 #define OPLUS_FB_ADSP_CRASH_RATELIMIT    180*1000 //ms
 
-//Zhao.Pan@MULTIMEDIA.AUDIODRIVER.KERNEL, 2020/08/10, Add for multimedia diagnosis feedback
 #define DIAGNOSIS_EVENT_ID_MASK   0x80000000
 
 //------- multimedia bigdata feedback event id, start ------------
