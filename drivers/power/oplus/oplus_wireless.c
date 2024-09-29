@@ -155,6 +155,7 @@ void oplus_wpc_dcin_irq_enable(bool enable)
 bool oplus_wireless_charge_start(void)
 {
 	if (!g_wpc_chip) {
+		//chg_err("g_wpc_chip null, return\n");
 		return false;
 	}
 	if (g_wpc_chip->wpc_ops->wireless_charge_start) {
@@ -244,7 +245,7 @@ bool oplus_wpc_get_fw_updating(void)
 int oplus_wpc_get_adapter_type(void)
 {
 	if (!g_wpc_chip) {
-		//chg_err("g_wpc_chip null, return\n");
+		chg_err("g_wpc_chip null, return\n");
 		return -EINVAL;
 	}
 	if (g_wpc_chip->wpc_ops->wpc_get_adapter_type) {
