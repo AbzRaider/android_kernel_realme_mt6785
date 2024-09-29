@@ -82,6 +82,7 @@ static int __tongfeng_test_mp2650_write_reg(int reg, int val)
 {
     int ret = 0;
     struct chip_mp2650 *chip = charger_ic;
+	int retry = 3;
 
 	if(!chip) {
         chg_err("chip is NULL\n");
@@ -89,6 +90,19 @@ static int __tongfeng_test_mp2650_write_reg(int reg, int val)
 	}
 
     ret = i2c_smbus_write_byte_data(chip->client, reg, val);
+
+	if (ret < 0) {
+		while(retry > 0) {
+			usleep_range(5000, 5000);
+			ret = i2c_smbus_write_byte_data(chip->client, reg, val);
+			if (ret < 0) {
+				retry--;
+			} else {
+				break;
+			}
+		}
+	}
+
     if (ret < 0) {
         chg_err("i2c write fail: can't write %02x to %02x: %d\n",
         val, reg, ret);
@@ -208,8 +222,22 @@ static int __mp2650_read_reg(int reg, int *returnData)
 {
     int ret = 0;
     struct chip_mp2650 *chip = charger_ic;
+	int retry = 3;
 
     ret = i2c_smbus_read_byte_data(chip->client, (unsigned char)reg);
+
+	if (ret < 0) {
+		while(retry > 0) {
+			usleep_range(5000, 5000);
+			ret = i2c_smbus_read_byte_data(chip->client, (unsigned char)reg);
+			if (ret < 0) {
+				retry--;
+			} else {
+				break;
+			}
+		}
+	}
+
     if (ret < 0) {
         chg_err("i2c read fail: can't read from %02x: %d\n", reg, ret);
         return ret;
@@ -235,11 +263,25 @@ static int __mp2650_write_reg(int reg, int val)
 {
     int ret = 0;
     struct chip_mp2650 *chip = charger_ic;
+	int retry = 3;
 
 	if (reg_access_allow != 0) {
 		return 0;
 	}
     ret = i2c_smbus_write_byte_data(chip->client, reg, val);
+
+	if (ret < 0) {
+		while(retry > 0) {
+			usleep_range(5000, 5000);
+			ret = i2c_smbus_write_byte_data(chip->client, reg, val);
+			if (ret < 0) {
+				retry--;
+			} else {
+				break;
+			}
+		}
+	}
+
     if (ret < 0) {
         chg_err("i2c write fail: can't write %02x to %02x: %d\n",
         val, reg, ret);
@@ -420,7 +462,7 @@ int mp2650_input_current_limit_ctrl_by_vooc_write(int current_ma)
 	}
 
 	tmp = tmp * 50;
-	for (count=(tmp / 500); count > 2; count--) {
+	for (count=(tmp / 500); count > 0; count--) {
 		chg_err("set charge current limit = %d\n", 500*count);
 		tmp = 500*count - REG00_MP2650_1ST_CURRENT_LIMIT_OFFSET;
 		tmp = tmp / REG00_MP2650_1ST_CURRENT_LIMIT_STEP;
@@ -429,7 +471,7 @@ int mp2650_input_current_limit_ctrl_by_vooc_write(int current_ma)
 		msleep(25);
 	}
 
-	for (count=3; count <= (current_ma /500); count++) {
+	for (count=1; count <= (current_ma /500); count++) {
 		chg_err("set charge current limit = %d\n", 500*count);
 		tmp = 500*count - REG00_MP2650_1ST_CURRENT_LIMIT_OFFSET;
 		tmp = tmp / REG00_MP2650_1ST_CURRENT_LIMIT_STEP;
@@ -1537,9 +1579,7 @@ int mp2650_other_registers_init(void)
 	//add for mp2762 damaged issue,keep Ilimi2 duration shortest
 	rc = mp2650_config_interface(REG10_MP2650_ADDRESS, 0x01, 0xff);
 	rc = mp2650_config_interface(REG11_MP2650_ADDRESS, 0xfe, 0xff);
-	rc = mp2650_config_interface(REG2D_MP2650_ADDRESS, 0x0f, 0xff);
 
-	mp2650_dump_registers();
 	return rc;
 /*
 #if 0
@@ -1604,14 +1644,14 @@ int mp2650_other_registers_init(void)
 */
 }
 
-#define DUMP_REG_LOG_CNT_30S             1
+#define DUMP_REG_LOG_CNT_30S             6
 void mp2650_dump_registers(void)
 {
     int rc;
 	int addr;
     static int dump_count = 0;
     struct chip_mp2650 *chip = charger_ic;
-    unsigned int val_buf[MP2650_DUMP_MAX_REG + 4] = {0x0};
+    unsigned int val_buf[MP2650_DUMP_MAX_REG + 3] = {0x0};
 
 	if(atomic_read(&chip->charger_suspended) == 1) {
 		return ;
@@ -1634,15 +1674,11 @@ void mp2650_dump_registers(void)
              chg_err("Couldn't  read 0x49 rc = %d\n", rc);
         }
 
-		rc = mp2650_read_reg(0x2D, &val_buf[MP2650_DUMP_MAX_REG + 3]);
-        if (rc) {
-             chg_err("Couldn't  read 0x48 rc = %d\n", rc);
-        }
         printk(KERN_ERR "mp2650_dump_reg: [0x%02x, 0x%02x, 0x%02x, 0x%02x], [0x%02x, 0x%02x, 0x%02x, 0x%02x], "
 		"[0x%02x, 0x%02x, 0x%02x, 0x%02x], [0x%02x, 0x%02x, 0x%02x, 0x%02x], "
 		"[0x%02x, 0x%02x, 0x%02x, 0x%02x], [0x%02x, 0x%02x, 0x%02x, 0x%02x], "
 		"[0x%02x, 0x%02x, 0x%02x, 0x%02x], [0x%02x, 0x%02x, 0x%02x, 0x%02x], "
-		"[0x%02x, 0x%02x, 0x%02x], [reg48=0x%02x, reg49=0x%02x ,reg0x2d=0x%x]\n",
+		"[0x%02x, 0x%02x, 0x%02x], [reg48=0x%02x, reg49=0x%02x]\n",
 		val_buf[0], val_buf[1], val_buf[2], val_buf[3],
 		val_buf[4], val_buf[5], val_buf[6], val_buf[7],
 		val_buf[8], val_buf[9], val_buf[10], val_buf[11],
@@ -1652,7 +1688,7 @@ void mp2650_dump_registers(void)
 		val_buf[24], val_buf[25], val_buf[26], val_buf[27],
 		val_buf[28], val_buf[29], val_buf[30], val_buf[31],
 		val_buf[32], val_buf[33], val_buf[34],
-		val_buf[35], val_buf[36], val_buf[37]);
+		val_buf[35], val_buf[36]);
     }
     dump_count++;
 }
@@ -1791,7 +1827,6 @@ int mp2650_hardware_init(void)
     mp2650_set_wdt_timer(REG09_MP2650_WTD_TIMER_40S);
 
     //mp2650_enable_hiz(chip);
-    mp2650_input_current_limit_without_aicl(500);
 
     return true;
 }

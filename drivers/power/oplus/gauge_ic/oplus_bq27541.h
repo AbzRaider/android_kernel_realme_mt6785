@@ -162,11 +162,13 @@
 #define DEVICE_TYPE_BQ27411			0x0421
 #define DEVICE_TYPE_BQ28Z610		0xFFA5
 #define DEVICE_TYPE_ZY0602			0x0602
+#define DEVICE_TYPE_ZY0603			0xA5FF
 
 #define DEVICE_BQ27541				0
 #define DEVICE_BQ27411				1
 #define DEVICE_BQ28Z610				2
 #define DEVICE_ZY0602				3
+#define DEVICE_ZY0603				4
 
 #define DEVICE_TYPE_FOR_VOOC_BQ27541		0
 #define DEVICE_TYPE_FOR_VOOC_BQ27411		1
@@ -418,6 +420,7 @@ struct chip_bq27541 {
 	bool battery_full_param;//only for wite battery full param in guage dirver probe on 7250 platform
 	int sha1_key_index;
 	bool batt_bq28z610;
+	bool batt_zy0603;
 	bool bq28z610_need_balancing;
 	int bq28z610_device_chem;
 	struct bq27541_authenticate_data *authenticate_data;

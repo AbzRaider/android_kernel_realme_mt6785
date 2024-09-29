@@ -546,7 +546,7 @@ static int stm8s_fw_check_then_recover(struct oplus_vooc_chip *chip)
 		opchg_set_clock_active(chip);
 		chip->mcu_boot_by_gpio = true;
 		msleep(10);
-		opchg_set_reset_active_force(chip);
+		opchg_set_reset_active(chip);
 		chip->mcu_update_ing = true;
 		msleep(2500);
 		chip->mcu_boot_by_gpio = false;
@@ -560,7 +560,7 @@ static int stm8s_fw_check_then_recover(struct oplus_vooc_chip *chip)
 				chip->mcu_boot_by_gpio = true;
 				msleep(10);
 				chip->mcu_update_ing = false;
-				opchg_set_reset_active_force(chip);
+				opchg_set_reset_active(chip);
 				chip->mcu_update_ing = true;
 				msleep(2500);
 				chip->mcu_boot_by_gpio = false;
