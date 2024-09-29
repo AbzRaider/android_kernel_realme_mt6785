@@ -518,8 +518,8 @@ static int op10_get_fw_verion_from_ic(struct oplus_vooc_chip *chip)
 		//strcpy(ver,&data_buf[0]);
 		chg_err("data:%x %x %x %x, fw_ver:%x\n", data_buf[0], data_buf[1], data_buf[2], data_buf[3], data_buf[0]);
 
-		msleep(5);
 		chip->mcu_update_ing = false;
+		msleep(5);
 		opchg_set_reset_active(chip);
 	}
 	return data_buf[0];
@@ -540,21 +540,21 @@ static int op10_fw_check_then_recover(struct oplus_vooc_chip *chip)
 
 	if (oplus_is_power_off_charging(chip) == true || oplus_is_charger_reboot(chip) == true) {
 		chip->mcu_update_ing = true;
-		opchg_set_reset_active_force(chip);
+		opchg_set_reset_active(chip);
 		msleep(5);
 		update_result = op10_fw_update(chip);
 		chip->mcu_update_ing = false;
 		if (update_result) {
 			msleep(30);
 			opchg_set_clock_sleep(chip);
-			opchg_set_reset_active_force(chip);
+			opchg_set_reset_active(chip);
 		}
 		ret = FW_NO_CHECK_MODE;
 	} else {
 		opchg_set_clock_active(chip);
 		chip->mcu_boot_by_gpio = true;
 		msleep(10);
-		opchg_set_reset_active_force(chip);
+		opchg_set_reset_active(chip);
 		chip->mcu_update_ing = true;
 		msleep(2500);
 		chip->mcu_boot_by_gpio = false;
@@ -569,9 +569,9 @@ static int op10_fw_check_then_recover(struct oplus_vooc_chip *chip)
 				opchg_set_clock_active(chip);
 				chip->mcu_boot_by_gpio = true;
 				msleep(10);
-				//chip->mcu_update_ing = false;
-				opchg_set_reset_active_force(chip);
-				//chip->mcu_update_ing = true;
+				chip->mcu_update_ing = false;
+				opchg_set_reset_active(chip);
+				chip->mcu_update_ing = true;
 				msleep(2500);
 				chip->mcu_boot_by_gpio = false;
 				opchg_set_clock_sleep(chip);
@@ -582,13 +582,12 @@ static int op10_fw_check_then_recover(struct oplus_vooc_chip *chip)
 			chg_debug("fw check ok\n");
 		}
 		__pm_relax(op10_update_wake_lock);
-		msleep(5);
 		chip->mcu_update_ing = false;
+		msleep(5);
 		opchg_set_reset_active(chip);
 		ret = FW_CHECK_MODE;
 	}
-	if (!oplus_vooc_get_fastchg_allow())
-		opchg_set_reset_sleep(chip);
+	opchg_set_reset_sleep(chip);
 
 	return ret;
 }

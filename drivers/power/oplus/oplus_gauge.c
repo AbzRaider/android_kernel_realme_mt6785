@@ -12,6 +12,8 @@
 
 
 static struct oplus_gauge_chip *g_gauge_chip = NULL;
+static struct oplus_plat_gauge_operations *g_plat_gauge_ops = NULL;
+static struct oplus_external_auth_chip *g_external_auth_chip = NULL;
 
 static int gauge_dbg_tbat = 0;
 module_param(gauge_dbg_tbat, int, 0644);
@@ -25,6 +27,31 @@ static int gauge_dbg_ibat = 0;
 module_param(gauge_dbg_ibat, int, 0644);
 MODULE_PARM_DESC(gauge_dbg_ibat, "debug battery current");
 
+int oplus_plat_gauge_is_support(void){
+	if (!g_plat_gauge_ops) {
+		return 0;
+	} else {
+		return 1;
+	}
+}
+
+int oplus_gauge_get_plat_batt_mvolts(void) {
+	if (!g_plat_gauge_ops) {
+		return 0;
+	} else {
+		return g_plat_gauge_ops->get_plat_battery_mvolts();
+	}
+	return 0;
+}
+
+int oplus_gauge_get_plat_batt_current(void) {
+	if (!g_plat_gauge_ops) {
+		return 0;
+	} else {
+		return g_plat_gauge_ops->get_plat_battery_current();
+	}
+	return 0;
+}
 
 int oplus_gauge_get_batt_mvolts(void)
 {
@@ -229,6 +256,20 @@ int oplus_gauge_get_batt_current(void)
 	}
 }
 
+int oplus_gauge_get_sub_current(void)
+{
+	if (!g_gauge_chip) {
+		return 100;
+	} else {
+		if(!g_gauge_chip->gauge_ops->get_sub_current) {
+			return -1;
+		} else {
+			return g_gauge_chip->gauge_ops->get_sub_current();
+		}
+	}
+}
+
+
 int oplus_gauge_get_remaining_capacity(void)
 {
 	if (!g_gauge_chip) {
@@ -294,6 +335,51 @@ bool oplus_gauge_get_batt_hmac(void)
 	}
 }
 
+bool oplus_gauge_get_batt_external_hmac(void)
+{
+	printk(KERN_ERR "[OPLUS_CHG]%s:oplus_gauge_get_batt_external_hmac \n",  __func__);
+	if (!g_external_auth_chip) {
+		return false;
+	}
+	if (!g_external_auth_chip->get_external_auth_hmac) {
+		return false;
+	} else  {
+		return g_external_auth_chip->get_external_auth_hmac();
+	}
+}
+
+int oplus_gauge_start_test_external_hmac(int count)
+{
+	printk(KERN_ERR "[OPLUS_CHG]%s:oplus_gauge_start_test_external_hmac \n",  __func__);
+	if (!g_external_auth_chip) {
+		return false;
+	} else  {
+		return g_external_auth_chip->start_test_external_hmac(count);
+	}
+}
+
+int oplus_gauge_get_external_hmac_test_result(int *count_total, int *count_now, int *fail_count)
+{
+	printk(KERN_ERR "[OPLUS_CHG]%s:oplus_gauge_get_hmac_test_result \n",  __func__);
+	if (!g_external_auth_chip) {
+		return false;
+	} else  {
+		return g_external_auth_chip->get_hmac_test_result(count_total, count_now, fail_count);
+	}
+}
+
+int oplus_gauge_get_external_hmac_status(int *status, int *fail_count, int *total_count,
+		int *real_fail_count, int *real_total_count)
+{
+	printk(KERN_ERR "[OPLUS_CHG]%s:oplus_gauge_get_hmac_status \n",  __func__);
+	if (!g_external_auth_chip) {
+		return false;
+	} else  {
+		return g_external_auth_chip->get_hmac_status(status, fail_count,
+				total_count, real_fail_count, real_total_count);
+	}
+}
+
 bool oplus_gauge_get_batt_authenticate(void)
 {
 	if (!g_gauge_chip) {
@@ -301,6 +387,13 @@ bool oplus_gauge_get_batt_authenticate(void)
 	} else {
 		return g_gauge_chip->gauge_ops->get_battery_authenticate();
 	}
+}
+
+void oplus_gauge_set_float_uv_ma(int iterm_ma,int float_volt_uv)
+{
+       if (g_gauge_chip) {
+               g_gauge_chip->gauge_ops->set_float_uv_ma(iterm_ma, float_volt_uv);
+       }
 }
 
 void oplus_gauge_set_batt_full(bool full)
@@ -322,6 +415,16 @@ bool oplus_gauge_check_chip_is_null(void)
 void oplus_gauge_init(struct oplus_gauge_chip *chip)
 {
 	g_gauge_chip = chip;
+}
+
+void oplus_plat_gauge_init(struct oplus_plat_gauge_operations *ops)
+{
+	g_plat_gauge_ops = ops;
+}
+
+void oplus_external_auth_init(struct oplus_external_auth_chip *chip)
+{
+	g_external_auth_chip = chip;
 }
 
 int oplus_gauge_get_prev_batt_mvolts(void)
