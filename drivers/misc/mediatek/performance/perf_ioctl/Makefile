@@ -12,6 +12,6 @@
 #
 
 #disable warning -Wunused-function
-KBUILD_CFLAGS += $(call cc-disable-warning, unused-function)
+ccflags-y += $(call cc-disable-warning, unused-function)
 
 obj-y += perf_ioctl.o
