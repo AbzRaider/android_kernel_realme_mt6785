@@ -11,6 +11,7 @@
 # GNU General Public License for more details.
 #
 
-ccflags-y += -I$(srctree)/drivers/misc/mediatek/base/power/include/
+#disable warning -Wunused-function
+KBUILD_CFLAGS += $(call cc-disable-warning, unused-function)
 
 obj-y += perf_ioctl.o
