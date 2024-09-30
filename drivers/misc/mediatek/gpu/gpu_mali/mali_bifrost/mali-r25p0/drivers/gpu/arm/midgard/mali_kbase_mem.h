@@ -492,7 +492,7 @@ static inline bool kbase_is_region_invalid_or_free(struct kbase_va_region *reg)
 	return (kbase_is_region_invalid(reg) ||	kbase_is_region_free(reg));
 }
 
-int kbase_remove_va_region(struct kbase_va_region *reg);
+void kbase_remove_va_region(struct kbase_va_region *reg);
 static inline void kbase_region_refcnt_free(struct kbase_va_region *reg)
 {
 	/* If region was mapped then remove va region*/
