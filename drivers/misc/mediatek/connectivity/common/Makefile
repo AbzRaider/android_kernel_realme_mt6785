@@ -184,9 +184,9 @@ ccflags-y += -D WMT_CREATE_NODE_DYNAMIC=1
 ccflags-y += -DLOG_STP_DEBUG_DISABLE
 
 ifneq ($(TARGET_BUILD_VARIANT), user)
-    ccflags-y += -D WMT_DBG_SUPPORT=1
-else
     ccflags-y += -D WMT_DBG_SUPPORT=0
+else
+    ccflags-y += -D WMT_DBG_SUPPORT=1
 endif
 
 ifeq ($(CONFIG_MTK_DEVAPC),y)
