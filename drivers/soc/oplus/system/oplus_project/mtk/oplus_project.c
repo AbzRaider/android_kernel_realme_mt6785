@@ -363,7 +363,7 @@ bool oppo_daily_build(void)
         return daily_build;
 
     if (strstr(saved_command_line, "buildvariant=userdebug") ||
-        strstr(saved_command_line, "buildvariant=eng")) {
+        strstr(saved_command_line, "buildvariant=user")) {
         daily_build = true;
     } else {
         daily_build = false;
