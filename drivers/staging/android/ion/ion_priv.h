@@ -556,14 +556,14 @@ extern atomic64_t page_sz_cnt;
 int ion_share_dma_buf_fd_nolock(struct ion_client *client,
 				struct ion_handle *handle);
 
-<<<<<<< HEAD
+
 #ifdef CONFIG_OPLUS_ION_BOOSTPOOL
 inline is_allocator_svc(struct task_struct *tsk);
 #endif /* CONFIG_OPLUS_ION_BOOSTPOOL */
-=======
+
 struct ion_handle *pass_to_user(struct ion_handle *handle);
 void user_ion_free_nolock(struct ion_client *client, struct ion_handle *handle);
->>>>>>> 5fd0f0414316 ([ALPS05390740] ION: Fix ION Security issue)
+
 
 struct ion_handle *__ion_alloc(struct ion_client *client, size_t len,
 			       size_t align, unsigned int heap_id_mask,
