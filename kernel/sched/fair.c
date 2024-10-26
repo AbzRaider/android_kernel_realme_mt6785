@@ -193,6 +193,32 @@ unsigned int capacity_margin				= 1300;
 unsigned int capacity_margin_dvfs = DEFAULT_CAP_MARGIN_DVFS;
 #endif
 
+#ifdef VENDOR_EDIT
+int sched_get_updown_migrate(unsigned int *up_migrate,
+						unsigned int *down_migrate)
+{
+	        if (!up_migrate || !down_migrate)
+			                return -1;
+		        *up_migrate = SCHED_FIXEDPOINT_SCALE * 100 / capacity_margin;
+			        *down_migrate = *up_migrate;
+				        return 0;
+}
+EXPORT_SYMBOL(sched_get_updown_migrate);
+
+int sched_set_updown_migrate(unsigned int up_migrate,
+						unsigned int down_migrate)
+{
+	        if ((up_migrate < down_migrate) || (up_migrate <= 0)
+							|| (down_migrate <= 0))
+			                return -1;
+
+		        capacity_margin = SCHED_FIXEDPOINT_SCALE * 100 / up_migrate;
+
+			        pr_debug("%s:Current capacity_margin=%u\n", __func__, capacity_margin);
+				        return 0;
+}
+EXPORT_SYMBOL(sched_set_updown_migrate);
+#endif
 
 static inline void update_load_add(struct load_weight *lw, unsigned long inc)
 {
