@@ -201,13 +201,13 @@ struct cpufreq_policy *cpufreq_cpu_get_raw(unsigned int cpu)
 }
 EXPORT_SYMBOL_GPL(cpufreq_cpu_get_raw);
 
-#ifdef OPLUS_FEATURE_HEALTHINFO
-struct list_head *get_cpufreq_policy_list(void)
+
+extern struct list_head *get_cpufreq_policy_list(void)
 {
 	return &cpufreq_policy_list;
 }
 EXPORT_SYMBOL(get_cpufreq_policy_list);
-#endif /* OPLUS_FEATURE_HEALTHINFO */
+
 
 unsigned int cpufreq_generic_get(unsigned int cpu)
 {

@@ -226,6 +226,19 @@ extern int sysctl_slide_boost_enabled;
 extern int sysctl_boost_task_threshold;
 #endif /* OPLUS_FEATURE_UIFIRST */
 
+#ifdef VENDOR_EDIT
+extern bool sched_boost(void);
+extern int sched_set_updown_migrate(unsigned int up_migrate,unsigned int down_migrate);
+extern int sched_get_updown_migrate(unsigned int *up_migrate,unsigned int *down_migrate);
+#endif /* VENDOR_EDIT */
+
+#ifdef VENDOR_EDIT
+
+extern bool sched_boost(void);
+extern int sched_set_updown_migrate(unsigned int up_pct, unsigned int down_pct);
+extern int sched_get_updown_migrate(unsigned int *up_pct, unsigned int *down_pct);
+#endif /* VENDOR_EDIT */
+
 /* Task command name length: */
 #define TASK_COMM_LEN			16
 

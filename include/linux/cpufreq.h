@@ -937,9 +937,9 @@ extern void arch_set_max_freq_scale(struct cpumask *cpus,
 extern void arch_set_min_freq_scale(struct cpumask *cpus,
 				    unsigned long policy_min_freq);
 
-#ifdef OPLUS_FEATURE_HEALTHINFO
-struct list_head *get_cpufreq_policy_list(void);
-#endif /* OPLUS_FEATURE_HEALTHINFO */
+
+extern struct list_head *get_cpufreq_policy_list(void);
+
 
 /* the following are really really optional */
 extern struct freq_attr cpufreq_freq_attr_scaling_available_freqs;

@@ -32,7 +32,7 @@
 static struct pm_qos_request hypnus_ddr_qos_request;
 
 extern void sched_get_nr_running_avg(int *avg, int *iowait_avg);
-extern int mt_gpufreq_scene_protect(unsigned int min_freq, unsigned int max_freq);
+//extern int mt_gpufreq_scene_protect(unsigned int min_freq, unsigned int max_freq);
 extern int set_sched_boost(unsigned int val);
 extern int sched_deisolate_cpu(int cpu);
 extern int sched_isolate_cpu(int cpu);
@@ -147,6 +147,8 @@ static int mt_get_gpu_freq(u32 gpu_index, unsigned int *min,
 	return 0;
 }
 
+/*
+ //  I havent ported required symbols for gpu freq management from RUI1
 static int mt_set_gpu_freq_limit(u32 gpu_index, u32 min_freq, u32 max_freq)
 {
 	struct hypnus_data *hypdata = hypnus_get_hypdata();
@@ -169,7 +171,7 @@ static int mt_set_gpu_freq_limit(u32 gpu_index, u32 min_freq, u32 max_freq)
 	}
 	return 0;
 }
-
+*/
 static int mt_set_lpm_gov(u32 type)
 {
 	switch (type) {
