@@ -5511,10 +5511,7 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
 	 * passed.
 	 */
 	if (p->in_iowait) {
-#ifdef VENDOR_EDIT
-		trace_iowait_task(p);
-		cpufreq_update_util(rq, SCHED_CPUFREQ_IOWAIT);
-#endif
+
 	}
 
 	for_each_sched_entity(se) {
