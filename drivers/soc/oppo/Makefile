@@ -34,4 +34,7 @@ obj-$(CONFIG_OPPO_WAKELOCK_PROFILER)     +=  oppo_wakelock_profiler/
 #ifdef OPLUS_FEATURE_MEMLEAK_DETECT
 #Hailong.Liu@BSP.MM 2019/03/18, Add for svelte
 obj-$(CONFIG_OPPO_SVELTE)     +=  oppo_svelte/
-#endifi /* OPLUS_FEATURE_MEMLEAK_DETECT */
+#endif /* OPLUS_FEATURE_MEMLEAK_DETECT */
+
+#OPPO Hypnus (MTK Performance)
+obj-$(CONFIG_OPPO_HYPNUS)       +=  oppo_hypnus/
