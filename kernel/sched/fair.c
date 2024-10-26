@@ -80,8 +80,8 @@ extern unsigned int walt_ravg_window;
  *
  * (default: 6ms * (1 + ilog(ncpus)), units: nanoseconds)
  */
-unsigned int sysctl_sched_latency			= 6000000ULL;
-unsigned int normalized_sysctl_sched_latency		= 6000000ULL;
+unsigned int sysctl_sched_latency			= 12000000ULL;
+unsigned int normalized_sysctl_sched_latency		= 12000000ULL;
 
 /*
  * Enable/disable honoring sync flag in energy-aware wakeups.
@@ -116,13 +116,13 @@ enum sched_tunable_scaling sysctl_sched_tunable_scaling = SCHED_TUNABLESCALING_L
  *
  * (default: 0.75 msec * (1 + ilog(ncpus)), units: nanoseconds)
  */
-unsigned int sysctl_sched_min_granularity		= 750000ULL;
-unsigned int normalized_sysctl_sched_min_granularity	= 750000ULL;
+unsigned int sysctl_sched_min_granularity		= 1200000ULL;
+unsigned int normalized_sysctl_sched_min_granularity	= 1200000ULL;
 
 /*
  * This value is kept at sysctl_sched_latency/sysctl_sched_min_granularity
  */
-static unsigned int sched_nr_latency = 8;
+static unsigned int sched_nr_latency = 12;
 
 /*
  * After fork, child runs first. If set to 0 (default) then
