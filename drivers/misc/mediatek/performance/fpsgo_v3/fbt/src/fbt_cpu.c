@@ -3445,11 +3445,7 @@ static void fbt_reset_boost(struct render_info *thr)
 
 	boost->last_blc = 0;
 	boost->target_time = 0;
-<<<<<<< HEAD
-=======
 	boost->target_fps = -1;
->>>>>>> c0d4fc32a501 ([ALPS05683232] performance: FPSGO migration)
-
 	memset(boost->frame_info, 0, WINDOW * sizeof(struct fbt_frame_info));
 	boost->f_iter = 0;
 	boost->floor_count = 0;
@@ -3458,11 +3454,7 @@ static void fbt_reset_boost(struct render_info *thr)
 
 	mutex_lock(&fbt_mlock);
 	if (!boost_ta)
-<<<<<<< HEAD
-		fbt_set_min_cap_locked(thr, 0, 0, 0);
-=======
 		fbt_set_min_cap_locked(thr, 0, 0);
->>>>>>> c0d4fc32a501 ([ALPS05683232] performance: FPSGO migration)
 	fbt_check_max_blc_locked();
 	mutex_unlock(&fbt_mlock);
 
@@ -3473,11 +3465,7 @@ static void fbt_frame_start(struct render_info *thr, unsigned long long ts)
 {
 	struct fbt_boost_info *boost;
 	long long runtime;
-<<<<<<< HEAD
-	int targettime, targetfps;
-=======
 	int targettime, targetfps, fps_margin;
->>>>>>> c0d4fc32a501 ([ALPS05683232] performance: FPSGO migration)
 	unsigned int limited_cap = 0;
 	int blc_wt = 0;
 	long loading = 0L;
@@ -3492,15 +3480,10 @@ static void fbt_frame_start(struct render_info *thr, unsigned long long ts)
 	boost->frame_info[boost->f_iter].running_time = thr->running_time;
 
 	fpsgo_fbt2fstb_query_fps(thr->pid, thr->buffer_id,
-<<<<<<< HEAD
-		&targetfps, &targettime, thr->tgid, thr->mid);
-
-=======
 			&targetfps, &targettime, &fps_margin, thr->tgid, thr->mid,
 			&q_c_time, &q_g_time);
 	boost->quantile_cpu_time = q_c_time;
 	boost->quantile_gpu_time = q_g_time;
->>>>>>> c0d4fc32a501 ([ALPS05683232] performance: FPSGO migration)
 	if (!targetfps)
 		targetfps = TARGET_UNLIMITED_FPS;
 

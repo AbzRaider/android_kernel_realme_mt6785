@@ -1627,7 +1627,7 @@ void fpsgo_fbt2fstb_query_fps(int pid, unsigned long long bufID,
 		else
 			v_c_time = total_time;
 
-		if (iter->queue_fps == -1))
+		if (iter->queue_fps == -1)
 			*target_fps = -1;
 	}
 
