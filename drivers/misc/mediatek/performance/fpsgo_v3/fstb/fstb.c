@@ -1700,8 +1700,6 @@ static void fstb_fps_stats(struct work_struct *work)
 
 			iter->render_idle_cnt = 0;
 			/* if queue fps == 0, we delete that frame_info */
-<<<<<<< HEAD
-=======
 		} else {
 			iter->render_idle_cnt++;
 			if (iter->render_idle_cnt < FSTB_IDLE_DBNC) {
@@ -1725,7 +1723,6 @@ static void fstb_fps_stats(struct work_struct *work)
 			}
 
 			vfree(iter);
->>>>>>> c0d4fc32a501 ([ALPS05683232] performance: FPSGO migration)
 		}
 	}
 
@@ -1742,21 +1739,6 @@ static void fstb_fps_stats(struct work_struct *work)
 	if (fstb_idle_cnt >= FSTB_IDLE_DBNC) {
 		fstb_active_dbncd = 0;
 		fstb_idle_cnt = 0;
-<<<<<<< HEAD
-		hlist_for_each_entry_safe(iter, n, &fstb_frame_infos, hlist) {
-			hlist_del(&iter->hlist);
-
-			{
-				struct pob_fpsgo_qtsk_info pffi = {iter->pid};
-
-				pob_fpsgo_qtsk_update(POB_FPSGO_QTSK_DEL,
-						&pffi);
-			}
-
-			vfree(iter);
-		}
-=======
->>>>>>> c0d4fc32a501 ([ALPS05683232] performance: FPSGO migration)
 	} else if (fstb_idle_cnt >= 2) {
 		fstb_active = 0;
 	}

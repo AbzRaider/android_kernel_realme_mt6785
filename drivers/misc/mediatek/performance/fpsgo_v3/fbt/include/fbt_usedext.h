@@ -30,7 +30,6 @@ extern unsigned int get_capacity_margin_dvfs(void);
 #else
 extern void set_capacity_margin(unsigned int margin);
 extern unsigned int get_capacity_margin(void);
-<<<<<<< HEAD
 #endif
 
 extern int fpsgo_fbt2minitop_start(int count, struct fpsgo_loading *fl);
