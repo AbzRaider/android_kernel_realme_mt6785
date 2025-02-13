@@ -2,7 +2,7 @@
 VERSION = 4
 PATCHLEVEL = 14
 SUBLEVEL = 348
-EXTRAVERSION = -openela
+EXTRAVERSION = -LineagePlus_v7
 NAME = Petit Gorille
 
 # *DOCUMENTATION*
