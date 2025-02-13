@@ -378,7 +378,7 @@ static int get_devinfo(void)
 		val[p->mtdes_index] &= ~(PI_MTDES_MASK << p->mtdes_shift);
 		val[p->mtdes_index] |= (tmp << p->mtdes_shift);
 	}
-
+#ifdef CONFIG_MTK_RAM_CONSOLE
 	/*
 	 * One-line
 	 */
@@ -406,6 +406,7 @@ static int get_devinfo(void)
 
 	/* Big_Low */
 	aee_rr_rec_ptp_cpu_2_little_volt_1(pi_efuse_idx[4].orig_mbb);
+#endif
 #endif
 #endif
 
