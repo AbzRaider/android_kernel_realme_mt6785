@@ -807,7 +807,7 @@ static void process_dbg_opt(const char *opt)
 		}
 	} else if (strncmp(opt, "mobile:", 7) == 0) {
 		if (strncmp(opt + 7, "on", 2) == 0)
-			g_mobilelog = 1;
+			g_mobilelog = 0;
 		else if (strncmp(opt + 7, "off", 3) == 0)
 			g_mobilelog = 0;
 	} else if (strncmp(opt, "bypass_blank:", 13) == 0) {
