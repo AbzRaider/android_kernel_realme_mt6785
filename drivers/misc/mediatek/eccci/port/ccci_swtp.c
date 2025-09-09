@@ -319,9 +319,7 @@ static void swtp_init_delayed_work(struct work_struct *work)
 
 	//#ifdef OPLUS_FEATURE_SWTP
 	swtp_gpio_create_proc();
-	//#endif  /*OPLUS_FEATURE_SWTP*/
-
-	return ret;
+	//#endif  /*OPLUS_FEATURE_SWTP*/	
 
 SWTP_INIT_END:
 	CCCI_BOOTUP_LOG(md_id, SYS, "%s end: ret = %d\n", __func__, ret);
